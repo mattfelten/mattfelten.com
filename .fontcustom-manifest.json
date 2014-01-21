@@ -1,0 +1,64 @@
+{
+  "checksum": {
+    "previous": "2a2078c3856a2aceb18638f22681096ab0a3d48b8a8227a0b76b0fb15bd8ebc5",
+    "current": "2a2078c3856a2aceb18638f22681096ab0a3d48b8a8227a0b76b0fb15bd8ebc5"
+  },
+  "fonts": [
+    "public/fonts/icon_2a2078c3856a2aceb18638f22681096a.ttf",
+    "public/fonts/icon_2a2078c3856a2aceb18638f22681096a.svg",
+    "public/fonts/icon_2a2078c3856a2aceb18638f22681096a.woff",
+    "public/fonts/icon_2a2078c3856a2aceb18638f22681096a.eot"
+  ],
+  "glyphs": {
+    "dribbble": {
+      "codepoint": 61696,
+      "source": "public/svg/dribbble.svg"
+    },
+    "github": {
+      "codepoint": 61697,
+      "source": "public/svg/github.svg"
+    },
+    "instagram": {
+      "codepoint": 61698,
+      "source": "public/svg/instagram.svg"
+    },
+    "paper-plane": {
+      "codepoint": 61699,
+      "source": "public/svg/paper-plane.svg"
+    },
+    "rdio": {
+      "codepoint": 61700,
+      "source": "public/svg/rdio.svg"
+    },
+    "twitter": {
+      "codepoint": 61701,
+      "source": "public/svg/twitter.svg"
+    }
+  },
+  "options": {
+    "autowidth": false,
+    "config": "fontcustom.yml",
+    "css_selector": ".icon-{{glyph}}",
+    "debug": false,
+    "font_name": "icon",
+    "force": false,
+    "input": {
+      "templates": "public/svg",
+      "vectors": "public/svg"
+    },
+    "no_hash": false,
+    "output": {
+      "css": "public/less/partials",
+      "fonts": "public/fonts",
+      "preview": "public/fonts"
+    },
+    "preprocessor_path": "",
+    "quiet": false,
+    "templates": [
+      "css"
+    ]
+  },
+  "templates": [
+    "public/less/partials/icon.css"
+  ]
+}

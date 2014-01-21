@@ -1,0 +1,38 @@
+#contact {
+	background: @grey;
+	color: @white;
+	text-align: center;
+	.font-size(@about-font-size*.75);
+
+	span {
+		display: inline-block;
+		margin: 0 auto;
+		padding-left: 2em;
+		position: relative;
+		text-align: left;
+		white-space: nowrap;
+	}
+
+	i {
+		font-size: 1.6em;
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+
+	a {
+		border: none;
+		color: @white;
+		display: block;
+		padding: 50px 20px;
+
+		&:hover {
+			color: @teal;
+		}
+	}
+
+	small {
+		display: block;
+		font-size: .5em;
+	}
+}
