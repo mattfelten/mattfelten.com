@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+ <title>Matt Felten</title>
+ <link href="http://articles.mattfelten.com/atom.xml" rel="self"/>
+ <link href="http://articles.mattfelten.com/"/>
+ <updated>2014-01-20T16:59:46-08:00</updated>
+ <id>http://articles.mattfelten.com</id>
+ <author>
+   <name>Matt Felten</name>
+   <email></email>
+ </author>
+
+ 
+ <entry>
+   <title>Lois Lane</title>
+   <link href="http://articles.mattfelten.com/2012/11/06/lois-lane/"/>
+   <updated>2012-11-06T00:00:00-08:00</updated>
+   <id>http://articles.mattfelten.com/2012/11/06/lois-lane</id>
+   <content type="html">&lt;p&gt;The day before my most recent move, I decided I wasn’t ready to start packing. I wanted to go on a walk. I can count the number of times I’ve walked around Long Beach on one hand, but now that I was leaving, I felt like I needed to do it again. It’s the “You start missing something when you lose it” scenario.&lt;/p&gt;
+
+&lt;p&gt;I went down to the beach. I walked by all the rich houses. I had some lunch. It was a pretty decent walk, by my admittedly lazy standards. On my way back home, I ran across a street named Lois Lane.&lt;/p&gt;
+
+&lt;p&gt;I laughed at the pun and kept walking. It stuck in my head though. I started thinking about the person who named that street. I know nothing about naming a street—other then someday I want to—but it was funny to me that someone decided that the street should be named Lois Lane. Knowing a little of how tedious governments are, I’m sure there were meetings and committees and all that complication.&lt;/p&gt;
+
+&lt;p&gt;It could have been Washington Blvd, Broadway, 2nd Street; some other name that every city in America already has. But that person wanted to be funny, they chose something abnormal. I like that. I liked that something so simple as the name of the street made me think about the people who made that decision. I saw the humanity behind it. There’s something special there. Someone wanted to make me smile, and I did.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;I was using the Live Chat feature of my cable company. I wanted to figure out how fast the internet I was paying for was, and nowhere in my account does it show the speed. After filling out an unnecessarily long form, I connected to their tech support and asked my question. I, then, had to play 20 questions with them so that they could verify who I was and which account was mine. Couldn’t any of this have been asked earlier? I clicked the Live Chat button from the dashboard in my account; couldn’t they have routed that information through? I had a very simple question that I needed to jump through hoops to get an answer to.&lt;/p&gt;
+
+&lt;p&gt;The internet is a funny place. It’s a never-ending construction site. Things get torn down, new things go up in its place. Nothing is ever finished, there’s always a phase 2, 3, 4 and 5. Let’s just get to good enough for now. There are always constraints and shifting priorities. You do what you can, as best as you can, and let it go.&lt;/p&gt;
+
+&lt;p&gt;I have a new priority with my work. I want someone to unexpectedly say, “That was easy/useful/clever.” I want to make something complicated seem easy. I want to be like whoever decided on Lois Lane and fought for it. I want to make someone smile.&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>2012</title>
+   <link href="http://articles.mattfelten.com/2012/02/06/2012/"/>
+   <updated>2012-02-06T00:00:00-08:00</updated>
+   <id>http://articles.mattfelten.com/2012/02/06/2012</id>
+   <content type="html">&lt;p&gt;Last month, I started a UI design position at &lt;a href=&quot;http://dreamhost.com&quot;&gt;DreamHost&lt;/a&gt;. It was awesome having a job I’ve wanted to do for a long time pretty much fall into my lap. I’ve been a customer since 2007 and while I’ve always been happy with my service, I’ve dreamed about reworking their admin panel and marketing site. Redesigning the admin panel has found it’s way to my “side projects” list a couple times, but I never found the time to finish.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, that meant I had to give up the two years I spent dedicated to building my freelance business. It took a lot of thought to get past that. I made a lot of connections and worked with some awesome people along the way. I think the hardest part was having to tell people who relied on me that I’m going to be on very limited availabilty.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;p&gt;What am I doing now? I’m using this time as a retrospective. Like a lot of things I’ve done, I fell into freelancing head-first, which can be both good and bad. It was always a dream of mine to work for myself but I probably wasn’t ready for it. There are a lot of aspects that I feel like I did right, and a lot that I did wrong.&lt;/p&gt;
+
+&lt;p&gt;I’m also going to try to write more (Hello blog!). I’ve been taking more and more notes over the last year and the next logic step to take is to start fleshing some of my thoughts out in a little bit of a longer form. I’ve noticed that the more I try to get things out of my head, the clearer and more understandable they become.&lt;/p&gt;
+
+&lt;p&gt;To growth, and to learning.&lt;/p&gt;</content>
+ </entry>
+ 
+
+</feed>
