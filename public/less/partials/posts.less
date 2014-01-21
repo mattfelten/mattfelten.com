@@ -15,9 +15,23 @@
 }
 
 #featured-image {
-	background-size: cover;
-	background-position: center center;
+	background: @black;
 	height: 45%;
+
+	div {
+		background-size: cover;
+		background-position: center center;
+		height: 100%;
+		max-width: 1000px;
+		margin: 0 auto;
+	}
+}
+
+@media (min-width: 1000px) {
+	@fade: 20px;
+	#featured-image div {
+		box-shadow: inset @fade 0 @fade @black, inset -@fade 0 @fade @black;
+	}
 }
 
 #post {
