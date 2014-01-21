@@ -1,6 +1,6 @@
 # Don't use tabs!
 # Build Settings
-exclude: ['less']
+exclude: ['less', 'fontcustom.yml']
 
 # Permalinks
 permalink: pretty
