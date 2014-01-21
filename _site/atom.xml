@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
  <title>Matt Felten</title>
- <link href="http://articles.mattfelten.com/atom.xml" rel="self"/>
- <link href="http://articles.mattfelten.com/"/>
- <updated>2014-01-20T16:59:46-08:00</updated>
- <id>http://articles.mattfelten.com</id>
+ <link href="http://mattfelten.com/atom.xml" rel="self"/>
+ <link href="http://mattfelten.com/"/>
+ <updated>2014-01-20T17:20:21-08:00</updated>
+ <id>http://mattfelten.com</id>
  <author>
    <name>Matt Felten</name>
    <email></email>
@@ -14,9 +14,9 @@
  
  <entry>
    <title>Lois Lane</title>
-   <link href="http://articles.mattfelten.com/2012/11/06/lois-lane/"/>
+   <link href="http://mattfelten.com/2012/11/06/lois-lane/"/>
    <updated>2012-11-06T00:00:00-08:00</updated>
-   <id>http://articles.mattfelten.com/2012/11/06/lois-lane</id>
+   <id>http://mattfelten.com/2012/11/06/lois-lane</id>
    <content type="html">&lt;p&gt;The day before my most recent move, I decided I wasn’t ready to start packing. I wanted to go on a walk. I can count the number of times I’ve walked around Long Beach on one hand, but now that I was leaving, I felt like I needed to do it again. It’s the “You start missing something when you lose it” scenario.&lt;/p&gt;
 
 &lt;p&gt;I went down to the beach. I walked by all the rich houses. I had some lunch. It was a pretty decent walk, by my admittedly lazy standards. On my way back home, I ran across a street named Lois Lane.&lt;/p&gt;
@@ -34,9 +34,9 @@
  
  <entry>
    <title>2012</title>
-   <link href="http://articles.mattfelten.com/2012/02/06/2012/"/>
+   <link href="http://mattfelten.com/2012/02/06/2012/"/>
    <updated>2012-02-06T00:00:00-08:00</updated>
-   <id>http://articles.mattfelten.com/2012/02/06/2012</id>
+   <id>http://mattfelten.com/2012/02/06/2012</id>
    <content type="html">&lt;p&gt;Last month, I started a UI design position at &lt;a href=&quot;http://dreamhost.com&quot;&gt;DreamHost&lt;/a&gt;. It was awesome having a job I’ve wanted to do for a long time pretty much fall into my lap. I’ve been a customer since 2007 and while I’ve always been happy with my service, I’ve dreamed about reworking their admin panel and marketing site. Redesigning the admin panel has found it’s way to my “side projects” list a couple times, but I never found the time to finish.&lt;/p&gt;
 
 &lt;p&gt;Unfortunately, that meant I had to give up the two years I spent dedicated to building my freelance business. It took a lot of thought to get past that. I made a lot of connections and worked with some awesome people along the way. I think the hardest part was having to tell people who relied on me that I’m going to be on very limited availabilty.&lt;/p&gt;
