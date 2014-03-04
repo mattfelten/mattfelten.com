@@ -1,0 +1,40 @@
+.loader {
+	border: .15em solid #3DDFC2;
+	border-right-color: transparent;
+	border-radius: 50%;
+	display: inline-block;
+	width: .5em;
+	height: .5em;
+
+	-webkit-animation: spin .75s linear infinite;
+	-moz-animation: spin .75s linear infinite;
+	-ms-animation: spin .75s linear infinite;
+	-o-animation: spin .75s linear infinite;
+	animation: spin .75s linear infinite;
+}
+
+
+@-webkit-keyframes spin {
+	100% { -webkit-transform: rotate(360deg); }
+}
+
+@-moz-keyframes spin {
+	100% { -moz-transform: rotate(360deg); }
+}
+
+@-o-keyframes spin {
+	100% { -o-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+	100% { transform: rotate(360deg); }
+}
+
+.loader-wrap {
+	font-family: 'Comic Sans', 'Comic Sans MS';
+}
+
+.massive {
+	font-size: 5em;
+	margin: .25em 0;
+}
