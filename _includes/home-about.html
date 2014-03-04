@@ -6,11 +6,9 @@
 			<p>I'm a UI Designer at DreamHost in Los Angeles.</p>
 			<p>Here's my <strike>work</strike>, <a href="#writing">writing</a>, and <a href="http://readinglist.mattfelten.com">reading list</a>.</p>
 			<ul>
-				<li><a href="http://twitter.com/mattfelten" class="icon-twitter"><span>Twitter</span></a></li>
-				<li><a href="http://instagram.com/mattfelten" class="icon-instagram"><span>Instagram</span></a></li>
-				<li><a href="http://rdio.com/people/mattfelten/" class="icon-rdio"><span>Rdio</span></a></li>
-				<li><a href="http://dribbble.com/mattfelten" class="icon-dribbble"><span>Dribbble</span></a></li>
-				<li><a href="http://github.com/mattfelten/" class="icon-github"><span>Github</span></a></li>
+				{% for link in site.data.social %}
+				<li><a href="{{ link[1] }}" class="icon-{{ link[0] }}"><span>{{ link[0] | capitalize }}</span></a></li>
+				{% endfor %}
 			</ul>
 		</article>
 	</div>
