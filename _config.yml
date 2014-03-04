@@ -1,6 +1,7 @@
 # Don't use tabs!
 # Build Settings
 exclude: ['less', 'fontcustom.yml']
+markdown: redcarpet
 
 # Permalinks
 permalink: pretty
