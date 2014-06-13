@@ -1,17 +1,15 @@
-# Don't use tabs!
-# Build Settings
+# Jekyll Config
 exclude: ['less', 'fontcustom.yml']
 markdown: redcarpet
 
-# Permalinks
-permalink: pretty
+# Server Config
+host: mattfelten.dev
 
-# Setup
+# Site Config
 title: Matt Felten
 url: http://mattfelten.com
-
+paginate: 99
+permalink: pretty
 author:
   name: 'Matt Felten'
   url: https://twitter.com/mattfelten
-
-paginate: 99
