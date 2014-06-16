@@ -19,7 +19,7 @@ quiet: false
 # --------------------------------------------------------------------------- #
 
 input:
-  vectors: public/svg         # required
+  vectors: assets/svg         # required
 
 
 # --------------------------------------------------------------------------- #
@@ -27,8 +27,8 @@ input:
 # --------------------------------------------------------------------------- #
 
 output:
-  fonts: public/fonts                             # required
-  css: public/less/partials
+  fonts: assets/fonts                             # required
+  css: assets/less/partials
 
 
 # --------------------------------------------------------------------------- #

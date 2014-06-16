@@ -4,35 +4,35 @@
     "current": "2a2078c3856a2aceb18638f22681096ab0a3d48b8a8227a0b76b0fb15bd8ebc5"
   },
   "fonts": [
-    "public/fonts/icon_2a2078c3856a2aceb18638f22681096a.ttf",
-    "public/fonts/icon_2a2078c3856a2aceb18638f22681096a.svg",
-    "public/fonts/icon_2a2078c3856a2aceb18638f22681096a.woff",
-    "public/fonts/icon_2a2078c3856a2aceb18638f22681096a.eot"
+    "assets/fonts/icon_2a2078c3856a2aceb18638f22681096a.ttf",
+    "assets/fonts/icon_2a2078c3856a2aceb18638f22681096a.svg",
+    "assets/fonts/icon_2a2078c3856a2aceb18638f22681096a.woff",
+    "assets/fonts/icon_2a2078c3856a2aceb18638f22681096a.eot"
   ],
   "glyphs": {
     "dribbble": {
       "codepoint": 61696,
-      "source": "public/svg/dribbble.svg"
+      "source": "assets/svg/dribbble.svg"
     },
     "github": {
       "codepoint": 61697,
-      "source": "public/svg/github.svg"
+      "source": "assets/svg/github.svg"
     },
     "instagram": {
       "codepoint": 61698,
-      "source": "public/svg/instagram.svg"
+      "source": "assets/svg/instagram.svg"
     },
     "paper-plane": {
       "codepoint": 61699,
-      "source": "public/svg/paper-plane.svg"
+      "source": "assets/svg/paper-plane.svg"
     },
     "rdio": {
       "codepoint": 61700,
-      "source": "public/svg/rdio.svg"
+      "source": "assets/svg/rdio.svg"
     },
     "twitter": {
       "codepoint": 61701,
-      "source": "public/svg/twitter.svg"
+      "source": "assets/svg/twitter.svg"
     }
   },
   "options": {
@@ -43,14 +43,14 @@
     "font_name": "icon",
     "force": false,
     "input": {
-      "templates": "public/svg",
-      "vectors": "public/svg"
+      "templates": "assets/svg",
+      "vectors": "assets/svg"
     },
     "no_hash": false,
     "output": {
-      "css": "public/less/partials",
-      "fonts": "public/fonts",
-      "preview": "public/fonts"
+      "css": "assets/less/partials",
+      "fonts": "assets/fonts",
+      "preview": "assets/fonts"
     },
     "preprocessor_path": "",
     "quiet": false,
@@ -59,6 +59,6 @@
     ]
   },
   "templates": [
-    "public/less/partials/icon.css"
+    "assets/less/partials/icon.css"
   ]
 }

@@ -1,5 +1,5 @@
 # Jekyll Config
-exclude: ['less', 'fontcustom.yml']
+exclude: ['fontcustom.yml']
 markdown: redcarpet
 
 # Server Config
