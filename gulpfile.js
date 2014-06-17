@@ -4,19 +4,20 @@ var gulp = require('gulp'),
 	exec = require('child_process').exec;
 
 gulp.task('less', function() {
-	return gulp.src('source/assets/_less/site.less')
+	return gulp.src('assets/_less/site.less')
 		.pipe(less())
 		.pipe(minifyCSS())
 		.pipe(gulp.dest('source/assets/css'));
 });
 
 gulp.task('watch', function () {
-	gulp.watch('source/**/*.less', ['less','build']);
+	gulp.watch('assets/**/*.less', ['less','build']);
 
 	// Basically recreating Jekyll's --watch flag
 	gulp.watch([
-		'source/**/*.html',
-		'source/**/*.md'
+		'**/*.html',
+		'!_site/*.html',
+		'!_site/**/.html',
 		], ['build']);
 });
 

@@ -1,8 +1,6 @@
 # Jekyll Config
 exclude: ['node_modules', 'gulpfile.js', 'README.md', 'fontcustom.yml','_less']
 markdown: redcarpet
-source: source
-destination: build
 
 # Server Config
 host: mattfelten.dev
