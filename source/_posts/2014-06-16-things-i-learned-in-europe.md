@@ -4,7 +4,6 @@ layout: post
 published: true
 ---
 
-
 A month ago I flew out of LAX. I spent sixteen days with close friends, hitting six cities in four different countries. It was awesome. There were so many firsts for me on that trip. I learned so many different things on that trip. I spent the last month reflecting on the trip and writing things down. Here's my big takeaways.
 
 * I ate a lot of bread in France. It was almost hard to find something without bread.
