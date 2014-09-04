@@ -1,7 +1,8 @@
 var gulp = require('gulp'),
 	less = require('gulp-less'),
 	minifyCSS = require('gulp-minify-css'),
-	exec = require('child_process').exec;
+	cp = require('child_process'),
+	exec = cp.exec;
 
 gulp.task('less', function() {
 	return gulp.src('assets/_less/site.less')
@@ -14,11 +15,7 @@ gulp.task('watch', function () {
 	gulp.watch('assets/**/*.less', ['less','build']);
 
 	// Basically recreating Jekyll's --watch flag
-	gulp.watch([
-		'**/*.html',
-		'!_site/*.html',
-		'!_site/**/.html',
-		], ['build']);
+	gulp.watch([ '*.yml', '*.md', '*.html', '_includes/*.html', '_layouts/*.html'], ['build']);
 });
 
 gulp.task('build', function () {
@@ -33,5 +30,5 @@ gulp.task('default', ['serve', 'watch'], function() {
 	setTimeout( function() {
 		console.log('Server running at http://mattfelten.dev:4000');
 		exec('open http://mattfelten.dev:4000');
-	}, 1500);
+	}, 2000);
 });
