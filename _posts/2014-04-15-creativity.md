@@ -1,7 +1,6 @@
 ---
 title: Creativity
 layout: post
-published: true
 ---
 
 > Think left and think right and think low and think high. Oh, the thinks you can think up if only you try! <cite>&mdash; Dr. Seuss</cite>
