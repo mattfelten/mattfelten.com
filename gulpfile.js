@@ -8,14 +8,14 @@ gulp.task('less', function() {
 	return gulp.src('assets/_less/site.less')
 		.pipe(less())
 		.pipe(minifyCSS())
-		.pipe(gulp.dest('source/assets/css'));
+		.pipe(gulp.dest('assets/css/'));
 });
 
 gulp.task('watch', function () {
 	gulp.watch('assets/**/*.less', ['less','build']);
 
 	// Basically recreating Jekyll's --watch flag
-	gulp.watch([ '*.yml', '*.md', '*.html', '_includes/*.html', '_layouts/*.html'], ['build']);
+	gulp.watch([ '*/*.yml', '*/*.md', '*/*.html','!_site/*'], ['build']);
 });
 
 gulp.task('build', function () {
