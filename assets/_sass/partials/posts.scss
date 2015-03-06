@@ -1,25 +1,29 @@
 #writing {
-	text-align: center;
-
-	p.meta:first-child {
-		margin-top: 0;
-	}
-}
-
-.posts {
+	font-size: 20px;
 	padding: 100px 0;
 	margin: 0 auto;
 	max-width: 420px;
+
+	ul {
+		@include nolist();
+	}
+
+	li {
+		margin: .5em 0;
+		padding-left: 150px;
+		position: relative;
+	}
+
+	.post-date {
+		position: absolute;
+		top: .1em;
+		left: 0;
+	}
 }
 
 .meta,
 .post-date {
 	color: $lightGrey;
-	margin-bottom: .5em;
-}
-
-.post-title {
-	margin-top: .25em;
 }
 
 #featured-image {
@@ -52,7 +56,7 @@
 	}
 
 	.post-title {
-		margin-bottom: 0;
+		margin: .25em 0 0;
 	}
 
 	.post-date {
