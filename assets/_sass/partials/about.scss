@@ -43,7 +43,7 @@ $about-font-size: 42;
 		}
 
 		span {
-			@include ir();
+			@include hide-text();
 		}
 	}
 
