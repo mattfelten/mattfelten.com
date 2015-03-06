@@ -13,3 +13,8 @@ permalink: pretty
 author:
   name: 'Matt Felten'
   url: https://twitter.com/mattfelten
+
+# Sass Config
+sass:
+  sass_dir: assets/_sass
+  style: compressed

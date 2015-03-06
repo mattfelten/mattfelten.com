@@ -1,0 +1,33 @@
+#contact {
+	background: $grey;
+	color: $white;
+	text-align: center;
+	@include font-size($about-font-size*.75);
+	-webkit-font-smoothing: antialiased;
+
+	span {
+		margin: 0 auto;
+		white-space: nowrap;
+	}
+
+	i {
+		display: block;
+		margin-bottom: .25em;
+	}
+
+	a {
+		border: none;
+		color: $white;
+		display: block;
+		padding: 50px 20px;
+
+		&:hover {
+			color: $teal;
+		}
+	}
+
+	small {
+		display: block;
+		font-size: .5em;
+	}
+}

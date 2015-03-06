@@ -1,0 +1,67 @@
+::selection {
+	background: $teal;
+	color: $grey;
+}
+::-moz-selection {
+	background: $teal;
+	color: $grey;
+}
+
+.highlight pre {
+	border: 1px solid #eee;
+	border-radius: 3px;
+	line-height: 1.2;
+	margin: 2em 0 3em;
+	padding: 1em;
+}
+
+.highlight pre code {
+	@include font-size(12);
+}
+
+a {
+	border-bottom: 1px solid $grey;
+	color: $grey;
+	text-decoration: none;
+
+	@include transition(border-color .2s);
+
+	&:hover {
+		border-color: $teal;
+	}
+}
+
+blockquote {
+	background: #f9f9f9;
+	border-radius: 3px;
+	@include font-size(32);
+	font-family: 'Miso';
+	line-height: 1.2;
+	margin: 1.5em 0;
+	padding: 1em;
+	padding-left: 2em;
+	quotes: "\201C""\201D""\2018""\2019";
+	position: relative;
+
+	.cf;
+
+	&:before {
+		color: #ccc;
+		content: open-quote;
+		font-size: 2.5em;
+		position: absolute;
+		top: .2em;
+		left: .2em;
+	}
+
+	p {
+		display: inline;
+	}
+
+	cite {
+		color: $lightGrey;
+		font-size: .7em;
+		float: right;
+		margin-top: .4em;
+	}
+}
