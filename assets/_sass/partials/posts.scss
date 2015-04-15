@@ -1,26 +1,3 @@
-#writing {
-	font-size: 20px;
-	padding: 100px 0;
-	margin: 0 auto;
-	max-width: 420px;
-
-	ul {
-		@include nolist();
-	}
-
-	li {
-		margin: .5em 0;
-		padding-left: 150px;
-		position: relative;
-	}
-
-	.post-date {
-		position: absolute;
-		top: .1em;
-		left: 0;
-	}
-}
-
 .meta,
 .post-date {
 	color: $lightGrey;

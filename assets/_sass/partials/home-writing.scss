@@ -1,0 +1,20 @@
+#writing {
+	ul {
+		display: table;
+		margin: 0 auto;
+	}
+
+	li {
+		display: table-row;
+	}
+
+	.post-date,
+	.post-title {
+		display: table-cell;
+		padding: .25em 0;
+	}
+
+	.post-date {
+		padding-right: 25px;
+	}
+}

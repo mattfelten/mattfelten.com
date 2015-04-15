@@ -2,24 +2,24 @@
 # Front matter comment to ensure Jekyll properly reads file.
 ---
 
-// Normalize
-@import "libraries/normalize";
+// Vendor
+@import "vendor/normalize";
+@import "vendor/syntax";
 
-// Helpers
-@import "partials/variables";
-@import "helpers/shortcuts";
-@import "helpers/prefixes";
-@import "helpers/grid";
+// Mixins
+@import "mixins/shortcuts";
+@import "mixins/prefixes";
+
+// Base
+@import "base/variables";
+@import "base/fonts";
+@import "base/icon";
+@import "base/defaults";
 
 // Components
-@import "partials/fonts";
-@import "partials/icon";
-@import "partials/syntax";
-@import "partials/defaults";
-@import "partials/site";
-@import "partials/about";
-@import "partials/posts";
-@import "partials/contact";
+@import "components/grid";
 
-// Shame.css
-@import "partials/shame";
+// Partials
+@import "partials/site";
+@import "partials/home";
+@import "partials/posts";

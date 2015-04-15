@@ -1,7 +1,0 @@
-<section id="writing" class="posts">
-	<ul>
-	{% for post in paginator.posts %}
-		<li><span class="post-date">{{ post.date | date: "%Y %B %-d" }}</span> <a href="{{ post.url }}" class="post-title">{{ post.title }}</a></li>
-	{% endfor %}
-	</ul>
-</section>
