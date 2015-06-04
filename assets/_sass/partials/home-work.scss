@@ -1,0 +1,47 @@
+#work {
+	li {
+		display: table;
+		width: 100%;
+	}
+
+	a {
+		border: none;
+		border-radius: 2px;
+		display: table-cell;
+		text-align: center;
+		vertical-align: middle;
+
+		background: $white;
+		height: 450px;
+		transition: background .2s;
+
+		&:hover {
+			background: $teal;
+		}
+	}
+
+	.work-dreamhost {
+		background-image: linear-gradient(130deg, #A7DEF7 0%, #38789B 100%);
+
+		a {
+			background: url(../images/work.dreamhost.background.png) no-repeat center center;
+			background-size: cover;
+
+			&:hover {
+				background: $teal;
+			}
+		}
+
+		span {
+			@include ir(426, 60, '../images/logo.dreamhost.svg');
+			vertical-align: middle;
+		}
+	}
+}
+
+@media (min-width:900px) {
+	#work a {
+		// height of the writing and speaking section
+		height: 632px;
+	}
+}

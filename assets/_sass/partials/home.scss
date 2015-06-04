@@ -1,4 +1,5 @@
 @import "home-about";
+@import "home-work";
 @import "home-writing";
 @import "home-contact";
 
@@ -11,15 +12,35 @@
 	}
 }
 
+#writing {
+	padding: 85px 0 100px;
+	margin: 0 auto;
+	max-width: 420px;
+}
+
 #work,
 #writing {
 	font-size: 20px;
-	padding: 100px 0;
-	margin: 0 auto;
-	max-width: 420px;
 
 	ul {
 		@include nolist();
 	}
 }
 
+@media (min-width:900px) {
+	#home-work-writing {
+		font-size: 0;
+		border-collapse: collapse;
+		border-spacing: 0;
+		display: table;
+		width: 100%;
+	}
+
+	#work,
+	#writing {
+		display: table-cell;
+		max-width: none;
+		vertical-align: top;
+		width: 50%;
+	}
+}
