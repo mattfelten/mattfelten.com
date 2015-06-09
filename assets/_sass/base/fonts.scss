@@ -7,3 +7,13 @@
     font-weight: normal;
     font-style: normal;
 }
+
+@font-face {
+    font-family: 'Work Sans';
+    src: local('Work Sans'),
+         url('../fonts/WorkSans-Bold.woff2') format('woff2'),
+         url('../fonts/WorkSans-Bold.woff') format('woff'),
+         url('../fonts/WorkSans-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
