@@ -3,4 +3,4 @@ layout: work
 title: DreamHost
 ---
 
-<p>This is where my dreamhost work goes.</p>
+<p>This is where my DreamHost work goes.</p>
