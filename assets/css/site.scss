@@ -7,19 +7,19 @@
 @import "vendor/syntax";
 
 // Mixins
-@import "mixins/shortcuts";
-@import "mixins/prefixes";
+@import "mixins/clearfix";
+@import "mixins/list-unset";
 
 // Base
 @import "base/variables";
 @import "base/fonts";
-@import "base/icon";
 @import "base/defaults";
 
 // Components
-@import "components/grid";
-
-// Partials
-@import "partials/site";
-@import "partials/home";
-@import "partials/posts";
+@import "components/image-full-width";
+@import "components/image-link";
+@import "components/list-article";
+@import "components/list-inline";
+@import "components/section";
+@import "components/section-text-block";
+@import "components/pagination";

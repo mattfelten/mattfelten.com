@@ -1,0 +1,28 @@
+.section-text-block {
+	color: $dark;
+	line-height: 1.4;
+	max-width: 35em;
+
+	img {
+		width: 100%;
+	}
+
+	hr {
+		margin: 2.5em;
+		display: block;
+		height: 1px;
+		border: 0;
+		border-top: 1px solid lighten($light, 30%);
+	}
+
+	h1, h2, h3, h4 {
+		font-size: $font-size*1.4;
+		font-weight: $font-weight;
+		margin-top: 1em;
+		margin-bottom: .25em;
+
+		+ p {
+			margin-top: 0;
+		}
+	}
+}

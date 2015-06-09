@@ -1,5 +1,9 @@
-@include font-face('Miso', 'miso-light', 300);
-@include font-face('Adelle','adelle_light-webfont', 400);
-@include font-face('Adelle','adelle_lightitalic-webfont', 400, italic);
-@include font-face('Adelle','adelle_semibold-webfont', bold);
-@include font-face('Adelle','adelle_semibolditalic-webfont', bold, italic);
+@font-face {
+    font-family: 'Work Sans';
+    src: local('Work Sans'),
+         url('../fonts/WorkSans-Regular.woff2') format('woff2'),
+         url('../fonts/WorkSans-Regular.woff') format('woff'),
+         url('../fonts/WorkSans-Regular.ttf') format('truetype');
+    font-weight: $font-weight;
+    font-style: normal;
+}

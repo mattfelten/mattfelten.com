@@ -51,7 +51,7 @@ And here's a full example. You can mess with the code on [JSFiddle](http://jsfid
 ------------
 
 <div class="loader-wrap">
-	<p class="massive"><i class="loader"></i> NICE SIZE</p>
+	<p class="massive"><i class="loader"></i> Nice Size</p>
 	<h1><i class="loader"></i> Wow</h1>
 	<h2><i class="loader"></i> So Repsonse</h2>
 	<h3><i class="loader"></i> Very CSS</h3>

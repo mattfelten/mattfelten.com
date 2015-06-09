@@ -1,14 +1,8 @@
 // Colors
-$white: #f6f6f6;
-$black: #222;
-$grey: #303030;
-$lightGrey: lighten($grey, 40%);
-$teal: #3DDFC2;
+$dark: #000;
+$light: #999;
+$accent: #3DDFC2;
 
-// Typeography
-$base-font-size: 26;
-
-// Grid
-$column-width: 56;
-$gutter-width: 25;
-$columns: 12;
+// Type
+$font-size: 1.4rem;
+$font-weight: 400;

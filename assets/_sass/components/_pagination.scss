@@ -1,0 +1,22 @@
+.pagination {
+	display: table;
+	width: 100%;
+
+	.pagination-item {
+		display: table-cell;
+		width: 50%;
+
+		&:last-child {
+			text-align: right;
+		}
+	}
+
+	.pagination-title {
+		color: $dark;
+		display: block;
+
+		&:hover {
+			color: $accent;
+		}
+	}
+}

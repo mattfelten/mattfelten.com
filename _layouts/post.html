@@ -2,34 +2,39 @@
 layout: default
 ---
 
-<header>
-	Hi, my name is Matt. I wrote this. <a href="/">Go back to my homepage.</a>
-</header>
+<section class="section">
+	<p class="section-title">Hi, my name is Matt. I wrote this.</p>
+	<p class="section-description"><a href="/">Go back to my homepage.</a></p>
+</section>
 
 {% if page.featured-image %}
-<section id="featured-image">
-	<div style="background-image: url(/assets/images/{{ page.featured-image }});"></div>
+<section class="section">
+	<div class="image-full-width">
+		<img src="/assets/images/{{ page.featured-image }}">
+	</div>
 </section>
 {% endif %}
-<section id="post">
-	<article class="post">
-		<h1 class="post-title">{{ page.title }}</h1>
-		<p class="post-date">{{ page.date | date_to_string }}</p>
-		<div class="content">
-			{{ content }}
-		</div>
-	</article>
 
-	<div id="pagination">
+<article class="section">
+	<h1 class="section-title">{{ page.title }}</h1>
+	<p class="section-description">{{ page.date | date_to_string }}</p>
+</article>
+
+<div class="section section-text-block">
+	{{ content }}
+</div>
+
+<section class="section">
+	<div class="pagination">
+		<span class="pagination-item">
 		{% if page.previous.url %}
-		<a class="pagination-item prev" href="{{page.previous.url}}">Older<span class="title">{{page.previous.title}}</span></a>
-		{% else %}
-		<span class="pagination-item placeholder"></span>
+			<a href="{{page.previous.url}}" class="pagination-title">{{page.previous.title}}</a> Older
 		{% endif %}
+		</span>
+		<span class="pagination-item">
 		{% if page.next.url %}
-		<a class="pagination-item next" href="{{page.next.url}}">Newer<span class="title">{{page.next.title}}</span></a>
-		{% else %}
-		<span class="pagination-item placeholder"></span>
+			<a class="pagination-title" href="{{page.next.url}}">{{page.next.title}}</a> Newer
 		{% endif %}
+		</span>
 	</div>
 </section>

@@ -1,0 +1,20 @@
+.image-link {
+	background: $accent;
+	overflow: hidden;
+
+	img {
+		-webkit-transition: opacity .15s, -webkit-transform .15s;
+		-moz-transition: opacity .15s, -moz-transform .15s;
+		transition: opacity .15s, transform .15s;
+		-webkit-backface-visibility: hidden;
+		-moz-backface-visibility: hidden;
+		backface-visibility: hidden;
+	}
+
+	&:hover img {
+		opacity: 0.4;
+		-webkit-transform: scale3d(1.1,1.1,1);
+		-moz-transform: scale3d(1.1,1.1,1);
+		transform: scale3d(1.1,1.1,1);
+	}
+}

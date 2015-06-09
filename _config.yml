@@ -1,5 +1,5 @@
 # Jekyll Config
-exclude: ['node_modules', 'gulpfile.js', 'README.md', 'fontcustom.yml','_less']
+exclude: ['README.md']
 markdown: redcarpet
 
 # Server Config

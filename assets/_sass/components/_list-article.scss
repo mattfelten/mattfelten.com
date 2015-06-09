@@ -1,0 +1,28 @@
+.list-article {
+	@include list-unset();
+	display: table;
+	margin: 1.5rem 0;
+
+	li {
+		display: table-row;
+	}
+}
+
+.list-article-label,
+.list-article-title {
+	display: table-cell;
+	padding: .25em 0;
+}
+
+.list-article-label {
+	padding-right: 25px;
+	padding-right: 2.5rem;
+}
+
+.list-article-title a {
+	color: $dark;
+
+	&:hover {
+		color: $accent;
+	}
+}

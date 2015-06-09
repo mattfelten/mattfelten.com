@@ -1,0 +1,15 @@
+.image-full-width {
+	margin: 1.5rem -2em;
+
+	img {
+		display: block;
+		width: 100%;
+	}
+}
+
+@media (min-width: 800px) {
+	.section .image-full-width {
+		margin-left: -5em;
+		margin-right: -5em;
+	}
+}

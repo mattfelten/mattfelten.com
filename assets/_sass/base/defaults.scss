@@ -1,10 +1,34 @@
 ::selection {
-	background: $teal;
-	color: $grey;
+	background: $accent;
+	color: $dark;
 }
 ::-moz-selection {
-	background: $teal;
-	color: $grey;
+	background: $accent;
+	color: $dark;
+}
+
+html {
+		font-size: 10px;
+}
+
+@media (min-width: 800px) {
+	html {
+		font-size: 15px;
+	}
+}
+
+body {
+	color: $light;
+	font: $font-weight $font-size/1 'Work Sans', 'Helvetica Neueu', Helvetica, Arial, sans-serif;
+}
+
+a {
+	color: $light;
+	transition: color .15s;
+
+	&:hover {
+		color: $accent;
+	}
 }
 
 .highlight pre {
@@ -16,26 +40,13 @@
 }
 
 .highlight pre code {
-	@include font-size(12);
-}
-
-a {
-	border-bottom: 1px solid $grey;
-	color: $grey;
-	text-decoration: none;
-
-	@include transition(border-color .2s);
-
-	&:hover {
-		border-color: $teal;
-	}
+	font-size: 12px;
 }
 
 blockquote {
 	background: #f9f9f9;
 	border-radius: 3px;
-	@include font-size(32);
-	font-family: 'Miso';
+	font-size: 32px;
 	line-height: 1.2;
 	margin: 1.5em 0;
 	padding: 1em;
@@ -43,7 +54,7 @@ blockquote {
 	quotes: "\201C""\201D""\2018""\2019";
 	position: relative;
 
-	@include cf;
+	@include clearfix;
 
 	&:before {
 		color: #ccc;
@@ -59,7 +70,7 @@ blockquote {
 	}
 
 	cite {
-		color: $lightGrey;
+		color: $light;
 		font-size: .7em;
 		float: right;
 		margin-top: .4em;
