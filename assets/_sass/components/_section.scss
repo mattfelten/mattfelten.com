@@ -1,9 +1,7 @@
 .section {
 	margin: 3.5em 2em;
-}
 
-@media (min-width: 800px) {
-	.section {
+	@media (min-width: 800px) {
 		margin: 7em;
 	}
 }
@@ -17,4 +15,13 @@
 
 .section-description {
 	margin: .25em 0;
+}
+
+.section-inner {
+	margin-left: 0;
+	margin-right: 0;
+
+	&:last-child {
+		margin-bottom: 0;
+	}
 }
