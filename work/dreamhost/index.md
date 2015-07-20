@@ -12,7 +12,7 @@ While working there I worked on a ton of projects that leveled up the design aes
 
 <div class="section section-inner">
 	<h2 class="section-title">DreamHost Rebrand</h2>
-	<p>We decided DreamHost needed a facelift. Working with our Creative Director and another designer we refreshed our logo as well as contracted new photography and completely rebuild our public-facing website from the ground up. I assisted with the design, ran design workshops with stakeholders, as well as lead the development of the website.</p>
+	<p>We decided DreamHost needed a facelift. Working with our Creative Director and another designer we refreshed our logo as well as contracted new photography and completely rebuilt our public-facing website from the ground up. I assisted with the design, ran design workshops with stakeholders, as well as lead the development of the website.</p>
 	<img src="logo.sketches.jpg">
 	<img src="logo.options.png">
 	<img src="logo.style-tiles.png">
@@ -29,7 +29,7 @@ While working there I worked on a ton of projects that leveled up the design aes
 
 <div class="section section-inner">
 	<h2 class="section-title">Login Screen Reskin</h2>
-	<p>While preparing to modernize more of our control panel, we decided to run an excercise on our login screen, to help us refine a visual style to move forward with. The login screen is both a highly visible screen as well as not a really complex interaction, so we thought it'd be a perfect place to start.</p>
+	<p>While preparing to modernize more of our control panel, we decided to run an excercise on our login screen, to help us refine a visual style to move forward with. The login screen is both a highly visible screen but not a really complex interaction, so we thought it'd be a perfect place to start.</p>
 	<img src="login.original.png">
 	<img src="login.variations.gif">
 	<img src="login.final.png">
