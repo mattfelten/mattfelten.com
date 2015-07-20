@@ -8,15 +8,17 @@
 		backface-visibility: hidden;
 	}
 
-	&:hover img {
-		opacity: 0.4;
-		-webkit-transform: scale3d(1.1,1.1,1);
-		-moz-transform: scale3d(1.1,1.1,1);
-		transform: scale3d(1.1,1.1,1);
-	}
-}
+	&:hover {
+		.image-link-wrapper {
+			background: $accent;
+			overflow: hidden;
+		}
 
-.image-link-wrapper {
-	background: $accent;
-	overflow: hidden;
+		img {
+			opacity: 0.4;
+			-webkit-transform: scale3d(1.1,1.1,1);
+			-moz-transform: scale3d(1.1,1.1,1);
+			transform: scale3d(1.1,1.1,1);
+		}
+	}
 }
