@@ -11,7 +11,6 @@
 	&:hover {
 		.image-link-wrapper {
 			background: $accent;
-			overflow: hidden;
 		}
 
 		img {
@@ -21,4 +20,9 @@
 			transform: scale3d(1.1,1.1,1);
 		}
 	}
+}
+
+.image-link-wrapper {
+	background: #f7f7f7;
+	overflow: hidden;
 }
