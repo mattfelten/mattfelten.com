@@ -22,6 +22,9 @@ layout: default
 
 <div class="section section-text-block section-text-wrap">
 	{{ content }}
+	{% if page.type == 'redirect' %}
+	<p>This was a post written on {{ page.redirect-site }}. <a href="{{ page.redirect-url }}">Go read it.</a></p>
+	{% endif %}
 </div>
 
 <section class="section">
