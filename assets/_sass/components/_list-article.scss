@@ -5,6 +5,10 @@
 
 	li {
 		display: table-row;
+
+		&:before {
+			content:'';
+		}
 	}
 }
 
