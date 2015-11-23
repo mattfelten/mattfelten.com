@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Work+Sans:400,700);
+@import url(http://fonts.googleapis.com/css?family=Work+Sans:300,700);
 
 ::selection {
 	background: $accent;
@@ -21,7 +21,7 @@ html {
 
 body {
 	color: $light;
-	font: $font-size/1 'Work Sans', 'Helvetica Neueu', Helvetica, Arial, sans-serif;
+	font: $font-weight $font-size/1 'Work Sans', 'Helvetica Neueu', Helvetica, Arial, sans-serif;
 }
 
 a {
