@@ -18,3 +18,5 @@ author:
 sass:
   sass_dir: assets/_sass
   style: compressed
+
+gems: ['jekyll-paginate']
