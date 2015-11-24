@@ -4,6 +4,7 @@
 
 	li {
 		display: inline-block;
+		margin-top: 0;
 
 		+ li {
 			margin-left: 25px;
@@ -11,7 +12,8 @@
 		}
 
 		&:before {
-			content:'';
+			content: '';
+			display: none;
 		}
 	}
 }

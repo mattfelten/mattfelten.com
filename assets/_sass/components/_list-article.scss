@@ -5,9 +5,11 @@
 
 	li {
 		display: table-row;
+		margin-top: 0;
 
 		&:before {
-			content:'';
+			content: '';
+			display: none;
 		}
 	}
 }
