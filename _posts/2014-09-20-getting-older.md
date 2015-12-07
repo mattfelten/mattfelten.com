@@ -25,4 +25,4 @@ I've always been afraid of what other people think of me. I think I've been gett
 
 ----
 
-What's getting older like for you? [Tell me on Twitter.]({{site.data.social.twitter}})
+What's getting older like for you? [Tell me on Twitter.]({{site.author.url}})

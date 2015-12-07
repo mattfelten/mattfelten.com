@@ -27,4 +27,4 @@ Are we in a golden age of television? Or did that bubble pop and studios are try
 
 ----
 
-If you choose to respond, [let's tweet back and forth forever.]({{site.data.social.twitter}})
+If you choose to respond, [let's tweet back and forth forever.]({{site.author.url}})

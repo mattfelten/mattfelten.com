@@ -63,5 +63,5 @@ And here's a full example. You can mess with the code on [JSFiddle](http://jsfid
 
 **This only works on IE9+ because of the CSS animation.** We still need an image fallback, but that's not too difficult to implement.
 
-I'm still trying to work on how to get the color to match the text color of the parent. Right now it's using border color, which has to be manually set. Annoying. If anyone has a better solution, [I'm all ears]({{site.data.social.twitter}}).
+I'm still trying to work on how to get the color to match the text color of the parent. Right now it's using border color, which has to be manually set. Annoying. If anyone has a better solution, [I'm all ears]({{site.author.url}}).
 

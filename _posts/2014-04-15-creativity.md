@@ -15,4 +15,4 @@ The biggest lesson in creativity I got was in college, one of my professors gave
 
 To me, creativity is thinking through a problem and finding the best solution. You don’t have to be some sort of artist to be creative. Everyone is creative in their own way.
 
-[What do you think?]({{site.data.social.twitter}})
+[What do you think?]({{site.author.url}})

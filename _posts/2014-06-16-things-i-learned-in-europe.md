@@ -18,4 +18,4 @@ A month ago I flew out of LAX. I spent sixteen days with close friends, hitting 
 * It surprised me the small amount of clothes I actually needed for such a long trip.
 * Having less means enjoying more.
 
-[What do you think?]({{site.data.social.twitter}})
+[What do you think?]({{site.author.url}})
