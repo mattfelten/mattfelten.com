@@ -1,0 +1,32 @@
+.project-list {
+	@extend .list-unset;
+	@extend .clearfix;
+}
+
+.project {
+	float: left;
+	width: 100%;
+
+	&,
+	&:first-child {
+		margin: 2em 0; // Standard li CSS is overwritting this
+	}
+
+	a {
+		text-decoration: none;
+	}
+}
+
+.project-half {
+	width: 44%;
+	margin-right: 6%;
+
+	& + & {
+		margin-right: 0;
+		margin-left: 6%;
+	}
+}
+
+.project-image + .project-name {
+	margin-top: .5em;
+}

@@ -7,30 +7,49 @@ DreamHost is a web hosting company I joined in 2012 as their first outside desig
 
 I had a simple goal when I started&mdash;improve the quality of design for the company to make web hosting, a traditionally technical service, into something far more accessible. I love the internet and have made my career through it. I want to make it easier for other people to do the same thing, whether it be learning to code, making a website for their business, or just goofing around.
 
-While working there I worked on a ton of projects that leveled up the design aesthetic. I was also able to hire and lead a small team of really great designers. These are some of the projects I worked on.
+While working there I worked on a ton of projects that leveled up our design aesthetic and increase adoption of our services. I was also able to hire and lead a small team of really great designers. These are a small selection of the projects I worked on.
 
-
-<div class="section section-inner">
-	<h2 class="section-title">DreamHost Rebrand</h2>
-	<p>We decided DreamHost needed a facelift. Working with our Creative Director and another designer we refreshed our logo as well as contracted new photography and completely rebuilt our public-facing website from the ground up. I assisted with the design, ran design workshops with stakeholders, as well as lead the development of the website.</p>
-	<img src="logo.sketches.jpg">
-	<img src="logo.options.png">
-	<img src="logo.style-tiles.png">
-	<img src="logo.website-mock.png">
-	<img src="homepage.gif">
-</div>
-
-<div class="section section-inner">
-	<h2 class="section-title">QNAP Integration</h2>
-	<p>We turned our cloud storage product into a platform for other companies to offer to their customers. We had to design a customer flow that starts and ends at another services interface which was a pretty unique challenge. We also had to create new screens to support and simplify our sign up and plan selection user flows.</p>
-	<img src="qnap.flow.png">
-	<img src="qnap.plans.png">
-</div>
-
-<div class="section section-inner">
-	<h2 class="section-title">Login Screen Reskin</h2>
-	<p>While preparing to modernize more of our control panel, we decided to run an excercise on our login screen, to help us refine a visual style to move forward with. The login screen is both a highly visible screen but not a really complex interaction, so we thought it'd be a perfect place to start.</p>
-	<img src="login.original.png">
-	<img src="login.variations.gif">
-	<img src="login.final.png">
-</div>
+<ul class="section section-inner project-list">
+	<li class="project project-full">
+		<a href="rebrand/" class="image-link">
+			<div class="project-image image-link-wrapper">
+				<img src="rebrand.png">
+			</div>
+			<div class="project-name">DreamHost Rebrand</div>
+		</a>
+	</li>
+	<li class="project project-half">
+		<a href="login-screen/" class="image-link">
+			<div class="project-image image-link-wrapper">
+				<img src="login-screen.png">
+			</div>
+			<div class="project-name">Login Screen Redesign</div>
+		</a>
+	</li>
+	<li class="project project-half">
+		<a href="qnap-integration/" class="image-link">
+			<div class="project-image image-link-wrapper">
+				<img src="qnap-integration.png">
+			</div>
+			<div class="project-name">QNAP Integration</div>
+		</a>
+	</li>
+	<li class="project project-full">
+		<a href="panel-reskin/" class="image-link">
+			<div class="project-image image-link-wrapper">
+				<img src="panel-reskin.png">
+			</div>
+			<div class="project-name">Control Panel Refresh</div>
+		</a>
+	</li>
+	<!--
+	<li class="project project-half">
+		<a href="account-backup/" class="image-link">
+			<div class="project-image image-link-wrapper">
+				<img src="account-backup.png">
+			</div>
+			<div class="project-name">Account Backup</div>
+		</a>
+	</li>
+	-->
+</ul>
