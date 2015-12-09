@@ -3,7 +3,7 @@ layout: work
 title: Control Panel Reskin
 ---
 
-I wrote a bit about this on [DreamHosts blog](https://www.dreamhost.com/blog/2015/09/15/control-panel-design-update/) but I'll go into more detail here. Since I started at DreamHost in 2012 with one huge, personal goal. We need to fix the hosting control panel.
+I wrote a bit about this on [DreamHosts blog](https://www.dreamhost.com/blog/2015/09/15/control-panel-design-update/) but I'll go into more detail here. I started at DreamHost in 2012 with one huge, personal goal. We need to fix the hosting control panel.
 
 What I didn't realize was how huge of a project that would be. We tried on three different occasions to plan out how to tackle it. A complete, ground-up redo would take years to see the light of day. A slowly-but-surely redesign was attainable but very incremental. What do we do?
 
