@@ -21,7 +21,7 @@ We decided the first phase of the project was to redesign the wrapper of the con
 
 	<p>Once we had this new architecture, we did some quick wireframes to help explain the idea. These were in no way final but we created them to get a shared vision of what we can turn the control panel into and run user tests on. We made a really nice prototype using all our wireframes and Invision to walk stakeholders through.</p>
 
-	<img src="wireframe.sketches.png">
+	<img src="wireframe.sketches.jpg">
 	<img src="panel.wireframes.png">
 
 	<p>Now that we have a good idea what we're planning on getting to, we can start working on design the shell of the app to support this design. We can work on patterns that support this new tiered heirarchy.</p>
