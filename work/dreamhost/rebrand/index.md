@@ -58,6 +58,6 @@ Visual Design, Web Development
 </div>
 
 <div class="section section-inner">
-	<p>This project took just under a year from kickoff to website launch. We've done a ton of reworking too since then. It was my first time redoing a brand from the inside so it was a tremedous learning experience. I learned that I enjoy leading people through group design exercises. I learned a lot about selling my work. I learned that bringing people into the design process early is never a bad thing.</p>
+	<p>This project took just under a year from kickoff to website launch. We've done a ton of reworking too since then. It was my first time redoing a brand from the inside so it was a tremendous learning experience. I learned that I enjoy leading people through group design exercises. I learned a lot about selling my work. I learned that bringing people into the design process early is never a bad thing.</p>
 	<p><a href="../">See more of my work at DreamHost</a></p>
 </div>
