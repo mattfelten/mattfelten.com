@@ -27,19 +27,19 @@ body {
 
 a {
 	color: $light;
-	transition: color .15s;
+	display: inline-block;
+	transition: color .15s, background .15s;
 
 	&:hover {
-		color: $accent;
+		background: $accent;
+		color: $dark;
+		padding: 0 .15em;
+		margin: 0 -.15em;
 	}
 }
 
 .link-dark {
 	color: $dark;
-
-	&:hover {
-		color: $accent;
-	}
 }
 
 .highlight pre {
