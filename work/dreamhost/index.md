@@ -42,14 +42,4 @@ While working there I worked on a ton of projects that leveled up our design aes
 			<div class="project-name">Control Panel Refresh</div>
 		</a>
 	</li>
-	<!--
-	<li class="project project-half">
-		<a href="account-backup/" class="image-link">
-			<div class="project-image image-link-wrapper">
-				<img src="account-backup.png">
-			</div>
-			<div class="project-name">Account Backup</div>
-		</a>
-	</li>
-	-->
 </ul>
