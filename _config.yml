@@ -1,9 +1,6 @@
 # Jekyll Config
 exclude: ['README.md']
 
-# Server Config
-host: mattfelten.dev
-
 # Site Config
 title: Matt Felten
 url: http://mattfelten.com
