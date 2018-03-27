@@ -1,4 +1,11 @@
 .image-link {
+	color: $dark;
+	font-weight: normal;
+
+	&:hover {
+		background: none;
+	}
+
 	img {
 		display: block;
 		-webkit-transition: opacity .15s, -webkit-transform .15s;
