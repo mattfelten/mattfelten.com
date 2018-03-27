@@ -68,6 +68,8 @@ I stole this idea from [Nathan Curtis](https://medium.com/eightshapes-llc/system
 {: .section-title.mt6 }
 So now that I got through all the prework I needed to do, I was able to start building the system. I spent 6 months cranking through the roadmap, talking with the design team about components, designing variations, iterating, prototyping, stress testing, implementing, fixing bugs. I learned a lot, worked hard, [made mistakes](/2018/03/26/horizontal-vertical-thinking/), and built a system that was really streamlining the product design and development process. There's a lot I could dive into but I'll save some of that for blog posts.
 
+<video src="https://d3vv6lp55qjaqc.cloudfront.net/items/3u3Y1R3G0G3F2U2T0s37/Screen%20Recording%202018-03-26%20at%2007.53%20PM.mov" controls style="display: block;height: auto;width: 100%;">Design System</video>
+
 Final stats
 - 8 Colors
 - 46 Shades
@@ -85,4 +87,4 @@ I love looking at variation artboards also
 
 ---
 
-If anyone wants to chat design systems, feel free to give me a shout. Building better tools and processes for designers to focus on more important tasks is really important to me. I love talking about it.
+If anyone wants to chat design systems, feel free to give me a shout. Building better tools and processes for designers to focus on more important tasks is important to me. I love talking about it.
