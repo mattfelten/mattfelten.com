@@ -85,4 +85,4 @@ I love looking at variation artboards also
 
 ---
 
-If anyone needs help with a design system, feel free to give me a shout. Building better tools and processes for designers to focus on more important tasks is really important to me. I love talking about it.
+If anyone wants to chat design systems, feel free to give me a shout. Building better tools and processes for designers to focus on more important tasks is really important to me. I love talking about it.
