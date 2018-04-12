@@ -38,7 +38,7 @@ Visual Design, Web Development
 
 <div class="section section-inner">
 	<h3 class="section-title">Product Categories</h3>
-	<p>Another thing we had to figure out with our stakeholders was how to treat our product line under this new branding scheme. There are a lot of paths we could take. Company name primary, with product secondary. Product name primary with (or without) company name. Separating products into consumer vs developer category groups.
+	<p>Another thing we had to figure out with our stakeholders was how to treat our product line under this new branding scheme. There are a lot of paths we could take. Company name primary, with product secondary. Product name primary with (or without) company name. Separating products into consumer vs developer category groups.</p>
 	<img src="product-line.png">
 </div>
 
