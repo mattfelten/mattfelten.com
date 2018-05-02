@@ -7,6 +7,8 @@ layout: default
 </section>
 
 <section class="section section-text-block">
+	{% if page.alert-text %}<div class="alert flex items-center justify-center pa4 dark-gray bl bw2 bg-near-white mb6" style="border-color: #3DDFC2;">{{ page.alert-text }}</div>{% endif %}
+
 	<h1 class="section-title">{{ page.title }}</h1>
 	{{ content }}
 </section>

@@ -11,6 +11,14 @@ While working there I worked on a ton of projects that leveled up our design aes
 
 <ul class="section section-inner project-list">
 	<li class="project project-full">
+		<a href="control-panel-redesign/" class="image-link">
+			<div class="project-image image-link-wrapper">
+				<img src="control-panel-redesign.png">
+			</div>
+			<div class="project-name">Control Panel Redesign</div>
+		</a>
+	</li>
+	<li class="project project-full">
 		<a href="rebrand/" class="image-link">
 			<div class="project-image image-link-wrapper">
 				<img src="rebrand.png">
