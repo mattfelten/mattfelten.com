@@ -3,6 +3,15 @@ import { Emoji, List, MetaLink, Section, Small } from '../components';
 
 export const Home = () => (
 	<div>
+		<a href="//old.mattfelten.com" style={{
+			background: '#000',
+			color: '#fff',
+			display: 'block',
+			fontSize: '16px',
+			padding: '1em',
+			textAlign: 'center',
+			textDecoration: 'none'
+		}}>I'm building a new site. It's live to encourage me to finish. See the old one at http://old.mattfelten.com</a>
 		<Section title="Matt Felten">
 			<p>Designer focusing on design systems and leading teams. Cat dad who plays games, rides bikes, and has browser tabs full of dinner recipes.</p>
 			<List spacing={4}>
