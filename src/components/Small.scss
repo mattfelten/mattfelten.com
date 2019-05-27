@@ -1,3 +1,11 @@
 .Small {
-	font-size: 24px;
+	@media (max-width: 400px) {
+		font-size: 12px;
+	}
+
+	font-size: 3vw;
+
+	@media (min-width: 800px) {
+		font-size: 24px;
+	}
 }

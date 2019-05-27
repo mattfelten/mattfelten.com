@@ -12,6 +12,7 @@
   "devDependencies": {
     "classnames": "^2.2.6",
     "node-sass": "^4.11.0",
+    "react-router-dom": "^5.0.0",
     "tachyons": "^4.11.1",
     "typescript": "3.3.3"
   },

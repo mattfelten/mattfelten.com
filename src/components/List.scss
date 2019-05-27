@@ -5,9 +5,11 @@
 	padding-left: 0;
 }
 
-.List--6 li + li { margin-top: 48px; }
-.List--5 li + li { margin-top: 40px; }
-.List--4 li + li { margin-top: 32px; }
-.List--3 li + li { margin-top: 24px; }
-.List--2 li + li { margin-top: 16px; }
-.List--1 li + li { margin-top: 8px; }
+.List--6 li { margin-bottom: 48px; }
+.List--5 li { margin-bottom: 40px; }
+.List--4 li { margin-bottom: 32px; }
+.List--3 li { margin-bottom: 24px; }
+.List--2 li { margin-bottom: 16px; }
+.List--1 li { margin-bottom: 8px; }
+
+.List li:last-child { margin-bottom: 0; }
