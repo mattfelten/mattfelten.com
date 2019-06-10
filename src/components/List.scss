@@ -3,6 +3,8 @@
 	margin-top: 0;
 	margin-bottom: 0;
 	padding-left: 0;
+
+	&, li { box-sizing: border-box; }
 }
 
 .List--6 li { margin-bottom: 48px; }
@@ -13,3 +15,56 @@
 .List--1 li { margin-bottom: 8px; }
 
 .List li:last-child { margin-bottom: 0; }
+
+/* Columns */
+.List--columns-2,
+.List--columns-3,
+.List--columns-4 {
+	align-items: flex-start;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	margin: 0 -8px;
+
+	li {
+		flex: 0 0 auto;
+		width: 100%;
+		padding: 0 8px;
+	}
+}
+
+.List--columns-2 {
+	@media (min-width: 1450px) {
+		flex-direction: row;
+
+		li { width: 50%; }
+	}
+}
+
+.List--columns-3 {
+	@media (min-width: 700px) {
+		flex-direction: row;
+
+		li { width: 50%; }
+	}
+
+	@media (min-width: 1450px) {
+		li { width: 33%; }
+	}
+}
+
+.List--columns-4 {
+	@media (min-width: 700px) {
+		flex-direction: row;
+
+		li { width: 50%; }
+	}
+
+	@media (min-width: 1450px) {
+		li { width: 33%; }
+	}
+
+	@media (min-width: 2000px) {
+		li { width: 25%; }
+	}
+}

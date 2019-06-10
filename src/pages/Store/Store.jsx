@@ -1,5 +1,5 @@
 import React from 'react';
-import { setTitle } from '../utils';
+import { setTitle } from '../../utils';
 
 export const Store = () => {
 	setTitle('Store');
