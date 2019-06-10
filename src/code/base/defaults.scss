@@ -1,0 +1,61 @@
+@import url(http://fonts.googleapis.com/css?family=Work+Sans:300,700);
+
+::selection {
+	background: $accent;
+	color: $dark;
+}
+::-moz-selection {
+	background: $accent;
+	color: $dark;
+}
+
+html {
+	background: $canvas;
+	font-size: 13px;
+}
+
+@media (min-width: 800px) {
+	html {
+		font-size: 15px;
+	}
+}
+
+body {
+	color: $light;
+	font: $font-weight $font-size/1 'Work Sans', 'Helvetica Neueu', Helvetica, Arial, sans-serif;
+}
+
+a {
+	color: $light;
+	display: inline-block;
+	transition: color .15s, background .15s;
+
+	&:hover {
+		background: $accent;
+		color: $dark;
+		padding: 0 .15em;
+		margin: 0 -.15em;
+	}
+}
+
+ul {
+	padding-left: 1.75em;
+}
+
+li {
+	list-style-type: none;
+	margin-top: 1em;
+
+	&:first-child {
+		margin-top: 0;
+	}
+
+	&:before {
+		float: left;
+		font-size: 1em;
+		margin-left: -1.5em;
+		width: 1.5em;
+		color: $dark;
+		content:'\2013';
+	}
+}

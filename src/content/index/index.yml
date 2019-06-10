@@ -1,0 +1,10 @@
+title: ""
+
+main:
+  - intro.md
+  - work.md
+  - writing.md
+  - speaking.md
+
+footer:
+  - /_shared/footer.md

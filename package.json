@@ -4,8 +4,15 @@
   "description": "mattfelten.com",
   "main": "index.html",
   "scripts": {
-    "start": "bundle exec jekyll serve --watch",
-    "build": "bundle exec jekyll build"
+    "start": "npm run watch",
+    "build": "npm run build:css && npm run build:site",
+    "build:site": "cuttlebelle",
+    "build:css": "npm run build:css:sass && npm run build:css:autoprefix",
+    "build:css:autoprefix": "postcss src/assets/css/*.css -u autoprefixer -r --no-map",
+    "build:css:sass": "mkdir -p src/assets/css/ && sass src/code/main.scss:src/assets/css/main.css --style=compressed",
+    "watch": "npm run build && npm run watch:sass | npm run watch:site",
+    "watch:site": "cuttlebelle -w -n",
+    "watch:sass": "onchange 'src/code/**/*.scss' -- npm run build:css"
   },
   "repository": {
     "type": "git",
@@ -13,5 +20,27 @@
   },
   "author": "",
   "license": "ISC",
-  "homepage": "https://github.com/mattfelten/mattfelten.com#readme"
+  "homepage": "https://github.com/mattfelten/mattfelten.com#readme",
+  "devDependencies": {
+    "autoprefixer": "^9.4.9",
+    "cuttlebelle": "^1.0.0-alpha.60",
+    "onchange": "^5.2.0",
+    "postcss-cli": "^6.1.2",
+    "sass": "^1.17.2"
+  },
+  "cuttlebelle": {
+    "folder": {
+      "content": "./src/content/",
+      "code": "./src/code/",
+      "site": "./dist/site/",
+      "docs": "./dist/docs/",
+      "assets": "./src/assets/",
+      "index": "index",
+      "homepage": "index"
+    },
+    "layouts": {
+      "page": "base/page",
+      "partial": "section/partial"
+    }
+  }
 }

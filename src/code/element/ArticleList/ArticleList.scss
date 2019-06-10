@@ -1,0 +1,31 @@
+.ArticleList {
+	@include list-unset();
+	display: table;
+	margin: 1.5em 0;
+
+	li {
+		display: table-row;
+		margin-top: 0;
+
+		&:before {
+			content: '';
+			display: none;
+		}
+	}
+}
+
+.ArticleList__label,
+.ArticleList__title {
+	display: table-cell;
+	padding: .25em 0;
+	vertical-align: top;
+}
+
+.ArticleList__label {
+	padding-right: 2em;
+	white-space: nowrap;
+}
+
+.ArticleList__link {
+	color: $dark;
+}
