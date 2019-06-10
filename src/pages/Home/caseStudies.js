@@ -15,31 +15,31 @@ export const caseStudies = [
 	{
 		title: 'Design System',
 		company: 'YouCaring',
-		url: '//old.mattfelten.com/work/youcaring/',
+		url: '//2018.mattfelten.com/work/youcaring/',
 		image: YouCaring,
 	},
 	{
 		title: 'Control Panel Redesign',
 		company: 'DreamHost',
-		url: '//old.mattfelten.com/work/dreamhost/control-panel-redesign/',
+		url: '//2018.mattfelten.com/work/dreamhost/control-panel-redesign/',
 		image: DHControlPanelRedesign,
 	},
 	{
 		title: 'Rebrand',
 		company: 'DreamHost',
-		url: '//old.mattfelten.com/work/dreamhost/rebrand/',
+		url: '//2018.mattfelten.com/work/dreamhost/rebrand/',
 		image: DreamHost,
 	},
 	{
 		title: 'QNAP Integration',
 		company: 'DreamHost',
-		url: '//old.mattfelten.com/work/dreamhost/qnap-integration/',
+		url: '//2018.mattfelten.com/work/dreamhost/qnap-integration/',
 		image: QNAP,
 	},
 	{
 		title: 'Control Panel Refresh',
 		company: 'DreamHost',
-		url: '//old.mattfelten.com/work/dreamhost/panel-reskin/',
+		url: '//2018.mattfelten.com/work/dreamhost/panel-reskin/',
 		image: DHControlPanelRefresh,
 	}
 ];

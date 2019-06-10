@@ -81,7 +81,7 @@ export class Home extends React.Component {
 					padding: '1em',
 					textAlign: 'center',
 					textDecoration: 'none'
-				}}>I'm building a new site. It's live to encourage me to finish. See the old one at http://old.mattfelten.com</a>
+				}}>I'm building a new site. It's live to encourage me to finish. See the old one at http://2018.mattfelten.com</a>
 
 				{this.intro()}
 				{this.caseStudies()}
