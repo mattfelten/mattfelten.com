@@ -1,9 +1,11 @@
-import Anvil from './imgs/Anvil.png';
-import DHControlPanelRedesign from './imgs/DHControlPanelRedesign.png';
-import DHControlPanelRefresh from './imgs/DHControlPanel.png';
-import DreamHost from './imgs/DreamHost.png';
-import QNAP from './imgs/QNAP.png';
-import YouCaring from './imgs/YouCaring.png';
+import {
+	Anvil,
+	DHControlPanelRedesign,
+	DHControlPanelRefresh,
+	DreamHost,
+	QNAP,
+	YouCaring
+ } from './imgs';
 
 export const caseStudies = [
 	{
