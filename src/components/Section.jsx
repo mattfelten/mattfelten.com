@@ -6,7 +6,7 @@ export const Section = React.forwardRef(({ title, children, className, type='tex
 	return (
 		<div className={SectionClasses} {...props} ref={ref}>
 			<div className="Section__wrap">
-				<p className="Section__title"><strong>{title}</strong></p>
+				{title && <p className="Section__title"><strong>{title}</strong></p>}
 				<div className="Section__content">
 					{children}
 				</div>

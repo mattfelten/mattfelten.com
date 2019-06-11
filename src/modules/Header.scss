@@ -1,0 +1,12 @@
+.Header {
+	margin-top: 48px;
+
+	a {
+		color: $color-text;
+		display: block;
+		text-decoration: none;
+		transition: all $hover-transition-duration ease-in-out;
+
+		&:hover { transform: translateY(-4px); }
+	}
+}

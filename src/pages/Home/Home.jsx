@@ -21,7 +21,7 @@ export class Home extends React.Component {
 	}
 
 	intro = () => (
-		<Section title="Matt Felten" className="mt6">
+		<Section className="mt6">
 			<p className="mt4 mb6">Designer focusing on design systems and leading teams. Cat dad who plays games, rides bikes, and has browser tabs full of dinner recipes.</p>
 			<List type="reset" spacing={5}>
 				<div>
