@@ -19,10 +19,16 @@
 	}
 }
 
-.List--reset {
+.List--reset,
+.List--inline {
 	margin-top: 0;
 	margin-bottom: 0;
 	padding-left: 0;
+}
+
+.List--inline {
+	display: flex;
+	flex-direction: row;
 }
 
 .List--6 li { margin-bottom: 48px; }

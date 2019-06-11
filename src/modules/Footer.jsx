@@ -1,6 +1,6 @@
 import React from 'react';
 import SimpleIcons from 'simple-icons-react-component';
-import { Section, Small } from '../components';
+import { List, Section, Small } from '../components';
 
 const links = [
 	{
@@ -36,12 +36,12 @@ const links = [
 export const Footer = () => (
 	<Section className="Footer" type="full">
 		<div className="Footer__wrap">
-			<Small className="Footer__name">Matt Felten.</Small>
-			<ul className="Footer__icons list pl0">
+			<Small className="Footer__name"><a href="/">Matt Felten</a></Small>
+			<List type="inline" className="Footer__icon-list">
 				{links.map(({url, icon, }, i) => (
-					<li key={i} className="dib mr3"><a className="db Footer__icon" href={url}><SimpleIcons name={icon} color="inherit" /></a></li>
+					<a key={i} className="Footer__icon" href={url}><SimpleIcons name={icon} color="inherit" /></a>
 				))}
-			</ul>
+			</List>
 		</div>
 	</Section>
 );

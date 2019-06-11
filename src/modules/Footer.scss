@@ -3,6 +3,15 @@
 	margin-bottom: 80px;
 
 	&::after { width: 5%; }
+
+	a {
+		color: $color-text;
+		display: block;
+		text-decoration: none;
+		transition: all $hover-transition-duration ease-in-out;
+
+		&:hover { transform: translateY(-4px); }
+	}
 }
 
 .Footer__wrap {
@@ -16,10 +25,15 @@
 
 .Footer__icon-list {
 	align-self: flex-end;
+
+	li {
+		margin-right: 16px;
+	}
 }
 
 .Footer__icon {
-	width: 24px;
+	display: block;
+	width: 18px;
 	color: $color-text;
 	opacity: .4;
 	transition: all $hover-transition-duration ease-in-out;

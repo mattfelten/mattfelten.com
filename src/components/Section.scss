@@ -1,40 +1,48 @@
 .Section {
-	display: flex;
-	margin-left: 3vw;
-	margin-right: 3vw;
+	margin-left: 8vw;
+	margin-right: 18vw;
 
 	& + & { margin-top: 160px; }
-
-	&::after,
-	&::before {
-		content: '';
-		display: block;
-		flex-shrink: 0;
-	}
-
-	&::before { width: 5%; }
-	&::after { width: 15%;}
 }
-
-.Section__wrap { flex-grow: 1; }
 
 /* Padding */
 .Section--padding-small {
-	&::before,
-	&::after { content: none; }
+	margin-left: 3vw;
+	margin-right: 3vw;
 
 	.Section__title {
-		margin-left: 5%;
-		margin-right: 15%;
+		margin-left: 5vw;
+		margin-right: 15vw;
 	}
 }
 
 /* Content Types */
-.Section--text .Section__wrap,
-.Section--two-col-list .Section__wrap { max-width: 28em; }
+.Section--text .Section__content,
+.Section--two-col-list .Section__content { max-width: 28em; }
 
 @media (min-width: 1450px) {
 	.Section--two-col-list {
-		.Section__wrap { max-width: none; }
+		.Section__content { max-width: none; }
+	}
+}
+
+/* SubSection */
+.SubSection {
+	margin: 2em 0;
+}
+
+.Section--text .SubSection {
+	margin-left: -5vw;
+	margin-right: -15vw;
+	width: 94vw;
+}
+
+.SubSection--equal {
+	display: flex;
+
+	> * {
+		box-sizing: border-box;
+		padding: 16px;
+		flex: 1;
 	}
 }
