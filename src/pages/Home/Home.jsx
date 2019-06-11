@@ -2,7 +2,6 @@ import React from 'react';
 import { CaseStudy, Emoji, Link, List, MetaLink, Section, Small } from '../../components';
 import { Page } from '../../modules';
 import { caseStudies, mediumStories, speakingEvents } from './';
-import { setTitle } from '../../utils';
 
 export class Home extends React.Component {
 	constructor(props) {
@@ -10,10 +9,6 @@ export class Home extends React.Component {
 		this.handleScrollToElement = this.handleScrollToElement.bind(this);
         this.workRef = React.createRef()   // Create a ref object
         this.writeRef = React.createRef()   // Create a ref object
-	}
-
-	componentDidMount() {
-		setTitle('Home');
 	}
 
 	handleScrollToElement = (ref) => {
