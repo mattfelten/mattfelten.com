@@ -23,7 +23,7 @@ export class Home extends React.Component {
 	intro = () => (
 		<Section title="Matt Felten" className="mt6">
 			<p className="mt4 mb6">Designer focusing on design systems and leading teams. Cat dad who plays games, rides bikes, and has browser tabs full of dinner recipes.</p>
-			<List spacing={5}>
+			<List type="reset" spacing={5}>
 				<div>
 					<Emoji label="flexed bicep" emoji="💪" /> I <Link onClick={() => this.handleScrollToElement(this.workRef)}>work</Link> with really cool companies.
 				</div>
@@ -42,7 +42,7 @@ export class Home extends React.Component {
 
 	caseStudies = () => (
 		<Section title="Case Studies" ref={this.workRef} type="full" padding="small">
-			<List spacing={5} columns={4}>
+			<List type="reset" spacing={5} columns={4}>
 				{caseStudies.map(({url, title, company, image}, i) => (
 					<CaseStudy key={i} url={url} title={title} company={company} coverImage={image} />
 				))}
@@ -52,7 +52,7 @@ export class Home extends React.Component {
 
 	writing = () => (
 		<Section title="Writing" ref={this.writeRef} type="two-col-list">
-			<List spacing={5} columns={2}>
+			<List type="reset" spacing={5} columns={2}>
 				{mediumStories.map(({url, title, date}, i) => (
 					<MetaLink key={i} url={url} title={title} meta={date} />
 				))}
@@ -62,7 +62,7 @@ export class Home extends React.Component {
 
 	speaking = () => (
 		<Section title="Speaking" type="two-col-list">
-			<List spacing={5} className="mb4" columns={2}>
+			<List type="reset" spacing={5} className="mb4" columns={2}>
 				{speakingEvents.map(({url, title, meta}, i) => (
 					<MetaLink key={i} url={url} title={title} meta={meta} />
 				))}

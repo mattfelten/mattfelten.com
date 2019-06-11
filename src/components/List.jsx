@@ -1,10 +1,11 @@
 import React from 'react';
 import classnames from 'classnames';
 
-export const List = ({ children, className, spacing=0, columns=1, ...props }) => {
+export const List = ({ children, className, spacing=0, columns=1, type='dashed', ...props }) => {
 	const ListClasses = classnames('List', className, {
 		[`List--${spacing}`]: spacing !== 0,
-		[`List--columns-${columns}`]: columns !== 1
+		[`List--columns-${columns}`]: columns !== 1,
+		[`List--${type}`]: type,
 	});
 	return (
 		<ul className={ListClasses} {...props}>

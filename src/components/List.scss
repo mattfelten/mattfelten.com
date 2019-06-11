@@ -1,10 +1,28 @@
 .List {
 	list-style: none;
+	&, li { box-sizing: border-box; }
+}
+
+.List--dashed {
+	list-style: none;
+	padding-left: 1.75em;
+
+	li { margin-top: 1em; }
+	li:first-child { margin-top: 0; }
+
+	li:before {
+		float: left;
+		font-size: 1em;
+		margin-left: -1.5em;
+		width: 1.5em;
+		content: '\2013';
+	}
+}
+
+.List--reset {
 	margin-top: 0;
 	margin-bottom: 0;
 	padding-left: 0;
-
-	&, li { box-sizing: border-box; }
 }
 
 .List--6 li { margin-bottom: 48px; }
