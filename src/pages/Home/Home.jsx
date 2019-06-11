@@ -1,5 +1,6 @@
 import React from 'react';
 import { CaseStudy, Emoji, Link, List, MetaLink, Section, Small } from '../../components';
+import { Page } from '../../modules';
 import { caseStudies, mediumStories, speakingEvents } from './';
 import { setTitle } from '../../utils';
 
@@ -42,7 +43,7 @@ export class Home extends React.Component {
 	caseStudies = () => (
 		<Section title="Case Studies" ref={this.workRef} type="full" padding="small">
 			<List spacing={5} columns={4}>
-				{caseStudies.map(({url, title, company, image}, i)=>(
+				{caseStudies.map(({url, title, company, image}, i) => (
 					<CaseStudy key={i} url={url} title={title} company={company} coverImage={image} />
 				))}
 			</List>
@@ -52,7 +53,7 @@ export class Home extends React.Component {
 	writing = () => (
 		<Section title="Writing" ref={this.writeRef} type="two-col-list">
 			<List spacing={5} columns={2}>
-				{mediumStories.map(({url, title, date}, i)=>(
+				{mediumStories.map(({url, title, date}, i) => (
 					<MetaLink key={i} url={url} title={title} meta={date} />
 				))}
 			</List>
@@ -62,7 +63,7 @@ export class Home extends React.Component {
 	speaking = () => (
 		<Section title="Speaking" type="two-col-list">
 			<List spacing={5} className="mb4" columns={2}>
-				{speakingEvents.map(({url, title, meta}, i)=>(
+				{speakingEvents.map(({url, title, meta}, i) => (
 					<MetaLink key={i} url={url} title={title} meta={meta} />
 				))}
 			</List>
@@ -72,25 +73,12 @@ export class Home extends React.Component {
 
 	render() {
 		return(
-			<div>
-				<a href="//2018.mattfelten.com" style={{
-					background: '#000',
-					color: '#fff',
-					display: 'block',
-					fontSize: '16px',
-					padding: '1em',
-					textAlign: 'center',
-					textDecoration: 'none'
-				}}>I'm building a new site. It's live to encourage me to finish. See the old one at http://2018.mattfelten.com</a>
-
+			<Page>
 				{this.intro()}
 				{this.caseStudies()}
 				{this.writing()}
 				{this.speaking()}
-
-
-				<Section>Footer</Section>
-			</div>
+			</Page>
 		)
 	}
 };

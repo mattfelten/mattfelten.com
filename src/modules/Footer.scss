@@ -1,0 +1,31 @@
+.Footer {
+	margin-top: 80px;
+	margin-bottom: 80px;
+
+	&::after { width: 5%; }
+}
+
+.Footer__wrap {
+	@media (min-width: 650px) {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+	}
+}
+
+.Footer__icon-list {
+	align-self: flex-end;
+}
+
+.Footer__icon {
+	width: 24px;
+	color: $color-text;
+	opacity: .4;
+	transition: all $hover-transition-duration ease-in-out;
+
+	&:hover {
+		opacity: 1;
+		transform: scale(1.06);
+	}
+}

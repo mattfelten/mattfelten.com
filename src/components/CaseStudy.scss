@@ -1,4 +1,4 @@
-$CaseStudy-transition-duration: .1s;
+$CaseStudy-transition-duration: $hover-transition-duration;
 
 .CaseStudy {
 	color: $color-text;
