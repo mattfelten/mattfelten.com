@@ -23,6 +23,7 @@ export class QNAP extends React.Component {
 						title={QNAP.title}
 						company={QNAP.company}
 						year={QNAP.year}
+						projectRole="UX Design"
 					/>
 
 					<p>We turned our cloud storage product into a platform for other companies to offer to their customers. We had to design a customer flow that starts and ends at another services interface which was a pretty unique challenge. We also had to create new screens to support and simplify our sign up and plan selection user flows.</p>

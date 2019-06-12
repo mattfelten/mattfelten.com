@@ -37,6 +37,7 @@ export class ControlPanelRefresh extends React.Component {
 						title={ControlPanelRefresh.title}
 						company={ControlPanelRefresh.company}
 						year={ControlPanelRefresh.year}
+						projectRole={<div><div>UX Design</div><div>Front-end Development</div></div>}
 					/>
 
 					<p>I wrote a bit about this on <Link href="https://www.dreamhost.com/blog/2015/09/15/control-panel-design-update/">DreamHosts blog</Link> but I'll go into more detail here. I started at DreamHost in 2012 with one huge, personal goal. We need to fix the hosting control panel.</p>
