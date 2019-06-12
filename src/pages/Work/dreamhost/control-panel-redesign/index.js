@@ -1,0 +1,1 @@
+export { ControlPanelRedesign } from './ControlPanelRedesign';

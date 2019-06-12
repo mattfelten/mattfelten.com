@@ -3,14 +3,22 @@ import { Page } from '../../modules';
 import { Section } from '../../components';
 import { setTitle } from '../../utils';
 
-export const Store = () => {
-	setTitle('Store');
+export class Store extends React.Component {
+	static title = 'Store';
+	static slug = 'store';
+	static path = '/store';
 
-	return (
-		<Page>
-			<Section>
-				<p>Hmmm. How do I make a store now...</p>
-			</Section>
-		</Page>
-	)
+	componentDidMount() {
+		setTitle(Store.title);
+	}
+
+	render() {
+		return (
+			<Page>
+				<Section>
+					<p>Hmmm. How do I make a store now...</p>
+				</Section>
+			</Page>
+		);
+	}
 };

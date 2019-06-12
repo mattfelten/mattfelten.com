@@ -4,5 +4,7 @@ export { Emoji } from './Emoji';
 export { Link } from './Link';
 export { List } from './List';
 export { MetaLink } from './MetaLink';
-export { Section, SubSection } from './Section';
+export { Section } from './Section';
 export { Small } from './Small';
+export { SubSection } from './SubSection';
+export { WorkHeader } from './WorkHeader';

@@ -25,24 +25,3 @@
 		.Section__content { max-width: none; }
 	}
 }
-
-/* SubSection */
-.SubSection {
-	margin: 2em 0;
-}
-
-.Section--text .SubSection {
-	margin-left: -5vw;
-	margin-right: -15vw;
-	width: 94vw;
-}
-
-.SubSection--equal {
-	display: flex;
-
-	> * {
-		box-sizing: border-box;
-		padding: 16px;
-		flex: 1;
-	}
-}

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import { Home, Store, YouCaring } from './pages'
+import { routes } from './routes';
 import { setTitle } from './utils';
 
 import './site.scss';
@@ -11,11 +11,11 @@ setTitle();
 
 function App() {
 	return (
-	  <Router>
-		  <Route exact path="/" component={Home} />
-		  <Route path="/store" component={Store} />
-		  <Route path="/work/youcaring" component={YouCaring} />
-	  </Router>
+		<Router>
+			{routes.map((component, i) => (
+				<Route key={i} path={component.path} component={component} exact />
+			))}
+		</Router>
 	);
   }
 

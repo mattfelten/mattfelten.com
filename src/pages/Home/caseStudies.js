@@ -1,47 +1,56 @@
 import {
-	Anvil,
+	Anvil as AnvilImage,
 	DHControlPanelRedesign,
 	DHControlPanelRefresh,
 	DreamHost,
-	QNAP,
-	YouCaring
- } from './imgs';
+	QNAP as QNAPImage,
+	YouCaring as YouCaringImage
+} from './imgs';
+import {
+	Anvil,
+	YouCaring,
+	ControlPanelRefresh,
+	ControlPanelRedesign,
+	Rebrand,
+	QNAP
+} from '../work';
+
 
 export const caseStudies = [
 	{
-		title: 'Anvil Design System',
-		company: 'ServiceTitan',
-		url: '#',
-		image: Anvil
+		title: Anvil.title,
+		company: Anvil.company,
+		url: Anvil.path,
+		image: AnvilImage
 	},
 	{
-		title: 'Design System',
-		company: 'YouCaring',
-		url: '//2018.mattfelten.com/work/youcaring/',
-		image: YouCaring,
+		title: YouCaring.title,
+		company: YouCaring.company,
+		url: YouCaring.path,
+		image: YouCaringImage,
 	},
 	{
-		title: 'Control Panel Redesign',
-		company: 'DreamHost',
-		url: '//2018.mattfelten.com/work/dreamhost/control-panel-redesign/',
+		title: ControlPanelRedesign.title,
+		company: ControlPanelRedesign.company,
+		url: ControlPanelRedesign.path,
 		image: DHControlPanelRedesign,
 	},
 	{
-		title: 'Rebrand',
-		company: 'DreamHost',
-		url: '//2018.mattfelten.com/work/dreamhost/rebrand/',
+		title: Rebrand.title,
+		company: Rebrand.company,
+		url: Rebrand.path,
 		image: DreamHost,
 	},
 	{
-		title: 'QNAP Integration',
-		company: 'DreamHost',
-		url: '//2018.mattfelten.com/work/dreamhost/qnap-integration/',
-		image: QNAP,
+		title: QNAP.title,
+		company: QNAP.company,
+		url: QNAP.path,
+		image: QNAPImage,
 	},
 	{
-		title: 'Control Panel Refresh',
-		company: 'DreamHost',
-		url: '//2018.mattfelten.com/work/dreamhost/panel-reskin/',
+		title: ControlPanelRefresh.title,
+		company: ControlPanelRefresh.company,
+		url: ControlPanelRefresh.path,
 		image: DHControlPanelRefresh,
 	}
 ];

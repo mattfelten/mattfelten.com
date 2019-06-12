@@ -12,14 +12,3 @@ export const Section = React.forwardRef(({ title, children, className, type='tex
 		</section>
 	)
 });
-
-export const SubSection = ({ children, className, type, ...props }) => {
-	const SectionClasses = classname('SubSection', className, {
-		[`SubSection--${type}`]: type,
-	});
-	return (
-		<section className={SectionClasses} {...props}>
-			{children}
-		</section>
-	)
-};

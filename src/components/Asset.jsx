@@ -1,10 +1,17 @@
 import React from 'react';
 import classname from 'classnames';
+import { Small } from './';
 
-export const Asset = ({ alt, caption, className, href, src, type="image", ...props }) => {
-	const SectionClasses = classname('Asset', `Asset--${type}`, className, {
-		'Asset--hoverable': href || props.onClick
+export const Asset = ({ alt, caption, className, expand, href, src, type="image", ...props }) => {
+	const AssetClasses = classname('Asset', `Asset--${type}`, className, {
+		'Asset--hoverable': href || props.onClick || expand
 	});
+
+	const getLink = () => {
+		if (href) return href;
+		if (expand) return src;
+		return false;
+	}
 
 	const getAssetContent = () => {
 		if (type === 'video')
@@ -13,16 +20,19 @@ export const Asset = ({ alt, caption, className, href, src, type="image", ...pro
 			);
 
 		return (
-			<img className="Asset__content" src={src} alt={alt} />
+			<img className="Asset__content" src={src} alt={caption || alt} />
 		)
 	}
 
 	const getContent = () => {
-		if (href) return <a className="Asset__link" href={href}>{getAssetContent()}</a>;
+		if (getLink()) return <a className="Asset__link" href={getLink()}>{getAssetContent()}</a>;
 		return getAssetContent();
 	}
 
 	return (
-		<span className={SectionClasses} {...props}>{getContent()}</span>
+		<span className={AssetClasses} {...props}>
+			{getContent()}
+			<Small className="Asset__caption">{caption}</Small>
+		</span>
 	)
 };

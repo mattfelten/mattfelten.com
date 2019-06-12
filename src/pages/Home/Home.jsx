@@ -4,6 +4,9 @@ import { Page } from '../../modules';
 import { caseStudies, mediumStories, speakingEvents } from './';
 
 export class Home extends React.Component {
+	static slug = 'home';
+	static path = '/';
+
 	constructor(props) {
 		super(props)
 		this.handleScrollToElement = this.handleScrollToElement.bind(this);
