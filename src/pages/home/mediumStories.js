@@ -1,5 +1,10 @@
 export const mediumStories = [
 	{
+		title: 'Design System Infrastructure',
+		url: '//medium.com/servicetitan-design/design-system-infrastructure-2f859318fcfd',
+		date: '2019 September 4'
+	},
+	{
 		title: 'Building an Enterprise Design System',
 		url: '//medium.com/servicetitan-design/building-an-enterprise-design-system-f0fe74e7fac',
 		date: '2018 December 5'
