@@ -1,5 +1,5 @@
 .Link {
-	border-bottom: .125em solid $color-accent;
+	background: linear-gradient(to top, fade-out($color-accent, 0.3) 25%, transparent 25%);
 	color: $color-text;
 	cursor: pointer;
 	font-weight: bold;
