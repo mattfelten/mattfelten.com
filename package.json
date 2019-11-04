@@ -4,7 +4,7 @@
   "description": "",
   "keywords": [],
   "main": "src/index.js",
-  "homepage" : "https://mattfelten.com",
+  "homepage": "https://mattfelten.com",
   "dependencies": {
     "react": "16.8.3",
     "react-dom": "16.8.3",
@@ -12,8 +12,8 @@
   },
   "devDependencies": {
     "classnames": "^2.2.6",
-    "node-sass": "^4.11.0",
-    "react-router-dom": "^5.0.0",
+    "node-sass": "^4.13.0",
+    "react-router-dom": "^5.1.2",
     "react-snap": "^1.23.0",
     "simple-icons-react-component": "^1.0.0",
     "tachyons": "^4.11.1",
