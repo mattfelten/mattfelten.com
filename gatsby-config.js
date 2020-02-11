@@ -92,9 +92,9 @@ module.exports = {
               return allMdx.edges.map(edge => {
                 return Object.assign({}, edge.node.frontmatter, {
                   description: edge.node.excerpt,
-                  data: edge.node.frontmatter.date,
-                  url: site.siteMetadata.siteUrl + edge.node.fields.slug,
-                  guid: site.siteMetadata.siteUrl + edge.node.fields.slug,
+                  data: edge.node.fields.date,
+                  url: edge.node.frontmatter.redirect_url || site.siteMetadata.siteUrl + edge.node.fields.slug,
+                  guid: edge.node.frontmatter.redirect_url || site.siteMetadata.siteUrl + edge.node.fields.slug,
                   custom_elements: [{ 'content:encoded': edge.node.html }],
                 })
               })
@@ -110,14 +110,18 @@ module.exports = {
             {
               allMdx(
                 limit: 1000,
-                sort: { order: DESC, fields: [frontmatter___date] },
+                sort: { order: DESC, fields: [fields___date] },
+                filter: {fields: {collection: {eq: "post"}}}
               ) {
                 edges {
                   node {
-                    fields { slug }
+                    fields {
+                      slug
+                      date
+                    }
                     frontmatter {
                       title
-                      date
+                      redirect_url
                     }
                     html
                   }

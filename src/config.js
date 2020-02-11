@@ -1,5 +1,6 @@
 module.exports = {
 	title: `Matt Felten`,
+	siteUrl: 'https://mattfelten.com',
 	description: `Designer focusing on design systems and leading teams. Cat dad who plays games, rides bikes, and has browser tabs full of dinner recipes.`,
 	author: `@mattfelten`,
 	social: {
