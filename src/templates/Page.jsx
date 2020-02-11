@@ -9,7 +9,7 @@ export const Page = ({ element, props }) => {
 
 	return (
 		<div>
-			<a href="//old.mattfelten.com" style={{
+			<a href="//2019.mattfelten.com" style={{
 				background: '#000',
 				color: '#fff',
 				display: 'block',
@@ -17,7 +17,7 @@ export const Page = ({ element, props }) => {
 				padding: '1em',
 				textAlign: 'center',
 				textDecoration: 'none'
-			}}>I'm building a new site. It's live to encourage me to finish. See the old one at http://2018.mattfelten.com</a>
+			}}>I'm building a new site. It's live to encourage me to finish. See the old one at http://2019.mattfelten.com</a>
 			<Header {...headerProps} />
 			{element}
 			<Footer />
