@@ -1,1 +1,0 @@
-export { ControlPanelRedesign } from './ControlPanelRedesign';

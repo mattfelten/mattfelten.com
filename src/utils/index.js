@@ -1,1 +1,1 @@
-export { setTitle } from './setTitle';
+export { readibleDate } from './readibleDate';
