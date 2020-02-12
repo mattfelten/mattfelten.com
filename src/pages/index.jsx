@@ -53,7 +53,7 @@ export const Homepage = ({data}) => {
 				{data.posts.edges.map(({ node }) => (
 					<List
 						title={node.frontmatter.title || node.fields.slug}
-						link={node.frontmatter.redirect_url || node.fields.slug}
+						link={node.frontmatter.url || node.fields.slug}
 						description={readibleDate(node.fields.date)}
 						key={node.fields.slug}
 					/>
@@ -115,7 +115,7 @@ export const query = graphql`
 					}
 					frontmatter {
 						title
-						redirect_url
+						url
 					}
 				}
 			}

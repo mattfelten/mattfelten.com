@@ -60,7 +60,7 @@ exports.createPages = ({ graphql, actions }) => {
 						}
 						frontmatter {
 							title
-							redirect_url
+							url
 						}
 					}
 				}
@@ -85,7 +85,7 @@ exports.createPages = ({ graphql, actions }) => {
 
 		posts.forEach((edge, index) => {
 			// Don't need a page for a redirect
-			if (edge.node.frontmatter.redirect_url) return;
+			if (edge.node.frontmatter.url) return;
 
 			const slug = edge.node.fields.slug;
 			const previous = index === posts.length - 1 ? null : posts[index + 1].node;

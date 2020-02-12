@@ -8,8 +8,8 @@ import { readibleDate } from '../utils';
 export const Post = (props) => {
 	const post = props.data.mdx;
 	const { previous, next } = props.pageContext;
-	const previousLink = previous ? previous.frontmatter.redirect_url || previous.fields.slug : null;
-	const nextLink = next ? next.frontmatter.redirect_url || next.fields.slug : null;
+	const previousLink = previous ? previous.frontmatter.url || previous.fields.slug : null;
+	const nextLink = next ? next.frontmatter.url || next.fields.slug : null;
 
 	return (
 		<>
