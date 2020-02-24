@@ -3,6 +3,10 @@ import styled from 'styled-components';
 import { Link as LinkComponent } from './Link';
 import { Link, UnderlineLinkDefault, UnderlineLinkHover } from '../styles';
 
+const Title = styled.span`
+	${UnderlineLinkDefault}
+`;
+
 const Wrapper = styled(LinkComponent)`
 	${Link}
 	display: block;
@@ -10,10 +14,6 @@ const Wrapper = styled(LinkComponent)`
 	&:hover ${Title} {
 		${UnderlineLinkHover}
 	}
-`;
-
-const Title = styled.span`
-	${UnderlineLinkDefault}
 `;
 
 const Meta = styled.span`

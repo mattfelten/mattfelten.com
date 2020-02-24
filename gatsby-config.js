@@ -121,7 +121,7 @@ module.exports = {
                     }
                     frontmatter {
                       title
-                      redirect_url
+                      url
                     }
                     html
                   }
