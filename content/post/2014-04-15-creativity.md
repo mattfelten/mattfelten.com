@@ -13,5 +13,3 @@ I remember my mom making dinner when I was younger. I used to be a pretty picky 
 The biggest lesson in creativity I got was in college, one of my professors gave us a project. We had to write down 100 ways to describe what a coffee mug can symbolize. It’s pretty easy to come up with 10 or 20. Waking up, #1 Dad, breakfast. What’s harder is the other 80. Sharing. Routine. Catching up with friends.  The first ideas are the easy answers. The last ones are the interesting answers.
 
 To me, creativity is thinking through a problem and finding the best solution. You don’t have to be some sort of artist to be creative. Everyone is creative in their own way.
-
-[What do you think?]({{site.author.url}})

@@ -29,5 +29,3 @@ I could have payed more attention to the fact that I was changing key flows. Doc
 I was also too focused on horizontal thinking, making sure we had a broad button system implemented that worked great for the majority of our application. Had I spent more time vertical thinking - looking at the outliers of what was being changed - I could have noticed how drastically different a couple of them were and then analyzed how to proceed more appropriately. Those edge-cases are important.
 
 Once I notice I'm too focused on either vertical or horizontal methods of thinking, I need to pause and reconsider what is needed for the task. Too much vertical thinking will get too in the weeds with considerations and the design system will become fragmented from exceptions. Too much horizontal thinking will lead to a very consistent but rigid system that doesn't serve business goals. A balance of both is necessary.
-
-[What do you think?]({{site.author.url}})

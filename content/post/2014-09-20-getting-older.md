@@ -21,7 +21,3 @@ I feel like I'm still the same 18 year old kid, just making everything up as I g
 
 ## More Honest With Myself
 I've always been afraid of what other people think of me. I think I've been getting over that. I like Dungeons and Dragons. I play Magic the Gathering. I spend more money on clothes than I should. I watch cooking shows on TV but never actually cook anything. I'm a bit of a recluse and don't have a huge "social network." I like doing introverted things in social settings, like reading at a bar. This is just me though. I don't think I'm going to change, so I might as well become happy with it.
-
-----
-
-What's getting older like for you? [Tell me on Twitter.]({{site.author.url}})

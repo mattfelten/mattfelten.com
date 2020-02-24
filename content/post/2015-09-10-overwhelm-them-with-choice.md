@@ -22,8 +22,3 @@ I think TV is hitting me the same way. The same way I dread opening up Netflix. 
 I don't know what you, my dear reader, does in the face of too many choices. I know what I do. I run. I shut it off. I delete my Netflix queue. I stop using the App Stores recommendations.
 
 Are we in a golden age of television? Or did that bubble pop and studios are trying to recreate the magic? I don't want more shows or apps or games. I want better shows and apps and games. I'm not a number to boost ad revenue or subscriber count. I want my time valued because I'm a human just like everyone else.
-
-
-----
-
-If you choose to respond, [let's tweet back and forth forever.]({{site.author.url}})

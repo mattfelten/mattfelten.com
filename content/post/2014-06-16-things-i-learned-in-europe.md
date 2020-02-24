@@ -16,5 +16,3 @@ A month ago I flew out of LAX. I spent sixteen days with close friends, hitting 
 * Having limited to no cell data makes you appreciate the time more. You're more in the moment. Having the ability to check Twitter/Instagram/etc at will, for me, becomes a default "I don't know what to do action" instead of enjoying the time and surroundings.
 * It surprised me the small amount of clothes I actually needed for such a long trip.
 * Having less means enjoying more.
-
-[What do you think?]({{site.author.url}})
