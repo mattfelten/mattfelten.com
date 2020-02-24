@@ -1,17 +1,51 @@
 import React from 'react';
+import styled from 'styled-components';
 import SimpleIcons from 'simple-icons-react-component';
 import { social } from '../data';
+import { Link } from '../styles';
+
+const Container = styled.section`
+	margin-top: ${props => props.theme.spacing9};
+	margin-bottom: ${props => props.theme.spacing6};
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+`;
+
+const HomepageLink = styled.a`
+	${Link}
+	display: block;
+`;
+
+const SocialList = styled.div`
+	display: flex;
+	align-self: flex-end;
+
+	> * {
+		margin-right: ${props => props.theme.spacing2};
+	}
+`;
+
+const SocialIcon = styled.a`
+	${Link}
+	display: block;
+	width: 18px;
+	opacity: .4;
+
+	&:hover {
+		opacity: 1;
+	}
+`;
 
 export const Footer = () => (
-	<section className="Footer">
-		<div className="Footer__wrap">
-			<small className="Footer__name"><a href="/">Matt Felten</a></small>
-			<ul className="Footer__icon-list">
-				{Object.keys(social).map((key, i) => {
-					const account = social[key];
-					return (<a key={i} className="Footer__icon" href={account.url}><SimpleIcons name={account.icon} color="inherit" /></a>);
-				})}
-			</ul>
-		</div>
-	</section>
+	<Container>
+		<HomepageLink href="/">Matt Felten</HomepageLink>
+		<SocialList>
+			{Object.keys(social).map((key, i) => {
+				const account = social[key];
+				return (<SocialIcon key={i} href={account.url}><SimpleIcons name={account.icon} color="inherit" /></SocialIcon>);
+			})}
+		</SocialList>
+	</Container>
 );

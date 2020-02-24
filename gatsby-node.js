@@ -119,3 +119,12 @@ exports.createPages = ({ graphql, actions }) => {
 		});
 	})
 }
+
+// Allow importing components into MDX content
+exports.onCreateWebpackConfig = ({ actions }) => {
+	actions.setWebpackConfig({
+		resolve: {
+			modules: [path.resolve(__dirname, "src"), "node_modules"]
+		}
+	});
+};

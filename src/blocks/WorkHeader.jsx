@@ -1,41 +1,57 @@
 import React from 'react';
-import classname from 'classnames';
+import styled, { css } from 'styled-components';
+
+const Meta = styled.div`
+	display: flex;
+	flex-wrap: wrap;
+	margin-right: -15vw;
+	margin-bottom: 2em;
+	width: 94vw;
+
+	> * {
+		box-sizing: border-box;
+		padding-right: 4em;
+
+		${props => props.count == 4 && css`
+			width: 50%;
+		`}
+	}
+
+	a {
+		color: ${props => props.theme.textColor};
+		display: block;
+		text-decoration: none;
+		transition: all ${props => props.theme.transition};
+
+		&:hover { transform: translateY(-${props => props.theme.spacingHalf}); }
+	}
+`;
+
+const MetaValue = styled.span`
+	display: block;
+	white-space: nowrap;
+`;
 
 export const WorkHeader = ({className, title, company, year, role, team}) => {
-	const WorkHeaderClasses = classname('WorkHeader', className, {
-		'WorkHeader--quad': (company && year && role && team)
-	});
+	const metaInfo = [];
+
+	if (company) metaInfo.push({title: 'Company', value: company});
+	if (year) metaInfo.push({title: 'Year', value: year});
+	if (role) metaInfo.push({title: 'Role', value: role});
+	if (team) metaInfo.push({title: 'Team', value: team});
 
 	return (
-		<div className={WorkHeaderClasses}>
-			<p><strong>{title}</strong></p>
+		<div>
+			<h1>{title}</h1>
 
-			<div className="WorkHeader__meta">
-				{company &&
+			<Meta count={metaInfo.length}>
+				{metaInfo.map(item => (
 					<p><small>
-						<strong>Company</strong>
-						<span className="db nowrap">{company}</span>
+						<strong>{item.title}</strong>
+						<MetaValue>{item.value}</MetaValue>
 					</small></p>
-				}
-				{year &&
-					<p><small>
-						<strong>Year</strong>
-						<span className="db nowrap">{year}</span>
-					</small></p>
-				}
-				{role &&
-					<p><small>
-						<strong>Role</strong>
-						<span className="db nowrap">{role}</span>
-					</small></p>
-				}
-				{team &&
-					<p><small>
-						<strong>Team</strong>
-						<span className="db nowrap">{team}</span>
-					</small></p>
-				}
-			</div>
+				))}
+			</Meta>
 		</div>
 	);
 }

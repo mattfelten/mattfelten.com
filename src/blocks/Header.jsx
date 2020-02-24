@@ -1,5 +1,24 @@
 import React from 'react';
 import { Link, useStaticQuery, graphql } from 'gatsby';
+import styled from 'styled-components';
+
+const Wrapper = styled.div`
+	margin-top: ${props => props.theme.spacing5};
+	margin-bottom: ${props => props.theme.spacing9};
+
+	a {
+		color: ${props => props.theme.textColor};
+		display: block;
+		text-decoration: none;
+		transition: all ${props => props.theme.transition};
+
+		&:hover { transform: translateY(-${props => props.theme.spacingHalf}); }
+	}
+`;
+
+const Heading = styled.p`
+	font-size: ${props => props.theme.fontSize2};
+`;
 
 export const Header = ({ location, rootPath }) => {
 	const { site } = useStaticQuery(graphql`
@@ -14,13 +33,15 @@ export const Header = ({ location, rootPath }) => {
 
 	const title = site.siteMetadata.title;
 
-	const Heading = location.pathname === rootPath ? 'h1' : 'h3';
+	const headingElement = location.pathname === rootPath ? 'h1' : 'h3';
 
 	return (
-		<Heading>
-			<Link to={`/`}>
-				{title}
-			</Link>
-		</Heading>
+		<Wrapper>
+			<Heading as={headingElement}>
+				<Link to={`/`}>
+					{title}
+				</Link>
+			</Heading>
+		</Wrapper>
 	)
 };

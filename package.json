@@ -46,6 +46,7 @@
     "react-helmet": "^5.2.0",
     "react-live": "^2.2.0",
     "simple-icons-react-component": "1.0.0",
+    "styled-components": "5.0.1",
     "typescript": "3.7.5"
   },
   "devDependencies": {
