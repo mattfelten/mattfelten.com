@@ -1,8 +1,9 @@
 import React from 'react';
-import { Link, useStaticQuery, graphql } from 'gatsby';
 import styled from 'styled-components';
+import { Link, useStaticQuery, graphql } from 'gatsby';
+import { Block } from '../components';
 
-const Wrapper = styled.div`
+const Wrapper = styled(Block)`
 	margin-top: ${props => props.theme.spacing5};
 	margin-bottom: ${props => props.theme.spacing9};
 

@@ -1,9 +1,38 @@
 import React from 'react';
+import styled from 'styled-components';
 import { graphql } from 'gatsby';
 import { MDXRenderer } from 'gatsby-plugin-mdx';
-
-import { Link, SEO } from '../components';
+import { Link, MaxWidth, SEO } from '../components';
+import { H1 } from '../typography';
 import { readibleDate } from '../utils';
+
+const List = styled.ul`
+	display: flex;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	list-style: none;
+	padding: 0;
+
+	li {
+		width: 50%;
+	}
+`;
+
+const Header = styled.div`
+	margin-bottom: ${props => props.theme.spacing7};
+`;
+
+const Title = styled(H1)`
+	margin-bottom: ${props => props.theme.spacing2};
+`;
+
+const Date = styled.p`
+	margin: 0;
+`;
+
+const Content = styled(MaxWidth)`
+	margin-bottom: ${props => props.theme.spacing7};
+`;
 
 export const Post = (props) => {
 	const post = props.data.mdx;
@@ -12,40 +41,33 @@ export const Post = (props) => {
 	const nextLink = next ? next.frontmatter.url || next.fields.slug : null;
 
 	return (
-		<>
-			<SEO title={post.frontmatter.title} description={post.excerpt} />
-			<h1>{post.frontmatter.title}</h1>
-			<p>
-				{readibleDate(post.fields.date)}
-			</p>
-			<MDXRenderer>{post.body}</MDXRenderer>
-			<hr />
+		<div>
+			<Content>
+				<SEO title={post.frontmatter.title} description={post.excerpt} />
+				<Header>
+					<Title>{post.frontmatter.title}</Title>
+					<Date>{readibleDate(post.fields.date, 'MMMM d, yyyy')}</Date>
+				</Header>
 
-			<ul
-				style={{
-					display: `flex`,
-					flexWrap: `wrap`,
-					justifyContent: `space-between`,
-					listStyle: `none`,
-					padding: 0,
-				}}
-			>
+				<MDXRenderer>{post.body}</MDXRenderer>
+			</Content>
+			<List>
 				<li>
 					{previousLink && (
-						<Link to={previousLink} rel="prev">
+						<Link href={previousLink} rel="prev">
 							← {previous.frontmatter.title}
 						</Link>
 					)}
 				</li>
-				<li>
+				<li style={{ textAlign: 'right'}}>
 					{nextLink && (
-						<Link to={nextLink} rel="next">
+						<Link href={nextLink} rel="next">
 							{next.frontmatter.title} →
 						</Link>
 					)}
 				</li>
-			</ul>
-		</>
+			</List>
+		</div>
 	)
 };
 

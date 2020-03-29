@@ -2,8 +2,9 @@
 title: Overwhelm Them with Choice
 ---
 
-> One of our values here is we put the viewer first, and we want to overwhelm them with choice and let them decide what they want to do.<br />
-<small>- [Craig Erwich, Hulu's Head of Content](http://www.nytimes.com/2015/08/31/business/fx-chief-ignites-soul-searching-about-the-boom-in-scripted-tv.html)</small>
+> One of our values here is we put the viewer first, and we want to overwhelm them with choice and let them decide what they want to do.
+>
+> &ndash; [Craig Erwich, Hulu's Head of Content](http://www.nytimes.com/2015/08/31/business/fx-chief-ignites-soul-searching-about-the-boom-in-scripted-tv.html)
 
 I was talking to a friend about how I can't deal with TV anymore. Nothing is holding my attention. Even shows I used to like I put on and jump to my computer to do other things. I just need to get that unwatched count down. What is that about?
 

@@ -1,16 +1,18 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
-const Wrapper = styled.span`
-	${props => props.href || props.onClick || props.expand && css`
-		display: block;
-		transition: all ${props => props.theme.transitionDuration} ${props => props.theme.transitionEasing};
+const Wrapper = styled.div`
+	margin: 2em 0;
+`;
 
-		&:hover {
-			transform: scale(${props => props.theme.transformScale});
-			box-shadow: 0 20px 50px rgba(0,0,0,.2);
-		}
-	`}
+const A = styled.a`
+	display: block;
+	transition: all ${props => props.theme.transition};
+
+	&:hover {
+		transform: scale(${props => props.theme.transformScale});
+		box-shadow: 0 20px 50px rgba(0,0,0,.2);
+	}
 `;
 
 const Image = styled.img`
@@ -28,7 +30,7 @@ const Video = styled.video`
 	width: 100%;
 `;
 
-const Caption = styled.span`
+const Caption = styled.small`
 	display: block;
 	margin-top: 1em;
 `;
@@ -52,7 +54,7 @@ export const Asset = ({ alt, caption, className, expand, href, src, type="image"
 	}
 
 	const getContent = () => {
-		if (getLink()) return <a href={getLink()}>{getAssetContent()}</a>;
+		if (getLink()) return <A href={getLink()}>{getAssetContent()}</A>;
 		return getAssetContent();
 	}
 

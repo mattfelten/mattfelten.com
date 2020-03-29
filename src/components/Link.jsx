@@ -29,19 +29,22 @@ export const Link = ({
 	activeClassName,
 	children,
 	partiallyActive,
-	to,
+	href,
 	underline = true,
 	...other
 }) => {
+
+	const as = href ? null : 'span';
+
 	// Tailor the following test to your environment.
 	// This example assumes that any internal link (intended for Gatsby)
 	// will start with exactly one slash, and that anything else is external.
-	const internal = /^\/(?!\/)/.test(to)
+	const internal = /^\/(?!\/)/.test(href);
 	// Use Gatsby Link for internal links, and <a> for others
 	if (internal) {
 		return (
 			<StyledLink
-				to={to}
+				to={href}
 				activeClassName={activeClassName}
 				partiallyActive={partiallyActive}
 				underline={underline}
@@ -51,8 +54,9 @@ export const Link = ({
 			</StyledLink>
 		)
 	}
+
 	return (
-		<A href={to} underline={underline} {...other}>
+		<A as={as} href={href} underline={underline} {...other}>
 			{children}
 		</A>
 	);

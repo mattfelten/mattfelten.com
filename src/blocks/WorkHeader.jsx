@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import { H1 } from '../typography';
 
 const Meta = styled.div`
 	display: flex;
@@ -42,7 +43,7 @@ export const WorkHeader = ({className, title, company, year, role, team}) => {
 
 	return (
 		<div>
-			<h1>{title}</h1>
+			<H1>{title}</H1>
 
 			<Meta count={metaInfo.length}>
 				{metaInfo.map(item => (

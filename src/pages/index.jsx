@@ -1,14 +1,12 @@
 import React, { useRef } from 'react';
 import { graphql } from 'gatsby';
 import styled from 'styled-components';
-import { Emoji, Link, ListReset, MetaLink, SEO } from '../components';
+import { Emoji, Link, ListReset, MaxWidth, MetaLink, SEO } from '../components';
 import { readibleDate } from '../utils';
 
-const Wrapper = styled.div`
+const Section = styled(MaxWidth)`
 	font-size: ${props => props.theme.fontSize3};
-`;
-
-const Section = styled.section`
+	line-height: ${props => props.theme.lineHeightSmall};
 	margin-top: ${props => props.theme.spacing9};
 `;
 
@@ -52,20 +50,20 @@ export const Homepage = ({data}) => {
 	const scrollToWriting = () => writeSection.current.scrollIntoView({behavior: 'smooth'});
 
 	return (
-		<Wrapper>
+		<div>
 			<SEO keywords={[`blog`, `gatsby`, `javascript`, `react`]} />
 
 			<Section>
 				<Intro>{data.site.siteMetadata.description}</Intro>
 				<ListReset>
 					<li>
-						<Emoji label="flexed bicep" emoji="💪" /> I <Link href="#" onClick={(e) => {
+						<Emoji label="flexed bicep" emoji="💪" /> I <Link onClick={(e) => {
 							e.preventDefault();
 							scrollToWork();
 						}}>work</Link> with really cool companies.
 					</li>
 					<li>
-						<Emoji label="memo" emoji="📝" /> I <Link href="#" onClick={(e) => {
+						<Emoji label="memo" emoji="📝" /> I <Link onClick={(e) => {
 							e.preventDefault();
 							scrollToWriting();
 						}}>write</Link> about my experiences in design, development, design systems, & management.
@@ -87,7 +85,7 @@ export const Homepage = ({data}) => {
 							<li>
 								<MetaLink
 									key={node.fields.slug}
-									to={node.fields.slug}
+									href={node.fields.slug}
 									title={node.frontmatter.title || node.fields.slug}
 									underline={false}
 								/>
@@ -105,7 +103,7 @@ export const Homepage = ({data}) => {
 							<li>
 								<MetaLink
 									key={node.fields.slug}
-									to={node.frontmatter.url || node.fields.slug}
+									href={node.frontmatter.url || node.fields.slug}
 									title={node.frontmatter.title || node.fields.slug}
 									meta={readibleDate(node.fields.date)}
 									underline={false}
@@ -124,7 +122,7 @@ export const Homepage = ({data}) => {
 							<li>
 								<MetaLink
 									key={node.fields.slug}
-									to={node.frontmatter.url}
+									href={node.frontmatter.url}
 									title={node.frontmatter.title || node.fields.slug}
 									meta={node.frontmatter.description}
 									underline={false}
@@ -135,7 +133,7 @@ export const Homepage = ({data}) => {
 				}
 				<SpeakingCTA>Send me <Link href="mailto:m@mattfelten.com">an email</Link> about speaking opportunities.</SpeakingCTA>
 			</Section>
-		</Wrapper>
+		</div>
 	)
 };
 

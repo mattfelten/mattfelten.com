@@ -3,13 +3,13 @@ import { graphql } from 'gatsby';
 import { MDXRenderer } from 'gatsby-plugin-mdx';
 
 import { WorkHeader } from '../blocks';
-import { SEO } from '../components';
+import { MaxWidth, SEO } from '../components';
 
 export const Work = (props) => {
 	const post = props.data.mdx;
 
 	return (
-		<>
+		<MaxWidth>
 			<SEO
 				title={`${post.frontmatter.company} ${post.frontmatter.title}`}
 				description={post.excerpt}
@@ -22,7 +22,7 @@ export const Work = (props) => {
 				team={post.frontmatter.team}
 			/>
 			<MDXRenderer>{post.body}</MDXRenderer>
-		</>
+		</MaxWidth>
 	)
 };
 

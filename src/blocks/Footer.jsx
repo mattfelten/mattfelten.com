@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import SimpleIcons from 'simple-icons-react-component';
+import { Block } from '../components';
 import { social } from '../data';
 import { Link } from '../styles';
 
-const Container = styled.section`
+const Container = styled(Block)`
 	margin-top: ${props => props.theme.spacing9};
 	margin-bottom: ${props => props.theme.spacing6};
 	display: flex;
