@@ -7,7 +7,6 @@ const Meta = styled.div`
 	flex-wrap: wrap;
 	margin-right: -15vw;
 	margin-bottom: 2em;
-	width: 94vw;
 
 	> * {
 		box-sizing: border-box;

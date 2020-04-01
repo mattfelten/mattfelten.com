@@ -13,6 +13,8 @@ const Wrapper = styled(LinkComponent)`
 
 	&:hover ${Title} {
 		${UnderlineLinkHover}
+
+		top: 0;
 	}
 `;
 

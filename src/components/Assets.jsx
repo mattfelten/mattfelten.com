@@ -6,15 +6,23 @@ import { RemoveGutters } from '../styles';
 const Wrapper = styled.div`
 	${RemoveGutters}
 
-	display: flex;
-	margin: 2em 0;
+	margin-top: 2em;
+	margin-bottom: 2em;
 	width: 94vw;
 
 	> * {
 		box-sizing: border-box;
-		margin: 0;
+		margin: 0 0 2em;
 		padding: 16px;
 		flex: 1;
+	}
+
+	@media (min-width: 640px) {
+		display: flex;
+
+		> * {
+			margin: 0;
+		}
 	}
 `;
 
