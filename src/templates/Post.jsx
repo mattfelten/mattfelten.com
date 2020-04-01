@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { graphql } from 'gatsby';
 import { MDXRenderer } from 'gatsby-plugin-mdx';
 import { Link, MaxWidth, SEO } from '../components';
-import { H1 } from '../typography';
+import { PageTitle } from '../blocks';
 import { readibleDate } from '../utils';
 
 const List = styled.ul`
@@ -16,18 +16,6 @@ const List = styled.ul`
 	li {
 		width: 50%;
 	}
-`;
-
-const Header = styled.div`
-	margin-bottom: ${props => props.theme.spacing7};
-`;
-
-const Title = styled(H1)`
-	margin-bottom: ${props => props.theme.spacing2};
-`;
-
-const Date = styled.p`
-	margin: 0;
 `;
 
 const Content = styled(MaxWidth)`
@@ -44,10 +32,11 @@ export const Post = (props) => {
 		<div>
 			<Content>
 				<SEO title={post.frontmatter.title} description={post.excerpt} />
-				<Header>
-					<Title>{post.frontmatter.title}</Title>
-					<Date>{readibleDate(post.fields.date, 'MMMM d, yyyy')}</Date>
-				</Header>
+
+				<PageTitle
+					title={post.frontmatter.title}
+					subtitle={readibleDate(post.fields.date, 'MMMM d, yyyy')}
+				/>
 
 				<MDXRenderer>{post.body}</MDXRenderer>
 			</Content>

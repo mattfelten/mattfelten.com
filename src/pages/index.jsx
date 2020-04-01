@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { graphql } from 'gatsby';
 import styled from 'styled-components';
-import { Emoji, Link, ListReset, MaxWidth, MetaLink, SEO } from '../components';
+import { CaseStudy, Emoji, Link, ListReset, MaxWidth, MetaLink, SEO } from '../components';
 import { readibleDate } from '../utils';
 
 const Section = styled(MaxWidth)`
@@ -36,6 +36,22 @@ const CustomList = styled(ListReset)`
 		flex-direction: row;
 
 		li { width: 50%; }
+	}
+`;
+
+const CaseStudyList = styled(CustomList)`
+	@media (min-width: 830px) {
+		flex-direction: row;
+
+		li { width: 50%; }
+	}
+
+	@media (min-width: 1450px) {
+		li { width: 33.333%; }
+	}
+
+	@media (min-width: 2000px) {
+		li { width: 25%; }
 	}
 `;
 
@@ -80,18 +96,18 @@ export const Homepage = ({data}) => {
 			<Section ref={workSection}>
 				<Headline>Case Studies</Headline>
 				{data.work.edges &&
-					<CustomList>
+					<CaseStudyList>
 						{data.work.edges.map(({ node }) => (
-							<li>
-								<MetaLink
-									key={node.fields.slug}
-									href={node.fields.slug}
+							<li key={node.fields.slug}>
+								<CaseStudy
+									url={node.fields.slug}
 									title={node.frontmatter.title || node.fields.slug}
-									underline={false}
+									company={node.frontmatter.company}
+									coverImage={node.frontmatter.cover.publicURL}
 								/>
 							</li>
 						))}
-					</CustomList>
+					</CaseStudyList>
 				}
 			</Section>
 
@@ -100,9 +116,8 @@ export const Homepage = ({data}) => {
 				{data.posts.edges &&
 					<CustomList>
 						{data.posts.edges.map(({ node }) => (
-							<li>
+							<li key={node.fields.slug}>
 								<MetaLink
-									key={node.fields.slug}
 									href={node.frontmatter.url || node.fields.slug}
 									title={node.frontmatter.title || node.fields.slug}
 									meta={readibleDate(node.fields.date)}
@@ -119,9 +134,8 @@ export const Homepage = ({data}) => {
 				{data.speaking.edges &&
 					<CustomList>
 						{data.speaking.edges.map(({ node }) => (
-							<li>
+							<li key={node.fields.slug}>
 								<MetaLink
-									key={node.fields.slug}
 									href={node.frontmatter.url}
 									title={node.frontmatter.title || node.fields.slug}
 									meta={node.frontmatter.description}
@@ -144,7 +158,7 @@ export const query = graphql`
 				description
 			}
 		}
-		work: allMdx(filter: {fields: {collection: {eq: "work"}}}) {
+		work: allMdx(sort: {fields: frontmatter___year, order: DESC}, filter: {fields: {collection: {eq: "work"}}}) {
 			edges {
 				node {
 					fields {
@@ -152,6 +166,10 @@ export const query = graphql`
 					}
 					frontmatter {
 						title
+						company
+						cover {
+							publicURL
+						}
 					}
 				}
 			}

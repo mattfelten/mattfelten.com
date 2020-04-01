@@ -29,7 +29,6 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
 		}
 
 		const actualSlug = `/${collection}${newSlug}`;
-
 		createNodeField({
 			node,
 			name: `slug`,

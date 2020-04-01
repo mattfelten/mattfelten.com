@@ -2,6 +2,7 @@ export * from './Asset';
 export * from './Assets';
 export * from './Bio';
 export * from './Block';
+export * from './CaseStudy';
 export * from './Code';
 export * from './Emoji';
 export * from './Hr';

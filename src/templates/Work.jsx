@@ -1,27 +1,74 @@
 import React from 'react';
+import styled from 'styled-components';
 import { graphql } from 'gatsby';
 import { MDXRenderer } from 'gatsby-plugin-mdx';
 
-import { WorkHeader } from '../blocks';
-import { MaxWidth, SEO } from '../components';
+import { PageTitle } from '../blocks';
+import { Hr, MaxWidth, SEO } from '../components';
+
+const Meta = styled.div`
+	display: flex;
+	font-size: ${props => props.theme.fontSize1};
+	margin-top: -${props => props.theme.spacing3};
+	margin-bottom: -${props => props.theme.spacing3};
+
+	> * {
+		box-sizing: border-box;
+		flex: 1 1 0;
+
+		&:first-child {
+			flex-grow: 2;
+
+			> * {
+				padding-right: ${props => props.theme.spacing5};
+			}
+		}
+	}
+`;
 
 export const Work = (props) => {
-	const post = props.data.mdx;
+	const {
+		body,
+		excerpt,
+		frontmatter: {
+			goal,
+			role,
+			title,
+			company,
+			year,
+		}
+	} = props.data.mdx;
+
+	const realGoal = goal instanceof Array ? goal.map(goal => <p>{goal}</p>) : <p>{goal}</p>;
+	const realRole = role instanceof Array ? role.map(role => <p>{role}</p>) : <p>{role}</p>;
 
 	return (
 		<MaxWidth>
 			<SEO
-				title={`${post.frontmatter.company} ${post.frontmatter.title}`}
-				description={post.excerpt}
+				title={`${company} ${title}`}
+				description={excerpt}
 			/>
-			<WorkHeader
-				title={post.frontmatter.title}
-				company={post.frontmatter.company}
-				year={post.frontmatter.year}
-				role={post.frontmatter.role}
-				team={post.frontmatter.team}
+			<PageTitle
+				title={title}
+				subtitle={`${company}  ${year}`}
 			/>
-			<MDXRenderer>{post.body}</MDXRenderer>
+
+			{goal && role &&
+				<>
+					<Meta>
+						<div>
+							<strong>Project Goal</strong>
+							{realGoal}
+						</div>
+						<div>
+							<strong>Role</strong>
+							{realRole}
+						</div>
+					</Meta>
+					<Hr />
+				</>
+			}
+			<MDXRenderer>{body}</MDXRenderer>
 		</MaxWidth>
 	)
 };
@@ -38,7 +85,7 @@ export const pageQuery = graphql`
 				company
 				year
 				role
-				team
+				goal
 			}
 			body
 		}
