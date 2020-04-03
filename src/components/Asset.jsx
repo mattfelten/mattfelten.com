@@ -1,8 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
+import { RemoveGutters } from '../styles';
 
 const Wrapper = styled.div`
 	margin: 2em 0;
+`;
+
+const WrapperNoGutters = styled(Wrapper)`
+	${RemoveGutters}
+	width: 94vw;
 `;
 
 const A = styled.a`
@@ -35,7 +41,10 @@ const Caption = styled.small`
 	margin-top: 1em;
 `;
 
-export const Asset = ({ alt, caption, className, expand, href, src, type="image", ...props }) => {
+export const Asset = ({ alt, caption, className, expand, href, src, type="image", fullWidth, ...props }) => {
+	let El = Wrapper;
+	if (fullWidth) El = WrapperNoGutters;
+
 	const getLink = () => {
 		if (href) return href;
 		if (expand) return src;
@@ -59,9 +68,9 @@ export const Asset = ({ alt, caption, className, expand, href, src, type="image"
 	}
 
 	return (
-		<Wrapper {...props}>
+		<El {...props}>
 			{getContent()}
 			<Caption>{caption}</Caption>
-		</Wrapper>
+		</El>
 	)
 };

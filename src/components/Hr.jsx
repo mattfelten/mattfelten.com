@@ -7,5 +7,5 @@ export const Hr = styled.hr`
 	width: 50%;
 	height: 2px;
 	clear: both;
-	opacity: 10%;
+	opacity: .1;
 `;

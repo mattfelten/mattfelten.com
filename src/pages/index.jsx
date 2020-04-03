@@ -24,12 +24,12 @@ const CustomList = styled(ListReset)`
 	display: flex;
 	flex-direction: column;
 	flex-wrap: wrap;
-	margin: 0 -8px;
+	margin: 0 -16px;
 
 	li {
 		flex: 0 0 auto;
 		width: 100%;
-		padding: 0 8px;
+		padding: 0 16px;
 	}
 
 	@media (min-width: 1450px) {
