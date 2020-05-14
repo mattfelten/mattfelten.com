@@ -24,6 +24,10 @@ const Meta = styled.div`
 			}
 		}
 	}
+
+	p {
+		margin: .5em 0;
+	}
 `;
 
 export const Work = (props) => {

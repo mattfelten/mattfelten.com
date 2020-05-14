@@ -16,7 +16,7 @@ export const SEO = ({ description, lang, meta, keywords, title }) => {
 						}}
 						title={title}
 						defaultTitle={data.site.siteMetadata.title}
-						titleTemplate={`%s × ${data.site.siteMetadata.title}`}
+						titleTemplate={`${data.site.siteMetadata.title} × %s`}
 						meta={[
 							{
 								name: `description`,
