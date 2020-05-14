@@ -10,7 +10,7 @@ cover: ./imgs/cover.png
 
 ---
 
-import { Asset, Assets, Emoji } from 'components';
+import { Asset, AssetRow, Emoji } from 'components';
 import { docsExample, docsReal, exampleAlerts, exampleButtons, exampleCards, interfaceInventory, interfaceInventoryGif, roadmap } from './imgs';
 
 I joined [YouCaring](https://youcaring.com/) in 2018 to lead their Design System initiative. YouCaring was a crowdfunding platform built around social good and helping people in need raise money. They’re also a B Corp. Based on my work with design systems at [DreamHost](/work/dreamhost/) and my love of Design Ops&trade;, this was a perfect role.
@@ -24,7 +24,7 @@ All projects need goals so I started by outlining what I was looking to do with 
 - Build processes to get the team involved in contributing
 
 ## Interface Inventory
-<Assets items={[
+<AssetRow items={[
 	{
 		src: interfaceInventoryGif,
 		alt: 'Interface Inventory'
@@ -40,7 +40,7 @@ The first thing I did was make an [interface inventory](http://bradfrost.com/blo
 ## Documentation Site
 We need a place for all the design patterns and documentation to live. I dove into creating a public website that the design system could live at.
 
-<Assets items={[
+<AssetRow items={[
 	{
 		src: docsExample,
 		href: docsExample,

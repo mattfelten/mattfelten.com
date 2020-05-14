@@ -1,5 +1,5 @@
 export * from './Asset';
-export * from './Assets';
+export * from './AssetRow';
 export * from './Bio';
 export * from './Block';
 export * from './CaseStudy';

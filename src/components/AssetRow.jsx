@@ -26,7 +26,7 @@ const Wrapper = styled.div`
 	}
 `;
 
-export const Assets = ({ items, ...props }) => (
+export const AssetRow = ({ items, ...props }) => (
 	<Wrapper {...props}>
 		{ items.map( props => <Asset {...props} />) }
 	</Wrapper>
