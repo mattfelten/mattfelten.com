@@ -5,6 +5,8 @@ const ariaLabels = {
 	'📝': 'memo',
 	'📨': 'incoming envelope',
 	'🎁': 'present',
+	'✅': 'check mark',
+	'✏️': 'pencil'
 }
 
 const generateAriaLabel = (emoji) => {
