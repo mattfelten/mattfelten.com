@@ -22,7 +22,7 @@ export const GlobalStyles = createGlobalStyle`
 	}
 
 	body {
-		background: ${props => props.theme.background};
+		background-color: ${props => props.theme.background};
 		color: ${props => props.theme.textColor};
 		font-size: ${props => props.theme.fontSize2};
 		font-family: ${props => props.theme.fontFamily};
@@ -33,5 +33,27 @@ export const GlobalStyles = createGlobalStyle`
 
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
+
+		&::before,
+		&::after {
+			content: ' ';
+			display: table;
+		}
+	}
+
+	html {
+		position: relative;
+
+		&::after {
+			content: "";
+			background-image: url(https://www.toptal.com/designers/subtlepatterns/patterns/dot-grid.png);
+			opacity: .6;
+			top: 0;
+			left: 0;
+			bottom: 0;
+			right: 0;
+			position: absolute;
+			z-index: -1;
+		}
 	}
 `
