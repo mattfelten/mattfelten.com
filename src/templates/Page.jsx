@@ -1,7 +1,7 @@
 import React from 'react';
-import styled from 'styled-components';
 import { Header, Footer } from '../blocks';
 import { Block } from '../components';
+import { GlobalStyles } from '../global';
 
 export const Page = ({ element, props }) => {
 	const headerProps = {
@@ -10,13 +10,14 @@ export const Page = ({ element, props }) => {
 	};
 
 	return (
-		<div>
+		<>
+			<GlobalStyles />
 			<Header {...headerProps} />
 			<Block>
 				{element}
 			</Block>
 			<Footer />
-		</div>
+		</>
 	);
 };
 

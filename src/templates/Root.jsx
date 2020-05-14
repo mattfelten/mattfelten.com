@@ -4,7 +4,7 @@ import { ThemeProvider } from 'styled-components';
 import { Code, Hr, Link } from '../components';
 import { H2, List, ListItem } from '../typography';
 import { preToCodeBlock } from 'mdx-utils';
-import { theme, GlobalStyles } from '../global';
+import { theme } from '../global';
 
 // components is its own object outside of render so that the references to
 // components are stable
@@ -28,7 +28,6 @@ const components = {
 
 export const Root = ({ element }) => (
 	<ThemeProvider theme={theme}>
-		<GlobalStyles />
 		<MDXProvider components={components}>
 			{element}
 		</MDXProvider>
