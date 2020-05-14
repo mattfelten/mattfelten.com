@@ -9,6 +9,7 @@ import { Hr, MaxWidth, SEO } from '../components';
 const Meta = styled.div`
 	display: flex;
 	font-size: ${props => props.theme.fontSize1};
+	letter-spacing: .02em;
 	margin-top: -${props => props.theme.spacing3};
 	margin-bottom: -${props => props.theme.spacing3};
 

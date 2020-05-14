@@ -1,23 +1,23 @@
 import { createGlobalStyle } from 'styled-components';
-import RegularWoff from './space-grotesk/SpaceGrotesk-Regular.woff';
-import RegularWoff2 from './space-grotesk/SpaceGrotesk-Regular.woff2';
-import BoldWoff from './space-grotesk/SpaceGrotesk-Bold.woff';
-import BoldWoff2 from './space-grotesk/SpaceGrotesk-Bold.woff2';
+import RegularWoff from './manrope/Manrope-Regular.woff';
+import RegularWoff2 from './manrope/Manrope-Regular.woff2';
+import BoldWoff from './manrope/Manrope-Bold.woff';
+import BoldWoff2 from './manrope/Manrope-Bold.woff2';
 
 export const GlobalStyles = createGlobalStyle`
 	@font-face {
-		font-family: 'Space Grotesk';
+		font-family: 'Manrope';
 		src: url(${RegularWoff2}) format('woff2'),
 			url(${RegularWoff}) format('woff');
-		font-weight: 400;
+		font-weight: normal;
 		font-style: normal;
 	}
 
 	@font-face {
-		font-family: 'Space Grotesk';
+		font-family: 'Manrope';
 		src: url(${BoldWoff2}) format('woff2'),
 			url(${BoldWoff}) format('woff');
-		font-weight: 700;
+		font-weight: bold;
 		font-style: normal;
 	}
 
@@ -29,6 +29,7 @@ export const GlobalStyles = createGlobalStyle`
 		line-height: ${props => props.theme.lineHeight};
 		margin: 0;
 		text-align: left;
+		word-spacing: .05em;
 
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
