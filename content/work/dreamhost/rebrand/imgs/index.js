@@ -15,5 +15,5 @@ export {
 	logoStyleTiles,
 	logoWebsiteMock,
 	productLine,
-	styleTiles,
+	styleTiles
 }
