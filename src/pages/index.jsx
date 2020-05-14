@@ -57,10 +57,12 @@ const CaseStudyList = styled(CustomList)`
 
 const SpeakingCTA = styled.p`
 	font-size: ${props => props.theme.fontSize2};
+	margin-top: ${props => props.theme.spacing4};
 `;
 
 const IntroListLI = styled.li`
 	display: flex;
+	max-width: 28em;
 
 	> *:first-child {
 		margin-right: ${props => props.theme.spacing2};

@@ -7,7 +7,7 @@ const Header = styled.div`
 `;
 
 const Title = styled(H1)`
-	margin-bottom: ${props => props.theme.spacing1};
+	margin-bottom: 0;
 `;
 
 const SubTitle = styled.p`
