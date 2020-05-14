@@ -49,10 +49,6 @@ const CaseStudyList = styled(CustomList)`
 	@media (min-width: 1450px) {
 		li { width: 33.333%; }
 	}
-
-	@media (min-width: 2000px) {
-		li { width: 25%; }
-	}
 `;
 
 const SpeakingCTA = styled.p`
