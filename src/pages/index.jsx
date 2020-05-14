@@ -59,6 +59,21 @@ const SpeakingCTA = styled.p`
 	font-size: ${props => props.theme.fontSize2};
 `;
 
+const IntroListLI = styled.li`
+	display: flex;
+
+	> *:first-child {
+		margin-right: ${props => props.theme.spacing2};
+	}
+`;
+
+const IntroListItem = ({emoji, label}) => (
+	<IntroListLI>
+		<Emoji emoji={emoji} />
+		<span>{label}</span>
+	</IntroListLI>
+)
+
 export const Homepage = ({data}) => {
 	const workSection = useRef();
 	const writeSection = useRef();
@@ -72,24 +87,28 @@ export const Homepage = ({data}) => {
 			<Section>
 				<Intro>{data.site.siteMetadata.description}</Intro>
 				<ListReset>
-					<li>
-						<Emoji label="flexed bicep" emoji="💪" /> I <Link onClick={(e) => {
+					<IntroListItem
+						emoji="💪"
+						label={<>I <Link onClick={(e) => {
 							e.preventDefault();
 							scrollToWork();
-						}}>work</Link> with really cool companies.
-					</li>
-					<li>
-						<Emoji label="memo" emoji="📝" /> I <Link onClick={(e) => {
+						}}>work</Link> with really cool companies.</>}
+					/>
+					<IntroListItem
+						emoji="📝"
+						label={<>I <Link onClick={(e) => {
 							e.preventDefault();
 							scrollToWriting();
-						}}>write</Link> about my experiences in design, development, design systems, & management.
-					</li>
-					<li>
-						<Emoji label="incoming envelop" emoji="📨" /> I <Link href="http://readinglist.mattfelten.com/">share</Link> articles that I like.
-					</li>
-					<li>
-						<Emoji label="present" emoji="🎁" /> I <Link href="/store">make</Link> fun little trinkets & whatnots.
-					</li>
+						}}>write</Link> about my experiences in design, development, design systems, & management.</>}
+					/>
+					<IntroListItem
+						emoji="📨"
+						label={<>I <Link href="http://readinglist.mattfelten.com/">share</Link> articles that I like.</>}
+					/>
+					<IntroListItem
+						emoji="🎁"
+						label={<>I <Link href="/store">make</Link> fun little trinkets & whatnots.</>}
+					/>
 				</ListReset>
 			</Section>
 

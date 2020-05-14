@@ -1,5 +1,19 @@
 import React from 'react';
 
-export const Emoji = ({ emoji, label }) => (
-	<span role="img" aria-label={`${label} emoji`}>{emoji}</span>
+const ariaLabels = {
+	'💪': 'flexed bicep',
+	'📝': 'memo',
+	'📨': 'incoming envelope',
+	'🎁': 'present',
+}
+
+const generateAriaLabel = (emoji) => {
+	const label = ariaLabels[emoji];
+	if (label) return label;
+
+	console.error(`Emoji not found. Make emoji label for ${emoji}`);
+}
+
+export const Emoji = ({ emoji }) => (
+	<span role="img" aria-label={generateAriaLabel(emoji)}>{emoji}</span>
 );
