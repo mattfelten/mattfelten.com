@@ -17,6 +17,10 @@ const Container = styled(Block)`
 const HomepageLink = styled.a`
 	${Link}
 	display: block;
+
+	@media (max-width: 440px) {
+		display: none;
+	}
 `;
 
 const SocialList = styled.div`

@@ -24,7 +24,6 @@ export const GlobalStyles = createGlobalStyle`
 	body {
 		background-color: ${props => props.theme.background};
 		color: ${props => props.theme.textColor};
-		font-size: ${props => props.theme.fontSize2};
 		font-family: ${props => props.theme.fontFamily};
 		line-height: ${props => props.theme.lineHeight};
 		margin: 0;
@@ -42,6 +41,8 @@ export const GlobalStyles = createGlobalStyle`
 	}
 
 	html {
+		font-size: ${props => props.theme.fontSize2};
+		font-size: clamp(${props => props.theme.baseFontSizeMin}, ${props => props.theme.baseFontSize}, ${props => props.theme.baseFontSizeMax});
 		position: relative;
 
 		&::after {
