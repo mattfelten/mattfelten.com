@@ -27,8 +27,8 @@ The product & design teams struggled with providing new features that users were
 
 Moreover, talking to users about the application, they also had issues discovering new features. A very few power users were using the platform daily to monthly. A majority of users would sign in infrequently, when services need renewing or upgrading, and have to learn our interface each time. We also user tested our interface and found that a big barrier to entry was not knowing what most of the menu items were for. It would take trial and error clicking around to find the features they were looking for.
 
-- **Pain Point:** Designers have trouble adding new features in an intuitive way besides adding another feature to the list.
-- **Pain Point:** Users have trouble knowing about new features, as well as finding existing features they already used.
+-   **Pain Point:** Designers have trouble adding new features in an intuitive way besides adding another feature to the list.
+-   **Pain Point:** Users have trouble knowing about new features, as well as finding existing features they already used.
 
 <Asset src={oldIa} expand caption="Old Information Architecture" />
 
@@ -36,24 +36,24 @@ A very common workflow for us was WordPress hosting. WordPress powers over a qua
 
 The workflow to set up a new WordPress site was complicated.
 
-- Find domain registration
-- Find an available domain (the URL you're thinking of is for sure already taken
-- Buy domain
-- Find hosting section
-- Add the domain to one of your existing hosting services (if you don't have a hosting service you have to find the area to add that as well)
-- Find the application installation section
-- Find WordPress and click button to install
+-   Find domain registration
+-   Find an available domain (the URL you're thinking of is for sure already taken
+-   Buy domain
+-   Find hosting section
+-   Add the domain to one of your existing hosting services (if you don't have a hosting service you have to find the area to add that as well)
+-   Find the application installation section
+-   Find WordPress and click button to install
 
 None of this was explained outside of help articles. Through user testing and looking at analytics, we were losing people in these steps. If we were lucky, they would contact support and get help. Many were not.
 
-- **Pain Point:** Flat structure imposed a very convoluted user workflow. People were having trouble completing all the steps.
+-   **Pain Point:** Flat structure imposed a very convoluted user workflow. People were having trouble completing all the steps.
 
 ## Problem Statements
 
 There were two big issues this unveiled that we wanted to solve.
 
-- **Problem:** How can we make managing the features of your account easier to find?
-- **Problem:** How can we improve the workflow for adding a website to improve success?
+-   **Problem:** How can we make managing the features of your account easier to find?
+-   **Problem:** How can we improve the workflow for adding a website to improve success?
 
 ## Where to Start
 
@@ -75,10 +75,10 @@ We learned a ton too. The prototype was rough so we only had the features we tho
 
 Because the prototype tested so well, we moved forward fleshing out what the entire application would be like under this new paradigm. It took a lot of research, documenting all our services, and iterating but we got it contained into a four sections.
 
-- Websites
-- Servers
-- Account
-- Support
+-   Websites
+-   Servers
+-   Account
+-   Support
 
 All the features we offered supported one or more of those categories. So those became our top-level concepts.
 
@@ -107,17 +107,18 @@ Each designer at this point worked on their respective projects from the diagram
 I also spent time wireframing the dashboard, the first screen you land on when you logged into the application. We also decided we wanted to have a coded prototype we could use to test and hand off to engineering, so I build the groundwork for that using [Vue.js](//vuejs.org).
 
 ## Visual Exploration
+
 We cycled through a lot of iterations on wireframes with the team. We had a rough prototype of our application that was testing well with users. The biggest issue we had was there were four of us working on the application and it definitely looked like it. Each section of the app had a distinct look and feel to it. The app looked miles away from where the original app was but it still had a fair amount of inconsistencies.
 
 Some of the other designers had to move on to other projects so there were only two of us at this point. I led that designer through an exercise to establish a consistent look and feel across the entire application collaboratively.
 
 Designing every page in the application as a pixel-perfect high resolution mockup in Sketch would take a really long time. I looked across our prototype and took five core pages that had unique layouts and features. I decided that if we spent time designing those five screens, we could use them as the goalposts for the look and feel for the entire application.
 
-- **Website Dashboard** This would be the first screen you would see when you entered the application. It was a standard list screen showing all the websites you had set up.
-- **Blank Slate** This was the screen that would appear if you signed in and did not have any websites set up. I wanted to make sure we were keeping these states in mind and had a consistent way of displaying them.
-- **Manage Website** This was the screen a user would see when they chose a website they wanted to modify. It was a combination of a dashboard and way to find, add, and change services on the website. It gave us an idea of how to display a lot of complicated information in an organized way.
-- **Add Website - Contact Info** This screen is a form-heavy layout with a lot of text inputs for customers to put in their information. This let us figure out a reusable form design that can scale across any other form screens.
-- **Add Website - Hosting Options** This screen is also a form layout but it is geared more towards selecting options and not inputting data. This helped us flesh out our form design.
+-   **Website Dashboard** This would be the first screen you would see when you entered the application. It was a standard list screen showing all the websites you had set up.
+-   **Blank Slate** This was the screen that would appear if you signed in and did not have any websites set up. I wanted to make sure we were keeping these states in mind and had a consistent way of displaying them.
+-   **Manage Website** This was the screen a user would see when they chose a website they wanted to modify. It was a combination of a dashboard and way to find, add, and change services on the website. It gave us an idea of how to display a lot of complicated information in an organized way.
+-   **Add Website - Contact Info** This screen is a form-heavy layout with a lot of text inputs for customers to put in their information. This let us figure out a reusable form design that can scale across any other form screens.
+-   **Add Website - Hosting Options** This screen is also a form layout but it is geared more towards selecting options and not inputting data. This helped us flesh out our form design.
 
 <Asset src={designArtboards} expand alt="Artboards" />
 <Asset src={designArtboards2} expand alt="Artboards 2" />
