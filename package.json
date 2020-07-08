@@ -12,7 +12,7 @@
   "scripts": {
     "lint": "eslint --ext .js,.jsx --ignore-pattern public .",
     "test": "echo \"Write tests! -> https://gatsby.app/unit-testing\"",
-    "format": "prettier --trailing-comma es5 --no-semi --single-quote --write 'src/**/*.js' 'src/**/*.md'",
+    "format": "prettier --write 'src/**/*.{js,jsx}' 'content/**/*.{jsx,mdx}'",
     "start": "gatsby develop",
     "build": "gatsby build",
     "clean": "gatsby clean",
