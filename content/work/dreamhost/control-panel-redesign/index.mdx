@@ -3,12 +3,12 @@ title: Control Panel Redesign
 company: DreamHost
 year: 2017
 role:
-- Project Lead
-- Collaborated with 3 designers
+    - Project Lead
+    - Collaborated with 3 designers
 goal: Reinvision a 20 year old web application with a focus on discovery and users mental models
 cover: ./imgs/cover.png
-
 ---
+
 import { Asset } from 'components';
 import {
 	designArtboards,
@@ -18,7 +18,7 @@ import {
 	finalPresentation,
 	newIaWithProjects,
 	newIa,
-	oldIa
+	oldIa,
 } from './imgs';
 
 DreamHost been around for 19 years and the interface powering the service had been built organically over that time. The application was structured to be incredibly flat, so every feature required a new page and a new menu item. This makes sense for services that do a few things really well. After years of new features to the platform, the navigation grew to upwards of 20 menu items.
@@ -49,12 +49,14 @@ None of this was explained outside of help articles. Through user testing and lo
 - **Pain Point:** Flat structure imposed a very convoluted user workflow. People were having trouble completing all the steps.
 
 ## Problem Statements
+
 There were two big issues this unveiled that we wanted to solve.
 
 - **Problem:** How can we make managing the features of your account easier to find?
 - **Problem:** How can we improve the workflow for adding a website to improve success?
 
 ## Where to Start
+
 I got the design team together to start brainstorming some ideas. A lot of the concepts behind these problems were things we have talked about for years so we definitely already had a trove of ideas to try. The one we felt the most confident in was reorganizing the interface around websites, instead of services.
 
 The majority case of users on the platform were hosting websites. They were combining services in order to make a website, and we had it organized around the services, not the end goal.
@@ -70,6 +72,7 @@ We quickly put together a rough wireframe prototype to user test. We tested thes
 We learned a ton too. The prototype was rough so we only had the features we thought were necessary to complete the flow. We made a list of the features users asked about, things like "Where can I set how long I want to buy the domain for?" and prioritize adding them as well.
 
 ## Information Architecture
+
 Because the prototype tested so well, we moved forward fleshing out what the entire application would be like under this new paradigm. It took a lot of research, documenting all our services, and iterating but we got it contained into a four sections.
 
 - Websites
@@ -82,6 +85,7 @@ All the features we offered supported one or more of those categories. So those 
 <Asset src={newIa} expand caption="New Information Architecture" />
 
 ## MVP
+
 After iterating on the information architecture for a few cycles with the design team and stakeholders we got to a place where we had a good idea where most of the feature would fall within the application. Still, with building an application from the ground up, especially one of this size, we needed to pair down what we would create first.
 
 We had three other designers working on the project at this time, so I divided it up into three distinct sections.
@@ -95,6 +99,7 @@ The **Website Landing Page** section was the main method of managing the website
 The **Account Section** would contain user preferences and billing information. We decided to focus on this for the MVP because based on analytics, we had a lot of usage from users paying their monthly bill. Adding to the MVP would make the users have to switch back to the existing application at lot less.
 
 ## Design, Prototype, Test
+
 The previous round of user testing was to validate we had a valid concept for our hypothesis. This phase is where the normal design process took place.
 
 Each designer at this point worked on their respective projects from the diagram above. I went into a product manager role, making sure each project had the right project specs for the designers, made sure we were asking and answering the right questions while user testing, and that all three projects would stitch back together in a cohesive application.
@@ -122,6 +127,7 @@ We cycled on these screens about three times. Each time we would present our ide
 <Asset src={designPresentation} expand fullWidth alt="Presentation" />
 
 ## Rework Prototype & Handoff
+
 So now we have a working prototype of the application that has been user tested and we have a set of screens we are using for goalpost visual design. The next and final step was to update our prototype so that every screen fit in with that visual design. One designer and myself spent about two weeks updating our prototype to match.
 
 Our handoff to leadership and engineering because a presentation of the final UI design as well as a coded prototype. The coded front-end we created became the groundwork for a design system that would let us continue building out the application in a maintainable and consistent fashion.

@@ -26,7 +26,9 @@ export const List = styled.ul`
 export const ListItem = styled.li`
 	margin-top: 1em;
 
-	&:first-child { margin-top: 0; }
+	&:first-child {
+		margin-top: 0;
+	}
 
 	&:before {
 		float: left;

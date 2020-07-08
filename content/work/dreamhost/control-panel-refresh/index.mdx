@@ -3,12 +3,12 @@ title: Control Panel Refresh
 company: DreamHost
 year: 2015
 role:
-- UX Design
-- Front-end Development
+    - UX Design
+    - Front-end Development
 goal: Improve navigation patterns and application chrome to simplify traversing and removing distractions
 cover: ./imgs/cover.png
-
 ---
+
 import { Asset } from 'components';
 import {
 	beforeAfter,
@@ -35,6 +35,7 @@ We do the later. As they say, ship early and often. So I created a plan of attac
 We decided the first phase of the project was to redesign the wrapper of the control panel. The header and navigation. The panel "chrome". This would give us time to put the groundwork in place to for the rest of the phases. We can build it to be responsive, so that as we redesign other sections responsively it Just Works&trade;. We can build out our fledgiling pattern library. We can focus on removing distractions from the page content. Yeah. This sounds good. Now what?
 
 ## Start at the end
+
 You can't start building the walls of a house if you don't know the floorplan. The first thing we started with was to figure out what the end goal of this project would be. What does a redesigned control panel look like? How is it organized? How can we streamline the user flows so that we're not forcing customers to sift through a wall of links and buttons?
 
 We mapped out the heirarchy of our control panel. There were 75 different top level navigation links, the epitomy of a flat architecture. We ran a card sort exercise and were able to condensed that down to five main sections. Domains, Servers, Cloud, Account and Support. This allowed us to work with increasing findability of features by grouping them.
@@ -49,6 +50,7 @@ Once we had this new architecture, we did some quick wireframes to help explain 
 Now that we have a good idea what we're planning on getting to, we can start working on design the shell of the app to support this design. We can work on patterns that support this new tiered heirarchy.
 
 ## Navigation design
+
 The hardest part of this project was working on the navigation structure. With a tiered heirarchy, we need solid patterns for secondary and tertiary navigation systems. Those are things we haven't really needed in the past so we spent some time figuring out how we can lay out navigation systems.
 
 <Asset src={navSketches2} alt="navigation sketches" fullWidth />
@@ -59,6 +61,7 @@ Once there were a number of options to sift through, we did competitor research.
 <Asset src={navSketches} alt="navigation sketches" fullWidth />
 
 ## Details
+
 Here's the fun part. Time to dive into the visual design portion of this project.
 
 <Asset src={panelWorkfile} alt="work" fullWidth />
@@ -73,6 +76,7 @@ After about four rounds of doing that, something started to happen. We started g
 <Asset src={panelWebid} caption="WebID" fullWidth />
 
 ### Launch!
+
 Even though we were testing this project throughout the design process, once the team was satisfied that we were hitting all our goals, we ran internal tests. We had a number of people from other teams use the new panel design as their primary interface. We kept track of all the feedback and fixed any bugs that arose. And then flipped the switch.
 
 <Asset src={beforeAfter} alt="before & after" fullWidth />

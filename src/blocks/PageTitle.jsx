@@ -14,11 +14,11 @@ const SubTitle = styled.p`
 	margin: 0;
 `;
 
-export const PageTitle = ({title, subtitle}) => {
+export const PageTitle = ({ title, subtitle }) => {
 	return (
 		<Header>
 			<Title>{title}</Title>
 			<SubTitle>{subtitle}</SubTitle>
 		</Header>
 	);
-}
+};

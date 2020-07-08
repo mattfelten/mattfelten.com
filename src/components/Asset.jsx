@@ -17,7 +17,7 @@ const A = styled.a`
 
 	&:hover {
 		transform: scale(${props => props.theme.transformScale});
-		box-shadow: 0 20px 50px rgba(0,0,0,.2);
+		box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
 	}
 `;
 
@@ -41,7 +41,17 @@ const Caption = styled.small`
 	margin-top: 1em;
 `;
 
-export const Asset = ({ alt, caption, className, expand, href, src, type="image", fullWidth, ...props }) => {
+export const Asset = ({
+	alt,
+	caption,
+	className,
+	expand,
+	href,
+	src,
+	type = 'image',
+	fullWidth,
+	...props
+}) => {
 	let El = Wrapper;
 	if (fullWidth) El = WrapperNoGutters;
 
@@ -49,28 +59,28 @@ export const Asset = ({ alt, caption, className, expand, href, src, type="image"
 		if (href) return href;
 		if (expand) return src;
 		return false;
-	}
+	};
 
 	const getAssetContent = () => {
 		if (type === 'video')
 			return (
-				<Video src={src} controls>{alt}</Video>
+				<Video src={src} controls>
+					{alt}
+				</Video>
 			);
 
-		return (
-			<Image src={src} alt={caption || alt} />
-		)
-	}
+		return <Image src={src} alt={caption || alt} />;
+	};
 
 	const getContent = () => {
 		if (getLink()) return <A href={getLink()}>{getAssetContent()}</A>;
 		return getAssetContent();
-	}
+	};
 
 	return (
 		<El {...props}>
 			{getContent()}
 			<Caption>{caption}</Caption>
 		</El>
-	)
+	);
 };

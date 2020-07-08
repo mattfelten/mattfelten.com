@@ -36,7 +36,7 @@ const SocialIcon = styled.a`
 	${Link}
 	display: block;
 	width: 18px;
-	opacity: .4;
+	opacity: 0.4;
 
 	&:hover {
 		opacity: 1;
@@ -49,7 +49,11 @@ export const Footer = () => (
 		<SocialList>
 			{Object.keys(social).map((key, i) => {
 				const account = social[key];
-				return (<SocialIcon key={i} href={account.url}><SimpleIcons name={account.icon} color="inherit" /></SocialIcon>);
+				return (
+					<SocialIcon key={i} href={account.url}>
+						<SimpleIcons name={account.icon} color="inherit" />
+					</SocialIcon>
+				);
 			})}
 		</SocialList>
 	</Container>

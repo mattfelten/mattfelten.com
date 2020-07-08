@@ -13,23 +13,21 @@ const components = {
 	a: props => <Link {...props} />,
 	hr: props => <Hr {...props} />,
 	pre: props => {
-		const convertedProps = preToCodeBlock(props)
+		const convertedProps = preToCodeBlock(props);
 		// if there's a codeString and some props, we passed the test
 		if (convertedProps) {
-			return <Code {...convertedProps} />
+			return <Code {...convertedProps} />;
 		} else {
 			// it's possible to have a pre without a code in it
-			return <pre {...props} />
+			return <pre {...props} />;
 		}
 	},
 	ul: props => <List {...props} />,
-	li:  props => <ListItem {...props} />
-}
+	li: props => <ListItem {...props} />,
+};
 
 export const Root = ({ element }) => (
 	<ThemeProvider theme={theme}>
-		<MDXProvider components={components}>
-			{element}
-		</MDXProvider>
+		<MDXProvider components={components}>{element}</MDXProvider>
 	</ThemeProvider>
 );

@@ -13,7 +13,7 @@ export const social = {
 	},
 	dribbble: {
 		icon: 'Dribbble',
-		url: '//dribbble.com/mattfelten'
+		url: '//dribbble.com/mattfelten',
 	},
 	instagram: {
 		icon: 'Instagram',
@@ -26,5 +26,5 @@ export const social = {
 	linkedin: {
 		icon: 'LinkedIn',
 		url: '//linkedin.com/in/mattfelten/',
-	}
+	},
 };

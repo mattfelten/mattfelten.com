@@ -1,28 +1,39 @@
 import React from 'react';
-import { Link as GatsbyLink } from "gatsby";
+import { Link as GatsbyLink } from 'gatsby';
 import styled, { css } from 'styled-components';
-import { Link as LinkStyle, UnderlineLink as UnderlineLinkStyle } from '../styles';
+import {
+	Link as LinkStyle,
+	UnderlineLink as UnderlineLinkStyle,
+} from '../styles';
 
 // Since DOM elements <a> cannot receive activeClassName
 // and partiallyActive, destructure the prop here and
 // pass it only to GatsbyLink
 
 const A = styled.a`
-	${props => props.underline && css`
-		${UnderlineLinkStyle}
-	`}
-	${props => !props.underline && css`
-		${LinkStyle}
-	`}
+	${props =>
+		props.underline &&
+		css`
+			${UnderlineLinkStyle}
+		`}
+	${props =>
+		!props.underline &&
+		css`
+			${LinkStyle}
+		`}
 `;
 
 const StyledLink = styled(GatsbyLink)`
-	${props => props.underline && css`
-		${UnderlineLinkStyle}
-	`}
-	${props => !props.underline && css`
-		${LinkStyle}
-	`}
+	${props =>
+		props.underline &&
+		css`
+			${UnderlineLinkStyle}
+		`}
+	${props =>
+		!props.underline &&
+		css`
+			${LinkStyle}
+		`}
 `;
 
 export const Link = ({
@@ -33,7 +44,6 @@ export const Link = ({
 	underline = true,
 	...other
 }) => {
-
 	const as = href ? null : 'span';
 
 	// Tailor the following test to your environment.
@@ -52,7 +62,7 @@ export const Link = ({
 			>
 				{children}
 			</StyledLink>
-		)
+		);
 	}
 
 	return (
@@ -60,4 +70,4 @@ export const Link = ({
 			{children}
 		</A>
 	);
-}
+};

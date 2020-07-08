@@ -8,7 +8,8 @@ export const SEO = ({ description, lang, meta, keywords, title }) => {
 		<StaticQuery
 			query={detailsQuery}
 			render={data => {
-				const metaDescription = description || data.site.siteMetadata.description;
+				const metaDescription =
+					description || data.site.siteMetadata.description;
 				return (
 					<Helmet
 						htmlAttributes={{
@@ -56,22 +57,22 @@ export const SEO = ({ description, lang, meta, keywords, title }) => {
 									? {
 											name: `keywords`,
 											content: keywords.join(`, `),
-										}
+									  }
 									: []
 							)
 							.concat(meta)}
 					/>
-				)
+				);
 			}}
 		/>
-	)
-}
+	);
+};
 
 SEO.defaultProps = {
 	lang: `en`,
 	meta: [],
 	keywords: [],
-}
+};
 
 SEO.propTypes = {
 	description: PropTypes.string,
@@ -79,7 +80,7 @@ SEO.propTypes = {
 	meta: PropTypes.array,
 	keywords: PropTypes.arrayOf(PropTypes.string),
 	title: PropTypes.string.isRequired,
-}
+};
 
 const detailsQuery = graphql`
 	query DefaultSEOQuery {
@@ -91,4 +92,4 @@ const detailsQuery = graphql`
 			}
 		}
 	}
-`
+`;

@@ -42,7 +42,8 @@ export const GlobalStyles = createGlobalStyle`
 
 	html {
 		font-size: ${props => props.theme.fontSize2};
-		font-size: clamp(${props => props.theme.baseFontSizeMin}, ${props => props.theme.baseFontSize}, ${props => props.theme.baseFontSizeMax});
+		font-size: clamp(${props => props.theme.baseFontSizeMin}, ${props =>
+	props.theme.baseFontSize}, ${props => props.theme.baseFontSizeMax});
 		position: relative;
 
 		&::after {
@@ -57,4 +58,4 @@ export const GlobalStyles = createGlobalStyle`
 			z-index: -1;
 		}
 	}
-`
+`;

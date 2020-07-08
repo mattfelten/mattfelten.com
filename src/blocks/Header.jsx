@@ -13,7 +13,9 @@ const Wrapper = styled(Block)`
 		text-decoration: none;
 		transition: all ${props => props.theme.transition};
 
-		&:hover { transform: translateY(-${props => props.theme.spacingHalf}); }
+		&:hover {
+			transform: translateY(-${props => props.theme.spacingHalf});
+		}
 	}
 `;
 
@@ -39,10 +41,8 @@ export const Header = ({ location, rootPath }) => {
 	return (
 		<Wrapper>
 			<Heading as={headingElement}>
-				<Link to={`/`}>
-					{title}
-				</Link>
+				<Link to={`/`}>{title}</Link>
 			</Heading>
 		</Wrapper>
-	)
+	);
 };

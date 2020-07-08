@@ -1,4 +1,4 @@
-import { css } from 'styled-components'
+import { css } from 'styled-components';
 
 export const ListReset = css`
 	list-style: none;
@@ -6,11 +6,16 @@ export const ListReset = css`
 	margin-bottom: 0;
 	padding-left: 0;
 
-	&, li { box-sizing: border-box; }
+	&,
+	li {
+		box-sizing: border-box;
+	}
 
 	li {
 		margin-bottom: 1.5em;
 	}
 
-	li:last-child { margin-bottom: 0; }
+	li:last-child {
+		margin-bottom: 0;
+	}
 `;

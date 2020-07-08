@@ -3,55 +3,69 @@ title: Design System
 company: YouCaring
 year: 2018
 role:
-- Project Lead
-- Collaborated with 3 designers & engineering team of 15
+    - Project Lead
+    - Collaborated with 3 designers & engineering team of 15
 goal: Improve product improvement velocity and team collaboration by initiating design systems
 cover: ./imgs/cover.png
-
 ---
 
 import { Asset, AssetRow, Emoji } from 'components';
-import { docsExample, docsReal, exampleAlerts, exampleButtons, exampleCards, interfaceInventory, interfaceInventoryGif, roadmap } from './imgs';
+import {
+	docsExample,
+	docsReal,
+	exampleAlerts,
+	exampleButtons,
+	exampleCards,
+	interfaceInventory,
+	interfaceInventoryGif,
+	roadmap,
+} from './imgs';
 
 I joined [YouCaring](https://youcaring.com/) in 2018 to lead their Design System initiative. YouCaring was a crowdfunding platform built around social good and helping people in need raise money. They’re also a B Corp. Based on my work with design systems at [DreamHost](/work/dreamhost/) and my love of Design Ops&trade;, this was a perfect role.
 
 All projects need goals so I started by outlining what I was looking to do with this design system project.
 
-- Consolidate six style guide documents and have one all encompassing document for design language
-- Create Sketch symbols of design patterns for designers to easily use in design mocks
-- Create React components of design patterns for engineers to easily import into application
-- Make sure Sketch symbols and React components are in sync
-- Build processes to get the team involved in contributing
+-   Consolidate six style guide documents and have one all encompassing document for design language
+-   Create Sketch symbols of design patterns for designers to easily use in design mocks
+-   Create React components of design patterns for engineers to easily import into application
+-   Make sure Sketch symbols and React components are in sync
+-   Build processes to get the team involved in contributing
 
 ## Interface Inventory
-<AssetRow items={[
-	{
-		src: interfaceInventoryGif,
-		alt: 'Interface Inventory'
-	},
-	{
-		src: interfaceInventory,
-		alt: 'Interface Inventory'
-	}
-]}  />
+
+<AssetRow
+	items={[
+		{
+			src: interfaceInventoryGif,
+			alt: 'Interface Inventory',
+		},
+		{
+			src: interfaceInventory,
+			alt: 'Interface Inventory',
+		},
+	]}
+/>
 
 The first thing I did was make an [interface inventory](http://bradfrost.com/blog/post/interface-inventory/). We needed to baseline where we’re at and truly understand the scope of the situation. Making one of these makes it very apparent where the biggest wins can be made.
 
 ## Documentation Site
+
 We need a place for all the design patterns and documentation to live. I dove into creating a public website that the design system could live at.
 
-<AssetRow items={[
-	{
-		src: docsExample,
-		href: docsExample,
-		caption: 'Documentation Site Concept'
-	},
-	{
-		src: docsReal,
-		href: docsReal,
-		caption: 'Published Documentation Site'
-	}
-]}  />
+<AssetRow
+	items={[
+		{
+			src: docsExample,
+			href: docsExample,
+			caption: 'Documentation Site Concept',
+		},
+		{
+			src: docsReal,
+			href: docsReal,
+			caption: 'Published Documentation Site',
+		},
+	]}
+/>
 
 I started by making a mockup of the functionality I wanted the site to have. I wanted to be able to explain a component, show variations, explain why a variation would be used, have a live example using actual code, and implementation details for both designers and engineers to use the component. We took this mockup and interviewed designers and engineers to make sure it met needs and iterated.
 

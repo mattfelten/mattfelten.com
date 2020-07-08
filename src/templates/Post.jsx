@@ -22,16 +22,21 @@ const Content = styled(MaxWidth)`
 	margin-bottom: ${props => props.theme.spacing7};
 `;
 
-export const Post = (props) => {
+export const Post = props => {
 	const post = props.data.mdx;
 	const { previous, next } = props.pageContext;
-	const previousLink = previous ? previous.frontmatter.url || previous.fields.slug : null;
+	const previousLink = previous
+		? previous.frontmatter.url || previous.fields.slug
+		: null;
 	const nextLink = next ? next.frontmatter.url || next.fields.slug : null;
 
 	return (
 		<div>
 			<Content>
-				<SEO title={post.frontmatter.title} description={post.excerpt} />
+				<SEO
+					title={post.frontmatter.title}
+					description={post.excerpt}
+				/>
 
 				<PageTitle
 					title={post.frontmatter.title}
@@ -48,7 +53,7 @@ export const Post = (props) => {
 						</Link>
 					)}
 				</li>
-				<li style={{ textAlign: 'right'}}>
+				<li style={{ textAlign: 'right' }}>
 					{nextLink && (
 						<Link href={nextLink} rel="next">
 							{next.frontmatter.title} →
@@ -57,7 +62,7 @@ export const Post = (props) => {
 				</li>
 			</List>
 		</div>
-	)
+	);
 };
 
 export default Post;

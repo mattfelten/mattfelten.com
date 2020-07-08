@@ -6,16 +6,18 @@ const ariaLabels = {
 	'📨': 'incoming envelope',
 	'🎁': 'present',
 	'✅': 'check mark',
-	'✏️': 'pencil'
-}
+	'✏️': 'pencil',
+};
 
-const generateAriaLabel = (emoji) => {
+const generateAriaLabel = emoji => {
 	const label = ariaLabels[emoji];
 	if (label) return label;
 
 	console.error(`Emoji not found. Make emoji label for ${emoji}`);
-}
+};
 
 export const Emoji = ({ emoji }) => (
-	<span role="img" aria-label={generateAriaLabel(emoji)}>{emoji}</span>
+	<span role="img" aria-label={generateAriaLabel(emoji)}>
+		{emoji}
+	</span>
 );

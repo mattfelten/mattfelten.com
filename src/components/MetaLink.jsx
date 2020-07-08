@@ -25,7 +25,7 @@ const Meta = styled.span`
 	margin-top: ${props => props.theme.spacing1};
 `;
 
-export const MetaLink = ({title, meta, ...props}) => (
+export const MetaLink = ({ title, meta, ...props }) => (
 	<Wrapper {...props}>
 		<Title>{title}</Title>
 		{meta && <Meta>{meta}</Meta>}

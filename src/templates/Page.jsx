@@ -6,16 +6,14 @@ import { GlobalStyles } from '../global';
 export const Page = ({ element, props }) => {
 	const headerProps = {
 		location: props.location,
-		rootPath: `${__PATH_PREFIX__}/`
+		rootPath: `${__PATH_PREFIX__}/`,
 	};
 
 	return (
 		<>
 			<GlobalStyles />
 			<Header {...headerProps} />
-			<Block>
-				{element}
-			</Block>
+			<Block>{element}</Block>
 			<Footer />
 		</>
 	);

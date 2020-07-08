@@ -18,7 +18,7 @@ const Company = styled.div`
 `;
 
 const ImageWrapper = styled.div`
-	background: #F6F6F6;
+	background: #f6f6f6;
 	margin-bottom: 16px;
 	padding-top: 75%;
 	position: relative;
@@ -27,7 +27,7 @@ const ImageWrapper = styled.div`
 	${Link}:hover & {
 		background: $color-accent;
 	}
-`
+`;
 
 const Image = styled.img`
 	position: absolute;
@@ -38,13 +38,15 @@ const Image = styled.img`
 
 	${Link}:hover & {
 		transform: scale(1.06);
-		box-shadow: 0 20px 50px rgba(0,0,0,.2);
+		box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
 	}
-`
+`;
 
 export const CaseStudy = ({ title, company, url, coverImage }) => (
 	<Link href={url}>
-		<ImageWrapper><Image src={coverImage} alt={`Cover for ${title} at ${company}`} /></ImageWrapper>
+		<ImageWrapper>
+			<Image src={coverImage} alt={`Cover for ${title} at ${company}`} />
+		</ImageWrapper>
 		<Title>{title}</Title>
 		<Company>{company}</Company>
 	</Link>

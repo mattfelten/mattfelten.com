@@ -1,7 +1,15 @@
 import React, { useRef } from 'react';
 import { graphql } from 'gatsby';
 import styled from 'styled-components';
-import { CaseStudy, Emoji, Link, ListReset, MaxWidth, MetaLink, SEO } from '../components';
+import {
+	CaseStudy,
+	Emoji,
+	Link,
+	ListReset,
+	MaxWidth,
+	MetaLink,
+	SEO,
+} from '../components';
 import { readibleDate } from '../utils';
 
 const Section = styled(MaxWidth)`
@@ -35,7 +43,9 @@ const CustomList = styled(ListReset)`
 	@media (min-width: 1450px) {
 		flex-direction: row;
 
-		li { width: 50%; }
+		li {
+			width: 50%;
+		}
 	}
 `;
 
@@ -43,11 +53,15 @@ const CaseStudyList = styled(CustomList)`
 	@media (min-width: 830px) {
 		flex-direction: row;
 
-		li { width: 50%; }
+		li {
+			width: 50%;
+		}
 	}
 
 	@media (min-width: 1450px) {
-		li { width: 33.333%; }
+		li {
+			width: 33.333%;
+		}
 	}
 `;
 
@@ -65,18 +79,20 @@ const IntroListLI = styled.li`
 	}
 `;
 
-const IntroListItem = ({emoji, label}) => (
+const IntroListItem = ({ emoji, label }) => (
 	<IntroListLI>
 		<Emoji emoji={emoji} />
 		<span>{label}</span>
 	</IntroListLI>
-)
+);
 
-export const Homepage = ({data}) => {
+export const Homepage = ({ data }) => {
 	const workSection = useRef();
 	const writeSection = useRef();
-	const scrollToWork = () => workSection.current.scrollIntoView({behavior: 'smooth'});
-	const scrollToWriting = () => writeSection.current.scrollIntoView({behavior: 'smooth'});
+	const scrollToWork = () =>
+		workSection.current.scrollIntoView({ behavior: 'smooth' });
+	const scrollToWriting = () =>
+		writeSection.current.scrollIntoView({ behavior: 'smooth' });
 
 	return (
 		<div>
@@ -87,85 +103,135 @@ export const Homepage = ({data}) => {
 				<ListReset>
 					<IntroListItem
 						emoji="💪"
-						label={<>I <Link onClick={(e) => {
-							e.preventDefault();
-							scrollToWork();
-						}}>work</Link> with really cool companies.</>}
+						label={
+							<>
+								I{' '}
+								<Link
+									onClick={e => {
+										e.preventDefault();
+										scrollToWork();
+									}}
+								>
+									work
+								</Link>{' '}
+								with really cool companies.
+							</>
+						}
 					/>
 					<IntroListItem
 						emoji="📝"
-						label={<>I <Link onClick={(e) => {
-							e.preventDefault();
-							scrollToWriting();
-						}}>write</Link> about my experiences in design, development, design systems, & management.</>}
+						label={
+							<>
+								I{' '}
+								<Link
+									onClick={e => {
+										e.preventDefault();
+										scrollToWriting();
+									}}
+								>
+									write
+								</Link>{' '}
+								about my experiences in design, development,
+								design systems, & management.
+							</>
+						}
 					/>
 					<IntroListItem
 						emoji="📨"
-						label={<>I <Link href="http://readinglist.mattfelten.com/">share</Link> articles that I like.</>}
+						label={
+							<>
+								I{' '}
+								<Link href="http://readinglist.mattfelten.com/">
+									share
+								</Link>{' '}
+								articles that I like.
+							</>
+						}
 					/>
 					<IntroListItem
 						emoji="🎁"
-						label={<>I <Link href="/store">make</Link> fun little trinkets & whatnots.</>}
+						label={
+							<>
+								I <Link href="/store">make</Link> fun little
+								trinkets & whatnots.
+							</>
+						}
 					/>
 				</ListReset>
 			</Section>
 
 			<Section ref={workSection}>
 				<Headline>Case Studies</Headline>
-				{data.work.edges &&
+				{data.work.edges && (
 					<CaseStudyList>
 						{data.work.edges.map(({ node }) => (
 							<li key={node.fields.slug}>
 								<CaseStudy
 									url={node.fields.slug}
-									title={node.frontmatter.title || node.fields.slug}
+									title={
+										node.frontmatter.title ||
+										node.fields.slug
+									}
 									company={node.frontmatter.company}
-									coverImage={node.frontmatter.cover.publicURL}
+									coverImage={
+										node.frontmatter.cover.publicURL
+									}
 								/>
 							</li>
 						))}
 					</CaseStudyList>
-				}
+				)}
 			</Section>
 
 			<Section ref={writeSection}>
 				<Headline>Writing</Headline>
-				{data.posts.edges &&
+				{data.posts.edges && (
 					<CustomList>
 						{data.posts.edges.map(({ node }) => (
 							<li key={node.fields.slug}>
 								<MetaLink
-									href={node.frontmatter.url || node.fields.slug}
-									title={node.frontmatter.title || node.fields.slug}
+									href={
+										node.frontmatter.url || node.fields.slug
+									}
+									title={
+										node.frontmatter.title ||
+										node.fields.slug
+									}
 									meta={readibleDate(node.fields.date)}
 									underline={false}
 								/>
 							</li>
 						))}
 					</CustomList>
-				}
+				)}
 			</Section>
 
 			<Section>
 				<Headline>Speaking</Headline>
-				{data.speaking.edges &&
+				{data.speaking.edges && (
 					<CustomList>
 						{data.speaking.edges.map(({ node }) => (
 							<li key={node.fields.slug}>
 								<MetaLink
 									href={node.frontmatter.url}
-									title={node.frontmatter.title || node.fields.slug}
+									title={
+										node.frontmatter.title ||
+										node.fields.slug
+									}
 									meta={node.frontmatter.description}
 									underline={false}
 								/>
 							</li>
 						))}
 					</CustomList>
-				}
-				<SpeakingCTA>Send me <Link href="mailto:m@mattfelten.com">an email</Link> about speaking opportunities.</SpeakingCTA>
+				)}
+				<SpeakingCTA>
+					Send me <Link href="mailto:m@mattfelten.com">an email</Link>{' '}
+					about speaking opportunities.
+				</SpeakingCTA>
 			</Section>
 		</div>
-	)
+	);
 };
 
 export const query = graphql`
@@ -175,7 +241,10 @@ export const query = graphql`
 				description
 			}
 		}
-		work: allMdx(sort: {fields: frontmatter___year, order: DESC}, filter: {fields: {collection: {eq: "work"}}}) {
+		work: allMdx(
+			sort: { fields: frontmatter___year, order: DESC }
+			filter: { fields: { collection: { eq: "work" } } }
+		) {
 			edges {
 				node {
 					fields {
@@ -191,7 +260,10 @@ export const query = graphql`
 				}
 			}
 		}
-		posts: allMdx(sort: {fields: [fields___date], order: DESC}, filter: {fields: {collection: {eq: "post"}}}) {
+		posts: allMdx(
+			sort: { fields: [fields___date], order: DESC }
+			filter: { fields: { collection: { eq: "post" } } }
+		) {
 			edges {
 				node {
 					fields {
@@ -205,7 +277,10 @@ export const query = graphql`
 				}
 			}
 		}
-		speaking: allMdx(sort: {fields: [fields___date], order: DESC}, filter: {fields: {collection: {eq: "speaking"}}}) {
+		speaking: allMdx(
+			sort: { fields: [fields___date], order: DESC }
+			filter: { fields: { collection: { eq: "speaking" } } }
+		) {
 			edges {
 				node {
 					fields {
@@ -221,6 +296,6 @@ export const query = graphql`
 			}
 		}
 	}
-`
+`;
 
 export default Homepage;

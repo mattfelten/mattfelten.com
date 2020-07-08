@@ -9,7 +9,7 @@ import { Hr, MaxWidth, SEO } from '../components';
 const Meta = styled.div`
 	display: flex;
 	font-size: ${props => props.theme.fontSize1};
-	letter-spacing: .02em;
+	letter-spacing: 0.02em;
 	margin-top: -${props => props.theme.spacing3};
 	margin-bottom: -${props => props.theme.spacing3};
 
@@ -27,38 +27,28 @@ const Meta = styled.div`
 	}
 
 	p {
-		margin: .5em 0;
+		margin: 0.5em 0;
 	}
 `;
 
-export const Work = (props) => {
+export const Work = props => {
 	const {
 		body,
 		excerpt,
-		frontmatter: {
-			goal,
-			role,
-			title,
-			company,
-			year,
-		}
+		frontmatter: { goal, role, title, company, year },
 	} = props.data.mdx;
 
-	const realGoal = goal instanceof Array ? goal.map(goal => <p>{goal}</p>) : <p>{goal}</p>;
-	const realRole = role instanceof Array ? role.map(role => <p>{role}</p>) : <p>{role}</p>;
+	const realGoal =
+		goal instanceof Array ? goal.map(goal => <p>{goal}</p>) : <p>{goal}</p>;
+	const realRole =
+		role instanceof Array ? role.map(role => <p>{role}</p>) : <p>{role}</p>;
 
 	return (
 		<MaxWidth>
-			<SEO
-				title={`${company} ${title}`}
-				description={excerpt}
-			/>
-			<PageTitle
-				title={title}
-				subtitle={`${company}  ${year}`}
-			/>
+			<SEO title={`${company} ${title}`} description={excerpt} />
+			<PageTitle title={title} subtitle={`${company}  ${year}`} />
 
-			{goal && role &&
+			{goal && role && (
 				<>
 					<Meta>
 						<div>
@@ -72,10 +62,10 @@ export const Work = (props) => {
 					</Meta>
 					<Hr />
 				</>
-			}
+			)}
 			<MDXRenderer>{body}</MDXRenderer>
 		</MaxWidth>
-	)
+	);
 };
 
 export default Work;

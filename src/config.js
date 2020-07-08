@@ -18,7 +18,7 @@ module.exports = {
 		},
 		dribbble: {
 			icon: 'Dribbble',
-			url: '//dribbble.com/mattfelten'
+			url: '//dribbble.com/mattfelten',
 		},
 		instagram: {
 			icon: 'Instagram',
@@ -31,6 +31,6 @@ module.exports = {
 		linkedin: {
 			icon: 'LinkedIn',
 			url: '//linkedin.com/in/mattfelten/',
-		}
-	}
+		},
+	},
 };
