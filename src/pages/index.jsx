@@ -86,6 +86,40 @@ const IntroListItem = ({ emoji, label }) => (
 	</IntroListLI>
 );
 
+const SpeakingList = styled(ListReset)`
+	font-size: ${props => props.theme.fontSize2};
+	margin-bottom: 2em;
+	@media (min-width: 900px) {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
+		grid-auto-rows: auto;
+		grid-gap: 1.5em;
+	}
+`;
+
+const SpeakingListItemLi = styled.li`
+	display: flex;
+	flex-direction: column-reverse;
+	@media (min-width: 900px) {
+		display: contents;
+	}
+`;
+
+const SpeakingListLabel = styled.span`
+	margin-top: ${props => props.theme.spacing1};
+	@media (min-width: 900px) {
+		margin-top: 0;
+		white-space: nowrap;
+	}
+`;
+
+const SpeakingListItem = ({key, title, url, meta}) => (
+	<SpeakingListItemLi key={key}>
+		<SpeakingListLabel>{meta}</SpeakingListLabel>
+		<span><Link href={url}>{title}</Link></span>
+	</SpeakingListItemLi>
+);
+
 export const Homepage = ({ data }) => {
 	const workSection = useRef();
 	const writeSection = useRef();
@@ -209,21 +243,19 @@ export const Homepage = ({ data }) => {
 			<Section>
 				<Headline>Speaking</Headline>
 				{data.speaking.edges && (
-					<CustomList>
+					<SpeakingList>
 						{data.speaking.edges.map(({ node }) => (
-							<li key={node.fields.slug}>
-								<MetaLink
-									href={node.frontmatter.url}
-									title={
-										node.frontmatter.title ||
-										node.fields.slug
-									}
-									meta={node.frontmatter.description}
-									underline={false}
-								/>
-							</li>
+							<SpeakingListItem
+								key={node.fields.slug}
+								url={node.frontmatter.url}
+								title={
+									node.frontmatter.title ||
+									node.fields.slug
+								}
+								meta={node.frontmatter.description}
+							/>
 						))}
-					</CustomList>
+					</SpeakingList>
 				)}
 				<SpeakingCTA>
 					Send me <Link href="mailto:m@mattfelten.com">an email</Link>{' '}
