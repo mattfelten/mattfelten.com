@@ -12,12 +12,12 @@ import {
 
 const A = styled.a`
 	${props =>
-		props.underline &&
+		props.$underline &&
 		css`
 			${UnderlineLinkStyle}
 		`}
 	${props =>
-		!props.underline &&
+		!props.$underline &&
 		css`
 			${LinkStyle}
 		`}
@@ -25,12 +25,12 @@ const A = styled.a`
 
 const StyledLink = styled(GatsbyLink)`
 	${props =>
-		props.underline &&
+		props.$underline &&
 		css`
 			${UnderlineLinkStyle}
 		`}
 	${props =>
-		!props.underline &&
+		!props.$underline &&
 		css`
 			${LinkStyle}
 		`}
@@ -57,7 +57,7 @@ export const Link = ({
 				to={href}
 				activeClassName={activeClassName}
 				partiallyActive={partiallyActive}
-				underline={underline}
+				$underline={underline}
 				{...other}
 			>
 				{children}
@@ -66,7 +66,7 @@ export const Link = ({
 	}
 
 	return (
-		<A as={as} href={href} underline={underline} {...other}>
+		<A as={as} href={href} $underline={underline} {...other}>
 			{children}
 		</A>
 	);

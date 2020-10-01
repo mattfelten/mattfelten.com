@@ -9,6 +9,7 @@ const Link = styled.a`
 
 const Title = styled.div`
 	font-weight: bold;
+	line-height: ${props => props.theme.lineHeightSmall}
 `;
 
 const Company = styled.div`

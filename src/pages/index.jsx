@@ -112,8 +112,8 @@ const SpeakingListLabel = styled.span`
 	}
 `;
 
-const SpeakingListItem = ({key, title, url, meta}) => (
-	<SpeakingListItemLi key={key}>
+const SpeakingListItem = ({title, url, meta}) => (
+	<SpeakingListItemLi>
 		<SpeakingListLabel>{meta}</SpeakingListLabel>
 		<span><Link href={url}>{title}</Link></span>
 	</SpeakingListItemLi>
