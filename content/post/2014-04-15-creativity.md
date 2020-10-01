@@ -2,7 +2,8 @@
 title: Creativity
 ---
 
-> Think left and think right and think low and think high. Oh, the thinks you can think up if only you try! <cite>&mdash; Dr. Seuss</cite>
+> Think left and think right and think low and think high. Oh, the thinks you can think up if only you try!
+>  <cite>Dr. Seuss</cite>
 
 The other day I was reading a blog post about the word "creative." The noun version. The job title. In advertising, the creatives are the designers, the copywriters, the photographers.
 

@@ -38,3 +38,18 @@ export const ListItem = styled.li`
 		content: '\\2013';
 	}
 `;
+
+export const Blockquote = styled.blockquote`
+	border-left : 3px solid ${props => props.theme.accent};
+	margin-left: 0;
+	margin-bottom: 2em;
+	padding-left: ${props => props.theme.spacing4};
+
+	cite {
+		font-size: ${props => props.theme.fontSize1};
+		margin-top: -${props => props.theme.spacing1};
+		&:before {
+			content: '— ';
+		}
+	}
+`;
