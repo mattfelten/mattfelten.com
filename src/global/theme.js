@@ -33,6 +33,7 @@ export const light = {
 
 export const dark = {
 	...light,
+	accent: '#00E0B8',
 	background: light.textColor,
 	backgroundImage: 'dot-grid.dark.jpg',
 	textColor: light.background
