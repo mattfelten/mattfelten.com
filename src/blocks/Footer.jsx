@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import SimpleIcons from 'simple-icons-react-component';
 import { Block } from '../components';
 import { social } from '../data';
@@ -14,12 +14,38 @@ const Container = styled(Block)`
 	align-items: center;
 `;
 
+const wave = keyframes`
+	0% { transform: rotate( 0.0deg) }
+   15% { transform: rotate(14.0deg) }  /* The following five values can be played with to make the waving more or less extreme */
+   30% { transform: rotate(-8.0deg) }
+   45% { transform: rotate(14.0deg) }
+   60% { transform: rotate(-4.0deg) }
+   75% { transform: rotate(10.0deg) }
+   100% { transform: rotate( 0.0deg) }
+`;
+
 const HomepageLink = styled.a`
 	${Link}
 	display: block;
 
 	@media (max-width: 440px) {
 		display: none;
+	}
+
+	&::after {
+		opacity: 0;
+		transition: opacity ${props => props.theme.transition};
+		content: '👋';
+		margin-left: .5em;
+		display: inline-block;
+		animation-name: ${wave};
+		animation-duration: 1.5s;
+		animation-iteration-count: infinite;
+		transform-origin: 70% 70%;
+	}
+
+	&:hover::after {
+		opacity: 1;
 	}
 `;
 
