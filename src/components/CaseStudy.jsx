@@ -14,7 +14,6 @@ const Title = styled.div`
 const Company = styled.div`
 	display: block;
 	font-size: ${props => props.theme.fontSize2};
-	margin-top: 8px;
 `;
 
 const ImageWrapper = styled.div`

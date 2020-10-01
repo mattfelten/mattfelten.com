@@ -14,7 +14,6 @@ import { readibleDate } from '../utils';
 
 const Section = styled(MaxWidth)`
 	font-size: ${props => props.theme.fontSize3};
-	line-height: ${props => props.theme.lineHeightSmall};
 	margin-top: ${props => props.theme.spacing9};
 `;
 
