@@ -15,7 +15,7 @@ export const UnderlineLinkDefault = css`
 	background: linear-gradient( to bottom, ${props =>
 		props.theme.accent}, ${props => props.theme.accent}) no-repeat bottom;
 	background-position: 0 165%;
-	background-size: 100% 50%;
+	background-size: 100% 45%;
 	cursor: pointer;
 	font-weight: bold;
 	position: relative;
@@ -23,7 +23,7 @@ export const UnderlineLinkDefault = css`
 `;
 
 export const UnderlineLinkHover = css`
-	background-position: 0 100%;
+	background-position: 0 155%;
 	top: -4px;
 `;
 
