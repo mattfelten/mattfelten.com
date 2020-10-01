@@ -1,7 +1,8 @@
 // Define what props.theme will look like
-export const theme = {
+export const light = {
 	accent: '#3DDFC2',
 	background: '#fafafa',
+	backgroundImage: 'dot-grid.jpg',
 	baseFontSize: '4vw',
 	baseFontSizeMin: '16px',
 	baseFontSizeMax: '24px',
@@ -29,3 +30,10 @@ export const theme = {
 	transformScale: 1.06,
 	transition: '.1s ease-in-out',
 };
+
+export const dark = {
+	...light,
+	background: light.textColor,
+	backgroundImage: 'dot-grid.dark.jpg',
+	textColor: light.background
+}

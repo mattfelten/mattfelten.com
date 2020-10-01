@@ -48,7 +48,7 @@ export const GlobalStyles = createGlobalStyle`
 
 		&::after {
 			content: "";
-			background-image: url(https://www.toptal.com/designers/subtlepatterns/patterns/dot-grid.png);
+			background-image: url(/${props => props.theme.backgroundImage});
 			opacity: .6;
 			top: 0;
 			left: 0;
