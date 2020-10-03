@@ -3,7 +3,7 @@ export * from './AssetRow';
 export * from './Bio';
 export * from './Block';
 export * from './CaseStudy';
-export * from './Code';
+export * from './CodeBlock';
 export * from './Emoji';
 export * from './Hr';
 export * from './Link';

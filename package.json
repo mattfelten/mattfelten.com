@@ -55,6 +55,7 @@
   "devDependencies": {
     "eslint": "7.4.0",
     "eslint-plugin-react": "7.20.3",
+    "polished": "3.6.7",
     "prettier": "2.0.5"
   }
 }

@@ -1,8 +1,8 @@
 import React from 'react';
 import { MDXProvider } from '@mdx-js/react';
 import { ThemeProvider } from 'styled-components';
-import { Code, Hr, Link } from '../components';
-import { Blockquote, H2, List, ListItem } from '../typography';
+import { CodeBlock, Hr, Link } from '../components';
+import { Blockquote, Code, H2, List, ListItem } from '../typography';
 import { useTheme } from '.';
 
 // components is its own object outside of render so that the references to
@@ -24,6 +24,7 @@ const components = {
 	ul: props => <List {...props} />,
 	li: props => <ListItem {...props} />,
 	blockquote: props => <Blockquote {...props} />,
+	inlineCode: props => <Code {...props} />,
 };
 
 export const Providers = ({children}) => {// Check for dark mode

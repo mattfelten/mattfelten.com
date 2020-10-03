@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { opacify } from 'polished';
 
 export const H1 = styled.h1`
 	font-size: ${props => props.theme.fontSize4};
@@ -52,4 +53,11 @@ export const Blockquote = styled.blockquote`
 			content: '— ';
 		}
 	}
+`;
+
+export const Code = styled.code`
+	font-family: monospace;
+	font-size: ${props => props.theme.fontSize1};
+	background: ${props => props.theme.textColor && opacify(-.9, props.theme.textColor)};
+	padding: .25em .5em;
 `;
