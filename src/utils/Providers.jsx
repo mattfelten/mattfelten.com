@@ -1,5 +1,6 @@
 import React from 'react';
 import { MDXProvider } from '@mdx-js/react';
+import { preToCodeBlock } from 'mdx-utils';
 import { ThemeProvider } from 'styled-components';
 import { CodeBlock, Hr, Link } from '../components';
 import { Blockquote, Code, H2, List, ListItem } from '../typography';
@@ -15,7 +16,7 @@ const components = {
 		const convertedProps = preToCodeBlock(props);
 		// if there's a codeString and some props, we passed the test
 		if (convertedProps) {
-			return <Code {...convertedProps} />;
+			return <CodeBlock {...convertedProps} />;
 		} else {
 			// it's possible to have a pre without a code in it
 			return <pre {...props} />;
