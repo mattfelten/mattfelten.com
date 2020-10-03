@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { light, dark } from '../global';
 
 export function useTheme() {
+	if (!window) return light;
+
 	// Check for dark mode
 	const mq = window.matchMedia('(prefers-color-scheme: dark)');
 	const [useDarkTheme, setDark] = useState(mq.matches);
