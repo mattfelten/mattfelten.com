@@ -1,6 +1,7 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import SimpleIcons from 'simple-icons-react-component';
+import { Link as GatsbyLink } from 'gatsby';
 import { Block } from '../components';
 import { social } from '../data';
 import { Link } from '../styles';
@@ -24,7 +25,7 @@ const wave = keyframes`
    100% { transform: rotate( 0.0deg) }
 `;
 
-const HomepageLink = styled.a`
+const HomepageLink = styled(GatsbyLink)`
 	${Link}
 	display: block;
 
@@ -71,7 +72,7 @@ const SocialIcon = styled.a`
 
 export const Footer = () => (
 	<Container>
-		<HomepageLink href="/">Matt Felten</HomepageLink>
+		<HomepageLink to="/">Matt Felten</HomepageLink>
 		<SocialList>
 			{Object.keys(social).map((key, i) => {
 				const account = social[key];
