@@ -11,26 +11,26 @@ import {
 // pass it only to GatsbyLink
 
 const A = styled.a`
-	${props =>
-		props.$underline &&
+	${({$underline}) =>
+		$underline &&
 		css`
 			${UnderlineLinkStyle}
 		`}
-	${props =>
-		!props.$underline &&
+	${({$underline}) =>
+		!$underline &&
 		css`
 			${LinkStyle}
 		`}
 `;
 
 const StyledLink = styled(GatsbyLink)`
-	${props =>
-		props.$underline &&
+	${({$underline}) =>
+		$underline &&
 		css`
 			${UnderlineLinkStyle}
 		`}
-	${props =>
-		!props.$underline &&
+	${({$underline}) =>
+		!$underline &&
 		css`
 			${LinkStyle}
 		`}

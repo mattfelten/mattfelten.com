@@ -1,7 +1,8 @@
 import React from 'react';
+import { Link as GatsbyLink } from 'gatsby';
 import styled from 'styled-components';
 
-const Link = styled.a`
+const Link = styled(GatsbyLink)`
 	color: ${props => props.theme.textColor};
 	display: block;
 	text-decoration: none;
@@ -43,7 +44,7 @@ const Image = styled.img`
 `;
 
 export const CaseStudy = ({ title, company, url, coverImage }) => (
-	<Link href={url}>
+	<Link to={url}>
 		<ImageWrapper>
 			<Image src={coverImage} alt={`Cover for ${title} at ${company}`} />
 		</ImageWrapper>
