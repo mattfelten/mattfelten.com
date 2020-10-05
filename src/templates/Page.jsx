@@ -2,6 +2,7 @@ import React from 'react';
 import { Header, Footer } from '../blocks';
 import { Block } from '../components';
 import { GlobalStyles } from '../global';
+import { Theme } from '../providers';
 
 export const Page = ({ element, props }) => {
 	const headerProps = {
@@ -11,10 +12,12 @@ export const Page = ({ element, props }) => {
 
 	return (
 		<>
-			<GlobalStyles />
-			<Header {...headerProps} />
-			<Block>{element}</Block>
-			<Footer />
+			<Theme>
+				<GlobalStyles />
+				<Header {...headerProps} />
+				<Block>{element}</Block>
+				<Footer />
+			</Theme>
 		</>
 	);
 };

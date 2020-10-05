@@ -1,4 +1,4 @@
 import React from 'react';
-import { Providers } from '../utils';
+import { MDX } from '../providers';
 
-export const Root = ({ element }) => <Providers>{element}</Providers>;
+export const Root = ({ element }) => <MDX>{element}</MDX>;
