@@ -1,7 +1,7 @@
+
 {
-  "useTabs": true,
-  "tabWidth": 4,
-  "singleQuote": true,
-  "arrowParens": "avoid",
-  "proseWrap": "never"
-}
+	"semi": true,
+	"singleQuote": false,
+	"useTabs": true,
+	"trailingComma": "es5"
+  }
