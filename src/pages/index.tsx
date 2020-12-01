@@ -1,32 +1,47 @@
 /** @jsx jsx */
 import { jsx, Styled } from "theme-ui";
-import { Layout } from "../components/Layout";
 import Head from "next/head";
+import Link from "next/link";
+import { Layout } from "../components/Layout";
+import { DateFormatter } from "../components/DateFormatter";
+import { BasicPost, getPosts } from "../lib/api";
 
 export const CMS_NAME = "Basic.dev";
 
-export default function Index() {
+export interface IndexProps {
+	posts: BasicPost[];
+}
+
+export default function Index({ posts }: IndexProps) {
 	return (
 		<>
 			<Head>
-				<title>All Posts | {CMS_NAME}</title>
+				<title>Blog | {CMS_NAME}</title>
 			</Head>
 			<Layout>
-				<div
-					sx={{
-						maxWidth: "container",
-						mx: "auto",
-						mt: 7,
-					}}
-				>
-					<Styled.h1 sx={{ fontSize: 6, mb: 4 }}>
-						This is my cool website.
-					</Styled.h1>
-					<Styled.p sx={{ fontSize: 3 }}>
-						My cool website has a dark mode and a blog and uses Nextjs.
-					</Styled.p>
-				</div>
+				<section>
+					{posts.map(({ slug, niceSlug, title, dateString }) => (
+						<div sx={{ mb: 6 }} key={slug}>
+							<Styled.h2 sx={{ mb: 2 }}>
+								<Link href={slug} as={niceSlug} passHref>
+									<Styled.a sx={{ color: "text" }}>{title}</Styled.a>
+								</Link>
+							</Styled.h2>
+							<span>
+								<DateFormatter dateString={dateString} />
+							</span>
+						</div>
+					))}
+				</section>
 			</Layout>
 		</>
 	);
+}
+
+export async function getStaticProps() {
+	const posts = getPosts();
+
+	return {
+		props: { posts },
+	};
 }

@@ -1,5 +1,6 @@
 ---
 title: Horizontal & Vertical Thinking in Design Systems
+date: '2018-03-26'
 ---
 
 I've been working as the Design System Lead at YouCaring for six months now. One of the lessons I've learned that I'm thinking a lot about right now is about horizontal and vertical thinking and it's place within a design system.

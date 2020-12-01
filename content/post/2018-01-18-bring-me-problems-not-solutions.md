@@ -1,5 +1,6 @@
 ---
 title: Bring Me Problems, Not Solutions
+date: '2018-01-18'
 ---
 
 > Bring me solutions, not problems! <cite>&mdash; Business Bro</cite>

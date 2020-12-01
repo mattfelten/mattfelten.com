@@ -1,5 +1,6 @@
 ---
 title: CSS-Only Spinner
+date: '2014-03-04'
 custom-css: spinner.css
 ---
 

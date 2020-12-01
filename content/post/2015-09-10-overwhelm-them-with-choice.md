@@ -1,5 +1,6 @@
 ---
 title: Overwhelm Them with Choice
+date: '2015-09-10'
 ---
 
 > One of our values here is we put the viewer first, and we want to overwhelm them with choice and let them decide what they want to do.

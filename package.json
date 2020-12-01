@@ -11,14 +11,15 @@
   },
   "scripts": {
     "dev": "next dev",
-    "dev:watch": "next-remote-watch ./posts",
+    "start": "next-remote-watch ./posts",
     "build": "next build",
-    "start": "next start",
+    "start:prod": "next start",
     "export": "next export",
     "typescript": "tsc"
   },
   "dependencies": {
     "date-fns": "2.10.0",
+    "globby": "11.0.1",
     "gray-matter": "^4.0.2",
     "next": "10.0.2",
     "next-mdx-remote": "^1.0.0",

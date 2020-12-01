@@ -7,11 +7,11 @@ import Head from "next/head";
 import hydrate from "next-mdx-remote/hydrate";
 // @ts-ignore
 import renderToString from "next-mdx-remote/render-to-string";
-import { Layout } from "../../components/Layout";
-import { DateFormatter } from "../../components/DateFormatter";
-import { BasicPost, getPostBySlug, getPosts } from "../../lib/api";
-import { AppThemeProvider } from "../_app";
-import { CMS_NAME } from "..";
+import { Layout } from "../../../components/Layout";
+import { DateFormatter } from "../../../components/DateFormatter";
+import { BasicPost, getPostBySlug, getPosts } from "../../../lib/api";
+import { AppThemeProvider } from "../../_app";
+import { CMS_NAME } from "../..";
 
 interface PostProps {
 	post: BasicPost;
@@ -58,6 +58,7 @@ type Params = {
 };
 
 export async function getStaticProps({ params }: Params) {
+	console.log('params.slug', params.slug);
 	const post = getPostBySlug(params.slug);
 
 	const mdxSource = await renderToString(post.content, {

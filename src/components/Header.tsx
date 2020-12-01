@@ -36,13 +36,6 @@ export function Header() {
 				<NavLink href="/" linkSx={navItemStyles} activeSx={navItemActiveStyles}>
 					{CMS_NAME}
 				</NavLink>
-				<NavLink
-					href="/blog"
-					linkSx={navItemStyles}
-					activeSx={navItemActiveStyles}
-				>
-					Blog
-				</NavLink>
 			</div>
 
 			<div sx={{ ml: "auto" }}>

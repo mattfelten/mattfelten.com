@@ -1,5 +1,6 @@
 ---
 title: Dealing with Disappointment
+date: '2014-09-19'
 ---
 
 Today, the iPhone 6 was released. I've been half-paying attention to the frenzy of people waiting at Apple stores to get one on launch day. It's crazy. I normally pre-order but I screwed up this year. I'm on a flight to Seattle right now that I forgot about. I preordered a few nights ago and mine will arrive at my door in about two weeks.

@@ -1,25 +1,28 @@
 import fs from "fs";
 import { join } from "path";
+import globby from 'globby';
 import matter from "gray-matter";
 
 // I think this should be a reusable package.
 
-const postsDirectory = join(process.cwd(), "posts");
+const postsDirectory = join(process.cwd(), 'content/post');
 
 export function getPostSlugs() {
-	return fs.readdirSync(postsDirectory);
+	return globby.sync(join(postsDirectory, '**/*.{md,mdx}'));
 }
 
 export interface BasicPost {
 	title: string;
 	dateString: string;
 	slug: string;
+	niceSlug: string;
 	content: string;
 }
 
 export function getPostBySlug(slug: string): BasicPost {
-	const slugWithoutExtension = slug.replace(/\.md$/, "");
-	const fullPath = join(postsDirectory, `${slugWithoutExtension}.md`);
+	console.log('slug', slug);
+	const slugWithoutExtension = slug;
+	const fullPath = join(postsDirectory, slug);
 	const fileContents = fs.readFileSync(fullPath, "utf8");
 
 	const { data, content } = matter(fileContents);
@@ -28,20 +31,26 @@ export function getPostBySlug(slug: string): BasicPost {
 	return {
 		...data,
 		content,
-		slug: slugWithoutExtension,
+		slug: slug,
+		niceSlug: `post/${slug}`,
 		dateString: data.date,
 	};
+}
+
+function fixGlobbyPath(path: string) {
+	return path.replace(postsDirectory, '').substr(1);
 }
 
 export function getPosts(): BasicPost[] {
 	const slugs = getPostSlugs();
 	const posts = slugs
+		.map(fixGlobbyPath)
 		.map((slug) => getPostBySlug(slug))
 		// sort posts by date in descending order
 		.sort(
-			(post1, post2) =>
-				new Date(post1.dateString).getTime() -
-				new Date(post2.dateString).getTime()
+			(a, b) =>
+				new Date(b.dateString).getTime() -
+				new Date(a.dateString).getTime()
 		);
 	return posts;
 }
