@@ -1,8 +1,9 @@
 ---
 title: Incremental Correctness
 ---
-import { Asset } from 'components';
+import { Asset, Link } from 'components';
 import files from './files.png';
+import mountain from './Mountain_Top.jpg';
 
 I was listening to an episode of [Design Details podcast](https://designdetails.fm/episodes/113490) where [Brian](https://twitter.com/brian_lovin) and [Marshall](https://twitter.com/marshallbock) interviewed [Guillermo Rauch](https://twitter.com/rauchg). They were talking about an idea of incremental correctness and I had to stop what I was doing and just listen. I've been intimately familiar with this concept for years now but never had such a clear way of articulating it.
 
@@ -12,7 +13,7 @@ My wife and I do this in our personal lives. When we're stuck on a project we te
 
 I've also used a metaphor of climbing a mountain to describe this concept. You know the goal &mdash; it's get to the top &mdash; but how would you do that? I'm not much of an outdoorsman, but charging up the mountain in a straight line is probably a very bad idea. Instead you go a little slower. You chart a course to the next safest point to stop and get your bearings. Then chart your next point. And again. And again, until you're at the top.
 
-![a person climbing a mountain]()
+<Asset src={mountain} alt="a person climbing a mountain" caption={<span>Illustration by <Link href="//marissaluca.com">Marissa Felten</Link></span>} />
 
 My work in design systems has taken me down a path of incremental improvement as well. A lot of projects have us roaming around in the dark finding the right balance of standardization and customization. We have components that are used thousands of times across multiple enterprise apps, so completely redoing a component can be incredibly painful for the teams using it to transition to. Deprecation and removal is an incredibly taxing exercise and we need to be cautious about that. So we plan, design, and build features that are the smallest most complete amount of correct we can. As our teams start using them, we learn more and improve them.
 
@@ -23,7 +24,7 @@ I really liked what Brian called out on his [website](https://brianlovin.com/ove
 
 Just look at all the jokes about design file names and you'll immediately see that our tools are meant to show something finished.
 
-<Asset src={files} alt='a giant list of poorly named design files' />
+<Asset src={files} alt="a giant list of poorly named design files" />
 
 There are two fundamental aspects of the tools we use that need to be in place to support us in our work. _Versioning_ and _branching_.
 
