@@ -1,4 +1,5 @@
 import path from 'path';
+import hydrate from 'next-mdx-remote/hydrate'
 import { getPathList, getPostData } from '../../lib/docs';
 import Head from 'next/head';
 import Layout from '../../components/layout';
@@ -8,9 +9,11 @@ import Date from '../../components/date';
 // File path for docs root
 const DOCS_ROOT = path.join(process.cwd(), '/docs');
 
-export default function Docs({ postData }) {
-  // const content = hydrate(source, { components });
+const components = {};
 
+const MDX = ({children}) => hydrate(children, { components });
+
+export default function Docs({ postData }) {
   return (
     <Layout>
       {/* Add this <Head> tag */}
@@ -24,7 +27,7 @@ export default function Docs({ postData }) {
             <Date dateString={postData.date} />
           </div>
         )}
-        <div dangerouslySetInnerHTML={{ __html: postData.contentHtml }} />
+          <MDX>{postData.source}</MDX>
       </article>
     </Layout>
   );
