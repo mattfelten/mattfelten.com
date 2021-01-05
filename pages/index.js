@@ -1,23 +1,25 @@
 import Head from 'next/head';
 import Layout, { siteTitle } from '../components/layout';
-import { getAllPosts } from '../api/posts';
 
 import utilStyles from '../styles/utils.module.css';
+//import { getSortedPostsData } from '../lib/posts';
+//import { getFolderNestedData } from '../lib/docs';
+import { getSortedFlatData } from '../lib/docs';
 import Link from 'next/link';
-import DateComponent from '../components/date';
+import Date from '../components/date';
 
 export async function getStaticProps() {
-  const posts = await getAllPosts();
+  const allDocsFlatData = await getSortedFlatData('docs');
 
   return {
     props: {
-      posts,
+      allDocsFlatData,
     },
   };
 }
 
 export default function Home({
-  posts,
+  allDocsFlatData,
 }) {
   return (
     <Layout home>
@@ -51,20 +53,16 @@ export default function Home({
         </p>
 
         <ul className={utilStyles.list}>
-          {posts.sort(
-            (a, b) =>
-              new Date(b.date).getTime() -
-              new Date(a.date).getTime()
-            ).map(({ date, title, slug }) => (
-            <li className={utilStyles.listItem} key={slug}>
-              <Link href={slug}>
+          {allDocsFlatData.map(({ id, date, title }) => (
+            <li className={utilStyles.listItem} key={id}>
+              <Link href={`/docs/${id}`}>
                 <a>{title}</a>
               </Link>
               <br />
 
               {date && (
                 <small className={utilStyles.lightText}>
-                  <DateComponent dateString={date} />
+                  <Date dateString={date} />
                 </small>
               )}
             </li>
