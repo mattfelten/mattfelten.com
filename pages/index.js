@@ -6,7 +6,7 @@ import utilStyles from '../styles/utils.module.css';
 //import { getFolderNestedData } from '../lib/docs';
 import { getSortedFlatData } from '../lib/docs';
 import Link from 'next/link';
-import Date from '../components/date';
+import DateFormatter from '../components/date';
 
 export async function getStaticProps() {
   const allDocsFlatData = await getSortedFlatData('docs');
@@ -53,7 +53,11 @@ export default function Home({
         </p>
 
         <ul className={utilStyles.list}>
-          {allDocsFlatData.map(({ id, date, title }) => (
+          {allDocsFlatData.sort(
+            (a, b) =>
+              new Date(b.date).getTime() -
+              new Date(a.date).getTime()
+            ).map(({ id, date, title }) => (
             <li className={utilStyles.listItem} key={id}>
               <Link href={`/docs/${id}`}>
                 <a>{title}</a>
@@ -62,7 +66,7 @@ export default function Home({
 
               {date && (
                 <small className={utilStyles.lightText}>
-                  <Date dateString={date} />
+                  <DateFormatter dateString={date} />
                 </small>
               )}
             </li>
