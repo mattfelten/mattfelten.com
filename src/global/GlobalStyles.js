@@ -56,6 +56,7 @@ export const GlobalStyles = createGlobalStyle`
 			right: 0;
 			position: absolute;
 			z-index: -1;
+			min-height: 100vh;
 		}
 	}
 `;
