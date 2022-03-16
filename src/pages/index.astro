@@ -1,0 +1,28 @@
+---
+const title = "Test";
+const posts = Astro.fetchContent('./post/**/*.md').sort((a, b) => new Date(b.date) - new Date(a.date));
+const speaking = Astro.fetchContent('./speaking/**/*.md').sort((a, b) => new Date(b.date) - new Date(a.date));
+---
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<title>{title}</title>
+
+	<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+</head>
+<body>
+	<main>
+		<ul>
+			{posts.map(
+				({title, url, redirect})=> <li><a href={redirect ||url}>{title}</a></li>
+			)}
+		</ul>
+		<ul>
+			{speaking.map(
+				({title,url, redirect})=> <li><a href={redirect || url}>{title}</a></li>
+			)}
+		</ul>
+	</main>
+</body>
+</html>
