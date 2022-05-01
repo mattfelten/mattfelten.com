@@ -1,15 +1,18 @@
 ---
 title: Horizontal & Vertical Thinking in Design Systems
 date: 2018-03-26
+setup: |
+    import H from './horizontal-thinking.png'
+    import V from './vertical-thinking.png'
 ---
 
 I've been working as the Design System Lead at YouCaring for six months now. One of the lessons I've learned that I'm thinking a lot about right now is about horizontal and vertical thinking and it's place within a design system.
 
-![Horizontal Thinking](horizontal-thinking.png)
+<img alt="Horizontal Thinking" src={H} />
 
 Horizontal thinking is looking at the big picture of the problem, creating consistency across an entire project. Design systems on the surface are about this type of thinking. You are either building a whole system from scratch or most likely inheriting a system of varying degrees of consistency. You need to add and consolidate features into the design system that work across all use cases in your app and some hypothetical ones, making sure all the adopters of the system are able and willing to use them. An unused design system is just pretend work after all.
 
-![Vertical Thinking](vertical-thinking.png)
+<img alt="Vertical Thinking" src={V} />
 
 Vertical thinking is looking at the details of the problem, diving in to see what the unique circumstances are, and figuring out the best way to solve that specific problem. Product Designers are normally doing projects that require vertical thinking. How do we encourage conversion on X page? What's the easiest way for X user to find Y feature? Those are vertical thinking projects, and are really important not only for business growth, but to guide how a design system evolves. The best design system is living and adapting, and this type of thinking is what does that.
 

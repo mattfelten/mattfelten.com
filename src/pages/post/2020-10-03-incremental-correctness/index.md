@@ -1,0 +1,48 @@
+---
+title: Incremental Correctness
+date: 2020-10-03
+setup: |
+    import Asset from '~components/Asset.astro'
+    import files from './files.png'
+    import mountain from './Mountain_Top.jpg';
+---
+
+I was listening to an episode of [Design Details podcast](https://designdetails.fm/episodes/113490) where [Brian](https://twitter.com/brian_lovin) and [Marshall](https://twitter.com/marshallbock) interviewed [Guillermo Rauch](https://twitter.com/rauchg). They were talking about an idea of incremental correctness and I had to stop what I was doing and just listen. I've been intimately familiar with this concept for years now but never had such a clear way of articulating it.
+
+In short, _Incremental Correctness_ is not the pursuit of finality, but to be always improving. It's against proposing a major redesign (hello design portfolios), instead optimizing what you have. Focus on understanding the space you're in, researching problems, experimenting, validating, and shipping small features quickly. When we learn about new problems, we pivot and fix them. Accepting that nothing is ever finished somehow is liberating. It allows you to celebrate each and every win when you make it.
+
+My wife and I do this in our personal lives. When we're stuck on a project we tell ourselves "what is the next right step?" and do that. She just spent a few months renovating our garage into a beautiful workspace. That project had her (and occasionally me) putting up drywall, painting, running electricity lines, painting, sealing, realigning the garage door, did I say painting? At times it felt like too big of a project, and we almost hired someone to finish, but she kept taking the next right step. We'll probably forever find little things to improve, change, and fix, but for now it's at a place where we're happy and can really enjoy the improved space she created.
+
+I've also used a metaphor of climbing a mountain to describe this concept. You know the goal &mdash; it's get to the top &mdash; but how would you do that? I'm not much of an outdoorsman, but charging up the mountain in a straight line is probably a very bad idea. Instead you go a little slower. You chart a course to the next safest point to stop and get your bearings. Then chart your next point. And again. And again, until you're at the top.
+
+<Asset src={mountain} alt="a person climbing a mountain">
+	Illustration by <a href="//marissaluca.com">Marissa Felten</a>
+</Asset>
+
+My work in design systems has taken me down a path of incremental improvement as well. A lot of projects have us roaming around in the dark finding the right balance of standardization and customization. We have components that are used thousands of times across multiple enterprise apps, so completely redoing a component can be incredibly painful for the teams using it to transition to. Deprecation and removal is an incredibly taxing exercise and we need to be cautious about that. So we plan, design, and build features that are the smallest most complete amount of correct we can. As our teams start using them, we learn more and improve them.
+
+---
+
+I really liked what Brian called out on his [website](https://brianlovin.com/overthought/incrementally-correct-personal-websites).
+
+> ...our tools don't afford incrementally-correct processes.
+
+Just look at all the jokes about design file names and you'll immediately see that our tools are meant to show something finished.
+
+<Asset src={files} alt="a giant list of poorly named design files" />
+
+There are two fundamental aspects of the tools we use that need to be in place to support us in our work. _Versioning_ and _branching_.
+
+Versioning is important because every decision we make builds on the last. We steadily gain knowledge and need our tools to reflect that our work changes over time. Our projects, the websites we make, the apps we create, the hot sauce recipe we're working on, they evolve over time. Our tools shouldn't live such a binary _final only_ world.
+
+Branching is also important. Branches are ideas and experiments we run in the hopes that improvements are realized. Some branches are unsuccessful but we've learned something that will inform the next branch we try. Some branches are successful and need to be carried through. This reminds me of the senior designer's process diagram [Julie Zhuo made](https://medium.com/the-year-of-the-looking-glass/junior-designers-vs-senior-designers-fbe483d3b51e).
+
+<Asset src="https://miro.medium.com/max/1000/1*v94epVSu0dQIdRXKnT-VSQ.png" href="https://medium.com/the-year-of-the-looking-glass/junior-designers-vs-senior-designers-fbe483d3b51e" alt="senior designer's process" caption="Julie Zhuo's Senior Designers Process" />
+
+There are some tools out there that do encourage _incrementalness_. `git` is a tool for code versioning and branching that is probably the biggest in the space, and is starting to grow in familiarity with designers. [Abstract](https://www.abstract.com) is built on top of those `git` fundamentals, but with a nice UI specific to Sketch and Adobe XD files. [Figma](https://www.figma.com/files/recent) does have versioning as well, but is missing the branching feature. In writing, tools like Confluence, Notion, Google Drive can all version but it's still tedious to explore, test ideas, and look back through history while writing.
+
+Years ago, when I used to do more work with WordPress websites I followed some tools like [VersionPress](https://versionpress.com) that would keep your website and content versioned and branchable. This would let you run different urls for production, staging, development, and other environments and experiments you'd like to set up.
+
+---
+
+I'm struggling figuring out how to end this. Maybe it will come to me and I'll edit this paragraph. Maybe it'll stay this way forever. Who knows.

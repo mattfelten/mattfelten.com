@@ -1,0 +1,86 @@
+---
+import cx from 'clsx';
+
+const {
+	alt,
+	className,
+	expand,
+	href,
+	src,
+	type = 'image',
+	fullWidth
+} = Astro.props;
+
+const classes = cx(
+	'Assets',
+	fullWidth && 'Assets--full-width',
+	className
+);
+---
+
+<style>
+	.Asset {
+		margin: 2em 0;
+	}
+
+	.Asset--full-width {
+		/* Remove gutters */
+		width: 94vw;
+	}
+
+	a {
+		display: block;
+		transition: all .1s ease-in-out;
+
+		&:hover {
+			transform: scale(1.06);
+			box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+		}
+	}
+
+	img {
+		border-style: none;
+		display: block;
+		height: auto;
+		max-width: 100%;
+		width: 100%;
+	}
+
+	video {
+		display: block;
+		height: auto;
+		max-width: 100%;
+		width: 100%;
+	}
+
+	small {
+		display: block;
+		margin-top: 1em;
+	}
+</style>
+
+<div class={classes}>
+	{() => {
+		const getLink = () => {
+			if (href) return href;
+			if (expand) return src;
+			return false;
+		};
+
+		const getAssetContent = () => {
+			if (type === 'video')
+				return (
+					<video src={src} controls>
+						{alt}
+					</video>
+				);
+
+			return <img src={src} alt={alt} />;
+		};
+
+		if (getLink()) return <a href={getLink()}>{getAssetContent()}</a>;
+		return getAssetContent();
+	}}
+
+	<small><slot /></small>
+</div>

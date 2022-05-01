@@ -1,7 +1,14 @@
 ---
 const title = "Test";
-const posts = Astro.fetchContent('./post/**/*.md').sort((a, b) => new Date(b.date) - new Date(a.date));
-const speaking = Astro.fetchContent('./speaking/**/*.md').sort((a, b) => new Date(b.date) - new Date(a.date));
+
+const work = await Astro.glob('./work/**/*.md');
+work.sort((a, b) => new Date(b.frontmatter.year).valueOf() - new Date(a.frontmatter.year).valueOf());
+
+const posts = await Astro.glob('./post/**/*.md');
+posts.sort((a, b) => new Date(b.frontmatter.date).valueOf() - new Date(a.frontmatter.date).valueOf());
+
+const speaking = await Astro.glob('./speaking/**/*.md');
+speaking.sort((a, b) => new Date(b.frontmatter.date).valueOf() - new Date(a.frontmatter.date).valueOf());
 ---
 <html lang="en">
 <head>
@@ -14,13 +21,18 @@ const speaking = Astro.fetchContent('./speaking/**/*.md').sort((a, b) => new Dat
 <body>
 	<main>
 		<ul>
+			{work.map(
+				({ frontmatter: { title, redirect }, url}) => <li><a href={redirect || url}>{title}</a></li>
+			)}
+		</ul>
+		<ul>
 			{posts.map(
-				({title, url, redirect})=> <li><a href={redirect ||url}>{title}</a></li>
+				({ frontmatter: { title, redirect }, url}) => <li><a href={redirect || url}>{title}</a></li>
 			)}
 		</ul>
 		<ul>
 			{speaking.map(
-				({title,url, redirect})=> <li><a href={redirect || url}>{title}</a></li>
+				({frontmatter: { title, redirect }, url})=> <li><a href={redirect || url}>{title}</a></li>
 			)}
 		</ul>
 	</main>
