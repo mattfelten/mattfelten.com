@@ -1,4 +1,6 @@
 ---
+import Layout from '../layout/default.astro';
+
 const title = "Test";
 
 const work = await Astro.glob('./work/**/*.md');
@@ -10,31 +12,20 @@ posts.sort((a, b) => new Date(b.frontmatter.date).valueOf() - new Date(a.frontma
 const speaking = await Astro.glob('./speaking/**/*.md');
 speaking.sort((a, b) => new Date(b.frontmatter.date).valueOf() - new Date(a.frontmatter.date).valueOf());
 ---
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width">
-	<title>{title}</title>
-
-	<link rel="icon" type="image/x-icon" href="/favicon.ico" />
-</head>
-<body>
-	<main>
-		<ul>
-			{work.map(
-				({ frontmatter: { title, redirect }, url}) => <li><a href={redirect || url}>{title}</a></li>
-			)}
-		</ul>
-		<ul>
-			{posts.map(
-				({ frontmatter: { title, redirect }, url}) => <li><a href={redirect || url}>{title}</a></li>
-			)}
-		</ul>
-		<ul>
-			{speaking.map(
-				({frontmatter: { title, redirect }, url})=> <li><a href={redirect || url}>{title}</a></li>
-			)}
-		</ul>
-	</main>
-</body>
-</html>
+<Layout title={title}>
+	<ul>
+		{work.map(
+			({ frontmatter: { title, redirect }, url}) => <li><a href={redirect || url}>{title}</a></li>
+		)}
+	</ul>
+	<ul>
+		{posts.map(
+			({ frontmatter: { title, redirect }, url}) => <li><a href={redirect || url}>{title}</a></li>
+		)}
+	</ul>
+	<ul>
+		{speaking.map(
+			({frontmatter: { title, redirect }, url})=> <li><a href={redirect || url}>{title}</a></li>
+		)}
+	</ul>
+</Layout>

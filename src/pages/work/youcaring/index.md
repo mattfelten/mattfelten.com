@@ -1,5 +1,6 @@
 ---
 title: Design System
+layout: ../../../layout/default.astro
 company: YouCaring
 year: 2018
 role:

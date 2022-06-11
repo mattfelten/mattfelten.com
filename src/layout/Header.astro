@@ -1,0 +1,18 @@
+---
+const Tag = Astro.canonicalURL.pathname === '/' ? 'h1' : 'h3';
+---
+<style>
+	a {
+		color: theme(colors.text); /* TODO: Theme */
+		display: block;
+		text-decoration: none;
+		transition: all;
+		@apply transition;
+
+		&:hover {
+			@apply hover-up;
+		}
+	}
+</style>
+
+<Tag><a href="/">Matt Felten</a></Tag>
