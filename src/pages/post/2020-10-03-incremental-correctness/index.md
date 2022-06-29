@@ -1,6 +1,7 @@
 ---
 title: Incremental Correctness
 date: 2020-10-03
+layout: ../../../layout/post.astro
 setup: |
     import Asset from '~components/Asset.astro'
     import files from './files.png'

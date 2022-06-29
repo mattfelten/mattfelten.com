@@ -1,11 +1,9 @@
 ---
 import Layout from './default.astro';
-const { content: { title } } = Astro.props;
+const { title, content } = Astro.props;
 ---
-
-
-<Layout title={title}>
-	<section class="prose dark:prose-white">
+<Layout title={title || content.title}>
+	<article class="prose lg:prose-xl dark:prose-white mx-auto">
 		<slot />
-	</section>
+	</article>
 </Layout>

@@ -1,6 +1,7 @@
 ---
 title: Things I Learned In Europe
 date: 2014-06-16
+layout: ../../layout/post.astro
 ---
 
 A month ago I flew out of LAX. I spent sixteen days with close friends, hitting six cities in four different countries. It was awesome. There were so many firsts for me on that trip. I learned so many different things on that trip. I spent the last month reflecting on the trip and writing things down. Here's my big takeaways.

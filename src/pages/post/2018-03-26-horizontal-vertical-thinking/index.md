@@ -1,6 +1,7 @@
 ---
 title: Horizontal & Vertical Thinking in Design Systems
 date: 2018-03-26
+layout: ../../../layout/post.astro
 setup: |
     import H from './horizontal-thinking.png'
     import V from './vertical-thinking.png'
