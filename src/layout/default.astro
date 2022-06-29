@@ -1,9 +1,9 @@
 ---
 import Header from './Header.astro';
 import Footer from './Footer.astro';
+import favicons from './favicon.html?raw';
 const { title: pageTitle } = Astro.props;
 const title = ['Matt Felten', (pageTitle && `× ${pageTitle}`)].join(' ');
-const spacing = 10;
 ---
 <style>
 	html {
@@ -33,7 +33,7 @@ const spacing = 10;
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
-	<link rel="icon" type="image/x-icon" href="/favicon.ico" />
+	<Fragment set:html={favicons} />
 </head>
 <body class="font-sans text-base bg-background text-text p-6 space-y-8 dark:antialiased">
 	<Header />

@@ -5,5 +5,15 @@ module.exports = {
 	config: {
 		// The options are the same as https://github.com/itgalaxy/favicons#usage
 		path: '/favicons/',
+		icons: {
+			android: false,
+			appleIcon: false,
+			appleStartup: false,
+			coast: false,
+			favicons: true,
+			firefox: false,
+			windows: false,
+			yandex: false,
+		},
 	},
 };
