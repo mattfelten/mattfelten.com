@@ -3,10 +3,41 @@ const plugin = require('tailwindcss/plugin');
 module.exports = {
 	content: ['./src/**/*.{html,js,astro}'],
 	theme: {
-		colors: {
-			accent: '#3DDFC2',
-			background: '#fafafa',
-			text: '#25272c',
+		variables: {
+			DEFAULT: {
+				color: {
+					accent: '#3DDFC2',
+					background: '#fafafa',
+					text: '#25272c',
+				},
+				backgroundImage: "url('/dot-grid.jpg')",
+			},
+		},
+		darkVariables: {
+			DEFAULT: {
+				color: {
+					accent: '#00E0B8',
+					background: '#25272c',
+					text: '#fafafa',
+				},
+				backgroundImage: "url('/dot-grid.dark.jpg')",
+			},
+		},
+		colors: {},
+		textColor: {
+			accent: 'var(--color-accent)',
+			background: 'var(--color-background)',
+			text: 'var(--color-text)',
+		},
+		backgroundColor: {
+			accent: 'var(--color-accent)',
+			background: 'var(--color-background)',
+			text: 'var(--color-text)',
+		},
+		textDecorationColor: {
+			accent: 'var(--color-accent)',
+			background: 'var(--color-background)',
+			text: 'var(--color-text)',
 		},
 		spacing: {
 			px: '1px',
@@ -20,25 +51,77 @@ module.exports = {
 			5: '48px',
 			6: '64px',
 			7: '80px',
+			8: '96px', // After this point, 16px steps is too small to be significant, and moves to 24px steps
+			9: '120px',
+			10: '144px',
+			11: '168px',
+			12: '192px',
 		},
 		fontFamily: {
-			sans: ['Noto Sans', 'sans-serif'],
+			sans: ['Manrope', 'sans-serif'],
 		},
 		extend: {
 			backgroundImage: {
-				pattern: "url('/dot-grid.jpg')",
+				pattern: 'var(--backgroundimage)',
+			},
+			textDecorationThickness: {
+				3: '3px',
+			},
+			typography: {
+				DEFAULT: {
+					css: {
+						'--tw-prose-body': 'var(--color-text)',
+						'--tw-prose-headings': 'var(--color-text)',
+						'--tw-prose-lead': 'var(--color-text)',
+						'--tw-prose-links': 'var(--color-text)',
+						'--tw-prose-bold': 'var(--color-text)',
+						'--tw-prose-counters': 'var(--color-text)',
+						'--tw-prose-bullets': 'var(--color-text)',
+						'--tw-prose-hr': 'var(--color-text)',
+						'--tw-prose-quotes': 'var(--color-text)',
+						'--tw-prose-quote-borders': 'var(--color-text)',
+						'--tw-prose-captions': 'var(--color-text)',
+						'--tw-prose-code': 'var(--color-text)',
+						'--tw-prose-pre-code': 'var(--color-text)',
+						'--tw-prose-pre-bg': 'var(--color-text)',
+						'--tw-prose-th-borders': 'var(--color-text)',
+						'--tw-prose-td-borders': 'var(--color-text)',
+						'--tw-prose-invert-body': 'var(--color-background)',
+						'--tw-prose-invert-headings': 'var(--color-background)',
+						'--tw-prose-invert-lead': 'var(--color-background)',
+						'--tw-prose-invert-links': 'var(--color-background)',
+						'--tw-prose-invert-bold': 'var(--color-background)',
+						'--tw-prose-invert-counters': 'var(--color-background)',
+						'--tw-prose-invert-bullets': 'var(--color-background)',
+						'--tw-prose-invert-hr': 'var(--color-background)',
+						'--tw-prose-invert-quotes': 'var(--color-background)',
+						'--tw-prose-invert-quote-borders':
+							'var(--color-background)',
+						'--tw-prose-invert-captions': 'var(--color-background)',
+						'--tw-prose-invert-code': 'var(--color-background)',
+						'--tw-prose-invert-pre-code': 'var(--color-background)',
+						'--tw-prose-invert-pre-bg': 'rgb(0 0 0 / 50%)',
+						'--tw-prose-invert-th-borders':
+							'var(--color-background)',
+						'--tw-prose-invert-td-borders':
+							'var(--color-background)',
+					},
+				},
 			},
 		},
 	},
 	plugins: [
+		require('@tailwindcss/typography'),
+		require('@mertasan/tailwindcss-variables'),
 		plugin(function ({ addComponents, theme }) {
 			addComponents({
-				'.transition': {
+				'.hover': {
+					trasition: 'all',
 					transitionDuration: '.1s',
 					transitionTimingFunction: 'ease-in-out',
-				},
-				'.hover-up': {
-					transform: `translateY(-${theme('spacing.[0.5]')})`,
+					'&:hover': {
+						transform: `translateY(-${theme('spacing.[0.5]')})`,
+					},
 				},
 			});
 		}),

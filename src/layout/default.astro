@@ -1,19 +1,43 @@
 ---
 import Header from './Header.astro';
 import Footer from './Footer.astro';
-const { title } = Astro.props;
+const { title: pageTitle } = Astro.props;
+const title = ['Matt Felten', (pageTitle && `× ${pageTitle}`)].join(' ');
+const spacing = 10;
 ---
+<style>
+	html {
+		position: relative;
+
+		&::after {
+			content: '';
+			background-image: var(--backgroundimage);
+			opacity: .6;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			position: absolute;
+			z-index: -1;
+			min-height: 100vh;
+		}
+	}
+</style>
+
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width">
 	<title>{title}</title>
 
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
 	<link rel="icon" type="image/x-icon" href="/favicon.ico" />
 </head>
-<body class="font-sans text-text bg-background bg-pattern">
+<body class="font-sans text-base bg-background text-text p-6 space-y-8 dark:antialiased">
 	<Header />
-	<main>
+	<main class="space-y-8">
 		<slot />
 	</main>
 	<Footer />
