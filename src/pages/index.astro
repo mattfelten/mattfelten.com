@@ -1,0 +1,35 @@
+---
+import Layout from '../layout/default.astro';
+import List from '../components/List.astro';
+
+const posts = await Astro.glob('./post/**/*.md');
+posts.sort((a, b) => new Date(b.frontmatter.date).valueOf() - new Date(a.frontmatter.date).valueOf());
+
+const speaking = await Astro.glob('./speaking/**/*.md');
+speaking.sort((a, b) => new Date(b.frontmatter.date).valueOf() - new Date(a.frontmatter.date).valueOf());
+---
+<style>
+	.headline {
+		@apply text-4xl font-bold mb-4;
+	}
+
+	.current a,
+	.previous a {
+		@apply underline decoration-3 decoration-accent font-semibold hover:decoration-4 whitespace-nowrap;
+	}
+
+	@media (min-width:1100px) and (max-width: 1310px) {
+		.previous {
+			max-width: 980px;
+		}
+	}
+</style>
+<Layout>
+	<section class="text-3xl leading-snug space-y-2 lg:space-y-1">
+		<p class="headline">Design & Code</p>
+		<p class="current">Currently I lead design and frontend engineering at <a href="//missioncloud.com">Mission Cloud</a>.</p>
+		<p class="previous">Previously I lead teams and design systems at <a href="//servicetitan.com">ServiceTitan</a>, <a href="//youcaring.com">YouCaring</a>, & <a href="//dreamhost.com">DreamHost</a></p>
+	</section>
+	<List list={posts} title="Writing" />
+	<List list={speaking} title="Speaking" />
+</Layout>
