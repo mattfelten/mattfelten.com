@@ -16,9 +16,7 @@ My wife and I do this in our personal lives. When we're stuck on a project we te
 
 I've also used a metaphor of climbing a mountain to describe this concept. You know the goal &mdash; it's get to the top &mdash; but how would you do that? I'm not much of an outdoorsman, but charging up the mountain in a straight line is probably a very bad idea. Instead you go a little slower. You chart a course to the next safest point to stop and get your bearings. Then chart your next point. And again. And again, until you're at the top.
 
-<Asset src={mountain} alt="a person climbing a mountain">
-	Illustration by <a href="//marissaluca.com">Marissa Felten</a>
-</Asset>
+<Asset src={mountain} alt="a person climbing a mountain">Illustration by <a href="//marissaluca.com">Marissa Felten</a></Asset>
 
 My work in design systems has taken me down a path of incremental improvement as well. A lot of projects have us roaming around in the dark finding the right balance of standardization and customization. We have components that are used thousands of times across multiple enterprise apps, so completely redoing a component can be incredibly painful for the teams using it to transition to. Deprecation and removal is an incredibly taxing exercise and we need to be cautious about that. So we plan, design, and build features that are the smallest most complete amount of correct we can. As our teams start using them, we learn more and improve them.
 
