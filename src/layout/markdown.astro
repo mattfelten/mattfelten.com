@@ -2,6 +2,11 @@
 import Layout from './default.astro';
 const { title, content } = Astro.props;
 ---
+<style is:global>
+	.prose hr {
+		opacity: .15;
+	}
+</style>
 <Layout title={title || content.title}>
 	<article class="prose lg:prose-xl dark:prose-white mx-auto">
 		<slot />
