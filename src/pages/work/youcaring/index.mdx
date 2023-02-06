@@ -7,19 +7,19 @@ role:
     - Project Lead
     - Collaborated with 3 designers & engineering team of 15
 goal: Improve product improvement velocity and team collaboration by initiating design systems
-cover: ./cover.png
-setup: |
-    import Asset from '~components/Asset.astro'
-    import AssetRow from '~components/AssetRow.astro'
-    import docsExample from './docs-example.png'
-    import docsReal from './docs-real.png'
-    import exampleAlerts from './example-alerts.png'
-    import exampleButtons from './example-buttons.png'
-    import exampleCards from './example-cards.png'
-    import interfaceInventory from './interface-inventory.png'
-    import interfaceInventoryGif from './interface-inventory.gif'
-    import roadmap from './roadmap.png'
+cover: ./imgs/cover.png
 ---
+
+import Asset from '../../../components/Asset.astro';
+import AssetRow from '../../../components/AssetRow.astro';
+import docsExample from './imgs/docs-example.png';
+import docsReal from './imgs/docs-real.png';
+import exampleAlerts from './imgs/example-alerts.png';
+import exampleButtons from './imgs/example-buttons.png';
+import exampleCards from './imgs/example-cards.png';
+import interfaceInventory from './imgs/interface-inventory.png';
+import interfaceInventoryGif from './imgs/interface-inventory.gif';
+import roadmap from './imgs/roadmap.png';
 
 I joined [YouCaring](https://youcaring.com/) in 2018 to lead their Design System initiative. YouCaring was a crowdfunding platform built around social good and helping people in need raise money. They’re also a B Corp. Based on my work with design systems at [DreamHost](/work/dreamhost/) and my love of Design Ops&trade;, this was a perfect role.
 
@@ -34,8 +34,8 @@ All projects need goals so I started by outlining what I was looking to do with 
 ## Interface Inventory
 
 <AssetRow>
-	<Asset src={interfaceInventoryGif} alt='Interface Inventory'/>
-	<Asset src={interfaceInventory} alt='Interface Inventory'/>
+	<Asset src={interfaceInventoryGif} alt="Interface Inventory" />
+	<Asset src={interfaceInventory} alt="Interface Inventory" />
 </AssetRow>
 
 The first thing I did was make an [interface inventory](http://bradfrost.com/blog/post/interface-inventory/). We needed to baseline where we’re at and truly understand the scope of the situation. Making one of these makes it very apparent where the biggest wins can be made.
@@ -45,8 +45,16 @@ The first thing I did was make an [interface inventory](http://bradfrost.com/blo
 We need a place for all the design patterns and documentation to live. I dove into creating a public website that the design system could live at.
 
 <AssetRow>
-	<Asset src={docsExample} href={docsExample} alt='Documentation Site Concept'>Documentation Site Concept</Asset>
-	<Asset src={docsReal} href={docsReal} alt='Published Documentation Site'>Published Documentation Site</Asset>
+	<Asset
+		src={docsExample}
+		href={docsExample}
+		alt="Documentation Site Concept"
+	>
+		Documentation Site Concept
+	</Asset>
+	<Asset src={docsReal} href={docsReal} alt="Published Documentation Site">
+		Published Documentation Site
+	</Asset>
 </AssetRow>
 
 I started by making a mockup of the functionality I wanted the site to have. I wanted to be able to explain a component, show variations, explain why a variation would be used, have a live example using actual code, and implementation details for both designers and engineers to use the component. We took this mockup and interviewed designers and engineers to make sure it met needs and iterated.
