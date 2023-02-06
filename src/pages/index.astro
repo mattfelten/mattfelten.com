@@ -1,13 +1,32 @@
 ---
+import { format as dateFormat } from 'date-fns';
+import { RxArrowTopRight } from 'react-icons/rx';
+import { getCollection } from 'astro:content';
 import Layout from '../layout/default.astro';
+import ConditionalLink from '../components/ConditionalLink.astro';
 import List from '../components/List.astro';
 
+const format = date => dateFormat(date, 'yyyy');
+
+const work = (await getCollection('work')).sort(
+	(a, b) => b.data.start.valueOf() - a.data.start.valueOf()
+);
+
 const posts = await Astro.glob('./post/**/*.md');
-posts.sort((a, b) => new Date(b.frontmatter.date).valueOf() - new Date(a.frontmatter.date).valueOf());
+posts.sort(
+	(a, b) =>
+		new Date(b.frontmatter.date).valueOf() -
+		new Date(a.frontmatter.date).valueOf()
+);
 
 const speaking = await Astro.glob('./speaking/**/*.md');
-speaking.sort((a, b) => new Date(b.frontmatter.date).valueOf() - new Date(a.frontmatter.date).valueOf());
+speaking.sort(
+	(a, b) =>
+		new Date(b.frontmatter.date).valueOf() -
+		new Date(a.frontmatter.date).valueOf()
+);
 ---
+
 <style>
 	.headline {
 		@apply text-4xl font-bold mb-4;
@@ -18,17 +37,80 @@ speaking.sort((a, b) => new Date(b.frontmatter.date).valueOf() - new Date(a.fron
 		@apply underline underline-offset-4 decoration-3 decoration-accent font-semibold hover:decoration-4 whitespace-nowrap;
 	}
 
-	@media (min-width:1100px) and (max-width: 1310px) {
+	@media (min-width: 1100px) and (max-width: 1310px) {
 		.previous {
 			max-width: 980px;
 		}
 	}
 </style>
 <Layout>
-	<section class="text-3xl leading-snug space-y-2 lg:space-y-1">
+	<section class="space-y-2 text-3xl leading-snug lg:space-y-1">
 		<p class="headline">Design & Code</p>
-		<p class="current">Currently I lead design and frontend engineering at <a href="//missioncloud.com">Mission Cloud</a>.</p>
-		<p class="previous">Previously I lead teams and design systems at <a href="//servicetitan.com">ServiceTitan</a>, <a href="//youcaring.com">YouCaring</a>, & <a href="//dreamhost.com">DreamHost</a></p>
+		<p class="current">
+			Currently I lead design and frontend engineering at <a
+				href="//missioncloud.com">Mission Cloud</a
+			>.
+		</p>
+		<p class="previous">
+			Previously I lead teams and design systems at <a
+				href="//servicetitan.com">ServiceTitan</a
+			>, <a href="//youcaring.com">YouCaring</a>, & <a
+				href="//dreamhost.com">DreamHost</a
+			>
+		</p>
+	</section>
+	<section>
+		<h3 class="mb-1 font-bold">Experience</h3>
+		<ol class="space-y-5">
+			{
+				work.map(
+					({
+						data: {
+							description,
+							company,
+							start,
+							end,
+							role,
+							website,
+						},
+					}) => (
+						<li class="flex">
+							<div class="w-1/4 min-w-[250px]">
+								<h4 class="text-2xl">
+									<ConditionalLink
+										href={website}
+										class="flex items-center group"
+									>
+										<span class="font-medium mb-0.5">
+											{company}
+										</span>
+										{website && (
+											<span class="group-hover:text-accent opacity-30 ml-0.5 group-hover:opacity-100 transition text-xl">
+												<RxArrowTopRight />
+											</span>
+										)}
+									</ConditionalLink>
+								</h4>
+								<time
+									class="block"
+									datetime={start.toISOString()}
+								>
+									{format(start)} —{' '}
+									{end ? format(end) : 'Now'}
+								</time>
+							</div>
+
+							<div class="pt-0.5">
+								<h5 class="mb-0.5 text-xl font-medium">
+									{role}
+								</h5>
+								<p class="prose">{description}</p>
+							</div>
+						</li>
+					)
+				)
+			}
+		</ol>
 	</section>
 	<List list={posts} title="Writing" />
 	<List list={speaking} title="Speaking" />

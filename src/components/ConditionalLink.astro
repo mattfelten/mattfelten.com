@@ -1,0 +1,7 @@
+---
+const Tag = Astro.props.href ? 'a' : 'span';
+---
+
+<Tag {...Astro.props}>
+	<slot />
+</Tag>

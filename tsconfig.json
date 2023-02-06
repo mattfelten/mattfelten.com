@@ -1,0 +1,6 @@
+{
+	"extends": "astro/tsconfigs/base",
+	"compilerOptions": {
+		"strictNullChecks": true // Note: Not needed if you extend "astro/tsconfigs/strict" or "astro/tsconfigs/strictest"
+	}
+}
