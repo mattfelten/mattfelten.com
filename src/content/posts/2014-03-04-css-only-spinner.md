@@ -2,7 +2,6 @@
 title: CSS-Only Spinner
 custom-css: spinner.css
 date: 2014-03-04
-layout: ../../layout/post.astro
 ---
 
 I recently converted all the icons in the DreamHost panel to an icon font. Icon fonts are great because the icons are scalable. They're based on the font size and color of the containing element. No more exporting 12 separate images per icon in different size and color combinations (Yeah, yeah, images sprites, blah blah blah). Super cool.

@@ -1,7 +1,6 @@
 ---
 title: Creativity
 date: 2014-04-15
-layout: ../../layout/post.astro
 ---
 
 > Think left and think right and think low and think high. Oh, the thinks you can think up if only you try! <cite>Dr. Seuss</cite>

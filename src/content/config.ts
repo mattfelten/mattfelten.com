@@ -8,13 +8,19 @@ export const collections = {
 		schema: z.object({
 			company: z.string(),
 			description: z.string().optional(),
-			end: z
-				.string()
-				.transform(str => new Date(str))
-				.optional(),
+			end: z.date().optional(),
 			role: z.string(),
-			start: z.string().transform(str => new Date(str)),
+			start: z.date(),
 			website: z.string().optional(),
 		}),
 	}),
+	speaking: defineCollection({
+		schema: z.object({
+			title: z.string(),
+			description: z.string(),
+			redirect: z.string(),
+			date: z.date(),
+		}),
+	}),
+	posts: defineCollection({}),
 };

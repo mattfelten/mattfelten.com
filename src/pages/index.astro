@@ -12,18 +12,12 @@ const work = (await getCollection('work')).sort(
 	(a, b) => b.data.start.valueOf() - a.data.start.valueOf()
 );
 
-const posts = await Astro.glob('./post/**/*.md');
-posts.sort(
-	(a, b) =>
-		new Date(b.frontmatter.date).valueOf() -
-		new Date(a.frontmatter.date).valueOf()
+const posts = (await getCollection('posts')).sort(
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
 
-const speaking = await Astro.glob('./speaking/**/*.md');
-speaking.sort(
-	(a, b) =>
-		new Date(b.frontmatter.date).valueOf() -
-		new Date(a.frontmatter.date).valueOf()
+const speaking = (await getCollection('speaking')).sort(
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
 ---
 

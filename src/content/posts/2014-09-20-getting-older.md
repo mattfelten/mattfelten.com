@@ -1,7 +1,6 @@
 ---
 title: Getting Older
 date: 2014-09-20
-layout: ../../layout/post.astro
 ---
 
 I turned 28 this year. My mom asked me recently if I feel like I'm getting old. I was also talking with a buddy the other night and he said he felt too old to do something. It's been on my mind, so I want to talk about it. This is what getting older is like for me at 28.

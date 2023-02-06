@@ -1,12 +1,11 @@
 ---
-title: Incremental Correctness
+title: 'Incremental Correctness'
 date: 2020-10-03
-layout: ../../../layout/post.astro
-setup: |
-    import Asset from '~components/Asset.astro'
-    import files from './files.png'
-    import mountain from './Mountain_Top.jpg';
 ---
+
+import Asset from '../../../components/Asset.astro';
+import files from './files.png';
+import mountain from './Mountain_Top.jpg';
 
 I was listening to an episode of [Design Details podcast](https://designdetails.fm/episodes/113490) where [Brian](https://twitter.com/brian_lovin) and [Marshall](https://twitter.com/marshallbock) interviewed [Guillermo Rauch](https://twitter.com/rauchg). They were talking about an idea of incremental correctness and I had to stop what I was doing and just listen. I've been intimately familiar with this concept for years now but never had such a clear way of articulating it.
 
@@ -16,7 +15,9 @@ My wife and I do this in our personal lives. When we're stuck on a project we te
 
 I've also used a metaphor of climbing a mountain to describe this concept. You know the goal &mdash; it's get to the top &mdash; but how would you do that? I'm not much of an outdoorsman, but charging up the mountain in a straight line is probably a very bad idea. Instead you go a little slower. You chart a course to the next safest point to stop and get your bearings. Then chart your next point. And again. And again, until you're at the top.
 
-<Asset src={mountain} alt="a person climbing a mountain">Illustration by <a href="//marissaluca.com">Marissa Felten</a></Asset>
+<Asset src={mountain} alt="a person climbing a mountain">
+	Illustration by <a href="//marissaluca.com">Marissa Felten</a>
+</Asset>
 
 My work in design systems has taken me down a path of incremental improvement as well. A lot of projects have us roaming around in the dark finding the right balance of standardization and customization. We have components that are used thousands of times across multiple enterprise apps, so completely redoing a component can be incredibly painful for the teams using it to transition to. Deprecation and removal is an incredibly taxing exercise and we need to be cautious about that. So we plan, design, and build features that are the smallest most complete amount of correct we can. As our teams start using them, we learn more and improve them.
 
@@ -36,7 +37,12 @@ Versioning is important because every decision we make builds on the last. We st
 
 Branching is also important. Branches are ideas and experiments we run in the hopes that improvements are realized. Some branches are unsuccessful but we've learned something that will inform the next branch we try. Some branches are successful and need to be carried through. This reminds me of the senior designer's process diagram [Julie Zhuo made](https://medium.com/the-year-of-the-looking-glass/junior-designers-vs-senior-designers-fbe483d3b51e).
 
-<Asset src="https://miro.medium.com/max/1000/1*v94epVSu0dQIdRXKnT-VSQ.png" href="https://medium.com/the-year-of-the-looking-glass/junior-designers-vs-senior-designers-fbe483d3b51e" alt="senior designer's process" caption="Julie Zhuo's Senior Designers Process" />
+<Asset
+	src="https://miro.medium.com/max/1000/1*v94epVSu0dQIdRXKnT-VSQ.png"
+	href="https://medium.com/the-year-of-the-looking-glass/junior-designers-vs-senior-designers-fbe483d3b51e"
+	alt="senior designer's process"
+	caption="Julie Zhuo's Senior Designers Process"
+/>
 
 There are some tools out there that do encourage _incrementalness_. `git` is a tool for code versioning and branching that is probably the biggest in the space, and is starting to grow in familiarity with designers. [Abstract](https://www.abstract.com) is built on top of those `git` fundamentals, but with a nice UI specific to Sketch and Adobe XD files. [Figma](https://www.figma.com/files/recent) does have versioning as well, but is missing the branching feature. In writing, tools like Confluence, Notion, Google Drive can all version but it's still tedious to explore, test ideas, and look back through history while writing.
 

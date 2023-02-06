@@ -18,6 +18,7 @@
 		"favicons:build": "favicons-generate"
 	},
 	"dependencies": {
+		"@astrojs/mdx": "^0.16.0",
 		"@astrojs/react": "^2.0.2",
 		"@icons-pack/react-simple-icons": "^6.2.0",
 		"clsx": "^1.2.1",
