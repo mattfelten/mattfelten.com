@@ -1,6 +1,7 @@
 ---
-const Tag = Astro.canonicalURL.pathname === '/' ? 'h1' : 'h3';
+const Tag = Astro.url.pathname === '/' ? 'h1' : 'h3';
 ---
+
 <style>
 	a {
 		display: block;
