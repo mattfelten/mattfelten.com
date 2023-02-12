@@ -1,16 +1,31 @@
 ---
-import { format as dateFormat } from 'date-fns';
+import { differenceInYears, getYear } from 'date-fns';
 import { RxArrowTopRight } from 'react-icons/rx/index.js';
 import { getCollection } from 'astro:content';
 import Layout from '../layout/default.astro';
 import ConditionalLink from '../components/ConditionalLink.astro';
 import List from '../components/List.astro';
 
-const format = date => dateFormat(date, 'yyyy');
-
 const work = (await getCollection('work')).sort(
 	(a, b) => b.data.start.valueOf() - a.data.start.valueOf()
 );
+
+const workCutoff = 10;
+const recentWork = work.filter(
+	role =>
+		!role.data.end ||
+		differenceInYears(new Date(), role.data.end) <= workCutoff
+);
+
+const previousWork = work
+	.filter(
+		({ data: { end } }) =>
+			end && differenceInYears(new Date(), end) > workCutoff
+	)
+	.map(({ data: { company } }) => company)
+	.reduce(
+		(a, b, i, array) => a + (i < array.length - 1 ? ', ' : ', and ') + b
+	);
 
 const posts = (await getCollection('posts')).sort(
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf()
@@ -54,57 +69,50 @@ const speaking = (await getCollection('speaking')).sort(
 		</p>
 	</section>
 	<section>
-		<h3 class="mb-1 font-bold">Experience</h3>
+		<h3 class="mb-1 font-bold">Roles</h3>
 		<ol class="space-y-5">
 			{
-				work.map(
-					({
-						data: {
-							description,
-							company,
-							start,
-							end,
-							role,
-							website,
-						},
-					}) => (
-						<li class="flex">
-							<div class="w-1/4 min-w-[250px]">
-								<h4 class="text-2xl">
-									<ConditionalLink
-										href={website}
-										class="flex items-center group"
-									>
-										<span class="font-medium mb-0.5">
-											{company}
+				recentWork.map(
+					({ data: { company, start, end, role, website } }) => {
+						const rangeEnd = end ? getYear(end) : 'Now';
+						const timeRange = `${getYear(start)} — ${rangeEnd}`;
+						return (
+							<li class="flex">
+								<ConditionalLink href={website} class="group">
+									<h4 class="flex items-center text-2xl">
+										<span>
+											<span class="font-bold">
+												{role}
+											</span>
+											<span class="px-0.5 opacity-70">
+												at
+											</span>
+											<span class="font-bold">
+												{company}
+											</span>
 										</span>
 										{website && (
 											<span class="group-hover:text-accent opacity-30 ml-0.5 group-hover:opacity-100 transition text-xl">
 												<RxArrowTopRight />
 											</span>
 										)}
-									</ConditionalLink>
-								</h4>
-								<time
-									class="block"
-									datetime={start.toISOString()}
-								>
-									{format(start)} —{' '}
-									{end ? format(end) : 'Now'}
-								</time>
-							</div>
-
-							<div class="pt-0.5">
-								<h5 class="mb-0.5 text-xl font-medium">
-									{role}
-								</h5>
-								<p class="prose">{description}</p>
-							</div>
-						</li>
-					)
+									</h4>
+									<time
+										class="block"
+										datetime={start.toISOString()}
+									>
+										{timeRange}
+									</time>
+								</ConditionalLink>
+							</li>
+						);
+					}
 				)
 			}
 		</ol>
+		<p class="mt-5">
+			Previously a designer at {previousWork}.
+		</p>
 	</section>
 	<List list={posts} title="Writing" />
 	<List list={speaking} title="Speaking" />
