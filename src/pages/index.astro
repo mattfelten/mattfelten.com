@@ -37,10 +37,6 @@ const speaking = (await getCollection('speaking')).sort(
 ---
 
 <style>
-	.headline {
-		@apply text-4xl font-bold mb-4;
-	}
-
 	.current a,
 	.previous a {
 		@apply underline underline-offset-4 decoration-3 decoration-accent font-semibold hover:decoration-4 whitespace-nowrap;
@@ -53,8 +49,8 @@ const speaking = (await getCollection('speaking')).sort(
 	}
 </style>
 <Layout>
-	<section class="space-y-2 text-3xl leading-snug lg:space-y-1">
-		<p class="headline">Design & Code</p>
+	<section class="space-y-2 text-3xl leading-snug mt-7 lg:space-y-1">
+		<h1 class="mb-4 text-4xl font-bold">Matt Felten<sup>™</sup></h1>
 		<p class="current">
 			Currently I lead design and frontend engineering at <a
 				href="//missioncloud.com">Mission Cloud</a
