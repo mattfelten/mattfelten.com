@@ -1,11 +1,16 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
-import tailwind from "@astrojs/tailwind";
+import tailwind from '@astrojs/tailwind';
 
-import mdx from "@astrojs/mdx";
+import mdx from '@astrojs/mdx';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://mattfelten.com',
-  integrations: [react(), tailwind(), mdx()]
+	site: 'https://mattfelten.com',
+	integrations: [react(), tailwind(), mdx()],
+	vite: {
+		server: {
+			open: true,
+		},
+	},
 });
