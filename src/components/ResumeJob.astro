@@ -1,0 +1,24 @@
+---
+import { getYear } from 'date-fns';
+import { getEntryBySlug } from 'astro:content';
+
+const { job } = Astro.props;
+const { Content } = await job.render();
+
+const {
+	data: { company, start, end, role },
+} = job;
+const rangeEnd = end ? getYear(end) : 'Present';
+const timeRange = `${getYear(start)} — ${rangeEnd}`;
+---
+
+<li class="flex">
+	<h4 class="w-3/12 text-2xl font-bold">{company}</h4>
+	<div class="w-3/12">
+		<h5 class="text-xl font-semibold">{role}</h5>
+		<time class="block pt-0.5" datetime={start.toISOString()}>
+			{timeRange}
+		</time>
+	</div>
+	<div class="w-6/12"><Content /></div>
+</li>

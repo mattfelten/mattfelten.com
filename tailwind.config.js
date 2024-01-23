@@ -113,6 +113,15 @@ module.exports = {
 	plugins: [
 		require('@tailwindcss/typography'),
 		require('@mertasan/tailwindcss-variables'),
+		require('tailwindcss-line-length')({
+			widths: {
+				xs: '18em', // 300px at 1rem
+				sm: '30em',
+				md: '35em', // 560px at 1rem
+				lg: '40em',
+				xl: '50em', // 800px at 1rem
+			},
+		}),
 		plugin(function ({ addComponents, theme }) {
 			addComponents({
 				'.hover': {
