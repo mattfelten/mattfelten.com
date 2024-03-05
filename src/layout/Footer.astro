@@ -1,37 +1,46 @@
 ---
-import { Twitter, Github, Medium, Dribbble, Instagram, Spotify, Linkedin } from '@icons-pack/react-simple-icons';
+import {
+	SiTwitter,
+	SiGithub,
+	SiMedium,
+	SiDribbble,
+	SiInstagram,
+	SiSpotify,
+	SiLinkedin,
+} from '@icons-pack/react-simple-icons';
 
 const social = [
 	{
-		icon: Twitter,
+		icon: SiTwitter,
 		url: '//twitter.com/mattfelten',
 	},
 	{
-		icon: Github,
+		icon: SiGithub,
 		url: '//github.com/mattfelten',
 	},
 	{
-		icon: Medium,
+		icon: SiMedium,
 		url: '//medium.com/@mattfelten',
 	},
 	{
-		icon: Dribbble,
+		icon: SiDribbble,
 		url: '//dribbble.com/mattfelten',
 	},
 	{
-		icon: Instagram,
+		icon: SiInstagram,
 		url: '//instagram.com/mattfelten',
 	},
 	{
-		icon: Spotify,
+		icon: SiSpotify,
 		url: '//open.spotify.com/user/mattfelten',
 	},
 	{
-		icon: Linkedin,
+		icon: SiLinkedin,
 		url: '//linkedin.com/in/mattfelten/',
 	},
 ];
 ---
+
 <style>
 	div {
 		display: flex;
@@ -40,14 +49,27 @@ const social = [
 	}
 
 	@keyframes wave {
-		0% { transform: rotate( 0.0deg) }
-		15% { transform: rotate(14.0deg) }  /* The following five values can be played with to make the waving more or less extreme */
-		30% { transform: rotate(-8.0deg) }
-		45% { transform: rotate(14.0deg) }
-		60% { transform: rotate(-4.0deg) }
-		75% { transform: rotate(10.0deg) }
-		100% { transform: rotate( 0.0deg) }
-
+		0% {
+			transform: rotate(0deg);
+		}
+		15% {
+			transform: rotate(14deg);
+		} /* The following five values can be played with to make the waving more or less extreme */
+		30% {
+			transform: rotate(-8deg);
+		}
+		45% {
+			transform: rotate(14deg);
+		}
+		60% {
+			transform: rotate(-4deg);
+		}
+		75% {
+			transform: rotate(10deg);
+		}
+		100% {
+			transform: rotate(0deg);
+		}
 	}
 	.home {
 		display: block;
@@ -59,9 +81,9 @@ const social = [
 
 		&::after {
 			opacity: 0;
-			transition: opacity .2s;
+			transition: opacity 0.2s;
 			content: '👋';
-			margin-left: .5em;
+			margin-left: 0.5em;
 			display: inline-block;
 			animation-name: wave;
 			animation-duration: 1.5s;
@@ -95,12 +117,14 @@ const social = [
 	<a class="home" href="/">Matt Felten</a>
 
 	<ul class="social">
-		{social.map(({icon: Icon, url}, i) => (
-			<li>
-				<a href={url}>
-					<Icon width={18} />
-				</a>
-			</li>
-		))}
+		{
+			social.map(({ icon: Icon, url }, i) => (
+				<li>
+					<a href={url}>
+						<Icon width={18} />
+					</a>
+				</li>
+			))
+		}
 	</ul>
 </div>

@@ -125,7 +125,7 @@ module.exports = {
 		plugin(function ({ addComponents, theme }) {
 			addComponents({
 				'.hover': {
-					trasition: 'all',
+					transition: 'all',
 					transitionDuration: '.1s',
 					transitionTimingFunction: 'ease-in-out',
 					'&:hover': {

@@ -1,38 +1,38 @@
 ---
-import { differenceInYears, getYear } from 'date-fns';
-import { RxArrowTopRight } from 'react-icons/rx/index.js';
+import { differenceInYears } from 'date-fns';
+import { RxArrowTopRight } from 'react-icons/rx';
 import { getCollection } from 'astro:content';
 import Layout from '../layout/default.astro';
 import ConditionalLink from '../components/ConditionalLink.astro';
 import List from '../components/List.astro';
 
 const work = (await getCollection('work')).sort(
-	(a, b) => b.data.start.valueOf() - a.data.start.valueOf()
+	(a, b) => b.data.start.valueOf() - a.data.start.valueOf(),
 );
 
 const workCutoff = 10;
 const recentWork = work.filter(
 	role =>
 		!role.data.end ||
-		differenceInYears(new Date(), role.data.end) <= workCutoff
+		differenceInYears(new Date(), role.data.end) <= workCutoff,
 );
 
 const previousWork = work
 	.filter(
 		({ data: { end } }) =>
-			end && differenceInYears(new Date(), end) > workCutoff
+			end && differenceInYears(new Date(), end) > workCutoff,
 	)
 	.map(({ data: { company } }) => company)
 	.reduce(
-		(a, b, i, array) => a + (i < array.length - 1 ? ', ' : ', and ') + b
+		(a, b, i, array) => a + (i < array.length - 1 ? ', ' : ', and ') + b,
 	);
 
 const posts = (await getCollection('posts')).sort(
-	(a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 
 const speaking = (await getCollection('speaking')).sort(
-	(a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 ---
 
@@ -70,8 +70,10 @@ const speaking = (await getCollection('speaking')).sort(
 			{
 				recentWork.map(
 					({ data: { company, start, end, role, website } }) => {
-						const rangeEnd = end ? getYear(end) : 'Now';
-						const timeRange = `${getYear(start)} — ${rangeEnd}`;
+						const rangeStart = new Date(start).getUTCFullYear();
+						const rangeEnd = end
+							? new Date(end).getUTCFullYear()
+							: 'Now';
 						return (
 							<li class="flex">
 								<ConditionalLink href={website} class="group">
@@ -97,12 +99,12 @@ const speaking = (await getCollection('speaking')).sort(
 										class="block opacity-70 font-medium"
 										datetime={start.toISOString()}
 									>
-										{timeRange}
+										{rangeStart} — {rangeEnd}
 									</time>
 								</ConditionalLink>
 							</li>
 						);
-					}
+					},
 				)
 			}
 		</ol>
