@@ -10,17 +10,15 @@ module.exports = {
 					background: '#fafafa',
 					text: '#25272c',
 				},
-				backgroundImage: "url('/dot-grid.jpg')",
 			},
 		},
 		darkVariables: {
 			DEFAULT: {
 				color: {
 					accent: '#00E0B8',
-					background: '#25272c',
+					background: '#000000',
 					text: '#fafafa',
 				},
-				backgroundImage: "url('/dot-grid.dark.jpg')",
 			},
 		},
 		colors: {},
@@ -61,9 +59,6 @@ module.exports = {
 			sans: ['Manrope', 'sans-serif'],
 		},
 		extend: {
-			backgroundImage: {
-				pattern: 'var(--backgroundimage)',
-			},
 			textDecorationThickness: {
 				3: '3px',
 			},
