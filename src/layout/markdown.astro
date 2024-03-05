@@ -1,6 +1,6 @@
 ---
 import Layout from './default.astro';
-const { title, content } = Astro.props;
+const { title } = Astro.props.frontmanter || Astro.props;
 ---
 
 <style is:global>
@@ -8,7 +8,7 @@ const { title, content } = Astro.props;
 		opacity: 0.15;
 	}
 </style>
-<Layout title={title || content.title}>
+<Layout title={title}>
 	<article class="prose lg:prose-xl dark:prose-white mx-auto">
 		<slot />
 	</article>
