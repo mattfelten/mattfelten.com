@@ -269,6 +269,13 @@ declare module 'astro:content' {
   collection: "posts";
   data: any
 } & { render(): Render[".mdx"] };
+"2024-03-04-momentum-collaboration-vision.mdx": {
+	id: "2024-03-04-momentum-collaboration-vision.mdx";
+  slug: "2024-03-04-momentum-collaboration-vision";
+  body: string;
+  collection: "posts";
+  data: any
+} & { render(): Render[".mdx"] };
 };
 "speaking": {
 "2013-07-14-dreamcon.md": {
