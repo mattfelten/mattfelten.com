@@ -1,21 +1,18 @@
 ---
 import cx from 'clsx';
+import { Picture } from 'astro:assets';
 
 const {
-	alt,
+	alt = '',
 	className,
 	expand,
 	href,
 	src,
-	type = 'image',
-	fullWidth
+	fullWidth,
+	...props
 } = Astro.props;
 
-const classes = cx(
-	'Assets',
-	fullWidth && 'Assets--full-width',
-	className
-);
+const classes = cx('Assets', fullWidth && 'Assets--full-width', className);
 ---
 
 <style>
@@ -58,32 +55,52 @@ const classes = cx(
 		display: block;
 		margin-top: 1em;
 
-		* { margin: 0; }
+		* {
+			margin: 0;
+		}
 	}
 </style>
 
 <div>
-	{() => {
-		const getLink = () => {
-			if (href) return href;
-			if (expand) return src;
-			return false;
-		};
+	{
+		() => {
+			const isExtension = (ext: string) => {
+				if (typeof src === 'string') return src.endsWith(ext);
+				return src.src.endsWith(ext);
+			};
+			const getLink = () => {
+				if (href) return href;
+				if (expand) return src;
+				return false;
+			};
 
-		const getAssetContent = () => {
-			if (type === 'video')
+			const getAssetContent = () => {
+				if (isExtension('mov'))
+					return (
+						<video src={src} controls class={classes} {...props}>
+							{alt}
+						</video>
+					);
+
+				if (isExtension('gif'))
+					return (
+						<img
+							src={src.src}
+							alt={alt}
+							class={classes}
+							{...props}
+						/>
+					);
+
 				return (
-					<video src={src} controls>
-						{alt}
-					</video>
+					<Picture src={src} alt={alt} class={classes} {...props} />
 				);
+			};
 
-			return <img src={src} alt={alt} />;
-		};
-
-		if (getLink()) return <a href={getLink()}>{getAssetContent()}</a>;
-		return getAssetContent();
-	}}
+			if (getLink()) return <a href={getLink()}>{getAssetContent()}</a>;
+			return getAssetContent();
+		}
+	}
 
 	<small><slot /></small>
 </div>
