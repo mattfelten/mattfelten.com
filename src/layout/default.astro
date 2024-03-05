@@ -15,7 +15,7 @@ const title = ['Matt Felten', pageTitle && `× ${pageTitle}`].join(' ');
 			background-size: 30px 30px;
 			background-image: radial-gradient(
 				ellipse at center,
-				var(--color-text) 0%,
+				var(--color-default) 0%,
 				transparent 10% /* 30px * .1 = 3px */
 			);
 			background-repeat: repeat;
@@ -46,7 +46,7 @@ const title = ['Matt Felten', pageTitle && `× ${pageTitle}`].join(' ');
 		<Fragment set:html={favicons} />
 	</head>
 	<body
-		class="p-6 space-y-8 font-sans text-base antialiased bg-background text-text"
+		class="p-6 space-y-8 font-sans text-base antialiased bg-background text-default max-w-screen-2xl mx-auto"
 	>
 		<Header />
 		<main class="space-y-8">

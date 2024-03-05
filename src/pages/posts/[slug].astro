@@ -1,7 +1,7 @@
 ---
 import { format } from 'date-fns';
 import { getCollection } from 'astro:content';
-import Markdown from '../../layout/markdown.astro';
+import Layout from '../../layout/default.astro';
 
 // 1. Generate a new path for every collection entry
 export async function getStaticPaths() {
@@ -20,17 +20,17 @@ const niceDate = format(date, 'MMMM d, yyyy');
 const { Content } = await entry.render();
 ---
 
-<style>
-	.title {
-		margin-bottom: 0;
-	}
-	.date {
-		@apply text-base mt-2;
+<style is:global>
+	.prose hr {
+		opacity: 0.15;
 	}
 </style>
-
-<Markdown title={title}>
-	<h1 class="title">{title}</h1>
-	<p class="date">{niceDate}</p>
-	<Content />
-</Markdown>
+<Layout title={title}>
+	<article class="prose lg:prose-xl dark:prose-white mx-auto">
+		<div class="flex flex-col gap-2 mb-6">
+			<h1 class="!mb-0">{title}</h1>
+			<p class="text-subdued text-xl !m-0">{niceDate}</p>
+		</div>
+		<Content />
+	</article>
+</Layout>

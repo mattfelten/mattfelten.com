@@ -1,0 +1,23 @@
+---
+import Layout from './default.astro';
+const { title, content } = Astro.props;
+---
+
+<style is:global>
+	.prose hr {
+		opacity: 0.15;
+	}
+</style>
+<Layout title={title || `${content.company} ${content.title}`}>
+	<article class="prose lg:prose-xl dark:prose-white mx-auto">
+		<div class="flex flex-col gap-1">
+			<div
+				class="uppercase text-base font-semibold tracking-wider text-subdued"
+			>
+				{content.company}
+			</div>
+			<h1>{content.title}</h1>
+		</div>
+		<slot />
+	</article>
+</Layout>
