@@ -1,7 +1,7 @@
 const plugin = require('tailwindcss/plugin');
 
 module.exports = {
-	content: ['./src/**/*.{html,js,astro}'],
+	content: ['./src/**/*.{html,js,jsx,astro}'],
 	theme: {
 		variables: {
 			DEFAULT: {
@@ -35,6 +35,7 @@ module.exports = {
 			strong: 'var(--color-strong)',
 			subdued: 'var(--color-subdued)',
 			weak: 'var(--color-weak)',
+			transparent: 'transparent',
 		},
 		backgroundColor: {
 			accent: 'var(--color-accent)',
@@ -43,6 +44,7 @@ module.exports = {
 			strong: 'var(--color-strong)',
 			subdued: 'var(--color-subdued)',
 			weak: 'var(--color-weak)',
+			transparent: 'transparent',
 		},
 		textDecorationColor: {
 			accent: 'var(--color-accent)',

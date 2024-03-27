@@ -1,0 +1,57 @@
+---
+import favicons from './favicon.html?raw';
+const { title: pageTitle } = Astro.props;
+const title = ['Matt Felten', pageTitle && `× ${pageTitle}`].join(
+	' '
+);
+---
+
+<style>
+	html {
+		position: relative;
+
+		&::after {
+			content: '';
+			background-size: 30px 30px;
+			background-image: radial-gradient(
+				ellipse at center,
+				var(--color-default) 0%,
+				transparent 10% /* 30px * .1 = 3px */
+			);
+			background-repeat: repeat;
+			opacity: 0.2;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			position: absolute;
+			z-index: -1;
+			min-height: 100vh;
+		}
+	}
+</style>
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<title>{title}</title>
+
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link
+			rel="preconnect"
+			href="https://fonts.gstatic.com"
+			crossorigin
+		/>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap"
+			rel="stylesheet"
+		/>
+		<Fragment set:html={favicons} />
+	</head>
+	<body
+		class="p-6 space-y-8 font-sans text-base antialiased bg-background text-default max-w-screen-2xl mx-auto"
+	>
+		<slot />
+	</body>
+</html>
