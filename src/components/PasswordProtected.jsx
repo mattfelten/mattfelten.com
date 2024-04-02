@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { RxArrowRight } from 'react-icons/rx';
 
@@ -7,6 +7,19 @@ export const PasswordProtected = ({ children, password }) => {
 	const [unlocked, setUnlocked] = useState(false);
 	const [value, setValue] = useState(placeholder);
 	if (!password) return null;
+
+	useEffect(() => {
+		const loc = new URL(window.location);
+		const urlParams = new URLSearchParams(loc.search);
+		if (!urlParams.has('p')) return;
+
+		const urlPassword = urlParams.get('p');
+
+		setUnlocked(password === urlPassword);
+
+		urlParams.delete('p');
+		history.replaceState({}, '', loc.pathname);
+	}, []);
 
 	const change = e => {
 		setValue(e.target.value || placeholder);
