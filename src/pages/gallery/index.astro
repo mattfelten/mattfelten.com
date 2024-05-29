@@ -2,6 +2,7 @@
 import HTML from '../../layout/html.astro';
 import { PasswordProtected } from '../../components/PasswordProtected';
 import { SpinnerCircularFixed } from 'spinners-react';
+import gallery from './gallery.png';
 ---
 
 <HTML>
@@ -12,13 +13,19 @@ import { SpinnerCircularFixed } from 'spinners-react';
 			speed={200}
 			color="#36ad47"
 			secondaryColor="rgba(0, 0, 0, 0.44)"
-			className="fixed z-10 top-1/2 left-1/2 -mt-2 -ml-2"
+			className="fixed z-[-1] top-1/2 left-1/2 -mt-2 -ml-2"
 			client:load
 		/>
-		<iframe
-			class="w-screen h-screen absolute top-0 left-0 z-20 bg-transparent"
-			src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fproto%2FzfvWcmnVN7pAwZ0eNg7nD7%2FResume%3Fpage-id%3D5%253A2669%26type%3Ddesign%26node-id%3D16-12%26viewport%3D378%252C259%252C0.22%26t%3DMmbrwHwDNyaDSxRB-1%26scaling%3Dcontain%26starting-point-node-id%3D16%253A12%26hotspot-hints%3D0%26mode%3Ddesign%26hide-ui%3D1"
-			allowtransparency="true"
-			allowfullscreen></iframe>
+		<div
+			style={{
+				backgroundImage: `url(${gallery.src})`,
+				backgroundRepeat: 'no-repeat',
+				backgroundSize: 'contain',
+				width: 'auto',
+				height: 16840,
+				aspectRatio: 2000 / 16840,
+			}}
+		>
+		</div>
 	</PasswordProtected>
 </HTML>
