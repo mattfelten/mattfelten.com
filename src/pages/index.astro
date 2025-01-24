@@ -43,9 +43,9 @@ const speaking = (await getCollection('speaking')).sort(
 		@apply underline underline-offset-4 decoration-2 decoration-accent font-medium hover:decoration-3 whitespace-nowrap text-strong;
 	}
 
-	@media (min-width: 1100px) and (max-width: 1310px) {
-		.previous {
-			max-width: 980px;
+	.previous {
+		@media (min-width: 990px) {
+			max-width: 850px;
 		}
 	}
 </style>
@@ -57,16 +57,16 @@ const speaking = (await getCollection('speaking')).sort(
 			Matt Felten
 		</h1>
 		<p class="current">
-			Currently I lead design and frontend engineering at <a
-				href="//missioncloud.com">Mission Cloud</a
+			Currently I lead design systems at <a href="//opengov.com"
+				>OpenGov</a
 			>.
 		</p>
 		<p class="previous">
-			Previously I lead teams and design systems at <a
-				href="//servicetitan.com">ServiceTitan</a
-			>, <a href="//youcaring.com">YouCaring</a>, & <a
-				href="//dreamhost.com">DreamHost</a
-			>
+			Previously I lead design & engineering teams at <a
+				href="//missioncloud.com">Mission Cloud</a
+			>, <a href="//servicetitan.com">ServiceTitan</a>, <a
+				href="//youcaring.com">YouCaring</a
+			>, & <a href="//dreamhost.com">DreamHost</a>.
 		</p>
 	</section>
 	<section>
