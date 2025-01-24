@@ -7,7 +7,15 @@ import mdx from '@astrojs/mdx';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://mattfelten.com',
-	integrations: [react(), tailwind(), mdx()],
+	integrations: [
+		react(),
+		mdx(),
+		tailwind({
+			// Example: Allow writing nested CSS declarations
+			// alongside Tailwind's syntax
+			nesting: true,
+		}),
+	],
 	vite: {
 		server: {
 			open: true,
