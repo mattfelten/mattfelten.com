@@ -1,38 +1,18 @@
 ---
 import {
-	SiTwitter,
 	SiGithub,
-	SiMedium,
-	SiDribbble,
-	SiInstagram,
-	SiSpotify,
 	SiLinkedin,
+	SiBluesky,
 } from '@icons-pack/react-simple-icons';
 
 const social = [
 	{
-		icon: SiTwitter,
-		url: '//twitter.com/mattfelten',
+		icon: SiBluesky,
+		url: '//bsky.app/profile/mattfelten.com',
 	},
 	{
 		icon: SiGithub,
 		url: '//github.com/mattfelten',
-	},
-	{
-		icon: SiMedium,
-		url: '//medium.com/@mattfelten',
-	},
-	{
-		icon: SiDribbble,
-		url: '//dribbble.com/mattfelten',
-	},
-	{
-		icon: SiInstagram,
-		url: '//instagram.com/mattfelten',
-	},
-	{
-		icon: SiSpotify,
-		url: '//open.spotify.com/user/mattfelten',
 	},
 	{
 		icon: SiLinkedin,
@@ -42,12 +22,6 @@ const social = [
 ---
 
 <style>
-	div {
-		display: flex;
-		justify-content: space-between;
-		@apply py-2;
-	}
-
 	@keyframes wave {
 		0% {
 			transform: rotate(0deg);
@@ -72,9 +46,15 @@ const social = [
 			transform: rotate(0deg);
 		}
 	}
+
+	div {
+		display: flex;
+		flex-direction: column;
+		@apply py-2 gap-1;
+	}
+
 	.home {
-		display: block;
-		font-weight: bold;
+		@apply block font-bold text-lg;
 
 		@media (max-width: 440px) {
 			display: none;
@@ -98,9 +78,7 @@ const social = [
 	}
 
 	.social {
-		display: flex;
-		gap: theme(spacing.2);
-		align-self: flex-end;
+		@apply flex gap-2;
 
 		a {
 			display: block;
