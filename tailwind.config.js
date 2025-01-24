@@ -73,7 +73,17 @@ module.exports = {
 			12: '192px',
 		},
 		fontFamily: {
-			sans: ['Manrope', 'sans-serif'],
+			sans: [
+				'Nudica',
+				'-apple-system',
+				'system-ui',
+				'BlinkMacSystemFont',
+				'Segoe UI',
+				'Roboto',
+				'Helvetica Neue',
+				'Arial',
+				'sans-serif',
+			],
 		},
 		extend: {
 			textDecorationThickness: {
