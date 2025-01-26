@@ -5,6 +5,7 @@ import { getCollection } from 'astro:content';
 import Layout from '../layout/default.astro';
 import ConditionalLink from '../components/ConditionalLink.astro';
 import List from '../components/List.astro';
+import { JobDescriber } from '../components/JobDescriber.jsx';
 
 const work = (await getCollection('work')).sort(
 	(a, b) => b.data.start.valueOf() - a.data.start.valueOf()
@@ -35,38 +36,26 @@ const posts = (await getCollection('posts')).sort(
 const speaking = (await getCollection('speaking')).sort(
 	(a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
+
+const labels = [
+	'Designer',
+	'Design Engineer',
+	'Engineer',
+	'Technologist',
+];
 ---
 
-<style>
-	.current a,
-	.previous a {
-		@apply underline underline-offset-4 decoration-2 decoration-accent font-medium hover:decoration-3 whitespace-nowrap text-strong;
-	}
-
-	.previous {
-		@media (min-width: 990px) {
-			max-width: 850px;
-		}
-	}
-</style>
 <Layout>
 	<section
-		class="space-y-2 text-2xl leading-snug mt-3 sm:mt-7 lg:space-y-2"
+		class="space-y-2 text-3xl leading-snug mt-7 lg:space-y-1 line-length-lg"
 	>
-		<h1 class="mb-4 text-4xl font-bold text-strong">
-			Matt Felten
-		</h1>
-		<p class="current">
-			Currently I lead design systems at <a href="//opengov.com"
-				>OpenGov</a
-			>.
-		</p>
-		<p class="previous">
-			Previously I lead design & engineering teams at <a
-				href="//missioncloud.com">Mission Cloud</a
-			>, <a href="//servicetitan.com">ServiceTitan</a>, <a
-				href="//youcaring.com">YouCaring</a
-			>, & <a href="//dreamhost.com">DreamHost</a>.
+		<p>
+			<JobDescriber
+				sequence={labels}
+				className="-mr-0.5"
+				client:load
+			/> based in Los Angeles specializing in solving complex problems
+			through collaboration, data, and hard work.
 		</p>
 	</section>
 	<section>
@@ -97,7 +86,7 @@ const speaking = (await getCollection('speaking')).sort(
 											<span class="text-subdued">
 												at
 											</span>
-											<span class="font-medium">
+											<span class="underline underline-offset-4 decoration-2 decoration-accent font-medium group-hover:decoration-3 whitespace-nowrap text-strong">
 												{company}
 											</span>
 										</span>

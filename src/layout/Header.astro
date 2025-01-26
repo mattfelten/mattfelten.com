@@ -1,6 +1,5 @@
 ---
 const Tag = Astro.url.pathname === '/' ? 'h1' : 'h3';
-const isHomepage = Astro.url.pathname === '/';
 ---
 
 <style>
@@ -14,10 +13,6 @@ const isHomepage = Astro.url.pathname === '/';
 	}
 </style>
 
-{
-	!isHomepage && (
-		<Tag>
-			<a href="/">Matt Felten</a>
-		</Tag>
-	)
-}
+<Tag>
+	<a href="/">Matt Felten</a>
+</Tag>
