@@ -20,7 +20,6 @@ const title = ['Matt Felten', pageTitle && `× ${pageTitle}`].join(
 				transparent 10% /* 30px * .1 = 3px */
 			);
 			background-repeat: repeat;
-			opacity: 0.2;
 			top: 0;
 			bottom: 0;
 			left: 0;
@@ -28,6 +27,11 @@ const title = ['Matt Felten', pageTitle && `× ${pageTitle}`].join(
 			position: absolute;
 			z-index: -1;
 			min-height: 100vh;
+
+			opacity: 0.2;
+			@media (prefers-color-scheme: dark) {
+				opacity: 0.25;
+			}
 		}
 	}
 </style>
