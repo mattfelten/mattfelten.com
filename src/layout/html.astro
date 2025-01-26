@@ -35,23 +35,15 @@ const title = ['Matt Felten', pageTitle && `× ${pageTitle}`].join(
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0"
+		/>
 		<title>{title}</title>
-
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link
-			rel="preconnect"
-			href="https://fonts.gstatic.com"
-			crossorigin
-		/>
-		<link
-			href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap"
-			rel="stylesheet"
-		/>
 		<Fragment set:html={favicons} />
 	</head>
 	<body
-		class="p-6 space-y-8 font-sans text-base antialiased bg-background text-default max-w-screen-2xl mx-auto"
+		class="p-3 sm:p-6 space-y-8 font-sans text-base antialiased bg-background text-default max-w-screen-2xl mx-auto"
 	>
 		<slot />
 	</body>
