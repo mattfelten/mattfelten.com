@@ -1,0 +1,17 @@
+---
+import { getCollection } from 'astro:content';
+import List from '@components/List.astro';
+import Section from '@components/Section.astro';
+
+const posts = (await getCollection('posts')).sort(
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+{
+	posts && (
+		<Section title="Writing">
+			<List list={posts} />
+		</Section>
+	)
+}

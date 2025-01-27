@@ -9,11 +9,11 @@ const { title, content } = Astro.props;
 	}
 </style>
 <Layout title={title || `${content.company} ${content.title}`}>
-	<article class="prose lg:prose-xl dark:prose-white mx-auto">
+	<article
+		class="prose-xl lg:prose-2xl prose-h1:text-4xl lg:prose-h1:text-5xl prose-h1:font-medium prose-h2:font-medium prose-h3:font-medium dark:prose-white prose-headings:text-pretty mx-auto"
+	>
 		<div class="flex flex-col gap-1">
-			<div
-				class="uppercase text-base font-semibold tracking-wider text-subdued"
-			>
+			<div class="text-lg font-semibold text-subdued">
 				{content.company}
 			</div>
 			<h1>{content.title}</h1>

@@ -3,7 +3,7 @@ import { TypeAnimation } from 'react-type-animation';
 export const JobDescriber = ({
 	sequence,
 	delay = 6000,
-	speed = 20,
+	speed = 45,
 	className,
 	shuffle = false,
 }) => {

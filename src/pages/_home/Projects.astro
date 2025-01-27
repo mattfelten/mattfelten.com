@@ -1,0 +1,62 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Section from '@components/Section.astro';
+import { RxArrowTopRight } from 'react-icons/rx';
+
+const projects = (await getCollection('projects')).sort(
+	(a, b) => b.data.year.valueOf() - a.data.year.valueOf()
+);
+---
+
+{
+	projects && (
+		<Section title="Select Projects">
+			<ul class="text-xl space-y-8">
+				{projects.map(
+					({
+						data: {
+							company,
+							cover,
+							coverAlt,
+							intro,
+							title,
+							url,
+							year,
+						},
+					}) => (
+						<li>
+							<p class="line-length-lg">
+								{url ? (
+									<a
+										href={url}
+										class="underline underline-offset-4 decoration-2 decoration-accent font-medium hover:decoration-3 whitespace-nowrap text-strong group"
+									>
+										{title}
+										<span class="group-hover:text-accent text-weak ml-0.5 transition text-xl">
+											<RxArrowTopRight className="inline-block align-text-bottom" />
+										</span>
+									</a>
+								) : (
+									<span class="underline underline-offset-4 decoration-2 decoration-weak font-medium whitespace-nowrap text-strong">
+										{title}
+									</span>
+								)}
+								{' — '}
+								<span>{intro}</span>
+							</p>
+							{cover && coverAlt && (
+								<div class="aspect-video bg-accent bg-opacity-50 mt-4 rounded-lg shadow-2xl overflow-hidden">
+									<Image
+										src={cover}
+										alt={coverAlt}
+									/>
+								</div>
+							)}
+						</li>
+					)
+				)}
+			</ul>
+		</Section>
+	)
+}

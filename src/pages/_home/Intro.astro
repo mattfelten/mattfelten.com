@@ -1,0 +1,23 @@
+---
+import { JobDescriber } from '@components/JobDescriber.jsx';
+
+const labels = [
+	'Designer',
+	'Design Engineer',
+	'Frontend Engineer',
+	'Technologist',
+];
+---
+
+<section
+	class="space-y-2 text-3xl leading-snug mt-7 lg:space-y-1 line-length-lg"
+>
+	<p>
+		<JobDescriber
+			sequence={labels}
+			className="-mr-0.5"
+			client:load
+		/> based in Los Angeles specializing in solving complex problems
+		through collaboration, data, and hard work.
+	</p>
+</section>

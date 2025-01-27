@@ -1,0 +1,87 @@
+---
+import { getCollection } from 'astro:content';
+import { differenceInYears } from 'date-fns';
+import { RxArrowTopRight } from 'react-icons/rx';
+import ConditionalLink from '@components/ConditionalLink.astro';
+import Section from '@components/Section.astro';
+
+const roles = (await getCollection('roles')).sort(
+	(a, b) => b.data.start.valueOf() - a.data.start.valueOf()
+);
+
+const roleCutoff = 10;
+
+const recentRoles = roles.filter(
+	role =>
+		!role.data.end ||
+		differenceInYears(new Date(), role.data.end) <= roleCutoff
+);
+
+const previousRoles = roles
+	.filter(
+		({ data: { end } }) =>
+			end && differenceInYears(new Date(), end) > roleCutoff
+	)
+	.map(({ data: { company } }) => company)
+	.reduce(
+		(a, b, i, array) =>
+			a + (i < array.length - 1 ? ', ' : ', and ') + b
+	);
+---
+
+{
+	roles && (
+		<Section title="Roles">
+			<ol class="space-y-5">
+				{recentRoles.map(
+					({
+						data: { company, start, end, role, website },
+					}) => {
+						const rangeStart = new Date(
+							start
+						).getUTCFullYear();
+						const rangeEnd = end
+							? new Date(end).getUTCFullYear()
+							: 'Now';
+						return (
+							<li class="flex">
+								<ConditionalLink
+									href={website}
+									class="group"
+								>
+									<h4 class="text-2xl">
+										<span>
+											<span class="font-medium">
+												{role}
+											</span>
+											<span class="text-subdued">
+												at
+											</span>
+											<span class="underline underline-offset-4 decoration-2 decoration-accent font-medium group-hover:decoration-3 whitespace-nowrap text-strong">
+												{company}
+											</span>
+										</span>
+										{website && (
+											<span class="group-hover:text-accent text-weak ml-0.5 transition text-xl">
+												<RxArrowTopRight className="inline-block align-baseline" />
+											</span>
+										)}
+									</h4>
+									<time
+										class="block text-subdued font-medium text-md"
+										datetime={start.toISOString()}
+									>
+										{rangeStart} — {rangeEnd}
+									</time>
+								</ConditionalLink>
+							</li>
+						);
+					}
+				)}
+			</ol>
+			<p class="mt-3 font-medium text-subdued">
+				Previously a designer at {previousRoles}.
+			</p>
+		</Section>
+	)
+}
