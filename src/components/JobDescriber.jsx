@@ -7,15 +7,11 @@ export const JobDescriber = ({
 	className,
 	shuffle = false,
 }) => {
-	var canUseDOM = !!(
-		typeof window !== 'undefined' &&
-		window.document &&
-		window.document.createElement
-	);
+	const canUseDOM = typeof window?.document?.createElement === 'function';
 
 	if (!canUseDOM) return sequence[0];
 
-	const shuffledSequence = shuffle ? shuffle(sequence) : sequence;
+	const shuffledSequence = shuffle ? shuffleFn(sequence) : sequence;
 
 	return (
 		<TypeAnimation
@@ -31,7 +27,7 @@ export const JobDescriber = ({
 	);
 };
 
-const shuffle = array => {
+const shuffleFn = array => {
 	for (let i = array.length - 1; i > 0; i--) {
 		const j = Math.floor(Math.random() * (i + 1));
 		[array[i], array[j]] = [array[j], array[i]];
