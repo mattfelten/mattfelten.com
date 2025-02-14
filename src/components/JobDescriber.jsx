@@ -7,7 +7,8 @@ export const JobDescriber = ({
 	className,
 	shuffle = false,
 }) => {
-	const canUseDOM = typeof window?.document?.createElement === 'function';
+	const canUseDOM =
+		typeof window !== 'undefined' && window.document?.createElement;
 
 	if (!canUseDOM) return sequence[0];
 
