@@ -156,5 +156,11 @@ module.exports = {
 				},
 			});
 		}),
+		plugin(function ({ addVariant }) {
+			addVariant(
+				'prose-inline-code',
+				'&.prose :where(:not(pre)>code):not(:where([class~="not-prose"] *))',
+			);
+		}),
 	],
 };

@@ -2,9 +2,10 @@
 import Header from './Header.astro';
 import Footer from './Footer.astro';
 import HTML from './html.astro';
+const { title } = Astro.props;
 ---
 
-<HTML>
+<HTML title={title}>
 	<Header />
 	<main class="space-y-8">
 		<slot />
