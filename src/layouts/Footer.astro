@@ -52,19 +52,7 @@ const social = [
 		}
 	}
 
-	div {
-		display: flex;
-		flex-direction: column;
-		@apply py-2 gap-1;
-	}
-
 	.home {
-		@apply block font-bold text-lg;
-
-		@media (max-width: 440px) {
-			display: none;
-		}
-
 		&::after {
 			opacity: 0;
 			transition: opacity 0.2s;
@@ -77,33 +65,26 @@ const social = [
 			transform-origin: 70% 70%;
 		}
 
-		&:hover::after {
+		&:hover::after,
+		&:focus-visible::after {
 			opacity: 1;
-		}
-	}
-
-	.social {
-		@apply flex gap-2;
-
-		a {
-			display: block;
-			@apply hover text-weak;
-
-			&:hover {
-				@apply text-strong;
-			}
 		}
 	}
 </style>
 
-<div>
-	<a class="home" href="/">Matt Felten</a>
+<div class="flex flex-col py-2 gap-1">
+	<a class="home block font-bold text-lg focus:outline-0" href="/"
+		>Matt Felten</a
+	>
 
-	<ul class="social">
+	<ul class="flex gap-2">
 		{
 			social.map(({ icon: Icon, url }, i) => (
 				<li>
-					<a href={url}>
+					<a
+						class="block hover text-weak hover:text-strong focus:outline-0 focus-visible:text-strong"
+						href={url}
+					>
 						<Icon width={18} />
 					</a>
 				</li>

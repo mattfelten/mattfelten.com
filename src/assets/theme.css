@@ -1,0 +1,44 @@
+@theme static {
+	--color-accent: '#3DDFC2';
+	--color-background: '#fafafa';
+	--color-default: '#374151';
+	--color-strong: '#111827';
+	--color-subdued: '#6B7280';
+	--color-weak: '#9CA3AF';
+
+	--font-sans: Nudica, -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+	--spacing: 8px;
+	--spacing-px: 1px;
+	--spacing-0: 0;
+	--spacing-0-5: 4px; /* Rare */
+	--spacing-1: 8px;
+	--spacing-1-5: 12px; /* Rare */
+	--spacing-2: 16px;
+	--spacing-2-5: 20px; /* Only use for icons */
+	--spacing-3: 24px;
+	--spacing-4: 32px; /* After this point, 8px steps is too small to be significant, and moves to 16px steps */
+	--spacing-5: 48px;
+	--spacing-6: 64px;
+	--spacing-7: 80px;
+	--spacing-8: 96px; /* After this point, 16px steps is too small to be significant, and moves to 24px steps */
+	--spacing-9: 120px;
+	--spacing-10: 144px;
+	--spacing-11: 168px;
+	--spacing-12: 192px;
+
+	--default-ring-width: 2px;
+	--default-ring-color: var(--color-accent);
+	--default-ring-opacity: 0.5;
+}
+
+@media (prefers-color-scheme: dark) {
+	@theme inline {
+		--color-accent: #00E0B8;
+		--color-background: #000000;
+		--color-default: #F3F4F6;
+		--color-strong: #F9FAFB;
+		--color-subdued: #9CA3AF;
+		--color-weak: #4B5563;
+	}
+}

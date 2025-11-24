@@ -46,13 +46,13 @@ export const PasswordProtected = ({ children, password }) => {
 								type="text"
 								name="password"
 								placeholder={placeholder}
-								className="leading-normal bg-transparent text-inherit text-strong focus:outline-none absolute top-0 left-0 bottom-0 right-0"
+								className="leading-normal bg-transparent text-strong focus:outline-none absolute top-0 left-0 bottom-0 right-0"
 								autoFocus
 								onChange={change}
 							/>
 						</div>
 
-						<button className="text-weak hover:text-accent">
+						<button className="text-weak hover:text-accent focus-visible:text-accent">
 							<RxArrowRight />
 						</button>
 					</form>

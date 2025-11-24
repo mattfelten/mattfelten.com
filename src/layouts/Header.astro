@@ -2,17 +2,10 @@
 const Tag = Astro.url.pathname === '/' ? 'h1' : 'h3';
 ---
 
-<style>
-	a {
-		display: block;
-
-		@apply text-default;
-		@apply font-bold;
-		@apply text-xl;
-		@apply hover;
-	}
-</style>
-
 <Tag>
-	<a href="/">Matt Felten ⚡️</a>
+	<a
+		href="/"
+		class="text-default font-bold text-xl hover focus:outline-0 block"
+		>Matt Felten ⚡️</a
+	>
 </Tag>

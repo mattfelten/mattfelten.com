@@ -5,7 +5,7 @@ import Section from '@components/Section.astro';
 import { RxArrowTopRight } from 'react-icons/rx';
 
 const projects = (await getCollection('projects')).sort(
-	(a, b) => b.data.year.valueOf() - a.data.year.valueOf()
+	(a, b) => b.data.year.valueOf() - a.data.year.valueOf(),
 );
 ---
 
@@ -30,10 +30,10 @@ const projects = (await getCollection('projects')).sort(
 								{url ? (
 									<a
 										href={url}
-										class="underline underline-offset-4 decoration-2 decoration-accent font-medium hover:decoration-3 whitespace-nowrap text-strong group"
+										class="underline underline-offset-4 decoration-2 decoration-accent font-medium hover:decoration-3 whitespace-nowrap text-strong group focus:outline-0"
 									>
 										{title}
-										<span class="group-hover:text-accent text-weak ml-0.5 transition text-xl">
+										<span class="group-hover:text-accent group-focus-within:text-accent text-weak ml-0.5 transition text-xl">
 											<RxArrowTopRight className="inline-block align-text-bottom" />
 										</span>
 									</a>
@@ -54,7 +54,7 @@ const projects = (await getCollection('projects')).sort(
 								</div>
 							)}
 						</li>
-					)
+					),
 				)}
 			</ul>
 		</Section>
