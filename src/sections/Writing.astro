@@ -1,0 +1,26 @@
+---
+import { getCollection } from 'astro:content';
+import List from '@components/List.astro';
+import Section from '@components/Section.astro';
+import { RxArrowRight } from 'react-icons/rx';
+
+const posts = (await getCollection('posts'))
+	.filter(post => !post.data.hidden)
+	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+	.slice(0, 4);
+---
+
+{
+	posts && (
+		<Section title="Writing">
+			<List list={posts} />
+			<a
+				class="mt-2 text-weak items-center gap-0-5 inline-flex hover:text-subdued focus:outline-0 focus-visible:text-subdued transition"
+				href="/posts"
+			>
+				See all articles
+				<RxArrowRight />
+			</a>
+		</Section>
+	)
+}

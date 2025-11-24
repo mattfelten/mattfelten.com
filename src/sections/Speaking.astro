@@ -12,6 +12,14 @@ const speaking = (await getCollection('speaking')).sort(
 	speaking && (
 		<Section title="Speaking">
 			<List list={speaking} />
+
+			<a
+				class="mt-2 text-weak items-center gap-0-5 inline-flex hover:text-subdued focus:outline-0 focus-visible:text-subdued transition"
+				href="mailto:m@mattfelten.com"
+				data-obfuscation="0"
+			>
+				Send me an email about speaking opportunities →
+			</a>
 		</Section>
 	)
 }

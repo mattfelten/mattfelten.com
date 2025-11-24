@@ -1,5 +1,20 @@
 ---
-import Home from './_home/index.astro';
+import Layout from '@layouts/default.astro';
+import {
+	Intro,
+	Projects,
+	Writing,
+	Speaking,
+	Newsletter,
+} from '@sections/index';
 ---
 
-<Home />
+<Layout>
+	<Intro />
+	<Projects />
+	<div class="flex gap-8">
+		<Writing />
+		<Speaking />
+	</div>
+	<Newsletter />
+</Layout>

@@ -1,18 +1,7 @@
----
-import Layout from '@layouts/default.astro';
 import Intro from './Intro.astro';
 import Projects from './Projects.astro';
-import Roles from './Roles.astro';
 import Writing from './Writing.astro';
 import Speaking from './Speaking.astro';
 import Newsletter from './newsletter.astro';
----
 
-<Layout>
-	<Intro />
-	<Projects />
-	<Roles />
-	<Writing />
-	<Speaking />
-	<Newsletter />
-</Layout>
+export { Intro, Projects, Writing, Speaking, Newsletter };

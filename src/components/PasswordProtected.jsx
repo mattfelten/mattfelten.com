@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-
+import { useEffect, useState } from 'react';
 import { RxArrowRight } from 'react-icons/rx';
 
 export const PasswordProtected = ({ children, password }) => {

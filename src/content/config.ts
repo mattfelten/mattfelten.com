@@ -21,6 +21,7 @@ export const collections = {
 		schema: z.object({
 			company: z.string(),
 			description: z.string().optional(),
+			acquired: z.string().optional(),
 			end: z.date().optional(),
 			role: z.string(),
 			start: z.date(),
