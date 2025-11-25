@@ -1,0 +1,44 @@
+---
+import { format } from 'date-fns';
+
+import Prose from '@layouts/prose.astro';
+import Newsletter from '@sections/newsletter.astro';
+
+export async function getStaticPaths() {
+	const url = new URL(`https://api.buttondown.com/v1/emails`);
+	const options = {
+		method: 'GET',
+		headers: {
+			Authorization: `Token ${import.meta.env.BUTTONDOWN_TOKEN}`,
+		},
+	};
+
+	const response = await fetch(url.toString(), options);
+	const data = await response.json();
+	const posts = data.results;
+
+	return posts.map(post => ({
+		params: { slug: post.slug },
+		props: { post }, // Pass the entire post object as a prop
+	}));
+}
+
+const {
+	post: { subject, body, publish_date, secondary_id },
+} = Astro.props;
+const niceDate = format(publish_date, 'MMMM d, yyyy');
+---
+
+<Prose title={subject}>
+	<div class="mb-6 flex flex-col gap-1">
+		<h1 class="mb-0!">{subject}</h1>
+		<div class="text-subdued flex items-center gap-3 text-xl">
+			<span>Issue {secondary_id}</span>
+			<span>{niceDate}</span>
+		</div>
+	</div>
+	<div set:html={body} />
+	<div class="mt-12! flex justify-center" slot="after-article">
+		<Newsletter />
+	</div>
+</Prose>

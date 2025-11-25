@@ -34,10 +34,16 @@ const years = Object.keys(postsByYear)
 				<Section title={year.toString()}>
 					<ul class="space-y-2">
 						{postsByYear[year].map(
-							({ data: { title, date, redirect }, slug }) => (
+							({
+								data: { title, date, redirect },
+								slug,
+							}) => (
 								<li>
 									<a
-										href={redirect || '/posts/' + slug}
+										href={
+											redirect ||
+											'/posts/' + slug
+										}
 										class="group flex items-baseline gap-2 transition-transform hover:translate-x-1 focus:outline-0"
 									>
 										<time class="text-subdued font-mono font-medium whitespace-nowrap">
@@ -53,7 +59,7 @@ const years = Object.keys(postsByYear)
 										</span>
 									</a>
 								</li>
-							),
+							)
 						)}
 					</ul>
 				</Section>

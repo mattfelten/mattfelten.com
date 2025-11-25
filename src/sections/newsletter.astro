@@ -9,12 +9,7 @@ import Section from '@components/Section.astro';
 		quiet feed of things I'd send a friend.
 	</p>
 	<div class="space-y-2">
-		<form
-			id="newsletter-form"
-			action="https://newsletter.mattfelten.com/api/v1/free"
-			method="post"
-			class="flex gap-2"
-		>
+		<form id="newsletter-form" class="flex gap-2">
 			<div class="bg-background w-full">
 				<input
 					id="newsletter-email"
@@ -27,9 +22,26 @@ import Section from '@components/Section.astro';
 			</div>
 			<button
 				id="newsletter-submit"
-				class="text-background bg-accent focus-visible:bg-accent/90 cursor-pointer rounded-md p-1.5 font-medium focus:outline-0 disabled:cursor-not-allowed disabled:opacity-50"
+				class="text-background bg-accent focus-visible:bg-accent/90 relative cursor-pointer rounded-md p-1.5 font-medium whitespace-nowrap focus:outline-0 disabled:cursor-not-allowed disabled:text-transparent disabled:opacity-50 disabled:*:block"
 				type="submit"
 			>
+				<svg
+					class="-mt-1-5 -ml-1-5 text-background absolute top-1/2 left-1/2 hidden size-3 animate-spin [animation-duration:.6s]"
+					xmlns="http://www.w3.org/2000/svg"
+					fill="none"
+					viewBox="0 0 24 24"
+					><circle
+						class="opacity-25"
+						cx="12"
+						cy="12"
+						r="10"
+						stroke="currentColor"
+						stroke-width="4"></circle><path
+						class="opacity-75"
+						fill="currentColor"
+						d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+					></path></svg
+				>
 				Subscribe
 			</button>
 		</form>
@@ -47,6 +59,8 @@ import Section from '@components/Section.astro';
 </Section>
 
 <script>
+	import { actions } from 'astro:actions';
+
 	const form = document.getElementById(
 		'newsletter-form'
 	) as HTMLFormElement | null;
@@ -71,52 +85,29 @@ import Section from '@components/Section.astro';
 		form.addEventListener('submit', async e => {
 			e.preventDefault();
 
-			const email = emailInput.value;
+			const email = emailInput.value.trim();
 			if (!email) return;
 
 			// Disable form during submission
 			submitButton.disabled = true;
+			emailInput.disabled = true;
 			errorMessage.classList.add('hidden');
+			successMessage.classList.add('hidden');
 
-			try {
-				// Use URLSearchParams for application/x-www-form-urlencoded
-				const params = new URLSearchParams();
-				params.append('email', email);
+			const { data, error } = await actions.subscribe({
+				email,
+			});
 
-				const response = await fetch(
-					'https://newsletter.mattfelten.com/api/v1/free',
-					{
-						method: 'POST',
-						headers: {
-							'Content-Type':
-								'application/x-www-form-urlencoded',
-						},
-						body: params.toString(),
-					}
-				);
+			emailInput.disabled = false;
+			submitButton.disabled = false;
 
-				// Treat any response that's not a client/server error (4xx/5xx) as success
-				// This handles cases where the API doesn't return a standard response
-				if (response.status < 400) {
-					// Hide form and show success message
-					form.classList.add('hidden');
-					successMessage.classList.remove('hidden');
-					emailInput.value = '';
-				} else {
-					// Show error message for 4xx/5xx responses
-					errorMessage.classList.remove('hidden');
-					submitButton.disabled = false;
-				}
-			} catch (error) {
-				// Log error for debugging
-				console.error(
-					'Newsletter subscription error:',
-					error
-				);
-				// Show error message
+			if (error) {
 				errorMessage.classList.remove('hidden');
-				submitButton.disabled = false;
+				return;
 			}
+
+			successMessage.classList.remove('hidden');
+			emailInput.value = '';
 		});
 	}
 </script>
