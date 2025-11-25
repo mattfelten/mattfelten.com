@@ -1,11 +1,12 @@
 ---
 import { getCollection } from 'astro:content';
+import { RxArrowRight } from 'react-icons/rx';
 
 import List from '@components/List.astro';
 import Section from '@components/Section.astro';
 
 const speaking = (await getCollection('speaking')).sort(
-	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf()
 );
 ---
 
@@ -19,7 +20,8 @@ const speaking = (await getCollection('speaking')).sort(
 				href="mailto:m@mattfelten.com"
 				data-obfuscation="0"
 			>
-				Send me an email about speaking opportunities →
+				Send me an email about speaking opportunities
+				<RxArrowRight />
 			</a>
 		</Section>
 	)
