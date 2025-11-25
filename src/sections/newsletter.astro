@@ -9,26 +9,29 @@ import Section from '@components/Section.astro';
 		quiet feed of things I'd send a friend.
 	</p>
 	<form
-		action="https://yourname.substack.com/api/v1/free"
+		action="https://newsletter.mattfelten.com/api/v1/free"
 		method="post"
 		target="_blank"
 		class="flex gap-2"
 	>
-		<input
+		{
+			/*	<input
 			type="hidden"
 			name="redirect"
 			value="https://mattfelten.com/newsletter/thank-you"
-		/>
-		<input type="hidden" name="tags" value="website" />
-		<input
-			class="bg-strong/10 border-none rounded-md p-1.5 w-full focus-visible:bg-strong/7 transition-colors focus:outline-0"
-			type="email"
-			name="email"
-			placeholder="name@example.com"
-			required
-		/>
+		/>*/
+		}
+		<div class="bg-background w-full">
+			<input
+				class="bg-strong/10 focus-visible:bg-strong/7 w-full rounded-md border-none p-1.5 transition-colors focus:outline-0"
+				type="email"
+				name="email"
+				placeholder="name@example.com"
+				required
+			/>
+		</div>
 		<button
-			class="p-1.5 rounded-md text-background bg-accent cursor-default focus:outline-0 focus-visible:bg-accent/90"
+			class="text-background bg-accent focus-visible:bg-accent/90 cursor-pointer rounded-md p-1.5 font-medium focus:outline-0"
 			type="submit">Subscribe</button
 		>
 	</form>
