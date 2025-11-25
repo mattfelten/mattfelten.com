@@ -1,9 +1,8 @@
 ---
-import HTML from '@layouts/html.astro';
+import { SpinnerCircularFixed } from 'spinners-react/lib/esm/SpinnerCircularFixed';
 
 import { PasswordProtected } from '@components/PasswordProtected';
-
-import { SpinnerCircularFixed } from 'spinners-react/lib/esm/SpinnerCircularFixed';
+import HTML from '@layouts/html.astro';
 
 import gallery from './_gallery.png';
 ---
@@ -16,7 +15,7 @@ import gallery from './_gallery.png';
 			speed={200}
 			color="#36ad47"
 			secondaryColor="rgba(0, 0, 0, 0.44)"
-			className="fixed z-[-1] top-1/2 left-1/2 -mt-2 -ml-2"
+			className="fixed top-1/2 left-1/2 z-[-1] -mt-2 -ml-2"
 			client:load
 		/>
 		<div

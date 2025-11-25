@@ -1,6 +1,6 @@
 @layer components {
-  .hover {
-		transition: all .1s ease-in-out;
+	.hover {
+		transition: all 0.1s ease-in-out;
 
 		&:hover,
 		&:focus-visible {

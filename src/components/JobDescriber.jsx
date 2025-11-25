@@ -16,14 +16,14 @@ export const JobDescriber = ({
 
 	return (
 		<TypeAnimation
-			sequence={shuffledSequence.map((label, i) => [label, delay]).flat()}
-			wrapper="span"
-			preRenderFirstString={true}
-			cursor={true}
-			repeat={Infinity}
-			speed={speed}
 			className={`${className} after:text-accent after:opacity-70`}
+			cursor={true}
+			preRenderFirstString={true}
+			repeat={Infinity}
+			sequence={shuffledSequence.flatMap(label => [label, delay])}
+			speed={speed}
 			style={{ display: 'inline-block' }}
+			wrapper="span"
 		/>
 	);
 };

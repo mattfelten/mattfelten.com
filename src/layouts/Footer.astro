@@ -1,8 +1,8 @@
 ---
 import {
+	SiBluesky,
 	SiGithub,
 	SiLinkedin,
-	SiBluesky,
 	SiReaddotcv,
 } from '@icons-pack/react-simple-icons';
 
@@ -72,8 +72,8 @@ const social = [
 	}
 </style>
 
-<div class="flex flex-col py-2 gap-1">
-	<a class="home block font-bold text-lg focus:outline-0" href="/"
+<div class="flex flex-col gap-1 py-2">
+	<a class="home block text-lg font-bold focus:outline-0" href="/"
 		>Matt Felten</a
 	>
 
@@ -82,7 +82,7 @@ const social = [
 			social.map(({ icon: Icon, url }, i) => (
 				<li>
 					<a
-						class="block hover text-weak hover:text-strong focus:outline-0 focus-visible:text-strong"
+						class="hover text-weak hover:text-strong focus-visible:text-strong block focus:outline-0"
 						href={url}
 					>
 						<Icon width={18} />

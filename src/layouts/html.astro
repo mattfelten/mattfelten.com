@@ -1,5 +1,6 @@
 ---
 import favicons from './favicon.html?raw';
+
 import '@assets/fonts/nudica.css';
 import '@assets/global.css';
 
@@ -10,29 +11,26 @@ const title = [pageTitle && `${pageTitle} `, 'Matt Felten'].join(' ');
 <style>
 	html {
 		position: relative;
+	}
 
-		&::after {
-			content: '';
-			background-size: 30px 30px;
-			background-image: radial-gradient(
-				ellipse at center,
-				var(--color-default) 0%,
-				transparent 10% /* 30px * .1 = 3px */
-			);
-			background-repeat: repeat;
-			top: 0;
-			bottom: 0;
-			left: 0;
-			right: 0;
-			position: absolute;
-			z-index: -1;
-			min-height: 100vh;
+	html::after {
+		content: '';
+		background-size: 30px 30px;
+		background-image: radial-gradient(
+			ellipse at center,
+			var(--color-default) 0%,
+			transparent 10% /* 30px * .1 = 3px */
+		);
+		background-repeat: repeat;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		position: absolute;
+		z-index: -1;
+		min-height: 100vh;
 
-			opacity: 0.2;
-			@media (prefers-color-scheme: dark) {
-				opacity: 0.25;
-			}
-		}
+		opacity: 0.15;
 	}
 </style>
 
@@ -47,7 +45,7 @@ const title = [pageTitle && `${pageTitle} `, 'Matt Felten'].join(' ');
 		<Fragment set:html={favicons} />
 	</head>
 	<body
-		class="p-3 sm:p-6 space-y-8 font-sans text-base antialiased bg-background text-default max-w-screen-2xl mx-auto"
+		class="bg-background text-default mx-auto max-w-screen-2xl space-y-8 p-3 font-sans text-base antialiased sm:p-6"
 	>
 		<slot />
 	</body>

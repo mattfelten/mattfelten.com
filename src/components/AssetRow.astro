@@ -1,26 +1,26 @@
 <style>
-.div {
-	margin-top: 2em;
-	margin-bottom: 2em;
-	width: 94vw;
-
-	> * {
-		box-sizing: border-box;
-		margin: 0 0 2em;
-		padding: 16px;
-		flex: 1;
-	}
-
-	@media (min-width: 640px) {
-		display: flex;
+	.div {
+		margin-top: 2em;
+		margin-bottom: 2em;
+		width: 94vw;
 
 		> * {
-			margin: 0;
+			box-sizing: border-box;
+			margin: 0 0 2em;
+			padding: 16px;
+			flex: 1;
+		}
+
+		@media (min-width: 640px) {
+			display: flex;
+
+			> * {
+				margin: 0;
+			}
 		}
 	}
-}
 </style>
 
 <div>
-	<slot/>
+	<slot />
 </div>

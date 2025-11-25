@@ -1,9 +1,10 @@
 ---
-import Layout from '@layouts/default.astro';
 import { getCollection } from 'astro:content';
-import Section from '@components/Section.astro';
 import { format } from 'date-fns';
 import { RxArrowTopRight } from 'react-icons/rx';
+
+import Section from '@components/Section.astro';
+import Layout from '@layouts/default.astro';
 import Newsletter from '@sections/newsletter.astro';
 
 const posts = (await getCollection('posts'))
@@ -33,22 +34,16 @@ const years = Object.keys(postsByYear)
 				<Section title={year.toString()}>
 					<ul class="space-y-2">
 						{postsByYear[year].map(
-							({
-								data: { title, date, redirect },
-								slug,
-							}) => (
+							({ data: { title, date, redirect }, slug }) => (
 								<li>
 									<a
-										href={
-											redirect ||
-											'/posts/' + slug
-										}
-										class="flex items-baseline gap-2 hover:translate-x-1 transition-transform focus:outline-0 group"
+										href={redirect || '/posts/' + slug}
+										class="group flex items-baseline gap-2 transition-transform hover:translate-x-1 focus:outline-0"
 									>
-										<time class="text-subdued font-medium whitespace-nowrap font-mono">
+										<time class="text-subdued font-mono font-medium whitespace-nowrap">
 											{format(date, 'MMM dd')}
 										</time>
-										<span class="flex items-baseline gap-0-5">
+										<span class="gap-0-5 flex items-baseline">
 											<span class="font-medium">
 												{title}
 											</span>
@@ -58,7 +53,7 @@ const years = Object.keys(postsByYear)
 										</span>
 									</a>
 								</li>
-							)
+							),
 						)}
 					</ul>
 				</Section>

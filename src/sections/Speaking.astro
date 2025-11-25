@@ -1,10 +1,11 @@
 ---
 import { getCollection } from 'astro:content';
+
 import List from '@components/List.astro';
 import Section from '@components/Section.astro';
 
 const speaking = (await getCollection('speaking')).sort(
-	(a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 ---
 
@@ -14,7 +15,7 @@ const speaking = (await getCollection('speaking')).sort(
 			<List list={speaking} />
 
 			<a
-				class="mt-2 text-weak items-center gap-0-5 inline-flex hover:text-subdued focus:outline-0 focus-visible:text-subdued transition"
+				class="text-weak gap-0-5 hover:text-subdued focus-visible:text-subdued mt-2 inline-flex items-center transition focus:outline-0"
 				href="mailto:m@mattfelten.com"
 				data-obfuscation="0"
 			>

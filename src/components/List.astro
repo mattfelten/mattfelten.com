@@ -20,12 +20,12 @@ const formatDate = date => format(date, 'MMMM d, yyyy');
 				<li>
 					<a
 						href={redirect || '/posts/' + slug}
-						class="inline-block hover group focus:outline-0"
+						class="hover group inline-block focus:outline-0"
 					>
 						<span class="block text-2xl font-medium">
 							{title}
 							{redirect && (
-								<span class="group-hover:text-accent group-focus-within:text-accent text-weak ml-0.5 transition text-xl">
+								<span class="group-hover:text-accent group-focus-within:text-accent text-weak ml-0.5 text-xl transition">
 									<RxArrowTopRight className="inline-block align-text-top" />
 								</span>
 							)}

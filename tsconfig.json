@@ -1,5 +1,4 @@
 {
-	"extends": "astro/tsconfigs/base",
 	"compilerOptions": {
 		"baseUrl": ".",
 		"paths": {
@@ -9,5 +8,6 @@
 			"@sections/*": ["src/sections/*"]
 		},
 		"strictNullChecks": true // Note: Not needed if you extend "astro/tsconfigs/strict" or "astro/tsconfigs/strictest"
-	}
+	},
+	"extends": "astro/tsconfigs/base"
 }

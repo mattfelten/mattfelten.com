@@ -4,21 +4,22 @@
 	"singleQuote": true,
 	"arrowParens": "avoid",
 	"proseWrap": "never",
-	"importOrderSeparation": true,
-	"importOrderSortSpecifiers": true,
 	"importOrder": [
-		"<BUILTIN_MODULES>",
+		"",
 		"<THIRD_PARTY_MODULES>",
-		"<TYPES>",
-		"^@components/(.*)$",
-		"^@layouts/(.*)$",
-		"^@sections/(.*)$",
-		"^[./]"
+		"",
+		"^(@assets|@components|@layouts|@sections)(.*)$",
+		"",
+		"^../(.*)",
+		"",
+		"^./(.*)"
 	],
 	"plugins": [
 		"prettier-plugin-astro",
-		"@trivago/prettier-plugin-sort-imports"
+		"prettier-plugin-tailwindcss",
+		"@ianvs/prettier-plugin-sort-imports"
 	],
+	"tailwindFunctions": ["clsx"],
 	"overrides": [
 		{
 			"files": "*.astro",

@@ -2,12 +2,12 @@
 import { getCollection } from 'astro:content';
 import { differenceInYears } from 'date-fns';
 import { RxArrowTopRight } from 'react-icons/rx';
-import ConditionalLink from '@components/ConditionalLink.astro';
 
+import ConditionalLink from '@components/ConditionalLink.astro';
 import Section from '@components/Section.astro';
 
 const roles = (await getCollection('roles')).sort(
-	(a, b) => b.data.start.valueOf() - a.data.start.valueOf()
+	(a, b) => b.data.start.valueOf() - a.data.start.valueOf(),
 );
 
 const roleCutoff = 10;
@@ -15,18 +15,17 @@ const roleCutoff = 10;
 const recentRoles = roles.filter(
 	role =>
 		!role.data.end ||
-		differenceInYears(new Date(), role.data.end) <= roleCutoff
+		differenceInYears(new Date(), role.data.end) <= roleCutoff,
 );
 
 const previousRoles = roles
 	.filter(
 		({ data: { end } }) =>
-			end && differenceInYears(new Date(), end) > roleCutoff
+			end && differenceInYears(new Date(), end) > roleCutoff,
 	)
 	.map(({ data: { company } }) => company)
 	.reduce(
-		(a, b, i, array) =>
-			a + (i < array.length - 1 ? ', ' : ', and ') + b
+		(a, b, i, array) => a + (i < array.length - 1 ? ', ' : ', and ') + b,
 	);
 ---
 
@@ -36,18 +35,9 @@ const previousRoles = roles
 			<ol class="space-y-5">
 				{recentRoles.map(
 					({
-						data: {
-							company,
-							start,
-							end,
-							role,
-							website,
-							acquired,
-						},
+						data: { company, start, end, role, website, acquired },
 					}) => {
-						const rangeStart = new Date(
-							start
-						).getUTCFullYear();
+						const rangeStart = new Date(start).getUTCFullYear();
 						const rangeEnd = end
 							? new Date(end).getUTCFullYear()
 							: 'Now';
@@ -62,28 +52,26 @@ const previousRoles = roles
 											<span class="font-medium">
 												{role}
 											</span>
-											<span class="text-subdued">
-												at
-											</span>
-											<span class="underline underline-offset-4 decoration-2 decoration-accent font-medium group-hover:decoration-3 group-focus-visible:decoration-3 whitespace-nowrap text-strong">
+											<span class="text-subdued">at</span>
+											<span class="decoration-accent text-strong font-medium whitespace-nowrap underline decoration-2 underline-offset-4 group-hover:decoration-3 group-focus-visible:decoration-3">
 												{company}
 											</span>
 										</span>
 										{website && (
-											<span class="group-hover:text-accent group-focus-visible:text-accent text-weak ml-0.5 transition text-xl">
+											<span class="group-hover:text-accent group-focus-visible:text-accent text-weak ml-0.5 text-xl transition">
 												<RxArrowTopRight className="inline-block align-baseline" />
 											</span>
 										)}
 									</h4>
-									<div class="flex gap-2 items-center">
+									<div class="flex items-center gap-2">
 										<time
-											class="block text-subdued font-medium text-md"
+											class="text-subdued text-md block font-medium"
 											datetime={start.toISOString()}
 										>
 											{rangeStart} — {rangeEnd}
 										</time>
 										{acquired && (
-											<span class="font-medium text-md text-weak">
+											<span class="text-md text-weak font-medium">
 												(Acquired)
 											</span>
 										)}
@@ -91,10 +79,10 @@ const previousRoles = roles
 								</ConditionalLink>
 							</li>
 						);
-					}
+					},
 				)}
 			</ol>
-			<p class="mt-3 font-medium text-subdued">
+			<p class="text-subdued mt-3 font-medium">
 				Previously a designer at {previousRoles}.
 			</p>
 		</Section>

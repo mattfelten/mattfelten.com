@@ -1,19 +1,19 @@
 ---
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import Section from '@components/Section.astro';
-
 import { RxArrowTopRight } from 'react-icons/rx';
 
+import Section from '@components/Section.astro';
+
 const projects = (await getCollection('projects')).sort(
-	(a, b) => b.data.year.valueOf() - a.data.year.valueOf()
+	(a, b) => b.data.year.valueOf() - a.data.year.valueOf(),
 );
 ---
 
 {
 	projects && (
 		<Section title="Select Projects">
-			<ul class="text-xl space-y-8">
+			<ul class="space-y-8 text-xl">
 				{projects.map(
 					({
 						data: {
@@ -31,15 +31,15 @@ const projects = (await getCollection('projects')).sort(
 								{url ? (
 									<a
 										href={url}
-										class="underline underline-offset-4 decoration-2 decoration-accent font-medium hover:decoration-3 whitespace-nowrap text-strong group focus:outline-0"
+										class="decoration-accent text-strong group font-medium whitespace-nowrap underline decoration-2 underline-offset-4 hover:decoration-3 focus:outline-0"
 									>
 										{title}
-										<span class="group-hover:text-accent group-focus-within:text-accent text-weak ml-0.5 transition text-xl">
+										<span class="group-hover:text-accent group-focus-within:text-accent text-weak ml-0.5 text-xl transition">
 											<RxArrowTopRight className="inline-block align-text-bottom" />
 										</span>
 									</a>
 								) : (
-									<span class="underline underline-offset-4 decoration-2 decoration-weak font-medium whitespace-nowrap text-strong">
+									<span class="decoration-weak text-strong font-medium whitespace-nowrap underline decoration-2 underline-offset-4">
 										{title}
 									</span>
 								)}
@@ -47,15 +47,12 @@ const projects = (await getCollection('projects')).sort(
 								<span>{intro}</span>
 							</p>
 							{cover && coverAlt && (
-								<div class="aspect-video bg-accent bg-opacity-50 mt-4 rounded-lg shadow-2xl overflow-hidden">
-									<Image
-										src={cover}
-										alt={coverAlt}
-									/>
+								<div class="bg-accent bg-opacity-50 mt-4 aspect-video overflow-hidden rounded-lg shadow-2xl">
+									<Image src={cover} alt={coverAlt} />
 								</div>
 							)}
 						</li>
-					)
+					),
 				)}
 			</ul>
 		</Section>

@@ -5,7 +5,6 @@ export const PasswordProtected = ({ children, password }) => {
 	const placeholder = 'Password';
 	const [unlocked, setUnlocked] = useState(false);
 	const [value, setValue] = useState(placeholder);
-	if (!password) return null;
 
 	useEffect(() => {
 		const loc = new URL(window.location);
@@ -18,7 +17,9 @@ export const PasswordProtected = ({ children, password }) => {
 
 		urlParams.delete('p');
 		history.replaceState({}, '', loc.pathname);
-	}, []);
+	}, [password]);
+
+	if (!password) return null;
 
 	const change = e => {
 		setValue(e.target.value || placeholder);
@@ -34,24 +35,30 @@ export const PasswordProtected = ({ children, password }) => {
 	return (
 		<>
 			{!unlocked && (
-				<div className="absolute top-0 left-0 w-screen h-screen flex items-center justify-center">
+				<div
+					className="absolute top-0 left-0 w-screen h-screen flex items-center justify-center"
+					popover
+				>
 					<form
-						onSubmit={submit}
 						className="max-w-xs flex gap-2 text-4xl"
+						onSubmit={submit}
 					>
 						<div className="relative text-transparent inline-flex leading-normal">
 							{value}
 							<input
-								type="text"
-								name="password"
-								placeholder={placeholder}
-								className="leading-normal bg-transparent text-strong focus:outline-none absolute top-0 left-0 bottom-0 right-0"
 								autoFocus
+								className="leading-normal bg-transparent text-strong focus:outline-none absolute top-0 left-0 bottom-0 right-0"
+								name="password"
 								onChange={change}
+								placeholder={placeholder}
+								type="text"
 							/>
 						</div>
 
-						<button className="text-weak hover:text-accent focus-visible:text-accent">
+						<button
+							className="text-weak hover:text-accent focus-visible:text-accent"
+							type="button"
+						>
 							<RxArrowRight />
 						</button>
 					</form>

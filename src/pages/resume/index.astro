@@ -1,22 +1,24 @@
 ---
 import { getCollection } from 'astro:content';
-import Job from './_Job.astro';
+
 import Layout from '@layouts/default.astro';
 
+import Job from './_Job.astro';
+
 const roles = (await getCollection('roles')).sort(
-	(a, b) => b.data.start.valueOf() - a.data.start.valueOf()
+	(a, b) => b.data.start.valueOf() - a.data.start.valueOf(),
 );
 ---
 
 <Layout>
 	<section
-		class="space-y-2 text-3xl leading-snug mt-7 lg:space-y-1 line-length-lg"
+		class="line-length-lg mt-7 space-y-2 text-3xl leading-snug lg:space-y-1"
 	>
 		<p>
-			Design leader with over 15 years of experience based in
-			Los Angeles. Specializes in building thoughtful teams who
-			solve technologically-complex problems through
-			collaboration, data, research, and hard work.
+			Design leader with over 15 years of experience based in Los Angeles.
+			Specializes in building thoughtful teams who solve
+			technologically-complex problems through collaboration, data,
+			research, and hard work.
 		</p>
 	</section>
 	<section>

@@ -1,13 +1,51 @@
 {
+	"$schema": "https://biomejs.dev/schemas/2.3.7/schema.json",
 	"assist": {
 		"actions": {
 			"source": {
-				"organizeImports": "on"
+				"organizeImports": {
+					"level": "on",
+					"options": {
+						"groups": [
+							":NODE:",
+							":BLANK_LINE:",
+							[":PACKAGE:", ":PACKAGE_WITH_PROTOCOL:"],
+							":BLANK_LINE:",
+							[
+								":ALIAS:",
+								"@assets/**",
+								"@components/**",
+								"@layouts/**",
+								"@sections/**"
+							],
+							":BLANK_LINE:",
+							"./**"
+						]
+					}
+				},
+				"useSortedAttributes": "on",
+				"useSortedKeys": "on",
+				"useSortedProperties": "on"
 			}
+		},
+		"enabled": true
+	},
+	"css": {
+		"parser": {
+			"tailwindDirectives": true
 		}
 	},
-	"organizeImports": {
-		"enabled": true
+	"files": {
+		"ignoreUnknown": false
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab"
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "double"
+		}
 	},
 	"linter": {
 		"enabled": true,
@@ -20,16 +58,21 @@
 			"includes": ["**/*.svelte", "**/*.astro", "**/*.vue"],
 			"linter": {
 				"rules": {
+					"correctness": {
+						"noUnusedImports": "off",
+						"noUnusedVariables": "off"
+					},
 					"style": {
 						"useConst": "off",
 						"useImportType": "off"
-					},
-					"correctness": {
-						"noUnusedVariables": "off",
-						"noUnusedImports": "off"
 					}
 				}
 			}
 		}
-	]
+	],
+	"vcs": {
+		"clientKind": "git",
+		"enabled": true,
+		"useIgnoreFile": true
+	}
 }

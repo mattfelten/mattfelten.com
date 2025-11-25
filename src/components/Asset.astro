@@ -1,6 +1,6 @@
 ---
-import cx from 'clsx';
 import { Picture } from 'astro:assets';
+import cx from 'clsx';
 
 const {
 	alt = '',
@@ -12,11 +12,7 @@ const {
 	...props
 } = Astro.props;
 
-const classes = cx(
-	'Assets',
-	fullWidth && 'Assets--full-width',
-	className
-);
+const classes = cx('Assets', fullWidth && 'Assets--full-width', className);
 ---
 
 <style>
@@ -82,12 +78,7 @@ const classes = cx(
 			const getAssetContent = () => {
 				if (isExtension('mov'))
 					return (
-						<video
-							src={src}
-							controls
-							class={classes}
-							{...props}
-						>
+						<video src={src} controls class={classes} {...props}>
 							{alt}
 						</video>
 					);
@@ -103,17 +94,11 @@ const classes = cx(
 					);
 
 				return (
-					<Picture
-						src={src}
-						alt={alt}
-						class={classes}
-						{...props}
-					/>
+					<Picture src={src} alt={alt} class={classes} {...props} />
 				);
 			};
 
-			if (getLink())
-				return <a href={getLink()}>{getAssetContent()}</a>;
+			if (getLink()) return <a href={getLink()}>{getAssetContent()}</a>;
 			return getAssetContent();
 		}
 	}

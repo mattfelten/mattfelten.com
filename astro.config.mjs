@@ -6,13 +6,12 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://mattfelten.com',
 	integrations: [react(), mdx(), mailObfuscation()],
+	site: 'https://mattfelten.com',
 	vite: {
+		plugins: [tailwindcss()],
 		server: {
 			open: true,
 		},
-
-		plugins: [tailwindcss()],
 	},
 });

@@ -1,19 +1,19 @@
 @utility line-length-xs {
-  max-width: 18em; /* 300px */
+	max-width: 18em; /* 300px */
 }
 
 @utility line-length-sm {
-  max-width: 30em;
+	max-width: 30em;
 }
 
 @utility line-length-md {
-  max-width: 35em; /* 560px */
+	max-width: 35em; /* 560px */
 }
 
 @utility line-length-lg {
-  max-width: 40em;
+	max-width: 40em;
 }
 
 @utility line-length-xl {
-  max-width: 50em; /* 800px */
+	max-width: 50em; /* 800px */
 }
