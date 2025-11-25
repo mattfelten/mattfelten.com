@@ -58,12 +58,17 @@ import Section from '@components/Section.astro';
 			</p>
 		</div>
 	</div>
-	<a
-		href="/newsletter"
-		class="text-weak gap-0-5 hover:text-subdued focus-visible:text-subdued mt-2 inline-flex items-center transition focus:outline-0"
-		>See newsletter archive
-		<RxArrowRight /></a
-	>
+	{
+		Astro.url.pathname !== '/newsletter' && (
+			<a
+				href="/newsletter"
+				class="text-weak gap-0-5 hover:text-subdued focus-visible:text-subdued mt-2 inline-flex items-center transition focus:outline-0"
+			>
+				See newsletter archive
+				<RxArrowRight />
+			</a>
+		)
+	}
 </Section>
 
 <script>
