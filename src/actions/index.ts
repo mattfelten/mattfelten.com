@@ -23,10 +23,7 @@ export const server = {
 				if (!response.ok) {
 					throw new ActionError({
 						code: 'BAD_REQUEST',
-						message:
-							response.status === 404
-								? 'already exists'
-								: response.statusText,
+						message: response.statusText,
 					});
 				}
 
