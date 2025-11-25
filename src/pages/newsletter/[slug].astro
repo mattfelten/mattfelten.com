@@ -26,6 +26,7 @@ export async function getStaticPaths() {
 const {
 	post: { subject, body, publish_date, secondary_id },
 } = Astro.props;
+
 const niceDate = format(publish_date, 'MMMM d, yyyy');
 ---
 

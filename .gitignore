@@ -22,3 +22,6 @@ src/layout/favicon.html
 
 # astro
 .astro/
+
+# Netlify specific
+.netlify/

@@ -1,6 +1,8 @@
 import { ActionError, defineAction } from 'astro:actions';
 import { z } from 'astro:schema';
 
+export const prerender = false;
+
 export const server = {
 	subscribe: defineAction({
 		input: z.object({
