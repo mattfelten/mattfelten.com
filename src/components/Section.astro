@@ -1,5 +1,5 @@
 ---
-const { title, href, class: className } = Astro.props;
+const { title, href, linkText = 'View all →', class: className } = Astro.props;
 ---
 
 <section class={className}>
@@ -7,7 +7,7 @@ const { title, href, class: className } = Astro.props;
 		<h3 class="text-subdued font-medium">{title}</h3>
 		{href && (
 			<a href={href} class="text-subdued hover:text-accent text-sm font-medium transition-colors">
-				View all →
+				{linkText}
 			</a>
 		)}
 	</div>
