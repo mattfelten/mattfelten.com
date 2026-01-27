@@ -1,0 +1,69 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+
+import Section from '@components/Section.astro';
+
+const work = (await getCollection('work'))
+	.filter(item => item.data.featured)
+	.sort((a, b) => {
+		// Sort by most recent year (active first, then by endYear/year)
+		const aYear = a.data.active ? Infinity : (a.data.endYear || a.data.year);
+		const bYear = b.data.active ? Infinity : (b.data.endYear || b.data.year);
+		return bYear - aYear;
+	});
+
+function formatYear(year: number, endYear?: number, active?: boolean) {
+	if (active) return `${year} – Present`;
+	if (endYear && endYear !== year) return `${year}–${endYear}`;
+	return year.toString();
+}
+---
+
+{
+	work.length > 0 && (
+		<Section title="Selected Work" href="/work">
+			<ul class="space-y-12">
+				{work.map(
+					({
+						data: {
+							company,
+							cover,
+							coverAlt,
+							intro,
+							title,
+							year,
+							endYear,
+							active,
+						},
+						slug,
+					}) => (
+						<li>
+							<a
+								href={`/work/${slug}`}
+								class="group block"
+							>
+								{cover && coverAlt && (
+									<div class="hover bg-accent/50 mb-4 aspect-video overflow-hidden rounded-lg shadow-lg">
+										<Image src={cover} alt={coverAlt} class="h-full w-full object-cover" />
+									</div>
+								)}
+								<div class="flex flex-col gap-1">
+									<div class="text-subdued text-sm font-medium">
+										{company} · {formatYear(year, endYear, active)}
+									</div>
+									<h3 class="text-strong group-hover:text-accent text-xl font-medium transition-colors">
+										{title}
+									</h3>
+									<p class="text-default line-length-md text-lg">
+										{intro}
+									</p>
+								</div>
+							</a>
+						</li>
+					),
+				)}
+			</ul>
+		</Section>
+	)
+}

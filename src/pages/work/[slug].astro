@@ -1,0 +1,39 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+
+import Prose from '@layouts/prose.astro';
+
+export async function getStaticPaths() {
+	const workEntries = await getCollection('work');
+	return workEntries.map(entry => ({
+		params: { slug: entry.slug },
+		props: { entry },
+	}));
+}
+
+const { entry } = Astro.props;
+const { title, company, year, endYear, active, cover, coverAlt } = entry.data;
+const { Content } = await entry.render();
+
+function formatYear(year: number, endYear?: number, active?: boolean) {
+	if (active) return `${year} – Present`;
+	if (endYear && endYear !== year) return `${year}–${endYear}`;
+	return year.toString();
+}
+---
+
+<Prose title={`${company} – ${title}`}>
+	<div class="mb-8 flex flex-col gap-1">
+		<div class="text-subdued text-lg font-medium">
+			{company} · {formatYear(year, endYear, active)}
+		</div>
+		<h1 class="mb-0!">{title}</h1>
+	</div>
+	{cover && coverAlt && (
+		<div class="bg-accent/50 mb-8 aspect-video overflow-hidden rounded-lg shadow-lg not-prose">
+			<Image src={cover} alt={coverAlt} class="h-full w-full object-cover" />
+		</div>
+	)}
+	<Content />
+</Prose>
