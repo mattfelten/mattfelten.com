@@ -1,0 +1,55 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+
+import Section from '@components/Section.astro';
+
+const work = (await getCollection('work'))
+	.filter(item => item.data.featured)
+	.sort((a, b) => {
+		// Sort by most recent year (active first, then by endYear/year)
+		const aYear = a.data.active ? Infinity : (a.data.endYear || a.data.year);
+		const bYear = b.data.active ? Infinity : (b.data.endYear || b.data.year);
+		return bYear - aYear;
+	});
+---
+
+{
+	work.length > 0 && (
+		<Section title="Selected Work" href="/work" linkText="View all work →">
+			<ul class="space-y-8 text-xl">
+				{work.map(
+					({
+						data: {
+							cover,
+							coverAlt,
+							intro,
+							title,
+						},
+						slug,
+					}) => (
+						<li>
+							<a
+								href={`/work/${slug}`}
+								class="group block"
+							>
+								<p class="line-length-lg">
+									<span class="decoration-accent text-strong font-medium whitespace-nowrap underline decoration-2 underline-offset-4 group-hover:decoration-3">
+										{title}
+									</span>
+									{' — '}
+									<span>{intro}</span>
+								</p>
+								{cover && coverAlt && (
+									<div class="hover bg-accent/80 group-hover:bg-accent mt-4 aspect-video overflow-hidden rounded-lg shadow-2xl transition-colors">
+										<Image src={cover} alt={coverAlt} class="h-full w-full object-cover" />
+									</div>
+								)}
+							</a>
+						</li>
+					),
+				)}
+			</ul>
+		</Section>
+	)
+}
