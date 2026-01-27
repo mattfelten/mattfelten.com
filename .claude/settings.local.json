@@ -6,7 +6,12 @@
       "Bash(head:*)",
       "Bash(cat:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git checkout:*)",
+      "Bash(git pull:*)",
+      "Bash(npm run build:*)",
+      "Bash(source:*)",
+      "Bash(npx astro check:*)"
     ]
   }
 }
