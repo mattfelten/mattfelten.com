@@ -10,6 +10,17 @@ cover: ./cover.png
 coverAlt: DreamHost Control Panel redesign showing the new navigation and dashboard
 ---
 
+import Asset from '../../../components/Asset.astro';
+
+import rebrandHomepage from './rebrand-homepage.gif';
+import rebrandLogoOptions from './rebrand-logo-options.png';
+import refreshBeforeAfter from './refresh-before-after.gif';
+import refreshIa from './refresh-ia.png';
+import redesignOldIa from './redesign-old-ia.png';
+import redesignNewIa from './redesign-new-ia.png';
+import redesignFinal from './redesign-final.png';
+import qnapFlow from './qnap-flow.png';
+
 **What I worked on:**
 
 - Redesigned the 20-year-old control panel, rethinking information architecture and user mental models
@@ -18,3 +29,41 @@ coverAlt: DreamHost Control Panel redesign showing the new navigation and dashbo
 - Shipped third-party integrations (QNAP cloud storage partnership)
 
 This was my first opportunity to hire and manage designers and frontend developers — a theme that continued through most of my subsequent roles.
+
+---
+
+## Company Rebrand (2014)
+
+Worked with the Creative Director to refresh DreamHost's brand identity. We ran exercises to define brand values (Authentic, Passionate, Community, Inventive) and personality. I then built the new marketing site using Jekyll for performance and modern tooling.
+
+<Asset src={rebrandLogoOptions} alt="Logo exploration options showing different directions for the DreamHost mark" />
+<Asset src={rebrandHomepage} alt="The new DreamHost homepage with refreshed branding" />
+
+---
+
+## Control Panel Refresh (2015)
+
+First phase of a multi-year redesign effort. Focused on the application chrome — header and navigation. Condensed 75 top-level navigation items into 5 main sections through card sorting exercises.
+
+<Asset src={refreshIa} alt="Information architecture showing the condensed navigation structure" />
+<Asset src={refreshBeforeAfter} alt="Before and after comparison of the control panel refresh" />
+
+---
+
+## Control Panel Redesign (2017)
+
+Full reimagining of the 20-year-old control panel. The key insight: users think in terms of websites, not services. Reorganized the entire architecture around that mental model.
+
+Led a team of 3 designers through research, prototyping, and user testing. Delivered a coded Vue.js prototype and design system foundation.
+
+<Asset src={redesignOldIa} alt="The old information architecture with flat structure" caption="Old Information Architecture" />
+<Asset src={redesignNewIa} alt="New information architecture organized around websites" caption="New Information Architecture" />
+<Asset src={redesignFinal} alt="Final UI design presentation showing the new control panel" />
+
+---
+
+## QNAP Integration (2014)
+
+Turned the cloud storage product into a platform for third-party integrations. The challenge: designing flows that cross between two different company interfaces.
+
+<Asset src={qnapFlow} alt="User flow diagram showing the integration between DreamHost and QNAP interfaces" />
