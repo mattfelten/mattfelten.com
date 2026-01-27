@@ -12,18 +12,12 @@ const work = (await getCollection('work'))
 		const bYear = b.data.active ? Infinity : (b.data.endYear || b.data.year);
 		return bYear - aYear;
 	});
-
-function formatYear(year: number, endYear?: number, active?: boolean) {
-	if (active) return `${year} – Present`;
-	if (endYear && endYear !== year) return `${year}–${endYear}`;
-	return year.toString();
-}
 ---
 
 {
 	work.length > 0 && (
 		<Section title="Selected Work" href="/work">
-			<ul class="space-y-12">
+			<ul class="space-y-8 text-xl">
 				{work.map(
 					({
 						data: {
@@ -32,34 +26,27 @@ function formatYear(year: number, endYear?: number, active?: boolean) {
 							coverAlt,
 							intro,
 							title,
-							year,
-							endYear,
-							active,
 						},
 						slug,
 					}) => (
 						<li>
-							<a
-								href={`/work/${slug}`}
-								class="group block"
-							>
-								{cover && coverAlt && (
-									<div class="hover bg-accent/50 mb-4 aspect-video overflow-hidden rounded-lg shadow-lg">
+							<p class="line-length-lg">
+								<a
+									href={`/work/${slug}`}
+									class="decoration-accent text-strong group font-medium whitespace-nowrap underline decoration-2 underline-offset-4 hover:decoration-3 focus:outline-0"
+								>
+									{title}
+								</a>
+								{' — '}
+								<span>{intro}</span>
+							</p>
+							{cover && coverAlt && (
+								<a href={`/work/${slug}`} class="block">
+									<div class="hover bg-accent/50 mt-4 aspect-video overflow-hidden rounded-lg shadow-2xl">
 										<Image src={cover} alt={coverAlt} class="h-full w-full object-cover" />
 									</div>
-								)}
-								<div class="flex flex-col gap-1">
-									<div class="text-subdued text-sm font-medium">
-										{company} · {formatYear(year, endYear, active)}
-									</div>
-									<h3 class="text-strong group-hover:text-accent text-xl font-medium transition-colors">
-										{title}
-									</h3>
-									<p class="text-default line-length-md text-lg">
-										{intro}
-									</p>
-								</div>
-							</a>
+								</a>
+							)}
 						</li>
 					),
 				)}
