@@ -21,11 +21,11 @@ We got better design tools, component libraries, mature frontend frameworks, tig
 
 Design has always been iterative. Lots of directions, lots of dead ends. What changed is the speed. The whole loop got faster. I went from _narrow down, then build_ to _build many, then narrow down._
 
-I had a project recently. A third-party integration, fast-paced partnership, needed to ship as soon as possible. I created seven working React prototypes in two days. Not mockups. Functional code, running in the app. They covered a full spectrum: one redesigned the entire customer dashboard, one was the smallest change possible, and the rest fell in between. I clicked through each of them, felt which ones were getting closer, and funneled down to a shortlist.
+I had a project recently. A third-party integration, fast-paced partnership, needed to ship as soon as possible. It started the way most projects do, brainstorming with the team. I took those rough notes and shaped them into different directions. Then I built seven working React prototypes in two days. Not mockups. Functional code, running in the app. They covered a full spectrum: one redesigned the entire customer dashboard, one was the smallest change possible, and the rest fell in between. I clicked through each of them, felt which ones were getting closer, and narrowed down to the one I thought was strongest, plus a backup. Quick conversations with teammates to build consensus, then forward.
 
-Then a half-day of craft, bouncing between Figma and code. I've found that the bigger the feature, the faster it is to prototype in code. More screens, more steps, more edge cases. But specific UI elements, like a card component, are still faster to nail down in Figma. I went through about seven iterations of that card before it felt right. Then brought the design into code.
+Then a half-day of craft, bouncing between Figma and code. I've found that the bigger the feature, the faster it is to prototype in code. More screens, more steps, more edge cases. But specific UI elements, like a card component, are still faster to nail down in Figma. I went through about seven iterations of that card before it felt right. Then brought the design into code. The winning prototype evolved into shipped code — reworked, polished, tested for accessibility and responsiveness. Production-grade.
 
-Concept to production. Under a week.
+Concept to production. Under a week. The integration shipped and we started backing customer onboarding into the new tool.
 
 ---
 
@@ -53,7 +53,7 @@ I've seen thoughtful process produce great work. I've also seen process become a
 
 Here's the other thing I keep coming back to. Everyone takes part in good user experience, not just designers. How we prioritize projects is design work. How a feature gets implemented in code is design work. It all has an impact on what the user sees at the end, how it feels.
 
-I scope projects. I define API shapes with backend engineers. I refine tasks for the engineering team. I work with product on roadmaps, not just _what_ are we building but _why_ are we building it.
+I scope projects. I collaborate on API shapes with backend engineers. I refine tasks for the engineering team. I work with product on roadmaps, not just _what_ are we building but _why_ are we building it.
 
 When I see a UX papercut, half the time I file a ticket. The other half, I just fix it in code. When the team is under pressure to ship, I pick up engineering work.
 
