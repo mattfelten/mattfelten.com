@@ -1,6 +1,6 @@
 ---
 title: Where Does the Value Live?
-date: 2025-02-12
+date: 2026-02-12
 ---
 
 I learned the design process the way most of us did. Research, define, ideate, prototype, test, iterate. It's a good framework. It taught me to slow down, to ask questions before jumping to solutions, to listen to people who aren't me.
