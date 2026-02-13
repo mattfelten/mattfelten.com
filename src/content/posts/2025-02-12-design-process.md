@@ -67,9 +67,9 @@ Not every team works this way. I've been on teams with hard walls between roles,
 
 My process isn't a diamond diagram. It's a set of values.
 
-- Stay close to the real materials &mdash; code, users, data.
-- Try more things than you think you need to.
-- Have the guts to make a call.
-- Go where the work is, not where your title says you should be.
+- Stay close to the materials, the code, the users, the data.
+- Explore more than feels necessary.
+- Decide with conviction.
+- Follow the work, not the role.
 
 I'm not claiming to have this figured out. I'm just trying to take the next right step.
