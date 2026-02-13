@@ -25,7 +25,7 @@ I had a project recently. A third-party integration, fast-paced partnership, nee
 
 Then a half-day of craft, bouncing between Figma and code. I've found that the bigger the feature, the faster it is to prototype in code. More screens, more steps, more edge cases. But specific UI elements, like a card component, are still faster to nail down in Figma. I went through about seven iterations of that card before it felt right. Then brought the design into code. The winning prototype evolved into shipped code — reworked, polished, tested for accessibility and responsiveness. Production-grade.
 
-Concept to production. Under a week. The integration shipped and we're rolling customers onto the new tool in waves.
+Concept to production. Under a week. The integration shipped and we started rolling customers onto the new tool in waves.
 
 ---
 
