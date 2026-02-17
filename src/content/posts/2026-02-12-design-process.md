@@ -5,9 +5,7 @@ date: 2026-02-12
 
 I learned the design process the way most of us did. Research, define, ideate, prototype, test, iterate. It's a good framework. It taught me to slow down, to ask questions before jumping to solutions, to listen to people who aren't me. Process gave me rigor. It gave me empathy. I owe a lot to it.
 
-But over the years I've adapted how I work. The standard process treats research, design, and building as separate phases. I do enough research upfront to understand the problem and unlock making — talking to users, looking at data, understanding constraints. From there, making, researching, and evaluating become a tight loop. Each prototype teaches me something a research phase alone wouldn't have.
-
-The cost of trying ideas has dropped dramatically. Better tools, component libraries, mature frameworks, AI. When making is cheap, you can explore more. I went from _narrow down, then build_ to _build many, then narrow down._
+But the cost of trying ideas has dropped dramatically. Better tools, component libraries, mature frameworks, AI. When making is cheap, you can explore more. I went from _narrow down, then build_ to _build many, then narrow down._
 
 I had a project recently. A third-party integration, fast-paced partnership, needed to ship quickly. It started the way most projects do — brainstorming with the team. I took those rough notes and shaped them into different directions, then built seven working React prototypes in two days. Not mockups. Functional code, running in the app. They covered a full spectrum: one redesigned the entire customer dashboard, one was the smallest change possible, and the rest fell in between.
 
