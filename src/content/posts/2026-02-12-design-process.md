@@ -7,11 +7,16 @@ I learned the design process the way most of us did. Research, define, ideate, p
 
 But the cost of trying ideas has dropped dramatically. Better tools, component libraries, mature frameworks, AI. When making is cheap, you can explore more. I went from _narrow down, then build_ to _build many, then narrow down._
 
-I had a project recently. A third-party integration, fast-paced partnership, needed to ship quickly. It started the way most projects do — brainstorming with the team. I took those rough notes and shaped them into different directions, then built seven working React prototypes in two days. Not mockups. Functional code, running in the app. They covered a full spectrum: one redesigned the entire customer dashboard, one was the smallest change possible, and the rest fell in between.
+I had a project recently. A third-party integration, fast-paced partnership, needed to ship quickly.
 
-I prototype across that wide a range deliberately. Small incremental additions slowly degrade a UI without anyone noticing. Sometimes the right answer really is the smallest change. Sometimes the whole thing needs rethinking. You don't know until you see both ends side by side.
+1. Started with team brainstorming. I took those rough notes and shaped them into different directions.
+2. Built seven working React prototypes in two days. Not mockups. Functional code, running in the app. They ranged from the smallest change possible to a full customer dashboard redesign.
+3. Clicked through each prototype, felt which ones were getting closer, and narrowed down to the strongest. Quick conversations with teammates to build consensus.
+4. A half-day of craft bouncing between Figma and code. The bigger the feature, the faster it is to prototype in code, but specific UI elements are still faster to nail down in Figma. The winning prototype evolved into shipped code. Reworked, polished, tested for accessibility and responsiveness.
 
-I clicked through each prototype, felt which ones were getting closer, and narrowed down to the strongest. Quick conversations with teammates to build consensus, then forward. A half-day of craft bouncing between Figma and code — the bigger the feature, the faster it is to prototype in code, but specific UI elements are still faster to nail down in Figma. The winning prototype evolved into shipped code — reworked, polished, tested for accessibility and responsiveness. Concept to production, under a week.
+Concept to production, under a week.
+
+I explored a wide range of ideas deliberately. Small incremental additions slowly degrade a UI without anyone noticing. One more button here, one more panel there. Sometimes the right answer really is the smallest change. Sometimes the whole thing needs rethinking. You don't know until you see both sides of the spectrum.
 
 When you can prototype that fast, the bottleneck isn't execution. It's judgment — knowing which direction to ship. That's the part no process diagram can replace.
 
