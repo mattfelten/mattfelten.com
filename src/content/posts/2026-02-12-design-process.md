@@ -18,11 +18,11 @@ Concept to production, under a week.
 
 I explored a wide range of ideas deliberately. Small incremental additions slowly degrade a UI without anyone noticing. One more button here, one more panel there. Sometimes the right answer really is the smallest change. Sometimes the whole thing needs rethinking. You don't know until you see both sides of the spectrum.
 
-When you can prototype that fast, the bottleneck isn't execution. It's judgment — knowing which direction to ship. That's the part no process diagram can replace.
+When you can prototype that fast, the bottleneck isn't execution. It's judgment. Knowing which direction to ship. That's the part no process diagram can replace.
 
 My process isn't a diamond diagram. It's a set of values.
 
-- Stay close to the materials — the code, the users, the data.
+- Stay close to the materials. The code, the users, the data.
 - Do enough research to unlock making. Keep researching as you go.
 - Explore more than necessary.
 - Decide with conviction.
