@@ -23,6 +23,6 @@ When you can prototype that fast, the bottleneck isn't execution. It's judgment.
 My process isn't a diamond diagram. It's a set of values.
 
 - Stay close to the materials. The code, the users, the data.
-- Do enough research to unlock making. Keep researching as you go.
 - Explore more than necessary.
 - Decide with conviction.
+- Follow the work, not the role.
