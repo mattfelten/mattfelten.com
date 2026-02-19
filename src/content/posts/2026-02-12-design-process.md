@@ -1,6 +1,6 @@
 ---
 title: Fast Tools
-date: 2026-02-12
+date: 2026-02-19
 ---
 
 I learned the design process the way most of us did. Research, define, ideate, prototype, test, iterate. It's a good framework. It taught me to slow down, to ask questions before jumping to solutions, to listen to people who aren't me. Process gave me rigor. It strengthened my empathy. It taught me to ask the right questions.
