@@ -13,7 +13,7 @@ I had a project recently. A third-party integration, a fast-paced partnership. W
 
 1. Started with team brainstorming. I took those rough notes and shaped them into different possible directions.
 2. Built working prototypes in two days. Not mockups. Rough but functional React code running in the app. They ranged from the smallest change possible to a full feature redesign.
-3. I started with three directions, and each spawned variations as I built them. That's how three became seven. The building was the ideation. I killed options for being too buried, too ambitious for the timeline, or too clever. Narrowed to the strongest and confirmed with the team.
+3. I started with three directions, and each one surfaced new variations as I built it. The building was the ideation. I killed options for being too buried, too ambitious for the timeline, or too clever. Narrowed to the strongest and confirmed with the team.
 4. A half-day of craft, bouncing between Figma and code. The bigger the feature, the faster it is to prototype in code, but specific UI elements are still faster to nail down in Figma. The winning prototype turned into shipped code. Reworked, polished, tested for accessibility and responsiveness.
 
 Concept to production, under a week.
