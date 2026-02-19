@@ -11,7 +11,7 @@ But the cost of trying ideas has dropped dramatically. Better tools, design syst
 
 Currently, I'm the only designer on a small software team. Nine engineers, a product manager, and me. I spent the last decade in design management and took this role to get back to making things.
 
-I had a project recently. A third-party integration, a fast-paced partnership. We needed to ship quickly.
+I had a project recently. A third-party integration, a fast-paced partnership. Customers had been asking for it for a while and were growing restless. We needed to ship quickly.
 
 1. I started by brainstorming with the team. I took those rough notes and shaped them into different possible directions.
 2. Over the next couple of days I built working prototypes. Not mockups. Rough but functional React code running in the app. They ranged from the smallest change possible to a full feature redesign.
@@ -19,6 +19,8 @@ I had a project recently. A third-party integration, a fast-paced partnership. W
 4. A half-day of refining and polish, bouncing between Figma and code. I'm finding that the bigger the feature, the faster it is to prototype in code, but specific UI elements are still faster to nail down in Figma. The winning prototype turned into shipped code. Reworked, polished, tested for accessibility and responsiveness.
 
 Concept to production, under a week.
+
+The feature itself was an internal workflow for our team, not customer-facing. Shipping was the fastest way to get real feedback. Iterate with the people using it, in context.
 
 ---
 
