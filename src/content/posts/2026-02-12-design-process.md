@@ -1,5 +1,5 @@
 ---
-title: Where Does the Value Live?
+title: Fast Tools
 date: 2026-02-12
 ---
 
