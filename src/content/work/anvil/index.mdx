@@ -11,8 +11,15 @@ coverAlt: A screenshot of the documentation website for Anvil Design System
 ---
 
 import Asset from '../../../components/Asset.astro';
+import AssetRow from '../../../components/AssetRow.astro';
 
-{/* TODO: Add visual imports when screenshots are ready */}
+import beforeSketch from './before-sketch.png';
+import processDiagram from './process-diagram.png';
+import docsLanding from './docs-landing.png';
+import componentProposal from './component-proposal.png';
+import buttonFigma from './button-figma.png';
+import buttonDocs from './button-docs.png';
+import releaseAnnouncement from './release-announcement.png';
 
 [ServiceTitan](https://servicetitan.com/) builds software that helps tradespeople — plumbers, electricians, HVAC technicians — run their businesses. Over four years, I built and led the design system team that unified their product experience across web, iOS, and Android.
 
@@ -37,6 +44,8 @@ The state of things when I arrived: design had some typography styles and a smal
 
 The deeper issue was collaboration. Engineers thought designers were too loose with patterns — they'd design whatever looked good instead of what existed in code. Designers thought engineers were too rigid, forcing everything into framework constraints that didn't cover enterprise SaaS needs. Both were right.
 
+<Asset src={beforeSketch} alt="The original design system: a Sketch file with basic typography styles and a small color palette" />
+
 ---
 
 ## Building the Foundation
@@ -49,7 +58,27 @@ This took significant iteration — making sure Sketch symbol overrides kept the
 
 The documentation site lived in the same codebase as the components. We could ship code and docs in the same release. No separate design docs versus engineering docs — everyone used the same reference, including Product Managers who needed to understand what patterns were available. The site was built with our own components, so it served as both documentation and dogfooding.
 
-{/* TODO: Add screenshot of documentation site */}
+<Asset src={processDiagram} alt="Process diagram showing the workflow for building design system components" />
+
+<Asset src={docsLanding} alt="The Anvil documentation site showing desktop and responsive views" />
+
+---
+
+## Principles
+
+We established six principles to guide decisions as the system scaled:
+
+**People First.** We were mindful of how many people used our tools, both directly and indirectly. We focused on making a great experience for all types of people.
+
+**Clear and Approachable.** Provide effective support, training, and information sharing about our processes and tools. Flexibly adjust communication based on what's needed. The tools themselves should be intuitive and understandable.
+
+**Thoughtful Details.** Spend time understanding complex problem spaces and exploring in-depth to create delightful, natural, and purpose-driven tools. Find the balance between simple and powerful, giving users a considered amount of information and flexibility.
+
+**Open and Transparent.** Collaboration is our backbone. Everyone working on products should feel included, able to participate, and that their voice is heard in evolving our tools.
+
+**Always Evolving.** Explore new tools, workflows, and processes to continually improve. Our tools will get better over time as new information emerges.
+
+**Holistic Experience.** Our modular tools should feel seamless, familiar, and intuitive. Every piece of the system should be trusted to be carefully and deliberately considered.
 
 ---
 
@@ -71,7 +100,18 @@ One of the Design Technologists spent a month rebuilding each component natively
 
 The Figma library landed at 55 components with over 10,000 variations. Designers inserted components 40,000 times per month with a 0.16% detach rate — meaning almost no one was breaking components to customize them.
 
-{/* TODO: Add Figma component screenshot */}
+<AssetRow>
+	<Asset src={buttonFigma} alt="Button component in Figma showing different variations" />
+	<Asset src={buttonDocs} alt="Button component documentation page" />
+</AssetRow>
+
+---
+
+## Component Development
+
+Each component went through a defined process: research existing patterns, explore variations, write a design proposal, build the React component, document it, then ship. The design proposal was a key artifact — it explained what the component would do, what features it needed, and included polished-but-not-final UI explorations.
+
+<Asset src={componentProposal} alt="A design proposal document for Input Addons, showing the component specification and UI explorations" />
 
 ---
 
@@ -102,6 +142,8 @@ By 2022, the system served 385 users across 32 teams on three platforms (Web, iO
 - **37 contributors** from across the company
 
 The moment I'm most proud of: a company all-hands where leadership launched a new product. People in the chat called out how polished it looked, how the user experience was better than anything they'd shipped before. That product was built entirely with design system components. It was a culture shift — the design system being valued not just by design and engineering, but recognized across the company as part of why the product was improving.
+
+<Asset src={releaseAnnouncement} alt="Version release announcement email sent to the Product Development organization" />
 
 ---
 
