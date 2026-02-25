@@ -1,0 +1,23 @@
+---
+import { getCollection } from 'astro:content';
+
+import Section from '@components/Section.astro';
+import Layout from '@layouts/default.astro';
+
+const drafts = (await getCollection('posts'))
+	.filter(post => post.data.draft === true)
+	.sort((a, b) => a.data.title.localeCompare(b.data.title));
+---
+
+<Layout>
+	<Section title="Draft Ideas">
+		<ul class="space-y-4">
+			{drafts.map(({ data: { title, description } }) => (
+				<li>
+					<p class="font-medium m-0">{title}</p>
+					<p class="text-subdued m-0">{description}</p>
+				</li>
+			))}
+		</ul>
+	</Section>
+</Layout>

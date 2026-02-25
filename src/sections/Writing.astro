@@ -6,7 +6,7 @@ import List from '@components/List.astro';
 import Section from '@components/Section.astro';
 
 const posts = (await getCollection('posts'))
-	.filter(post => !post.data.hidden)
+	.filter(post => !post.data.hidden && !post.data.draft)
 	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 	.slice(0, 4);
 ---
