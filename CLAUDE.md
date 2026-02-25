@@ -58,6 +58,10 @@ Configured in `tsconfig.json`:
 
 Newsletter subscription handled via server action in `src/actions/index.ts` using Buttondown API.
 
+## Writing Style
+
+- Never use em dashes (—) in written content. Use periods, commas, or colons to separate thoughts instead.
+
 ## Formatting
 
 Uses both Biome and Prettier:
