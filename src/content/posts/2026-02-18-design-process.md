@@ -7,7 +7,7 @@ I learned the design process the way most of us did. Research, define, ideate, p
 
 I've started to believe that when your tools are fast enough, the hard part isn't making things. It's knowing which thing to ship.
 
-But the cost of trying ideas has dropped dramatically. Better tools, design systems, mature frameworks, AI. When making is cheap, you can explore more, quicker. My process has shifted from _narrow down, then build_ to _build many, then narrow down._
+But the cost of trying ideas has dropped dramatically. Design systems, AI, mature frameworks, and tools that keep getting faster. When making is cheap, you can explore more, quicker. My process has shifted from _narrow down, then build_ to _build many, then narrow down._
 
 ---
 
@@ -30,9 +30,9 @@ Small incremental additions slowly degrade a UI without anyone noticing. One mor
 
 One of the prototypes I killed was a full integrations hub that rolled all our existing integrations into a single view. I wanted it to work, but building it showed me how much rework the other integrations needed to fit the new pattern. It was the right direction but the wrong scope. The version I shipped was the least change that still made the integration feel substantial. I've since revived the hub idea and scaled it back. I'm now migrating each integration one at a time instead of as one big change. The exploration generated a roadmap.
 
-When you can prototype that fast, the bottleneck isn't execution. It's judgment. Knowing which direction to ship. Process tries to make that call less subjective, and sometimes that's helpful. But taken too far, it dismisses everything a designer spends their career developing. Taste, empathy, a feel for quality. You take in the research, the feedback, the data, and then you decide what to act on and what to set aside. That's the work.
+When you can prototype that fast, the bottleneck isn't execution. It's judgment. Knowing which direction to ship. Process tries to make that call less subjective, and that's valuable. But when process becomes a substitute for judgment, it dismisses everything a designer spends their career developing. Taste, empathy, a feel for quality. You take in the research, the feedback, the data, and then you decide what to act on and what to set aside. That's the work.
 
-My process isn't a diamond diagram. It's a set of values.
+My process doesn't always look like a diamond diagram. It's a set of values.
 
 - Stay close to the materials. The code, the users, the data.
 - Explore more than necessary.
