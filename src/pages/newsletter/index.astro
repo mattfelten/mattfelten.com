@@ -3,17 +3,21 @@ import Section from '@components/Section.astro';
 import Layout from '@layouts/default.astro';
 import Newsletter from '@sections/newsletter.astro';
 
-const url = new URL(`https://api.buttondown.com/v1/emails`);
-const options = {
-	method: 'GET',
-	headers: {
-		Authorization: `Token ${import.meta.env.BUTTONDOWN_TOKEN}`,
-	},
-};
+let posts = [];
 
-const response = await fetch(url.toString(), options);
-const data = await response.json();
-const posts = data.results;
+if (import.meta.env.BUTTONDOWN_TOKEN) {
+	const url = new URL(`https://api.buttondown.com/v1/emails`);
+	const options = {
+		method: 'GET',
+		headers: {
+			Authorization: `Token ${import.meta.env.BUTTONDOWN_TOKEN}`,
+		},
+	};
+
+	const response = await fetch(url.toString(), options);
+	const data = await response.json();
+	posts = data.results;
+}
 ---
 
 <Layout>
