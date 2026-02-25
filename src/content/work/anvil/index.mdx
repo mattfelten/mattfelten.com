@@ -13,13 +13,42 @@ coverAlt: A screenshot of the documentation website for Anvil Design System
 import Asset from '../../../components/Asset.astro';
 import AssetRow from '../../../components/AssetRow.astro';
 
-import beforeSketch from './before-sketch.png';
-import processDiagram from './process-diagram.png';
-import docsLanding from './docs-landing.png';
-import componentProposal from './component-proposal.png';
-import buttonFigma from './button-figma.png';
-import buttonDocs from './button-docs.png';
-import releaseAnnouncement from './release-announcement.png';
+{/*
+IMAGE RECOMMENDATIONS:
+
+1. STARTING POINT - Show the chaos/before state
+   Option A: Component audit artboard (shows the scale of inconsistency)
+   Option B: Original Sketch file (shows humble beginnings)
+   → Recommend: Component audit. It's more visceral - seeing dozens of
+   inconsistent UI patterns makes the problem tangible.
+
+2. BUILDING THE FOUNDATION - Show the methodology and output
+   - Process diagram (how you worked)
+   - Docs landing page (what you shipped)
+   → Both are worth keeping. Process shows the thinking, docs shows the result.
+
+3. MIGRATING TO FIGMA - Currently has button examples
+   → Cut this section's images entirely. The text about 0.16% detach rate
+   and 10k variations is more compelling than a button screenshot.
+
+4. COMPONENT DEVELOPMENT - Show design thinking, not final output
+   Option A: Component proposal (Input Addons)
+   Option B: Explorations artboard (zoomed out variations)
+   → Recommend: Explorations artboard. It shows the messy thinking process,
+   which is more interesting than a polished spec doc.
+
+5. OUTCOMES - Show the communication/adoption work
+   Option A: Release announcement email
+   Option B: New feature slide for company meetings
+   → Either works. The email shows scale (sent to entire org).
+   The slide shows internal marketing.
+
+IMAGES TO SKIP:
+- Button Figma/docs/code — not interesting
+- ServiceTitan homepage — not relevant
+- Contribution guide — could be text if you want to include it
+- Scoped Search prototype — too specific, doesn't support main narrative
+*/}
 
 [ServiceTitan](https://servicetitan.com/) builds software that helps tradespeople — plumbers, electricians, HVAC technicians — run their businesses. Over four years, I built and led the design system team that unified their product experience across web, iOS, and Android.
 
@@ -44,7 +73,7 @@ The state of things when I arrived: design had some typography styles and a smal
 
 The deeper issue was collaboration. Engineers thought designers were too loose with patterns — they'd design whatever looked good instead of what existed in code. Designers thought engineers were too rigid, forcing everything into framework constraints that didn't cover enterprise SaaS needs. Both were right.
 
-<Asset src={beforeSketch} alt="The original design system: a Sketch file with basic typography styles and a small color palette" />
+{/* TODO: Component audit artboard - shows the scale of UI inconsistency across the product */}
 
 ---
 
@@ -58,9 +87,9 @@ This took significant iteration — making sure Sketch symbol overrides kept the
 
 The documentation site lived in the same codebase as the components. We could ship code and docs in the same release. No separate design docs versus engineering docs — everyone used the same reference, including Product Managers who needed to understand what patterns were available. The site was built with our own components, so it served as both documentation and dogfooding.
 
-<Asset src={processDiagram} alt="Process diagram showing the workflow for building design system components" />
+{/* TODO: Process diagram - shows the workflow for building components */}
 
-<Asset src={docsLanding} alt="The Anvil documentation site showing desktop and responsive views" />
+{/* TODO: Docs landing page - shows the polished documentation site output */}
 
 ---
 
@@ -100,10 +129,7 @@ One of the Design Technologists spent a month rebuilding each component natively
 
 The Figma library landed at 55 components with over 10,000 variations. Designers inserted components 40,000 times per month with a 0.16% detach rate — meaning almost no one was breaking components to customize them.
 
-<AssetRow>
-	<Asset src={buttonFigma} alt="Button component in Figma showing different variations" />
-	<Asset src={buttonDocs} alt="Button component documentation page" />
-</AssetRow>
+{/* No image here - the stats (0.16% detach rate, 10k variations) are more compelling than component screenshots */}
 
 ---
 
@@ -111,7 +137,7 @@ The Figma library landed at 55 components with over 10,000 variations. Designers
 
 Each component went through a defined process: research existing patterns, explore variations, write a design proposal, build the React component, document it, then ship. The design proposal was a key artifact — it explained what the component would do, what features it needed, and included polished-but-not-final UI explorations.
 
-<Asset src={componentProposal} alt="A design proposal document for Input Addons, showing the component specification and UI explorations" />
+{/* TODO: Explorations artboard - shows the messy design thinking process, more interesting than polished specs */}
 
 ---
 
@@ -143,7 +169,7 @@ By 2022, the system served 385 users across 32 teams on three platforms (Web, iO
 
 The moment I'm most proud of: a company all-hands where leadership launched a new product. People in the chat called out how polished it looked, how the user experience was better than anything they'd shipped before. That product was built entirely with design system components. It was a culture shift — the design system being valued not just by design and engineering, but recognized across the company as part of why the product was improving.
 
-<Asset src={releaseAnnouncement} alt="Version release announcement email sent to the Product Development organization" />
+{/* TODO: Release announcement email or new feature slide - shows the communication/adoption work */}
 
 ---
 
