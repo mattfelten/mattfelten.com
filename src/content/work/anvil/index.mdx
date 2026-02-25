@@ -3,20 +3,110 @@ title: Anvil Design System
 company: ServiceTitan
 year: 2018
 endYear: 2022
-type: case-study
+type: showcase
 featured: true
-intro: Built an enterprise design system from zero-to-one, then scaled a team of designers and engineers to maintain and evolve it across the platform.
+intro: Built and scaled an enterprise design system from scratch, leading a team that served 385 users across 32 product teams and delivered $5.3M in annual efficiency gains.
 cover: ./cover.png
 coverAlt: A screenshot of the documentation website for Anvil Design System
 ---
 
 import Asset from '../../../components/Asset.astro';
 
-*Content to be expanded — this is a placeholder for the full case study.*
+{/* TODO: Add visual imports when screenshots are ready */}
 
-I spent four years building and leading the design system at ServiceTitan, a platform that helps tradespeople (plumbers, electricians, HVAC technicians) run their businesses.
+[ServiceTitan](https://servicetitan.com/) builds software that helps tradespeople — plumbers, electricians, HVAC technicians — run their businesses. Over four years, I built and led the design system team that unified their product experience across web, iOS, and Android.
 
-I've written about this work:
+**The problem:** The engineering team had accumulated three competing UI frameworks (Bootstrap, Semantic UI, and Material Design) across different parts of the app. The design team had loose typography and color guidelines but no shared component language. Engineers had to learn multiple frameworks to do their jobs. Designers went with what looked good rather than what was buildable. Every handoff was a negotiation.
+
+**What I worked on:**
+
+- Built the initial design system from scratch in the first six months, establishing React as the source of truth
+- Created a novel pipeline that generated Sketch symbols directly from React components, eliminating drift between code and design
+- Hired and led a team of Design Technologists who could think critically about design details while building production-quality code
+- Built a unified documentation site where designers, engineers, and PMs all used the same reference material
+- Managed the migration from Sketch to Figma, including rebuilding 55 components with 10,000+ variations
+- Scaled adoption from greenfield projects to 71% of all products
+
+---
+
+## Starting Point
+
+I was hired for a traditional Product Design role, but during my interview I walked through design system work from a previous job. The Director of Product Design called me afterward — they'd been trying to get a design system off the ground but kept hitting roadblocks. The design team wanted it one way, engineering wanted it another. He asked if I'd come in to focus on that problem instead.
+
+The state of things when I arrived: design had some typography styles and a small color palette. Engineering couldn't align on a single framework because each had tradeoffs and gaps. They'd started with Bootstrap, built features in Material, then others in Semantic UI. Visually the product was inconsistent. For developers, it meant learning three different systems, sometimes within the same project.
+
+The deeper issue was collaboration. Engineers thought designers were too loose with patterns — they'd design whatever looked good instead of what existed in code. Designers thought engineers were too rigid, forcing everything into framework constraints that didn't cover enterprise SaaS needs. Both were right.
+
+---
+
+## Building the Foundation
+
+The first year was about establishing the system and proving value. I started with research and planning while working with a frontend engineer to build the technical infrastructure.
+
+The key decision was making code the source of truth, not design files. We built a pipeline using a forked version of html-sketchapp that rendered a React page of component variations and output a native Sketch file with every component converted to a symbol. If it looked right in code, it looked right in Sketch.
+
+This took significant iteration — making sure Sketch symbol overrides kept their references intact, deciding which HTML elements became groups versus getting ignored, handling the complexity of component variations. Each button state (color, size, disabled) had to be painstakingly rendered in the React page because Sketch didn't handle complex variations well.
+
+The documentation site lived in the same codebase as the components. We could ship code and docs in the same release. No separate design docs versus engineering docs — everyone used the same reference, including Product Managers who needed to understand what patterns were available. The site was built with our own components, so it served as both documentation and dogfooding.
+
+{/* TODO: Add screenshot of documentation site */}
+
+---
+
+## Scaling the Team
+
+Year one was just me and one engineer. Year two I hired the first Design Technologist — someone strong at design who could also build React components, think critically about details, and explain rationale to both designers and engineers. Year three brought a second Design Technologist. Year four, I got engineering investment for two part-time dedicated engineers.
+
+As the team grew, my work shifted from building the system to building systems around the system. How we handled breaking changes. How we communicated releases. Enablement and adoption training. How teams got things on our roadmap. A lot of it came down to negotiation — when a designer created a new pattern, who would build it? The system team, or the implementing team as a contribution? We created frameworks and decision trees, but these conversations happened constantly.
+
+Adoption started with greenfield projects — existing teams didn't have time to spend months backporting. But as new features launched using Anvil and customers responded positively to the improved experience, other teams felt pressure to adopt. The quality difference was visible.
+
+---
+
+## Migrating to Figma
+
+When the design team decided to move from Sketch to Figma, we had a choice: rebuild our code-to-design pipeline for Figma, or build components from scratch. Figma's component features — boolean props, editable labels, nested component linking — wouldn't have worked well with our automated approach. We could build better Figma components by hand.
+
+One of the Design Technologists spent a month rebuilding each component natively in Figma. We supported both tools during a transition window, then phased out Sketch. The old files still worked, but we stopped generating new symbol libraries.
+
+The Figma library landed at 55 components with over 10,000 variations. Designers inserted components 40,000 times per month with a 0.16% detach rate — meaning almost no one was breaking components to customize them.
+
+{/* TODO: Add Figma component screenshot */}
+
+---
+
+## The Hard Parts
+
+A few challenges that shaped how we worked:
+
+**Timing mismatches.** We'd ship a component, designers would start using it, then engineers would implement it months later and surface issues with something that had existed for a year. The feedback loop was long.
+
+**"Why not just use MUI?"** Engineers often had a framework they already knew and wanted to use. We spent time evaluating when to pull something off-the-shelf versus build from scratch. Complex data tables came from Kendo Grid. Some Semantic UI components made sense to adopt. But instead of making everyone learn multiple frameworks that we'd have to extend anyway, we rolled everything into one system. Learn ours, and we'd bake in what you needed from wherever we pulled it.
+
+**Breaking changes.** We could deprecate components, but unless teams spent time migrating — which they often wouldn't — we had to keep supporting old versions. Some teams stayed months out of date because they didn't want the migration overhead.
+
+**Perception as a bottleneck.** There was pressure to appear mid-project and somehow make UI materialize — as if we were just a step between design and engineering who would build the frontend so product teams could wire it up. That model would have made us a bottleneck. We had to constantly reinforce that we built foundations, not features.
+
+---
+
+## Outcomes
+
+By 2022, the system served 385 users across 32 teams on three platforms (Web, iOS, Android).
+
+- **$5.3M annual ROI** — equivalent to 34 additional designers or engineers in productivity gains
+- **71% adoption** across products
+- **65% design time saved**, 30% engineering time saved
+- **55 components** with 10,000+ variations in Figma
+- **250,000 lines of code**, 5,000 NPM installs per week
+- **77% customer satisfaction** score for the system itself
+- **37 contributors** from across the company
+
+The moment I'm most proud of: a company all-hands where leadership launched a new product. People in the chat called out how polished it looked, how the user experience was better than anything they'd shipped before. That product was built entirely with design system components. It was a culture shift — the design system being valued not just by design and engineering, but recognized across the company as part of why the product was improving.
+
+---
+
+## Related Writing
 
 - [Building an Enterprise Design System](https://medium.com/servicetitan-design/building-an-enterprise-design-system-f0fe74e7fac)
 - [Design System Infrastructure](https://medium.com/servicetitan-design/design-system-infrastructure-2f859318fcfd)
+- [Headless Creator Podcast: A Conversation about Design Systems](https://open.spotify.com/episode/3KqNPBJlJXEhtHQYqxBlOZ)
