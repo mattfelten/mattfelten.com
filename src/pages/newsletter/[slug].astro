@@ -5,6 +5,10 @@ import Prose from '@layouts/prose.astro';
 import Newsletter from '@sections/newsletter.astro';
 
 export async function getStaticPaths() {
+	if (!import.meta.env.BUTTONDOWN_TOKEN) {
+		return [];
+	}
+
 	const url = new URL(`https://api.buttondown.com/v1/emails`);
 	const options = {
 		method: 'GET',
@@ -19,7 +23,7 @@ export async function getStaticPaths() {
 
 	return posts.map(post => ({
 		params: { slug: post.slug },
-		props: { post }, // Pass the entire post object as a prop
+		props: { post },
 	}));
 }
 
