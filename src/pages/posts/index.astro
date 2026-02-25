@@ -8,7 +8,7 @@ import Layout from '@layouts/default.astro';
 import Newsletter from '@sections/newsletter.astro';
 
 const posts = (await getCollection('posts'))
-	.filter(post => !post.data.hidden)
+	.filter(post => !post.data.hidden && !post.data.draft)
 	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 // Group posts by year
