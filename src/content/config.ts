@@ -52,4 +52,14 @@ export const collections = {
 			title: z.string(),
 		}),
 	}),
+	library: defineCollection({
+		schema: z.object({
+			title: z.string(),
+			author: z.string(),
+			description: z.string(),
+			category: z.enum(['classics', 'craft', 'communication', 'collaboration']),
+			isbn: z.string(),
+			url: z.string(),
+		}),
+	}),
 };
