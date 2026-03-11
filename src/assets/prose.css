@@ -60,10 +60,6 @@
 	margin-bottom: 1rlh;
 }
 
-.prose p {
-	line-height: 1.65;
-}
-
 .prose p + p {
 	margin-top: 1rlh;
 }
