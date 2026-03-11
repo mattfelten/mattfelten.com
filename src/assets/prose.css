@@ -35,3 +35,41 @@
 
 @custom-variant prose-inline-code (&.prose
 	:where(:not(pre) > code):not(:where([class~="not-prose"] *)));
+
+.prose h1 {
+	font-size: 2rem;
+	font-weight: 600;
+	margin-top: 1rlh;
+	margin-bottom: 1rlh;
+}
+
+.prose h2 {
+	font-size: 1.25rem;
+	font-weight: 600;
+	margin-top: 2rlh;
+	margin-bottom: 1rlh;
+}
+
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+	font-size: 1rem;
+	font-weight: 600;
+	margin-top: 1rlh;
+	margin-bottom: 1rlh;
+}
+
+.prose p {
+	line-height: 1.65;
+}
+
+.prose p + p {
+	margin-top: 1rlh;
+}
+
+.prose ul,
+.prose ol {
+	margin-top: 1rlh;
+	margin-bottom: 1rlh;
+}
