@@ -1,8 +1,6 @@
 ---
 import Section from '@components/Section.astro';
 import Layout from '@layouts/default.astro';
-import Newsletter from '@sections/newsletter.astro';
-
 let posts = [];
 
 if (import.meta.env.BUTTONDOWN_TOKEN) {
@@ -32,5 +30,4 @@ if (import.meta.env.BUTTONDOWN_TOKEN) {
 			</Section>
 		)
 	}
-	<Newsletter />
 </Layout>
