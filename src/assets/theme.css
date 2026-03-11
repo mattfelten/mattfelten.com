@@ -1,10 +1,10 @@
 @theme static {
-	--color-accent: '#3DDFC2';
-	--color-background: '#fafafa';
-	--color-default: '#374151';
-	--color-strong: '#111827';
-	--color-subdued: '#6B7280';
-	--color-weak: '#9CA3AF';
+	--color-accent: #3DDFC2;
+	--color-background: #fafafa;
+	--color-default: #374151;
+	--color-strong: #111827;
+	--color-subdued: #6B7280;
+	--color-weak: #9CA3AF;
 
 	--font-sans:
 		Nudica, -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI',
@@ -35,7 +35,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-	@theme inline {
+	:root {
 		--color-accent: #00e0b8;
 		--color-background: #000000;
 		--color-default: #f3f4f6;
