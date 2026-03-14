@@ -1,0 +1,59 @@
+---
+import { getCollection } from 'astro:content';
+
+import BookCover from '@components/BookCover.astro';
+import Section from '@components/Section.astro';
+import Layout from '@layouts/default.astro';
+
+const books = await getCollection('library');
+
+const categories = [
+	{
+		key: 'classics',
+		label: 'Classics',
+		description:
+			"Referenced universally for good reason. Pick these up because you'll be citing them in conversations for the rest of your career.",
+	},
+	{
+		key: 'craft',
+		label: 'Craft',
+		description: 'The hard skills of a designer.',
+	},
+	{
+		key: 'communication',
+		label: 'Communication',
+		description: 'How designers think about and talk about their work.',
+	},
+	{
+		key: 'collaboration',
+		label: 'Collaboration',
+		description: 'How designers work with others.',
+	},
+] as const;
+---
+
+<Layout title="Design Library">
+	<Section title="Design Library">
+		<div class="space-y-16">
+			{
+				categories.map(({ key, label, description }) => {
+					const categoryBooks = books.filter((b) => b.data.category === key);
+					if (!categoryBooks.length) return null;
+					return (
+						<div>
+							<div class="mb-6">
+								<h2 class="text-strong text-xl font-medium">{label}</h2>
+								<p class="text-subdued mt-1">{description}</p>
+							</div>
+							<div class="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4">
+								{categoryBooks.map((book) => (
+									<BookCover {...book.data} />
+								))}
+							</div>
+						</div>
+					);
+				})
+			}
+		</div>
+	</Section>
+</Layout>
