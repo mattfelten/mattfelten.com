@@ -1,3 +1,7 @@
+:root {
+	line-height: 1.65;
+}
+
 @theme static {
 	--color-accent: #3DDFC2;
 	--color-background: #fafafa;
