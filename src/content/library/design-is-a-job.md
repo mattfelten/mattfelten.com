@@ -1,8 +1,7 @@
 ---
 title: Design is a Job
-author: Mike Monteiro
-description: "Mike Monteiro tells you what design school didn't. Blunt, honest, and occasionally uncomfortable in the best way."
+description: "Monteiro told me things design school never did."
 category: collaboration
-isbn: "9781937557010"
-url: https://bookshop.org/p/books/design-is-a-job-mike-monteiro/12198251
+isbn: "9798989358748"
+url: "https://www.amazon.com/Design-Job-Necessary-Mike-Monteiro/dp/B0DLDQWNTF/"
 ---

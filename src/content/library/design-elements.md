@@ -1,8 +1,6 @@
 ---
 title: "Design Elements: A Graphic Style Manual"
-author: Timothy Samara
-description: "Fundamentals of visual design laid out clearly. Good for building vocabulary around why things look the way they do."
+description: "I still flip through it when I want to articulate a visual decision more precisely."
 category: craft
-isbn: "9781592531172"
-url: https://bookshop.org/p/books/design-elements-a-graphic-style-manual-timothy-samara/7154705
+isbn: "1631598724"
 ---

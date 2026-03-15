@@ -1,8 +1,6 @@
 ---
 title: Designing Design
-author: Kenya Hara
-description: "Kenya Hara thinks about design at a different level. Dense and philosophical, but it expands how you think about what design even is."
+description: "Dense and philosophical, but it changed how I think about what design actually is."
 category: communication
-isbn: "9783037784204"
-url: https://bookshop.org/p/books/designing-design-kenya-hara/10406428
+isbn: "303778105X"
 ---

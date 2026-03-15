@@ -55,11 +55,10 @@ export const collections = {
 	library: defineCollection({
 		schema: z.object({
 			title: z.string(),
-			author: z.string(),
 			description: z.string(),
 			category: z.enum(['classics', 'craft', 'communication', 'collaboration']),
-			isbn: z.string(),
-			url: z.string(),
+			isbn: z.string().optional(), // ISBN-10; drives cover image + auto Amazon URL
+			url: z.string().optional(), // explicit URL; overrides auto-generated Amazon link
 		}),
 	}),
 };

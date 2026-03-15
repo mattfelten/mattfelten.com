@@ -1,8 +1,7 @@
 ---
 title: Design Sprint
-author: Richard Banfield, C. Todd Lombardo & Trace Wax
-description: "A companion take on sprints from practitioners in the wild. Good for seeing how the method adapts across different contexts."
+description: "Useful for seeing how the sprint method adapts across different contexts."
 category: collaboration
-isbn: "9781491923214"
-url: https://bookshop.org/p/books/design-sprint-a-practical-guidebook-for-building-great-digital-products-richard-banfield/7258279
+isbn: "1491923133"
+url: "https://www.amazon.com/Design-Sprint-Practical-Guidebook-Building-ebook/dp/B015YOJS5O/"
 ---

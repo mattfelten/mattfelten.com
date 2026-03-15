@@ -1,8 +1,6 @@
 ---
 title: Refactoring UI
-author: Adam Wathan & Steve Schoger
-description: "The practical design book developers didn't know they needed. Concrete techniques for making interfaces look better without a design degree."
+description: "The contrast and spacing heuristics alone are worth the price."
 category: craft
-isbn: "9780578318400"
-url: https://www.refactoringui.com
+url: "https://www.refactoringui.com"
 ---
