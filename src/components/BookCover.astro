@@ -4,25 +4,38 @@ interface Props {
 	description: string;
 	isbn?: string;
 	url?: string;
+	cover?: string;
 }
 
-const { title, description, isbn, url } = Astro.props;
-const linkUrl = url ?? (isbn ? `https://amazon.com/dp/${isbn}` : undefined);
-const coverUrl = isbn
-	? `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`
-	: '/book-placeholder.svg';
+const { title, description, isbn, url, cover } = Astro.props;
+const linkUrl =
+	url ?? (isbn ? `https://amazon.com/dp/${isbn}` : undefined);
+const coverUrl = cover
+	?? (isbn ? `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg` : '/book-placeholder.svg');
 ---
 
-<a href={linkUrl} target="_blank" rel="noopener noreferrer" class="group block">
-	<div class="mb-3 flex h-52 items-end transition-transform duration-200 group-hover:-translate-y-1">
+<a
+	href={linkUrl}
+	target="_blank"
+	rel="noopener noreferrer"
+	class="group block"
+>
+	<div
+		class="mb-3 flex h-24 items-end transition-transform duration-200 group-hover:-translate-y-1 sm:h-32"
+	>
 		<img
 			src={coverUrl}
 			alt={title}
 			loading="lazy"
-			class="w-full rounded"
+			class="w-full rounded-md"
 			style="max-height: 100%; object-fit: contain; object-position: bottom; box-shadow: 4px 6px 16px rgba(0,0,0,0.25), 2px 3px 6px rgba(0,0,0,0.15);"
+			onerror="this.onerror=null;this.src='/book-placeholder.svg';"
 		/>
 	</div>
-	<h3 class="text-strong text-sm font-medium leading-snug">{title}</h3>
-	<p class="text-subdued mt-1 text-xs leading-snug">{description}</p>
+	<h3 class="text-strong text-sm leading-snug font-medium">
+		{title}
+	</h3>
+	<p class="text-subdued mt-1 text-sm leading-snug">
+		{description}
+	</p>
 </a>

@@ -57,8 +57,9 @@ export const collections = {
 			title: z.string(),
 			description: z.string(),
 			category: z.enum(['classics', 'craft', 'communication', 'collaboration']),
-			isbn: z.string().optional(), // ISBN-10; drives cover image + auto Amazon URL
+			isbn: z.string().optional(), // ISBN-10; drives auto Amazon URL
 			url: z.string().optional(), // explicit URL; overrides auto-generated Amazon link
+			cover: z.string().optional(), // local cover image path (e.g. /books/foo.jpg)
 		}),
 	}),
 };

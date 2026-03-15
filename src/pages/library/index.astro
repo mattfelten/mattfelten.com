@@ -11,41 +11,54 @@ const categories = [
 	{
 		key: 'classics',
 		label: 'Classics',
-		description: 'These are the ones that keep coming up. I still reference them in conversations years after reading them.',
+		description:
+			'These are the ones that keep coming up. I still reference them in conversations years after reading them.',
 	},
 	{
 		key: 'craft',
 		label: 'Craft',
-		description: 'The hard skills: visual design, interaction patterns, understanding what makes interfaces work.',
+		description:
+			'The hard skills: visual design, interaction patterns, understanding what makes interfaces work.',
 	},
 	{
 		key: 'communication',
 		label: 'Communication',
-		description: 'How I think about and talk about design work, both to myself and to others.',
+		description:
+			'How I think about and talk about design work, both to myself and to others.',
 	},
 	{
 		key: 'collaboration',
 		label: 'Collaboration',
-		description: 'How I work with teams, facilitate decisions, and get design done in the real world.',
+		description:
+			'How I work with teams, facilitate decisions, and get design done in the real world.',
 	},
 ] as const;
+
+let cardIndex = 0;
 ---
 
 <Layout title="Design Library">
-	<Section title="Design Library">
+	<Section>
+		<h1 class="mb-4 text-3xl font-bold">Design Library</h1>
 		<div class="space-y-16">
 			{
 				categories.map(({ key, label, description }) => {
-					const categoryBooks = books.filter((b) => b.data.category === key);
+					const categoryBooks = books.filter(
+						b => b.data.category === key,
+					);
 					if (!categoryBooks.length) return null;
 					return (
 						<div>
-							<div class="mb-6">
-								<h2 class="text-strong text-xl font-medium">{label}</h2>
-								<p class="text-subdued mt-1">{description}</p>
+							<div class="mb-5">
+								<h2 class="text-strong text-xl font-medium">
+									{label}
+								</h2>
+								<p class="text-subdued mt-1">
+									{description}
+								</p>
 							</div>
 							<div class="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4">
-								{categoryBooks.map((book) => (
+								{categoryBooks.map(book => (
 									<BookCover {...book.data} />
 								))}
 							</div>
