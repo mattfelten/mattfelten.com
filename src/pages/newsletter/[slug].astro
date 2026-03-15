@@ -2,7 +2,6 @@
 import { format } from 'date-fns';
 
 import Prose from '@layouts/prose.astro';
-import Newsletter from '@sections/newsletter.astro';
 
 export async function getStaticPaths() {
 	if (!import.meta.env.BUTTONDOWN_TOKEN) {
@@ -43,7 +42,4 @@ const niceDate = format(publish_date, 'MMMM d, yyyy');
 		</div>
 	</div>
 	<div set:html={body} />
-	<div class="mt-12! flex justify-center" slot="after-article">
-		<Newsletter />
-	</div>
 </Prose>

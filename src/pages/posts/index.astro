@@ -5,8 +5,6 @@ import { RxArrowTopRight } from 'react-icons/rx';
 
 import Section from '@components/Section.astro';
 import Layout from '@layouts/default.astro';
-import Newsletter from '@sections/newsletter.astro';
-
 const posts = (await getCollection('posts'))
 	.filter(post => !post.data.hidden && !post.data.draft)
 	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
@@ -66,5 +64,4 @@ const years = Object.keys(postsByYear)
 			))
 		}
 	</div>
-	<Newsletter />
 </Layout>
