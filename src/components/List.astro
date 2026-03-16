@@ -4,6 +4,7 @@ import { RxArrowTopRight } from 'react-icons/rx';
 
 const { list } = Astro.props;
 const formatDate = date => format(date, 'MMMM d, yyyy');
+const stripDate = slug => slug.replace(/^\d{4}-\d{2}-\d{2}-/, '');
 ---
 
 <style>
@@ -19,7 +20,7 @@ const formatDate = date => format(date, 'MMMM d, yyyy');
 			{list.map(({ data: { title, date, redirect }, slug }) => (
 				<li>
 					<a
-						href={redirect || '/posts/' + slug}
+						href={redirect || '/articles/' + stripDate(slug)}
 						class="hover group inline-block focus:outline-0"
 					>
 						<span class="block text-2xl font-medium">

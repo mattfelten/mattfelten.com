@@ -1,0 +1,30 @@
+---
+import { getCollection } from 'astro:content';
+import { format } from 'date-fns';
+
+import Prose from '@layouts/prose.astro';
+
+export async function getStaticPaths() {
+	const entries = (await getCollection('posts')).filter(
+		entry => !entry.data.draft && !entry.data.redirect,
+	);
+	return entries.map(entry => ({
+		params: { slug: entry.slug.replace(/^\d{4}-\d{2}-\d{2}-/, '') },
+		props: { entry },
+	}));
+}
+
+const { entry } = Astro.props;
+const { title, date } = entry.data;
+
+const niceDate = format(date, 'MMMM d, yyyy');
+const { Content } = await entry.render();
+---
+
+<Prose title={title}>
+	<div class="mb-6 flex flex-col gap-1">
+		<h1 class="mb-0!">{title}</h1>
+		<p class="text-subdued m-0! text-xl">{niceDate}</p>
+	</div>
+	<Content />
+</Prose>

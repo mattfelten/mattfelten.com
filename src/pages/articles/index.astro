@@ -1,0 +1,68 @@
+---
+import { getCollection } from 'astro:content';
+import { format } from 'date-fns';
+import { RxArrowTopRight } from 'react-icons/rx';
+
+import Section from '@components/Section.astro';
+import Layout from '@layouts/default.astro';
+
+const stripDate = slug => slug.replace(/^\d{4}-\d{2}-\d{2}-/, '');
+
+const posts = (await getCollection('posts'))
+	.filter(post => !post.data.hidden && !post.data.draft)
+	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+	.map(post => ({ ...post, articleSlug: stripDate(post.slug) }));
+
+// Group posts by year
+const postsByYear = posts.reduce((acc, post) => {
+	const year = post.data.date.getFullYear();
+	if (!acc[year]) {
+		acc[year] = [];
+	}
+	acc[year].push(post);
+	return acc;
+}, {});
+
+// Get years sorted in descending order
+const years = Object.keys(postsByYear)
+	.map(Number)
+	.sort((a, b) => b - a);
+---
+
+<Layout>
+	<div class="space-y-5">
+		{
+			years.map(year => (
+				<Section title={year.toString()}>
+					<ul class="space-y-2">
+						{postsByYear[year].map(
+							({
+								data: { title, date, redirect },
+								articleSlug,
+							}) => (
+								<li>
+									<a
+										href={redirect || '/articles/' + articleSlug}
+										class="group flex items-baseline gap-2 transition-transform hover:translate-x-1 focus:outline-0"
+									>
+										<time class="text-subdued font-mono font-medium whitespace-nowrap">
+											{format(date, 'MMM dd')}
+										</time>
+										<span class="gap-0-5 flex items-baseline">
+											<span class="font-medium">
+												{title}
+											</span>
+											{redirect && (
+												<RxArrowTopRight className="text-weak group-hover:text-accent group-focus-within:text-accent inline-block align-text-top text-xl relative top-[5px]" />
+											)}
+										</span>
+									</a>
+								</li>
+							)
+						)}
+					</ul>
+				</Section>
+			))
+		}
+	</div>
+</Layout>
