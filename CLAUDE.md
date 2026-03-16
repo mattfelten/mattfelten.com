@@ -61,6 +61,14 @@ Newsletter subscription handled via server action in `src/actions/index.ts` usin
 ## Writing Style
 
 - Never use em dashes (—) in written content. Use periods, commas, or colons to separate thoughts instead.
+- Rhythm matters: mix short punchy sentences with longer elaborating ones. Contrast is intentional. Avoid running too many short sentences together — it gets clipped and hard to follow.
+- Fragments are fine for emphasis. ("Judgment. Taste.")
+- Use `---` to break major sections in posts.
+- First-person, conversational, admits uncertainty and mistakes. Never preachy.
+- Share experience honestly. Don't try to convince or convert — just show what you've found.
+- No prescriptive CTAs at the end ("try this," "do that"). Let the last thought land as an honest observation, not a lesson.
+- Dry humor is fine. Forced humor is not.
+- When writing blog posts, after significant style or voice decisions are made, update this section to capture new learnings.
 
 ## Formatting
 
