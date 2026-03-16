@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Astro Dev Server",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "site:run"],
+      "port": 4321
+    }
+  ]
+}
