@@ -13,6 +13,15 @@ coverAlt: A screenshot of the documentation website for Anvil Design System
 import Asset from '../../../components/Asset.astro';
 import AssetRow from '../../../components/AssetRow.astro';
 
+import auditImg from './audit.png';
+import componentHypothesisImg from './component-hypothesis.png';
+import componentSpecImg from './component-spec.png';
+import docsImg from './docs.png';
+import existingArtImg from './existing-art.png';
+import messyArtboardImg from './messy-artboard.png';
+import prototypingSpecImg from './prototyping-spec.png';
+import releaseNotesImg from './release-notes.png';
+
 [ServiceTitan](https://servicetitan.com/) builds software for tradespeople. Plumbers, electricians, HVAC technicians. When I joined, engineering had three competing UI frameworks and design had loose guidelines but no shared component language. Every handoff was a negotiation. Engineers thought designers were too loose. Designers thought engineers were too rigid. Both were right.
 
 Over four years, I built and led the design system team that unified their product experience. The technical work mattered, but the harder problem was cultural: getting two disciplines to trust a shared system.
@@ -30,10 +39,10 @@ Over four years, I built and led the design system team that unified their produ
 
 ## Starting Point
 
-<div style="background: #f0f0f0; border: 2px dashed #999; padding: 3rem 2rem; text-align: center; margin: 2em 0; border-radius: 8px;">
-	<strong style="display: block; margin-bottom: 0.5rem;">IMAGE: Component Audit</strong>
-	<span style="color: #666;">Artboard showing the scale of UI inconsistency across the product. Multiple button styles, form patterns, and navigation treatments side by side.</span>
-</div>
+<AssetRow>
+	<Asset src={existingArtImg} alt="Existing UI artwork showing inconsistent patterns across the product" />
+	<Asset src={auditImg} alt="Component audit showing the scale of UI inconsistency" />
+</AssetRow>
 
 I applied for a traditional Product Design role. During my interview I walked through design system work from a previous job. The Director of Product Design called me afterward. They'd been trying to get a design system going but kept hitting roadblocks. Design wanted it one way, engineering wanted it another. He asked if I'd come in to focus on that problem instead.
 
@@ -45,15 +54,9 @@ The deeper issue was collaboration. Engineers thought designers were too loose w
 
 ## Building the Foundation
 
-<div style="background: #f0f0f0; border: 2px dashed #999; padding: 3rem 2rem; text-align: center; margin: 2em 0; border-radius: 8px;">
-	<strong style="display: block; margin-bottom: 0.5rem;">IMAGE: Code-to-Design Pipeline</strong>
-	<span style="color: #666;">Diagram showing the workflow: React components → html-sketchapp rendering → Sketch symbol library output.</span>
-</div>
+<Asset src={prototypingSpecImg} alt="Prototyping spec showing the React to Sketch component pipeline workflow" />
 
-<div style="background: #f0f0f0; border: 2px dashed #999; padding: 3rem 2rem; text-align: center; margin: 2em 0; border-radius: 8px;">
-	<strong style="display: block; margin-bottom: 0.5rem;">IMAGE: Documentation Site</strong>
-	<span style="color: #666;">Screenshot of the Anvil docs landing page showing component categories and live examples.</span>
-</div>
+<Asset src={docsImg} alt="Anvil documentation site showing component categories and live examples" />
 
 The first year was about establishing the system and proving value. I started with research and planning while working with a frontend engineer to build the technical infrastructure.
 
@@ -105,10 +108,12 @@ The Figma library landed at 55 components with over 10,000 variations. Designers
 
 ## Component Development
 
-<div style="background: #f0f0f0; border: 2px dashed #999; padding: 3rem 2rem; text-align: center; margin: 2em 0; border-radius: 8px;">
-	<strong style="display: block; margin-bottom: 0.5rem;">IMAGE: Component Explorations</strong>
-	<span style="color: #666;">Messy artboard showing design exploration for a component. Multiple variations, annotations, and iteration.</span>
-</div>
+<AssetRow>
+	<Asset src={messyArtboardImg} alt="Messy artboard showing design exploration for a component with multiple variations and annotations" />
+	<Asset src={componentHypothesisImg} alt="Component hypothesis exploration showing design rationale" />
+</AssetRow>
+
+<Asset src={componentSpecImg} alt="Component specification document" />
 
 Each component went through a defined process. Research existing patterns, explore variations, write a design proposal, build the React component, document it, then ship. The design proposal was a key artifact. It explained what the component would do, what features it needed, and included polished-but-not-final UI explorations.
 
@@ -150,10 +155,7 @@ By 2022, the system served 385 users across 32 teams on three platforms: web, iO
 
 The moment I'm most proud of: a company all-hands where leadership launched a new product. People in the chat called out how polished it looked, how the user experience was better than anything they'd shipped before. That product was built entirely with design system components. It was a culture shift. The design system being valued not just by design and engineering, but recognized across the company as part of why the product was improving.
 
-<div style="background: #f0f0f0; border: 2px dashed #999; padding: 3rem 2rem; text-align: center; margin: 2em 0; border-radius: 8px;">
-	<strong style="display: block; margin-bottom: 0.5rem;">IMAGE: Release Communication</strong>
-	<span style="color: #666;">Example release announcement email or slide showing how new components were communicated to the organization.</span>
-</div>
+<Asset src={releaseNotesImg} alt="Release notes showing how new components were communicated to the organization" />
 
 ---
 
