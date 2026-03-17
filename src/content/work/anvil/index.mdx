@@ -3,20 +3,153 @@ title: Anvil Design System
 company: ServiceTitan
 year: 2018
 endYear: 2022
-type: case-study
+type: showcase
 featured: true
-intro: Built an enterprise design system from zero-to-one, then scaled a team of designers and engineers to maintain and evolve it across the platform.
+intro: Built and scaled an enterprise design system from scratch, leading a team that served 385 users across 32 product teams and delivered $5.3M in annual efficiency gains.
+role: Design Systems Lead
 cover: ./cover.png
 coverAlt: A screenshot of the documentation website for Anvil Design System
 ---
 
 import Asset from '../../../components/Asset.astro';
+import AssetRow from '../../../components/AssetRow.astro';
+import Stats from '../../../components/Stats.astro';
+import Stat from '../../../components/Stat.astro';
 
-*Content to be expanded — this is a placeholder for the full case study.*
+import auditImg from './audit.png';
+import componentHypothesisImg from './component-hypothesis.png';
+import componentSpecImg from './component-spec.png';
+import docsImg from './docs.png';
+import existingArtImg from './existing-art.png';
+import messyArtboardImg from './messy-artboard.png';
+import prototypingSpecImg from './prototyping-spec.png';
+import releaseNotesImg from './release-notes.png';
 
-I spent four years building and leading the design system at ServiceTitan, a platform that helps tradespeople (plumbers, electricians, HVAC technicians) run their businesses.
+[ServiceTitan](https://servicetitan.com/) builds software for tradespeople. Plumbers, electricians, HVAC technicians. When I joined, engineering had three competing UI frameworks and design had loose guidelines but no shared component language. Every handoff was a negotiation. Engineers thought designers were too loose. Designers thought engineers were too rigid. Both were right.
 
-I've written about this work:
+Over four years, I built and led the design system team that unified their product experience. The technical work mattered, but the harder problem was cultural: getting two disciplines to trust a shared system.
+
+**What I worked on:**
+
+- Built the initial design system from scratch in the first six months, establishing React as the source of truth
+- Created a pipeline that generated Sketch symbols directly from React components, eliminating drift between code and design
+- Hired and led a team of Design Technologists who could think critically about design details while building production code
+- Built a unified documentation site where designers, engineers, and PMs all used the same reference
+- Managed the migration from Sketch to Figma, rebuilding 55 components with 10,000+ variations
+- Scaled adoption from greenfield projects to 71% of all products
+
+---
+
+## Starting Point
+
+<AssetRow>
+	<Asset src={existingArtImg} alt="Existing UI artwork showing inconsistent patterns across the product" />
+	<Asset src={auditImg} alt="Component audit showing the scale of UI inconsistency" />
+</AssetRow>
+
+I applied for a traditional Product Design role. During my interview I walked through design system work from a previous job. The Director of Product Design called me afterward. They'd been trying to get a design system going but kept hitting roadblocks. Design wanted it one way, engineering wanted it another. He asked if I'd come in to focus on that problem instead.
+
+The state of things when I arrived: design had some typography styles and a small color palette. Engineering couldn't align on a single framework because each had tradeoffs and gaps. They'd started with Bootstrap, built features in Material, then others in Semantic. Visually the product was inconsistent. For developers, it meant learning three different systems, sometimes within the same project.
+
+The deeper issue was collaboration. Engineers thought designers were too loose with patterns. They'd design whatever looked good instead of what existed in code. Designers thought engineers were too rigid, forcing everything into framework constraints that didn't cover enterprise SaaS needs. Both were right.
+
+---
+
+## Building the Foundation
+
+<Asset src={prototypingSpecImg} alt="Prototyping spec showing the React to Sketch component pipeline workflow" />
+
+<Asset src={docsImg} alt="Anvil documentation site showing component categories and live examples" />
+
+The first year was about establishing the system and proving value. I started with research and planning while working with a frontend engineer to build the technical infrastructure.
+
+The key decision was making code the source of truth, not design files. We built a pipeline using a forked version of html-sketchapp that rendered a React page of component variations and output a native Sketch file with every component converted to a symbol. If it looked right in code, it looked right in Sketch.
+
+This took significant iteration. Making sure Sketch symbol overrides kept their references intact. Deciding which HTML elements became groups versus getting ignored. Handling the complexity of component variations. Each button state (color, size, disabled) had to be rendered in the React page because Sketch didn't handle complex variations well.
+
+The documentation site lived in the same codebase as the components. We could ship code and docs in the same release. No separate design docs versus engineering docs. Everyone used the same reference, including Product Managers who needed to understand what patterns were available. The site was built with our own components, so it served as both documentation and dogfooding.
+
+---
+
+## Scaling the Team
+
+Year one was just me and one engineer. Year two I hired the first Design Technologist. Someone strong at design who could also build React components, think critically about details, and explain rationale to both designers and engineers. Year three brought a second Design Technologists. Year four, I got engineering investment for two part-time dedicated engineers.
+
+As the team grew, my work shifted from building the system to building systems around the system. How we handled breaking changes. How we communicated releases. Enablement and adoption training. How teams got things on our roadmap. A lot of it came down to negotiation. When a designer created a new pattern, who would build it? The system team, or the implementing team as a contribution? We created frameworks and decision trees, but these conversations happened constantly.
+
+Adoption started with greenfield projects. Existing teams didn't have time to spend months backporting. But as new features launched using Anvil and customers responded positively to the improved experience, other teams felt pressure to adopt. The quality difference was visible.
+
+---
+
+## Migrating to Figma
+
+When the design team decided to move from Sketch to Figma, we had a choice. Rebuild our code-to-design pipeline for Figma, or build components from scratch. Figma's component features like boolean props, editable labels, and nested component linking wouldn't have worked well with our automated approach. We could build better Figma components by hand.
+
+One of the Design Technologists spent a month rebuilding each component natively in Figma. We supported both tools during a transition window, then phased out Sketch. The old files still worked, but we stopped generating new symbol libraries.
+
+The Figma library landed at 55 components with over 10,000 variations. Designers inserted components 40,000 times per month with a 0.16% detach rate. Almost no one was breaking components to customize them.
+
+---
+
+## Component Development
+
+<AssetRow>
+	<Asset src={messyArtboardImg} alt="Messy artboard showing design exploration for a component with multiple variations and annotations" />
+	<Asset src={componentHypothesisImg} alt="Component hypothesis exploration showing design rationale" />
+</AssetRow>
+
+<Asset src={componentSpecImg} alt="Component specification document" />
+
+Each component went through a defined process. Research existing patterns, explore variations, write a design proposal, build the React component, document it, then ship. The design proposal was a key artifact. It explained what the component would do, what features it needed, and included polished-but-not-final UI explorations.
+
+---
+
+## The Hard Parts
+
+A few challenges that shaped how we worked:
+
+**Timing mismatches.** We'd ship a component, designers would start using it, then engineers would implement it months later and surface issues with something that had existed for a year. The feedback loop was long.
+
+**"Why not just use MUI?"** Engineers often had a framework they already knew and wanted to use. We spent time evaluating when to pull something off-the-shelf versus build from scratch. Complex data tables came from Kendo Grid. Some Semantic UI components made sense to adopt. But instead of making everyone learn multiple frameworks that we'd have to extend anyway, we rolled everything into one system. Learn ours, and we'd bake in what you needed from wherever we pulled it.
+
+**Breaking changes.** We could deprecate components, but unless teams spent time migrating, which they often wouldn't, we had to keep supporting old versions. Some teams stayed months out of date because they didn't want the migration overhead.
+
+**Perception as a bottleneck.** There was pressure to appear mid-project and somehow make UI materialize. As if we were just a step between design and engineering who would build the frontend so product teams could wire it up. That model would have made us a bottleneck. We had to constantly reinforce that we built foundations, not features.
+
+---
+
+## What I'd Do Differently
+
+I underestimated adoption friction. We measured component usage but not migration pain. Teams stayed on old versions for months because updating was a project in itself. Earlier investment in automated codemods and migration tooling would have helped.
+
+I also wish I'd pushed harder on mobile parity earlier. The system started web-first, and iOS and Android always felt like they were catching up. A platform-agnostic token layer from day one would have made cross-platform work smoother.
+
+---
+
+## Outcomes
+
+By 2022, the system served 385 users across 32 teams on three platforms: web, iOS, and Android.
+
+<Stats>
+	<Stat value="$5.3M" label="Annual ROI, equivalent to 34 additional designers or engineers" />
+	<Stat value="71%" label="Adoption across products" />
+	<Stat value="65%" label="Design time saved (30% engineering time saved)" />
+	<Stat value="55" label="Components with 10,000+ variations in Figma" />
+	<Stat value="250K" label="Lines of code, 5,000 NPM installs per week" />
+	<Stat value="77%" label="Customer satisfaction score" />
+	<Stat value="37" label="Contributors from across the company" />
+	<Stat value="385" label="Users across design and engineering" />
+	<Stat value="32" label="Product teams served across web, iOS, and Android" />
+</Stats>
+
+The moment I'm most proud of: a company all-hands where leadership launched a new product. People in the chat called out how polished it looked, how the user experience was better than anything they'd shipped before. That product was built entirely with design system components. It was a culture shift. The design system being valued not just by design and engineering, but recognized across the company as part of why the product was improving.
+
+<Asset src={releaseNotesImg} alt="Release notes showing how new components were communicated to the organization" />
+
+---
+
+## Related Writing
 
 - [Building an Enterprise Design System](https://medium.com/servicetitan-design/building-an-enterprise-design-system-f0fe74e7fac)
 - [Design System Infrastructure](https://medium.com/servicetitan-design/design-system-infrastructure-2f859318fcfd)
+- [Headless Creator Podcast: A Conversation about Design Systems](https://open.spotify.com/episode/3KqNPBJlJXEhtHQYqxBlOZ)
