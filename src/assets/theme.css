@@ -1,8 +1,10 @@
 :root {
-	line-height: 1.65;
+	line-height: var(--line-height-base);
 }
 
 @theme static {
+	--line-height-base: 1.75;
+
 	--color-accent: #3DDFC2;
 	--color-background: #fafafa;
 	--color-default: #374151;

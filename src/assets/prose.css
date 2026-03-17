@@ -35,7 +35,7 @@
 
 .prose {
 	font-size: var(--text-lg);
-	line-height: 1.65;
+	line-height: var(--line-height-base);
 }
 
 @variant md {
@@ -54,20 +54,26 @@
 }
 
 .prose h1 {
-	font-size: 2rem;
+	font-size: 1.875em;
 	font-weight: 500;
 	margin-top: 1rlh;
 	margin-bottom: 1rlh;
 }
 
 .prose h2 {
-	font-size: 1.25rem;
+	font-size: 1.5em;
+	font-weight: 500;
+	margin-top: 2rlh;
+	margin-bottom: 1rlh;
+}
+
+.prose h3 {
+	font-size: 1.125em;
 	font-weight: 600;
 	margin-top: 2rlh;
 	margin-bottom: 1rlh;
 }
 
-.prose h3,
 .prose h4,
 .prose h5,
 .prose h6 {
