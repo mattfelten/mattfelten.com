@@ -13,18 +13,9 @@ coverAlt: A screenshot of the documentation website for Anvil Design System
 import Asset from '../../../components/Asset.astro';
 import AssetRow from '../../../components/AssetRow.astro';
 
-{/*
-IMAGE RECOMMENDATIONS:
+[ServiceTitan](https://servicetitan.com/) builds software for tradespeople. Plumbers, electricians, HVAC technicians. When I joined, engineering had three competing UI frameworks and design had loose guidelines but no shared component language. Every handoff was a negotiation. Engineers thought designers were too loose. Designers thought engineers were too rigid. Both were right.
 
-1. STARTING POINT - Component audit artboard (shows the scale of inconsistency)
-2. BUILDING THE FOUNDATION - Process diagram + Docs landing page
-3. COMPONENT DEVELOPMENT - Explorations artboard (shows messy design thinking)
-4. OUTCOMES - Release announcement email or new feature slide
-*/}
-
-[ServiceTitan](https://servicetitan.com/) builds software that helps tradespeople run their businesses. Plumbers, electricians, HVAC technicians. Over four years, I built and led the design system team that unified their product experience across web, iOS, and Android.
-
-**The problem:** Engineering had accumulated three competing UI frameworks. Bootstrap in some places, Semantic UI in others, Material Design in the rest. Design had loose typography and color guidelines but no shared component language. Engineers had to learn multiple frameworks to do their jobs. Designers went with what looked good rather than what was buildable. Every handoff was a negotiation.
+Over four years, I built and led the design system team that unified their product experience. The technical work mattered, but the harder problem was cultural: getting two disciplines to trust a shared system.
 
 **What I worked on:**
 
@@ -45,7 +36,10 @@ The state of things when I arrived: design had some typography styles and a smal
 
 The deeper issue was collaboration. Engineers thought designers were too loose with patterns. They'd design whatever looked good instead of what existed in code. Designers thought engineers were too rigid, forcing everything into framework constraints that didn't cover enterprise SaaS needs. Both were right.
 
-{/* TODO: Component audit artboard - shows the scale of UI inconsistency across the product */}
+<div style="background: #f0f0f0; border: 2px dashed #999; padding: 3rem 2rem; text-align: center; margin: 2em 0; border-radius: 8px;">
+	<strong style="display: block; margin-bottom: 0.5rem;">IMAGE: Component Audit</strong>
+	<span style="color: #666;">Artboard showing the scale of UI inconsistency across the product. Multiple button styles, form patterns, and navigation treatments side by side.</span>
+</div>
 
 ---
 
@@ -59,9 +53,15 @@ This took significant iteration. Making sure Sketch symbol overrides kept their 
 
 The documentation site lived in the same codebase as the components. We could ship code and docs in the same release. No separate design docs versus engineering docs. Everyone used the same reference, including Product Managers who needed to understand what patterns were available. The site was built with our own components, so it served as both documentation and dogfooding.
 
-{/* TODO: Process diagram - shows the workflow for building components */}
+<div style="background: #f0f0f0; border: 2px dashed #999; padding: 3rem 2rem; text-align: center; margin: 2em 0; border-radius: 8px;">
+	<strong style="display: block; margin-bottom: 0.5rem;">IMAGE: Code-to-Design Pipeline</strong>
+	<span style="color: #666;">Diagram showing the workflow: React components → html-sketchapp rendering → Sketch symbol library output.</span>
+</div>
 
-{/* TODO: Docs landing page - shows the polished documentation site output */}
+<div style="background: #f0f0f0; border: 2px dashed #999; padding: 3rem 2rem; text-align: center; margin: 2em 0; border-radius: 8px;">
+	<strong style="display: block; margin-bottom: 0.5rem;">IMAGE: Documentation Site</strong>
+	<span style="color: #666;">Screenshot of the Anvil docs landing page showing component categories and live examples.</span>
+</div>
 
 ---
 
@@ -107,7 +107,10 @@ The Figma library landed at 55 components with over 10,000 variations. Designers
 
 Each component went through a defined process. Research existing patterns, explore variations, write a design proposal, build the React component, document it, then ship. The design proposal was a key artifact. It explained what the component would do, what features it needed, and included polished-but-not-final UI explorations.
 
-{/* TODO: Explorations artboard - shows the messy design thinking process */}
+<div style="background: #f0f0f0; border: 2px dashed #999; padding: 3rem 2rem; text-align: center; margin: 2em 0; border-radius: 8px;">
+	<strong style="display: block; margin-bottom: 0.5rem;">IMAGE: Component Explorations</strong>
+	<span style="color: #666;">Messy artboard showing design exploration for a component. Multiple variations, annotations, and iteration.</span>
+</div>
 
 ---
 
@@ -125,6 +128,14 @@ A few challenges that shaped how we worked:
 
 ---
 
+## What I'd Do Differently
+
+I underestimated adoption friction. We measured component usage but not migration pain. Teams stayed on old versions for months because updating was a project in itself. Earlier investment in automated codemods and migration tooling would have helped.
+
+I also wish I'd pushed harder on mobile parity earlier. The system started web-first, and iOS and Android always felt like they were catching up. A platform-agnostic token layer from day one would have made cross-platform work smoother.
+
+---
+
 ## Outcomes
 
 By 2022, the system served 385 users across 32 teams on three platforms: web, iOS, and Android.
@@ -139,7 +150,10 @@ By 2022, the system served 385 users across 32 teams on three platforms: web, iO
 
 The moment I'm most proud of: a company all-hands where leadership launched a new product. People in the chat called out how polished it looked, how the user experience was better than anything they'd shipped before. That product was built entirely with design system components. It was a culture shift. The design system being valued not just by design and engineering, but recognized across the company as part of why the product was improving.
 
-{/* TODO: Release announcement email or new feature slide - shows the communication/adoption work */}
+<div style="background: #f0f0f0; border: 2px dashed #999; padding: 3rem 2rem; text-align: center; margin: 2em 0; border-radius: 8px;">
+	<strong style="display: block; margin-bottom: 0.5rem;">IMAGE: Release Communication</strong>
+	<span style="color: #666;">Example release announcement email or slide showing how new components were communicated to the organization.</span>
+</div>
 
 ---
 
