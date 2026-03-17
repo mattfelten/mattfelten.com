@@ -1,28 +1,30 @@
 ---
 import { getCollection, render } from 'astro:content';
+import { format } from 'date-fns';
 
 import Prose from '@layouts/prose.astro';
 
-// 1. Generate a new path for every collection entry
 export async function getStaticPaths() {
-	const projects = await getCollection('projects');
-	return projects.map(entry => ({
+	const entries = (await getCollection('posts')).filter(
+		entry => !entry.data.draft && !entry.data.redirect,
+	);
+	return entries.map(entry => ({
 		params: { slug: entry.id },
 		props: { entry },
 	}));
 }
 
-// 2. When it's time to render, you can get the entry directly from the prop
 const { entry } = Astro.props;
-const { title, year } = entry.data;
+const { title, date } = entry.data;
 
+const niceDate = format(date, 'MMMM d, yyyy');
 const { Content } = await render(entry);
 ---
 
 <Prose title={title}>
 	<div class="mb-6 flex flex-col gap-1">
-		<h1 class="!mb-0">{title}</h1>
-		<p class="text-subdued !m-0 text-xl">{year}</p>
+		<h1 class="mb-0!">{title}</h1>
+		<p class="text-subdued m-0! text-xl">{niceDate}</p>
 	</div>
 	<Content />
 </Prose>

@@ -22,10 +22,10 @@ function formatYear(year: number, endYear?: number, active?: boolean) {
 <Layout title="Work">
 	<Section title="Work">
 		<ul class="space-y-12">
-			{work.map(({ data: { title, company, year, endYear, active, intro, cover, coverAlt }, slug }) => (
+			{work.map(({ data: { title, company, year, endYear, active, intro, cover, coverAlt }, id }) => (
 				<li>
 					<a
-						href={`/work/${slug}`}
+						href={`/work/${id}`}
 						class="group block"
 					>
 						{cover && coverAlt && (
