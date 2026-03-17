@@ -6,8 +6,6 @@ import { RxArrowTopRight } from 'react-icons/rx';
 import Section from '@components/Section.astro';
 import Layout from '@layouts/default.astro';
 
-const stripDate = (slug: string) => slug.replace(/^\d{4}-\d{2}-\d{2}-/, '');
-
 const posts = (await getCollection('posts'))
 	.filter(post => !post.data.hidden && !post.data.draft)
 	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
@@ -37,11 +35,11 @@ const years = Object.keys(postsByYear)
 						{postsByYear[year].map(
 							({
 								data: { title, date, redirect },
-								slug,
+								id,
 							}) => (
 								<li>
 									<a
-										href={redirect || '/articles/' + stripDate(slug)}
+										href={redirect || '/articles/' + id}
 										class="group flex items-baseline gap-2 transition-transform hover:translate-x-1 focus:outline-0"
 									>
 										<time class="text-subdued font-mono font-medium whitespace-nowrap">

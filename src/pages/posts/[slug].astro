@@ -1,14 +1,17 @@
 ---
-import { getCollection } from 'astro:content';
+// Generates redirect pages at old /posts/<date>-<title> URLs.
+// Primary redirect is handled by netlify.toml; this is a dev fallback.
 
 export async function getStaticPaths() {
-	const entries = (await getCollection('posts')).filter(
-		entry => !entry.data.draft && !entry.data.redirect,
-	);
-	return entries.map(entry => ({
-		params: { slug: entry.slug },
-		props: { newSlug: entry.slug.replace(/^\d{4}-\d{2}-\d{2}-/, '') },
-	}));
+	const files = import.meta.glob('/src/content/posts/**/*.{md,mdx}');
+	return Object.keys(files).flatMap(path => {
+		const relative = path.replace('/src/content/posts/', '');
+		const withoutExt = relative.replace(/\.(md|mdx)$/, '').replace(/\/index$/, '');
+		// Only redirect date-prefixed posts; skip drafts
+		if (!/^\d{4}-\d{2}-\d{2}-/.test(withoutExt)) return [];
+		const newSlug = withoutExt.replace(/^\d{4}-\d{2}-\d{2}-/, '');
+		return [{ params: { slug: withoutExt }, props: { newSlug } }];
+	});
 }
 
 const { newSlug } = Astro.props;

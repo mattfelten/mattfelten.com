@@ -1,8 +1,9 @@
 ---
+import { render } from 'astro:content';
 import { getYear } from 'date-fns';
 
 const { job } = Astro.props;
-const { Content } = await job.render();
+const { Content } = await render(job);
 
 const {
 	data: { company, start, end, role },
