@@ -30,28 +30,20 @@ Over four years, I built and led the design system team that unified their produ
 
 ## Starting Point
 
+<div style="background: #f0f0f0; border: 2px dashed #999; padding: 3rem 2rem; text-align: center; margin: 2em 0; border-radius: 8px;">
+	<strong style="display: block; margin-bottom: 0.5rem;">IMAGE: Component Audit</strong>
+	<span style="color: #666;">Artboard showing the scale of UI inconsistency across the product. Multiple button styles, form patterns, and navigation treatments side by side.</span>
+</div>
+
 I applied for a traditional Product Design role. During my interview I walked through design system work from a previous job. The Director of Product Design called me afterward. They'd been trying to get a design system going but kept hitting roadblocks. Design wanted it one way, engineering wanted it another. He asked if I'd come in to focus on that problem instead.
 
 The state of things when I arrived: design had some typography styles and a small color palette. Engineering couldn't align on a single framework because each had tradeoffs and gaps. They'd started with Bootstrap, built features in Material, then others in Semantic. Visually the product was inconsistent. For developers, it meant learning three different systems, sometimes within the same project.
 
 The deeper issue was collaboration. Engineers thought designers were too loose with patterns. They'd design whatever looked good instead of what existed in code. Designers thought engineers were too rigid, forcing everything into framework constraints that didn't cover enterprise SaaS needs. Both were right.
 
-<div style="background: #f0f0f0; border: 2px dashed #999; padding: 3rem 2rem; text-align: center; margin: 2em 0; border-radius: 8px;">
-	<strong style="display: block; margin-bottom: 0.5rem;">IMAGE: Component Audit</strong>
-	<span style="color: #666;">Artboard showing the scale of UI inconsistency across the product. Multiple button styles, form patterns, and navigation treatments side by side.</span>
-</div>
-
 ---
 
 ## Building the Foundation
-
-The first year was about establishing the system and proving value. I started with research and planning while working with a frontend engineer to build the technical infrastructure.
-
-The key decision was making code the source of truth, not design files. We built a pipeline using a forked version of html-sketchapp that rendered a React page of component variations and output a native Sketch file with every component converted to a symbol. If it looked right in code, it looked right in Sketch.
-
-This took significant iteration. Making sure Sketch symbol overrides kept their references intact. Deciding which HTML elements became groups versus getting ignored. Handling the complexity of component variations. Each button state (color, size, disabled) had to be rendered in the React page because Sketch didn't handle complex variations well.
-
-The documentation site lived in the same codebase as the components. We could ship code and docs in the same release. No separate design docs versus engineering docs. Everyone used the same reference, including Product Managers who needed to understand what patterns were available. The site was built with our own components, so it served as both documentation and dogfooding.
 
 <div style="background: #f0f0f0; border: 2px dashed #999; padding: 3rem 2rem; text-align: center; margin: 2em 0; border-radius: 8px;">
 	<strong style="display: block; margin-bottom: 0.5rem;">IMAGE: Code-to-Design Pipeline</strong>
@@ -62,6 +54,14 @@ The documentation site lived in the same codebase as the components. We could sh
 	<strong style="display: block; margin-bottom: 0.5rem;">IMAGE: Documentation Site</strong>
 	<span style="color: #666;">Screenshot of the Anvil docs landing page showing component categories and live examples.</span>
 </div>
+
+The first year was about establishing the system and proving value. I started with research and planning while working with a frontend engineer to build the technical infrastructure.
+
+The key decision was making code the source of truth, not design files. We built a pipeline using a forked version of html-sketchapp that rendered a React page of component variations and output a native Sketch file with every component converted to a symbol. If it looked right in code, it looked right in Sketch.
+
+This took significant iteration. Making sure Sketch symbol overrides kept their references intact. Deciding which HTML elements became groups versus getting ignored. Handling the complexity of component variations. Each button state (color, size, disabled) had to be rendered in the React page because Sketch didn't handle complex variations well.
+
+The documentation site lived in the same codebase as the components. We could ship code and docs in the same release. No separate design docs versus engineering docs. Everyone used the same reference, including Product Managers who needed to understand what patterns were available. The site was built with our own components, so it served as both documentation and dogfooding.
 
 ---
 
@@ -105,12 +105,12 @@ The Figma library landed at 55 components with over 10,000 variations. Designers
 
 ## Component Development
 
-Each component went through a defined process. Research existing patterns, explore variations, write a design proposal, build the React component, document it, then ship. The design proposal was a key artifact. It explained what the component would do, what features it needed, and included polished-but-not-final UI explorations.
-
 <div style="background: #f0f0f0; border: 2px dashed #999; padding: 3rem 2rem; text-align: center; margin: 2em 0; border-radius: 8px;">
 	<strong style="display: block; margin-bottom: 0.5rem;">IMAGE: Component Explorations</strong>
 	<span style="color: #666;">Messy artboard showing design exploration for a component. Multiple variations, annotations, and iteration.</span>
 </div>
+
+Each component went through a defined process. Research existing patterns, explore variations, write a design proposal, build the React component, document it, then ship. The design proposal was a key artifact. It explained what the component would do, what features it needed, and included polished-but-not-final UI explorations.
 
 ---
 
