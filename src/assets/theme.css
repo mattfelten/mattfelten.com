@@ -1,5 +1,6 @@
 :root {
 	line-height: 1.65;
+	--tw-leading: 1.65;
 }
 
 @theme static {
