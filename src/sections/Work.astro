@@ -26,11 +26,11 @@ const work = (await getCollection('work'))
 							intro,
 							title,
 						},
-						slug,
+						id,
 					}) => (
 						<li>
 							<a
-								href={`/work/${slug}`}
+								href={`/work/${id}`}
 								class="group block"
 							>
 								<p class="line-length-lg">

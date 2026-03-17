@@ -33,5 +33,102 @@
 	--tw-prose-invert-td-borders: var(--color-background);
 }
 
-@custom-variant prose-inline-code (&.prose
-	:where(:not(pre) > code):not(:where([class~="not-prose"] *)));
+.prose {
+	font-size: var(--text-lg);
+	line-height: var(--line-height-base);
+}
+
+@variant md {
+	.prose {
+		font-size: var(--text-xl);
+	}
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+	text-wrap: pretty;
+}
+
+.prose h1 {
+	font-size: 1.875em;
+	font-weight: 500;
+	margin-top: 1rlh;
+	margin-bottom: 1rlh;
+}
+
+.prose h2 {
+	font-size: 1.5em;
+	font-weight: 500;
+	margin-top: 2rlh;
+	margin-bottom: 1rlh;
+}
+
+.prose h3 {
+	font-size: 1.125em;
+	font-weight: 600;
+	margin-top: 2rlh;
+	margin-bottom: 1rlh;
+}
+
+.prose h4,
+.prose h5,
+.prose h6 {
+	font-size: 1em;
+	font-weight: 600;
+	margin-top: 2rlh;
+	margin-bottom: 1rlh;
+}
+
+.prose p + p {
+	margin-top: 1rlh;
+}
+
+.prose ul,
+.prose ol {
+	margin-top: 1rlh;
+	margin-bottom: 1rlh;
+}
+
+.prose ul {
+	list-style-type: '– ';
+}
+
+.prose ::marker {
+	color: var(--color-weak);
+}
+
+.prose hr {
+	opacity: 0.5;
+	height: 2px;
+	border: none;
+	background-color: var(--color-weak);
+}
+
+.prose a:hover,
+.prose a:focus-visible {
+	text-decoration-color: var(--color-accent);
+}
+
+.prose a:focus {
+	outline: none;
+}
+
+.prose :where(:not(pre) > code):not(:where([class~='not-prose'] *)) {
+	background-color: #262626;
+	padding-top: var(--spacing-0-5);
+	padding-bottom: var(--spacing-0-5);
+	padding-left: var(--spacing-1);
+	padding-right: var(--spacing-1);
+	border-radius: 0.25rem;
+	white-space: break-spaces;
+	font-size: 85%;
+}
+
+.prose :where(:not(pre) > code):not(:where([class~='not-prose'] *))::before,
+.prose :where(:not(pre) > code):not(:where([class~='not-prose'] *))::after {
+	content: none;
+}

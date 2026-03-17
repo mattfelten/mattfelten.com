@@ -1,34 +1,29 @@
 ---
-import { getCollection } from 'astro:content';
-import { format } from 'date-fns';
+// Generates redirect pages at old /posts/<date>-<title> URLs.
+// Primary redirect is handled by netlify.toml; this is a dev fallback.
 
-import Prose from '@layouts/prose.astro';
-import Newsletter from '@sections/newsletter.astro';
-
-// 1. Generate a new path for every collection entry
 export async function getStaticPaths() {
-	const blogEntries = (await getCollection('posts')).filter(entry => !entry.data.draft);
-	return blogEntries.map(entry => ({
-		params: { slug: entry.slug },
-		props: { entry },
-	}));
+	const files = import.meta.glob('/src/content/posts/**/*.{md,mdx}');
+	return Object.keys(files).flatMap(path => {
+		const relative = path.replace('/src/content/posts/', '');
+		const withoutExt = relative.replace(/\.(md|mdx)$/, '').replace(/\/index$/, '');
+		// Only redirect date-prefixed posts; skip drafts
+		if (!/^\d{4}-\d{2}-\d{2}-/.test(withoutExt)) return [];
+		const newSlug = withoutExt.replace(/^\d{4}-\d{2}-\d{2}-/, '');
+		return [{ params: { slug: withoutExt }, props: { newSlug } }];
+	});
 }
 
-// 2. When it's time to render, you can get the entry directly from the prop
-const { entry } = Astro.props;
-const { title, date } = entry.data;
-
-const niceDate = format(date, 'MMMM d, yyyy');
-const { Content } = await entry.render();
+const { newSlug } = Astro.props;
+const target = `/articles/${newSlug}`;
 ---
 
-<Prose title={title}>
-	<div class="mb-6 flex flex-col gap-1">
-		<h1 class="mb-0!">{title}</h1>
-		<p class="text-subdued m-0! text-xl">{niceDate}</p>
-	</div>
-	<Content />
-	<div class="mt-12! flex justify-center" slot="after-article">
-		<Newsletter />
-	</div>
-</Prose>
+<html>
+	<head>
+		<meta http-equiv="refresh" content={`0;url=${target}`} />
+		<link rel="canonical" href={target} />
+	</head>
+	<body>
+		<a href={target}>Redirecting…</a>
+	</body>
+</html>

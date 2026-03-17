@@ -16,10 +16,10 @@ const formatDate = date => format(date, 'MMMM d, yyyy');
 {
 	list && (
 		<ul class="space-y-4">
-			{list.map(({ data: { title, date, redirect }, slug }) => (
+			{list.map(({ data: { title, date, redirect }, id }) => (
 				<li>
 					<a
-						href={redirect || '/posts/' + slug}
+						href={redirect || '/articles/' + id}
 						class="hover group inline-block focus:outline-0"
 					>
 						<span class="block text-2xl font-medium">

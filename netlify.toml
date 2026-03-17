@@ -12,3 +12,13 @@
 
   # Default build command.
   command = "npm run build"
+
+[[redirects]]
+  from = "/posts"
+  to = "/articles"
+  status = 301
+
+[[redirects]]
+  from = "/posts/:year-:month-:day-:slug"
+  to = "/articles/:slug"
+  status = 301

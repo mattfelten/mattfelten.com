@@ -5,7 +5,12 @@ import '@assets/fonts/nudica.css';
 import '@assets/global.css';
 
 const { title: pageTitle } = Astro.props;
-const title = [pageTitle && `${pageTitle} `, 'Matt Felten'].join(' ');
+
+const titleParts: string[] = [];
+if (pageTitle) titleParts.push(pageTitle);
+titleParts.push('Matt Felten');
+
+const title = titleParts.join(' → ');
 ---
 
 <style>
