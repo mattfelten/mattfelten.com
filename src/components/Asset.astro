@@ -4,6 +4,7 @@ import cx from 'clsx';
 
 const {
 	alt = '',
+	caption,
 	className,
 	expand,
 	href,
@@ -59,61 +60,63 @@ const classes = cx(
 
 <div class="asset-wrap">
 	{
-		() => {
-			const isExtension = (ext: string) => {
-				if (typeof src === 'string') return src.endsWith(ext);
-				return src.src.endsWith(ext);
-			};
-			const getLink = () => {
-				if (href) return href;
-				if (expand) return src;
-				return false;
-			};
+		src ? (
+			() => {
+				const isExtension = (ext: string) => {
+					if (typeof src === 'string') return src.endsWith(ext);
+					return src.src.endsWith(ext);
+				};
+				const getLink = () => {
+					if (href) return href;
+					if (expand) return src;
+					return false;
+				};
 
-			const getAssetContent = () => {
-				if (isExtension('mov'))
+				const getAssetContent = () => {
+					if (isExtension('mov'))
+						return (
+							<video
+								src={src}
+								controls
+								class={classes}
+								{...props}
+							>
+								{alt}
+							</video>
+						);
+
+					if (isExtension('gif') || isExtension('svg'))
+						return (
+							<img
+								src={typeof src === 'string' ? src : src.src}
+								alt={alt}
+								class={classes}
+								{...props}
+							/>
+						);
+
 					return (
-						<video
+						<Picture
 							src={src}
-							controls
-							class={classes}
-							{...props}
-						>
-							{alt}
-						</video>
-					);
-
-				if (isExtension('gif'))
-					return (
-						<img
-							src={src.src}
 							alt={alt}
 							class={classes}
 							{...props}
 						/>
 					);
+				};
 
-				return (
-					<Picture
-						src={src}
-						alt={alt}
-						class={classes}
-						{...props}
-					/>
-				);
-			};
-
-			if (getLink())
-				return <a href={getLink()}>{getAssetContent()}</a>;
-			return getAssetContent();
-		}
-	}
-
-	{
-		Astro.slots.has('default') && (
-			<small>
-				<slot />
-			</small>
+				if (getLink())
+					return <a href={getLink()}>{getAssetContent()}</a>;
+				return getAssetContent();
+			}
+		) : (
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 9" class="Assets">
+				<rect width="16" height="9" fill="currentColor" opacity="0.08"/>
+				<line x1="0" y1="0" x2="16" y2="9" stroke="currentColor" stroke-width="0.03" opacity="0.2"/>
+				<line x1="16" y1="0" x2="0" y2="9" stroke="currentColor" stroke-width="0.03" opacity="0.2"/>
+			</svg>
 		)
 	}
+
+	{caption && <small set:html={caption} />}
 </div>
