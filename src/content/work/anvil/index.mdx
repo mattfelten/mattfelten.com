@@ -13,8 +13,8 @@ coverAlt: A screenshot of the documentation website for Anvil Design System
 
 import Asset from '../../../components/Asset.astro';
 import AssetRow from '../../../components/AssetRow.astro';
-import Stats from '../../../components/Stats.astro';
 import Stat from '../../../components/Stat.astro';
+import Stats from '../../../components/Stats.astro';
 
 import auditImg from './audit.png';
 import componentHypothesisImg from './component-hypothesis.png';
@@ -24,6 +24,7 @@ import existingArtImg from './existing-art.png';
 import messyArtboardImg from './messy-artboard.png';
 import prototypingSpecImg from './prototyping-spec.png';
 import releaseNotesImg from './release-notes.png';
+import systemDesignProcessImg from './system-design-process.png';
 
 [ServiceTitan](https://servicetitan.com/) builds software for tradespeople. Plumbers, electricians, HVAC technicians. When I joined, engineering had three competing UI frameworks and design had loose guidelines but no shared component language. Every handoff was a negotiation. Engineers thought designers were too loose. Designers thought engineers were too rigid. Both were right.
 
@@ -43,23 +44,28 @@ Over four years, I built and led the design system team that unified their produ
 ## Starting Point
 
 <AssetRow>
-	<Asset src={existingArtImg} alt="Existing UI artwork showing inconsistent patterns across the product" />
-	<Asset src={auditImg} alt="Component audit showing the scale of UI inconsistency" />
+	<Asset
+		src={existingArtImg}
+		alt="Existing UI artwork showing inconsistent patterns across the product"
+	/>
+	<Asset
+		src={auditImg}
+		alt="Component audit showing the scale of UI inconsistency"
+	/>
 </AssetRow>
 
 I applied for a traditional Product Design role. During my interview I walked through design system work from a previous job. The Director of Product Design called me afterward. They'd been trying to get a design system going but kept hitting roadblocks. Design wanted it one way, engineering wanted it another. He asked if I'd come in to focus on that problem instead.
 
 The state of things when I arrived: design had some typography styles and a small color palette. Engineering couldn't align on a single framework because each had tradeoffs and gaps. They'd started with Bootstrap, built features in Material, then others in Semantic. Visually the product was inconsistent. For developers, it meant learning three different systems, sometimes within the same project.
 
-The deeper issue was collaboration. Engineers thought designers were too loose with patterns. They'd design whatever looked good instead of what existed in code. Designers thought engineers were too rigid, forcing everything into framework constraints that didn't cover enterprise SaaS needs. Both were right.
-
 ---
 
 ## Building the Foundation
 
-<Asset src={prototypingSpecImg} alt="Prototyping spec showing the React to Sketch component pipeline workflow" />
-
-<Asset src={docsImg} alt="Anvil documentation site showing component categories and live examples" />
+<Asset
+	src={docsImg}
+	alt="Anvil documentation site showing component categories and live examples"
+/>
 
 The first year was about establishing the system and proving value. I started with research and planning while working with a frontend engineer to build the technical infrastructure.
 
@@ -71,24 +77,6 @@ The documentation site lived in the same codebase as the components. We could sh
 
 ---
 
-## Principles
-
-We established six principles to guide decisions as the system scaled:
-
-**People First.** We were mindful of how many people used our tools, both directly and indirectly. We focused on making a great experience for all types of people.
-
-**Clear and Approachable.** Provide effective support, training, and information sharing about our processes and tools. Flexibly adjust communication based on what's needed. The tools themselves should be intuitive and understandable.
-
-**Thoughtful Details.** Spend time understanding complex problem spaces and exploring in-depth to create delightful, natural, and purpose-driven tools. Find the balance between simple and powerful, giving users a considered amount of information and flexibility.
-
-**Open and Transparent.** Collaboration is our backbone. Everyone working on products should feel included, able to participate, and that their voice is heard in evolving our tools.
-
-**Always Evolving.** Explore new tools, workflows, and processes to continually improve. Our tools will get better over time as new information emerges.
-
-**Holistic Experience.** Our modular tools should feel seamless, familiar, and intuitive. Every piece of the system should be trusted to be carefully and deliberately considered.
-
----
-
 ## Scaling the Team
 
 Year one was just me and one engineer. Year two I hired the first Design Technologist. Someone strong at design who could also build React components, think critically about details, and explain rationale to both designers and engineers. Year three brought a second Design Technologist. Year four, I got engineering investment for two part-time dedicated engineers.
@@ -96,6 +84,8 @@ Year one was just me and one engineer. Year two I hired the first Design Technol
 As the team grew, my work shifted from building the system to building systems around the system. How we handled breaking changes. How we communicated releases. Enablement and adoption training. How teams got things on our roadmap. A lot of it came down to negotiation. When a designer created a new pattern, who would build it? The system team, or the implementing team as a contribution? We created frameworks and decision trees, but these conversations happened constantly.
 
 Adoption started with greenfield projects. Existing teams didn't have time to spend months backporting. But as new features launched using Anvil and customers responded positively to the improved experience, other teams felt pressure to adopt. The quality difference was visible.
+
+The ceiling was older parts of the product with no active development. Consistency alone is hard to put on a roadmap.
 
 ---
 
@@ -111,14 +101,44 @@ The Figma library landed at 55 components with over 10,000 variations. Designers
 
 ## Component Development
 
+<Asset
+	src={systemDesignProcessImg}
+	alt="Diagram showing the Anvil component development process from kickoff through release"
+/>
+
+Each component started with an open-invite kickoff: designers, developers, and PMs surfacing use cases before any design started. Research followed — existing internal patterns, comparable design systems, the shape of the data the component would need.
+
+Design happened in Figma, sometimes with code prototypes first to feel out interactions. The output was a design proposal: what the component would do, what props it needed, polished-but-not-final explorations. Then development: stateless React components, a Storybook story, QA across every prop combination and keyboard interaction. Then documentation, then release.
+
+The goal was for Figma components to reflect shipped code, not lead it. In practice, we kept a beta library for components still being explored — a way to get them in front of designers earlier without implying they were stable.
+
+<Asset
+	src={messyArtboardImg}
+	alt="Messy artboard showing design exploration for a component with multiple variations and annotations"
+/>
+
 <AssetRow>
-	<Asset src={messyArtboardImg} alt="Messy artboard showing design exploration for a component with multiple variations and annotations" />
-	<Asset src={componentHypothesisImg} alt="Component hypothesis exploration showing design rationale" />
+	<Asset
+		src={componentHypothesisImg}
+		alt="Component hypothesis exploration showing design rationale"
+	/>
+	<Asset src={componentSpecImg} alt="Component specification document" />
 </AssetRow>
 
-<Asset src={componentSpecImg} alt="Component specification document" />
+<Asset
+	src={prototypingSpecImg}
+	alt="Prototyping spec showing component variations and states"
+/>
 
-Each component went through a defined process. Research existing patterns, explore variations, write a design proposal, build the React component, document it, then ship. The design proposal was a key artifact. It explained what the component would do, what features it needed, and included polished-but-not-final UI explorations.
+---
+
+## Theming
+
+By year three, teams started asking for more control over visual style. A dark mode. A white-label skin. A product with a different brand identity. Before theming, components had hardcoded color values. Reskinning meant forking, which defeated the purpose of a shared system.
+
+We built a ThemeProvider component and a global design token layer using CSS custom properties. Components consumed tokens instead of hardcoded values. A separate anvil-themes package let teams extend or override tokens independently without touching the core library.
+
+The Figma side was more manual. Variables and modes didn't exist yet, so we published a separate library for each theme. Switching themes meant swapping which library your file connected to. Not elegant, but it worked, and we documented the steps so designers didn't have to figure it out on their own.
 
 ---
 
@@ -146,23 +166,26 @@ I also wish I'd pushed harder on mobile parity earlier. The system started web-f
 
 ## Outcomes
 
-By 2022, the system served 385 users across 32 teams on three platforms: web, iOS, and Android.
+By 2022, the system served 385 users across 32 product teams on three platforms: web, iOS, and Android.
+
+<Asset
+	src={releaseNotesImg}
+	alt="Release notes showing how new components were communicated to the organization"
+/>
 
 <Stats>
-	<Stat value="$5.3M" label="Annual ROI, equivalent to 34 additional designers or engineers" />
+	<Stat
+		value="$5.3M"
+		label="Annual ROI, equivalent to 34 additional designers or engineers"
+	/>
 	<Stat value="71%" label="Adoption across products" />
 	<Stat value="65%" label="Design time saved (30% engineering time saved)" />
 	<Stat value="55" label="Components with 10,000+ variations in Figma" />
-	<Stat value="250K" label="Lines of code, 5,000 NPM installs per week" />
 	<Stat value="77%" label="Customer satisfaction score" />
 	<Stat value="37" label="Contributors from across the company" />
-	<Stat value="385" label="Users across design and engineering" />
-	<Stat value="32" label="Product teams served across web, iOS, and Android" />
 </Stats>
 
 The moment I'm most proud of: a company all-hands where leadership launched a new product. People in the chat called out how polished it looked, how the user experience was better than anything they'd shipped before. That product was built entirely with design system components. It was a culture shift. The design system being valued not just by design and engineering, but recognized across the company as part of why the product was improving.
-
-<Asset src={releaseNotesImg} alt="Release notes showing how new components were communicated to the organization" />
 
 ---
 

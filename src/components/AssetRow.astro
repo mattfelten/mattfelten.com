@@ -1,22 +1,28 @@
 <style>
-	.div {
+	div {
 		margin-top: 2em;
 		margin-bottom: 2em;
 		width: 94vw;
+		display: flex;
+		flex-direction: column;
+		gap: var(--spacing-2);
 
 		> * {
 			box-sizing: border-box;
-			margin: 0 0 2em;
-			padding: 16px;
 			flex: 1;
 		}
 
 		@media (min-width: 640px) {
-			display: flex;
+			flex-direction: row;
+			gap: var(--spacing-4);
 
 			> * {
 				margin: 0;
 			}
+		}
+
+		.prose-case-study & {
+			width: auto;
 		}
 	}
 </style>
