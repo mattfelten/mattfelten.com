@@ -24,6 +24,7 @@ import existingArtImg from './existing-art.png';
 import messyArtboardImg from './messy-artboard.png';
 import prototypingSpecImg from './prototyping-spec.png';
 import releaseNotesImg from './release-notes.png';
+import systemDesignProcessImg from './system-design-process.jpg';
 
 [ServiceTitan](https://servicetitan.com/) builds software for tradespeople. Plumbers, electricians, HVAC technicians. When I joined, engineering had three competing UI frameworks and design had loose guidelines but no shared component language. Every handoff was a negotiation. Engineers thought designers were too loose. Designers thought engineers were too rigid. Both were right.
 
@@ -93,6 +94,14 @@ The Figma library landed at 55 components with over 10,000 variations. Designers
 
 ## Component Development
 
+<Asset src={systemDesignProcessImg} alt="Diagram showing the Anvil component development process from kickoff through release" />
+
+Each component started with an open-invite kickoff: designers, developers, and PMs surfacing use cases before any design started. Research followed — existing internal patterns, comparable design systems, the shape of the data the component would need.
+
+Design happened in Figma, sometimes with code prototypes first to feel out interactions. The output was a design proposal: what the component would do, what props it needed, polished-but-not-final explorations. Then development: stateless React components, a Storybook story, QA across every prop combination and keyboard interaction. Then documentation, then release.
+
+The goal was for Figma components to reflect shipped code, not lead it. In practice, we kept a beta library for components still being explored — a way to get them in front of designers earlier without implying they were stable.
+
 <AssetRow>
 	<Asset src={messyArtboardImg} alt="Messy artboard showing design exploration for a component with multiple variations and annotations" />
 	<Asset src={componentHypothesisImg} alt="Component hypothesis exploration showing design rationale" />
@@ -100,7 +109,15 @@ The Figma library landed at 55 components with over 10,000 variations. Designers
 
 <Asset src={componentSpecImg} alt="Component specification document" />
 
-Each component went through a defined process. Research existing patterns, explore variations, write a design proposal, build the React component, document it, then ship. The design proposal was a key artifact. It explained what the component would do, what features it needed, and included polished-but-not-final UI explorations.
+---
+
+## Theming
+
+By year three, teams started asking for more control over visual style. A dark mode. A white-label skin. A product with a different brand identity. Before theming, components had hardcoded color values. Reskinning meant forking, which defeated the purpose of a shared system.
+
+We built a ThemeProvider component and a global design token layer using CSS custom properties. Components consumed tokens instead of hardcoded values. A separate anvil-themes package let teams extend or override tokens independently without touching the core library.
+
+The Figma side was more manual. Variables and modes didn't exist yet, so we published a separate library for each theme. Switching themes meant swapping which library your file connected to. Not elegant, but it worked, and we documented the steps so designers didn't have to figure it out on their own.
 
 ---
 
