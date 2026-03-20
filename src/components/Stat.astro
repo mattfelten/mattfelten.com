@@ -2,7 +2,11 @@
 const { value, label } = Astro.props;
 ---
 
-<div class="not-prose flex flex-col gap-1">
-	<span class="text-strong text-2xl font-medium leading-none">{value}</span>
+<div
+	class="not-prose flex flex-col gap-1 rounded-lg border border-[rgba(255,255,255,0.03)] bg-[hsl(0,0%,6%)] p-2"
+>
+	<span class="text-strong text-2xl leading-none font-medium"
+		>{value}</span
+	>
 	<span class="text-subdued text-sm leading-snug">{label}</span>
 </div>

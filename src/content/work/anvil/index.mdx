@@ -13,8 +13,8 @@ coverAlt: A screenshot of the documentation website for Anvil Design System
 
 import Asset from '../../../components/Asset.astro';
 import AssetRow from '../../../components/AssetRow.astro';
-import Stats from '../../../components/Stats.astro';
 import Stat from '../../../components/Stat.astro';
+import Stats from '../../../components/Stats.astro';
 
 import auditImg from './audit.png';
 import componentHypothesisImg from './component-hypothesis.png';
@@ -44,8 +44,14 @@ Over four years, I built and led the design system team that unified their produ
 ## Starting Point
 
 <AssetRow>
-	<Asset src={existingArtImg} alt="Existing UI artwork showing inconsistent patterns across the product" />
-	<Asset src={auditImg} alt="Component audit showing the scale of UI inconsistency" />
+	<Asset
+		src={existingArtImg}
+		alt="Existing UI artwork showing inconsistent patterns across the product"
+	/>
+	<Asset
+		src={auditImg}
+		alt="Component audit showing the scale of UI inconsistency"
+	/>
 </AssetRow>
 
 I applied for a traditional Product Design role. During my interview I walked through design system work from a previous job. The Director of Product Design called me afterward. They'd been trying to get a design system going but kept hitting roadblocks. Design wanted it one way, engineering wanted it another. He asked if I'd come in to focus on that problem instead.
@@ -56,7 +62,10 @@ The state of things when I arrived: design had some typography styles and a smal
 
 ## Building the Foundation
 
-<Asset src={docsImg} alt="Anvil documentation site showing component categories and live examples" />
+<Asset
+	src={docsImg}
+	alt="Anvil documentation site showing component categories and live examples"
+/>
 
 The first year was about establishing the system and proving value. I started with research and planning while working with a frontend engineer to build the technical infrastructure.
 
@@ -92,7 +101,10 @@ The Figma library landed at 55 components with over 10,000 variations. Designers
 
 ## Component Development
 
-<Asset src={systemDesignProcessImg} alt="Diagram showing the Anvil component development process from kickoff through release" />
+<Asset
+	src={systemDesignProcessImg}
+	alt="Diagram showing the Anvil component development process from kickoff through release"
+/>
 
 Each component started with an open-invite kickoff: designers, developers, and PMs surfacing use cases before any design started. Research followed — existing internal patterns, comparable design systems, the shape of the data the component would need.
 
@@ -100,15 +112,23 @@ Design happened in Figma, sometimes with code prototypes first to feel out inter
 
 The goal was for Figma components to reflect shipped code, not lead it. In practice, we kept a beta library for components still being explored — a way to get them in front of designers earlier without implying they were stable.
 
-<AssetRow>
-	<Asset src={messyArtboardImg} alt="Messy artboard showing design exploration for a component with multiple variations and annotations" />
-	<Asset src={componentHypothesisImg} alt="Component hypothesis exploration showing design rationale" />
-</AssetRow>
+<Asset
+	src={messyArtboardImg}
+	alt="Messy artboard showing design exploration for a component with multiple variations and annotations"
+/>
 
 <AssetRow>
+	<Asset
+		src={componentHypothesisImg}
+		alt="Component hypothesis exploration showing design rationale"
+	/>
 	<Asset src={componentSpecImg} alt="Component specification document" />
-	<Asset src={prototypingSpecImg} alt="Prototyping spec showing component variations and states" />
 </AssetRow>
+
+<Asset
+	src={prototypingSpecImg}
+	alt="Prototyping spec showing component variations and states"
+/>
 
 ---
 
@@ -148,10 +168,16 @@ I also wish I'd pushed harder on mobile parity earlier. The system started web-f
 
 By 2022, the system served 385 users across 32 product teams on three platforms: web, iOS, and Android.
 
-<Asset src={releaseNotesImg} alt="Release notes showing how new components were communicated to the organization" />
+<Asset
+	src={releaseNotesImg}
+	alt="Release notes showing how new components were communicated to the organization"
+/>
 
 <Stats>
-	<Stat value="$5.3M" label="Annual ROI, equivalent to 34 additional designers or engineers" />
+	<Stat
+		value="$5.3M"
+		label="Annual ROI, equivalent to 34 additional designers or engineers"
+	/>
 	<Stat value="71%" label="Adoption across products" />
 	<Stat value="65%" label="Design time saved (30% engineering time saved)" />
 	<Stat value="55" label="Components with 10,000+ variations in Figma" />
