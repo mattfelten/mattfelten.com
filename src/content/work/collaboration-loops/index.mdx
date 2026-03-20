@@ -1,0 +1,89 @@
+---
+title: Collaboration Loops
+company: Mission Cloud
+year: 2025
+endYear: 2026
+type: case-study
+featured: true
+intro: Turning a static meeting document into a living collaboration space, shared between a service team and their customers.
+role: Product Designer
+cover: ./cover.png
+coverAlt: A TAM check-in loop in Mission Control showing live Cloud Score data, recommendations, and meeting agenda
+---
+
+import Asset from '../../../components/Asset.astro';
+import AssetRow from '../../../components/AssetRow.astro';
+
+## The Problem
+
+Mission Cloud's Technical Account Managers run recurring check-ins with 30+ customers each. Before Collaboration Loops, every meeting meant manually assembling a Google Slides deck, pulling data from Gainsight, Vantage, ConnectWise, and Slack, then rebuilding it from scratch the following month. Customers arrived to meetings without context. Historical decisions evaporated between calls. There was no shared record either side could return to.
+
+The core tension: the tools that existed treated these meetings as one-sided reporting events. What we needed to build was a space where both Mission's team and their customers could prepare, collaborate, and look back together.
+
+---
+
+## My Role
+
+I was the sole designer on this project for its entire 14-month lifespan. Working closely with our PM, I led discovery and problem framing, ran concept exploration, designed and validated the full feature across multiple rounds of customer and stakeholder interviews, scoped the MVP, wrote Jira tickets for engineers, and contributed directly to frontend development, building and polishing components in the live product.
+
+---
+
+## The Design Challenge
+
+The obvious solution was a better template, a structured document TAMs could fill out instead of building slides. We deliberately didn't build that.
+
+A document is static. It captures a moment, then goes stale. What we needed was something that stayed alive between meetings: pulling fresh data from multiple systems, preserving what was decided last time, and giving customers a reason to come back on their own rather than waiting to be invited.
+
+This meant designing a blueprint-and-widget architecture where each section of a loop could display live data, be configured per meeting type, and behave differently depending on whether a Mission team member or a customer was viewing it, while still feeling like a single coherent space.
+
+---
+
+{/* TODO: Add entry-point image */}
+<Asset caption="Where Loops lives inside Mission Control. Shows the TAM's full customer list alongside open loops, giving them a single starting point instead of navigating across tools." />
+
+{/* TODO: Add hero image */}
+<Asset caption="A complete TAM check-in loop showing Cloud Score trending, open recommendations, case metrics, agenda sections, and the activity feed, all in one view. This replaced a manually assembled slide deck rebuilt from scratch every month." />
+
+{/* TODO: Add cloud-score-widget image */}
+<Asset caption="The Cloud Score widget pulls 6 months of trend data and surfaces actionable recommendations with approve/archive/snooze actions inline. Live data that was previously copied and pasted from a separate tool." />
+
+---
+
+## Key Decisions
+
+### Blueprints over free-form templates
+
+We could have built a generic document builder. Instead we invested in purpose-built blueprints, TAM check-in, CSM success planning, general meeting, each with pre-wired data connections. The constraint creates consistency across 30+ customer relationships per TAM and makes onboarding faster than a blank canvas would.
+
+### Live data that freezes on close
+
+Widgets display current data while a loop is open, then snapshot that state when the meeting closes. This preserves historical accuracy. You can see exactly what the Cloud Score looked like in February, not what it looks like today. A subtle decision that changes the archival value of every loop significantly.
+
+### Manual creation over automation for launch
+
+We deliberately scoped out auto-generated loops for the beta. TAMs creating loops themselves meant they had intent and ownership. Automating it risked loops being ignored because nobody asked for them. Adoption over elegance.
+
+---
+
+{/* TODO: Add view-mission and view-customer images */}
+<AssetRow>
+	<Asset caption="Mission view: the full operational layer with internal notes, action items, and configuration controls." />
+	<Asset caption="Customer view: a curated view that gives them context and a reason to engage before the meeting." />
+</AssetRow>
+
+The same loop renders differently based on role. Customers see a curated view that gives them context and a reason to engage before the meeting. Mission team members see the full operational layer. One space, two entry points.
+
+---
+
+{/* TODO: Add process-artifact image */}
+<Asset caption="An early concept from discovery, showing how the blueprint structure was originally framed before the widget model emerged from feedback." />
+
+---
+
+## Outcomes
+
+- Beta launched at AWS Re:Invent, December 2025
+- GA rollout to full customer base, March 2026
+- Customer quote: "I can see this getting big and keeping customers engaged." — Beta customer, validation session
+
+{/* TODO: Add Heap usage metrics week of March 23 */}
