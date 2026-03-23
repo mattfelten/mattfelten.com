@@ -1,0 +1,19 @@
+---
+const { description } = Astro.props;
+---
+
+<style>
+	.placeholder {
+		border: 2px dashed var(--color-subtle, #ccc);
+		border-radius: 8px;
+		padding: 2rem;
+		text-align: center;
+		color: var(--color-subtle, #999);
+		margin: 1.5rem 0;
+		font-style: italic;
+	}
+</style>
+
+<div class="placeholder">
+	{description}
+</div>
