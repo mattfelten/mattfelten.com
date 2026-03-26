@@ -87,6 +87,10 @@
 	margin-top: 1rlh;
 }
 
+.prose > .asset-wrap + .asset-wrap {
+	margin-top: 2rlh;
+}
+
 .prose ul,
 .prose ol {
 	margin-top: 1rlh;
@@ -131,18 +135,4 @@
 .prose :where(:not(pre) > code):not(:where([class~='not-prose'] *))::before,
 .prose :where(:not(pre) > code):not(:where([class~='not-prose'] *))::after {
 	content: none;
-}
-
-/* Case study: images break out of prose column.
-   Adaptive formula: breakout grows as viewport widens but never exceeds
-   available space (viewport minus body padding), so images are never clipped.
-   3rem = total body horizontal padding at sm+ (1.5rem each side). */
-.prose-case-study :not(.asset-row-wrap) .asset-wrap,
-.prose-case-study .asset-row-wrap {
-	margin-left: max(-4rem, min(0rem, calc((100% + 3rem - 100vw) / 2)));
-	margin-right: max(-4rem, min(0rem, calc((100% + 3rem - 100vw) / 2)));
-}
-
-.prose-case-study .asset-row-wrap picture {
-	margin: 0;
 }
