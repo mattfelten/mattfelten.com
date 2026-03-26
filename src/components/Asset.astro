@@ -2,6 +2,8 @@
 import { Picture } from 'astro:assets';
 import cx from 'clsx';
 
+import Placeholder from './Placeholder.astro';
+
 const {
 	alt = '',
 	caption,
@@ -63,7 +65,8 @@ const classes = cx(
 		src ? (
 			() => {
 				const isExtension = (ext: string) => {
-					if (typeof src === 'string') return src.endsWith(ext);
+					if (typeof src === 'string')
+						return src.endsWith(ext);
 					return src.src.endsWith(ext);
 				};
 				const getLink = () => {
@@ -88,7 +91,11 @@ const classes = cx(
 					if (isExtension('gif') || isExtension('svg'))
 						return (
 							<img
-								src={typeof src === 'string' ? src : src.src}
+								src={
+									typeof src === 'string'
+										? src
+										: src.src
+								}
 								alt={alt}
 								class={classes}
 								{...props}
@@ -106,15 +113,13 @@ const classes = cx(
 				};
 
 				if (getLink())
-					return <a href={getLink()}>{getAssetContent()}</a>;
+					return (
+						<a href={getLink()}>{getAssetContent()}</a>
+					);
 				return getAssetContent();
 			}
 		) : (
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 9" class="Assets">
-				<rect width="16" height="9" fill="currentColor" opacity="0.08"/>
-				<line x1="0" y1="0" x2="16" y2="9" stroke="currentColor" stroke-width="0.03" opacity="0.2"/>
-				<line x1="16" y1="0" x2="0" y2="9" stroke="currentColor" stroke-width="0.03" opacity="0.2"/>
-			</svg>
+			<Placeholder />
 		)
 	}
 
