@@ -87,8 +87,9 @@
 	margin-top: 1rlh;
 }
 
-.prose > .asset-wrap + .asset-wrap {
+.prose > .asset-wrap {
 	margin-top: 2rlh;
+	margin-bottom: 2rlh;
 }
 
 .prose ul,
