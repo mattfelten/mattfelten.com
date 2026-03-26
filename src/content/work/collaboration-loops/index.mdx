@@ -13,9 +13,8 @@ coverAlt: A TAM check-in loop in Mission Control showing live Cloud Score data, 
 
 import Asset from '../../../components/Asset.astro';
 import AssetRow from '../../../components/AssetRow.astro';
-import ConstraintCard from '../../../components/ConstraintCard.astro';
-import PersonaCard from '../../../components/PersonaCard.astro';
-import PersonaCards from '../../../components/PersonaCards.astro';
+import Card from '../../../components/Card.astro';
+import Placeholder from '../../../components/Placeholder.astro';
 import PullQuote from '../../../components/PullQuote.astro';
 import Stat from '../../../components/Stat.astro';
 import Stats from '../../../components/Stats.astro';
@@ -50,18 +49,30 @@ We started with workshops across internal teams and customers to understand what
 
 I dug into the two-sided nature of the problem.
 
-<PersonaCards>
-	<PersonaCard role="Customers">
-		<li>Accurate, current data</li>
-		<li>Don't make me repeat myself across team members</li>
-		<li>Show me what Mission has done for us</li>
-	</PersonaCard>
-	<PersonaCard role="TAMs & CSMs">
-		<li>Stop rebuilding docs every month</li>
-		<li>Visibility into each other's customer conversations</li>
-		<li>History that follows when customers transition</li>
-	</PersonaCard>
-</PersonaCards>
+<div class="not-prose my-8 grid gap-4 sm:grid-cols-2">
+	<Card>
+		<div class="flex items-center gap-3">
+			<div class="h-10 w-10 shrink-0 overflow-hidden rounded-full"><Placeholder /></div>
+			<span class="text-strong text-lg font-medium">Customers</span>
+		</div>
+		<ul class="text-default flex flex-col gap-1.5 text-sm leading-snug">
+			<li>Accurate, current data</li>
+			<li>Don't make me repeat myself across team members</li>
+			<li>Show me what Mission has done for us</li>
+		</ul>
+	</Card>
+	<Card>
+		<div class="flex items-center gap-3">
+			<div class="h-10 w-10 shrink-0 overflow-hidden rounded-full"><Placeholder /></div>
+			<span class="text-strong text-lg font-medium">TAMs & CSMs</span>
+		</div>
+		<ul class="text-default flex flex-col gap-1.5 text-sm leading-snug">
+			<li>Stop rebuilding docs every month</li>
+			<li>Visibility into each other's customer conversations</li>
+			<li>History that follows when customers transition</li>
+		</ul>
+	</Card>
+</div>
 
 {/* TODO: Add problem statement verbatim from work. Matt to provide exact text. */}
 
@@ -85,15 +96,15 @@ A document is static. It captures a moment, then goes stale. What we needed was 
 That meant solving for several constraints at once.
 
 <div class="not-prose my-8 grid gap-4 sm:grid-cols-3">
-	<ConstraintCard label="Stay current">
+	<Card title="Stay current">
 		The space had to stay up to date between meetings without anyone manually updating it.
-	</ConstraintCard>
-	<ConstraintCard label="Preserve history">
+	</Card>
+	<Card title="Preserve history">
 		It had to capture what was true at the time of each conversation so nothing got rewritten in hindsight.
-	</ConstraintCard>
-	<ConstraintCard label="Serve both sides">
+	</Card>
+	<Card title="Serve both sides">
 		Two audiences with fundamentally different needs, sharing the same view, without feeling like two products stitched together.
-	</ConstraintCard>
+	</Card>
 </div>
 
 ---

@@ -5,7 +5,7 @@ const { title } = Astro.props.frontmatter || Astro.props;
 ---
 
 <Layout title={title}>
-	<article class="prose dark:prose-white prose-case-study mx-auto">
+	<article class="prose dark:prose-white prose-case-study mx-auto max-w-[85ch]">
 		<slot />
 	</article>
 	<slot name="after-article" />

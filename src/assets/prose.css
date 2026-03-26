@@ -137,3 +137,7 @@
 .prose :where(:not(pre) > code):not(:where([class~='not-prose'] *))::after {
 	content: none;
 }
+
+.prose picture {
+	margin-bottom: 0;
+}
