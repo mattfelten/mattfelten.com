@@ -13,18 +13,66 @@ coverAlt: A TAM check-in loop in Mission Control showing live Cloud Score data, 
 
 import Asset from '../../../components/Asset.astro';
 import AssetRow from '../../../components/AssetRow.astro';
+import ConstraintCard from '../../../components/ConstraintCard.astro';
+import PersonaCard from '../../../components/PersonaCard.astro';
+import PersonaCards from '../../../components/PersonaCards.astro';
+import PullQuote from '../../../components/PullQuote.astro';
+import Stat from '../../../components/Stat.astro';
+import Stats from '../../../components/Stats.astro';
+
+[Mission Cloud](https://missioncloud.com/) sells AWS managed services. Mission Control is the platform that connects their internal team with customers. I spent 14 months designing and building Collaboration Loops, the feature that replaced their most painful recurring workflow.
+
+---
 
 ## The Problem
 
-Mission Cloud's Technical Account Managers run recurring check-ins with 30+ customers each. Before Collaboration Loops, every meeting meant manually assembling a Google Slides deck, pulling data from Gainsight, Vantage, ConnectWise, and Slack, then rebuilding it from scratch the following month. Customers arrived to meetings without context. Historical decisions evaporated between calls. There was no shared record either side could return to.
+Mission Cloud's Technical Account Managers run recurring check-ins each month across 30+ customers each. Every meeting meant pulling data from multiple third-party tools and manually assembling a Google Slide deck or Google Doc. That process took up to five hours per customer. And then they'd do it again the next month.
 
-The core tension: the tools that existed treated these meetings as one-sided reporting events. What we needed to build was a space where both Mission's team and their customers could prepare, collaborate, and look back together.
+Customers had no way to see what was discussed before. If a TAM transitioned a customer to a colleague, the history didn't follow. New hires on either side started from zero. The information and decisions from those meetings weren't tracked in a way anyone else at Mission, or on the customer's end, could get to.
+
+The tools that existed treated these meetings as one-sided reporting events. What we needed to build was a space where both Mission's team and their customers could prepare, contribute, and look back together.
+
+{/* TODO: Add image representing the fragmented old process */}
+
+<Asset caption="The old workflow. TAMs pulled data from multiple tools and manually assembled slides before every check-in, spending hours on a document that went stale immediately." />
 
 ---
 
 ## My Role
 
-I was the sole designer on this project for its entire 14-month lifespan. Working closely with our PM, I led discovery and problem framing, ran concept exploration, designed and validated the full feature across multiple rounds of customer and stakeholder interviews, scoped the MVP, wrote Jira tickets for engineers, and contributed directly to frontend development, building and polishing components in the live product.
+I was the sole designer across the full 14-month arc, from discovery through writing production React code. That included research, concept exploration, customer and stakeholder interviews, MVP scoping, writing engineering tickets, and shipping features in the live product.
+
+---
+
+## Discovery
+
+We started with workshops across internal teams and customers to understand what kept surfacing. The same problem came up in every conversation. Check-in prep was painful, the artifacts could be outdated if a meeting shifted, and the information from those conversations was effectively lost. Buried in an email thread, locked in one person's Google Drive, inaccessible to anyone who wasn't in the room.
+
+I dug into the two-sided nature of the problem.
+
+<PersonaCards>
+	<PersonaCard role="Customers">
+		<li>Accurate, current data</li>
+		<li>Don't make me repeat myself across team members</li>
+		<li>Show me what Mission has done for us</li>
+	</PersonaCard>
+	<PersonaCard role="TAMs & CSMs">
+		<li>Stop rebuilding docs every month</li>
+		<li>Visibility into each other's customer conversations</li>
+		<li>History that follows when customers transition</li>
+	</PersonaCard>
+</PersonaCards>
+
+{/* TODO: Add problem statement verbatim from work. Matt to provide exact text. */}
+
+<PullQuote title="Problem Statement">
+	TODO. Placeholder for the problem statement from discovery. Matt to provide
+	verbatim text.
+</PullQuote>
+
+{/* TODO: Add discovery artifact image, personas, journey map, or similar */}
+
+<Asset caption="Discovery artifacts from workshops with internal teams and customers, mapping the recurring pain points on both sides of the check-in experience." />
 
 ---
 
@@ -32,20 +80,63 @@ I was the sole designer on this project for its entire 14-month lifespan. Workin
 
 The obvious solution was a better template, a structured document TAMs could fill out instead of building slides. We deliberately didn't build that.
 
-A document is static. It captures a moment, then goes stale. What we needed was something that stayed alive between meetings: pulling fresh data from multiple systems, preserving what was decided last time, and giving customers a reason to come back on their own rather than waiting to be invited.
+A document is static. It captures a moment, then goes stale. What we needed was something that stayed alive between meetings, pulling fresh data from multiple systems, preserving what was decided last time, and giving customers a reason to come back and actually contribute. Add topics to the agenda before a meeting. Approve recommendations themselves. Make the space theirs too, not just something they're invited to view.
 
-This meant designing a blueprint-and-widget architecture where each section of a loop could display live data, be configured per meeting type, and behave differently depending on whether a Mission team member or a customer was viewing it, while still feeling like a single coherent space.
+That meant solving for several constraints at once.
+
+<div class="not-prose my-8 grid gap-4 sm:grid-cols-3">
+	<ConstraintCard label="Stay current">
+		The space had to stay up to date between meetings without anyone manually updating it.
+	</ConstraintCard>
+	<ConstraintCard label="Preserve history">
+		It had to capture what was true at the time of each conversation so nothing got rewritten in hindsight.
+	</ConstraintCard>
+	<ConstraintCard label="Serve both sides">
+		Two audiences with fundamentally different needs, sharing the same view, without feeling like two products stitched together.
+	</ConstraintCard>
+</div>
 
 ---
 
+## Process
+
+I collected 15-20 real meeting artifacts from TAMs and CSMs. The actual slide decks, Google Docs, and handwritten notes they were already using. Then I affinity mapped them, pulling apart the recurring building blocks that showed up across every customer relationship.
+
+Those building blocks became the configurable sections in each loop. Cloud Score trends, open recommendations, case metrics, agenda items. The pattern was consistent enough to standardize but varied enough that rigid templates would fail. That is where the blueprint concept emerged. Structured enough to be useful out of the box, flexible enough that TAMs could tailor each loop to the customer relationship and tell the story they want.
+
+Each TAM's presentation is their own narrative of their customer's AWS environment. They structure it however makes sense for that relationship. We support that.
+
+{/* TODO: Add affinity map image */}
+
+<Asset caption="Affinity mapping 15-20 real meeting artifacts from TAMs and CSMs. The repeating building blocks that emerged here became the configurable sections in each loop." />
+
+{/* TODO: Add early wireframe/exploration images */}
+
+<Asset caption="Early explorations of the loop structure, testing how the building blocks from discovery could be arranged into a reusable, configurable format." />
+
+---
+
+## The Product
+
 {/* TODO: Add entry-point image */}
-<Asset caption="Where Loops lives inside Mission Control. Shows the TAM's full customer list alongside open loops, giving them a single starting point instead of navigating across tools." />
+
+<Asset caption="Where Loops lives inside Mission Control. The TAM's full customer list alongside open loops, giving them a single starting point instead of navigating across tools." />
 
 {/* TODO: Add hero image */}
-<Asset caption="A complete TAM check-in loop showing Cloud Score trending, open recommendations, case metrics, agenda sections, and the activity feed, all in one view. This replaced a manually assembled slide deck rebuilt from scratch every month." />
+
+<Asset caption="A complete TAM check-in loop. Cloud Score trending, open recommendations, case metrics, agenda sections, and the activity feed. All in one view. This replaced a slide deck that was rebuilt from scratch every month." />
 
 {/* TODO: Add cloud-score-widget image */}
-<Asset caption="The Cloud Score widget pulls 6 months of trend data and surfaces actionable recommendations with approve/archive/snooze actions inline. Live data that was previously copied and pasted from a separate tool." />
+
+<Asset caption="The Cloud Score widget pulls six months of trend data and surfaces actionable recommendations with approve, archive, and snooze actions inline. Live data that was previously copied and pasted from a separate tool." />
+
+{/* TODO: Add configurable-agenda image */}
+
+<Asset caption="The configurable agenda. TAMs reorder sections and toggle blocks per customer, adapting the blueprint to each relationship without starting from scratch." />
+
+{/* TODO: Add commenting/collaboration image */}
+
+<Asset caption="Commenting, tagging, and notifications. This is the layer that makes the collaboration real. Both sides can prepare before meetings and follow up after without leaving the platform." />
 
 ---
 
@@ -53,37 +144,35 @@ This meant designing a blueprint-and-widget architecture where each section of a
 
 ### Blueprints over free-form templates
 
-We could have built a generic document builder. Instead we invested in purpose-built blueprints, TAM check-in, CSM success planning, general meeting, each with pre-wired data connections. The constraint creates consistency across 30+ customer relationships per TAM and makes onboarding faster than a blank canvas would.
+We started with purpose-built templates, then pivoted to a single general-purpose template thinking it would be easier to support all the flexibility. After a few stakeholder interviews, we went back to purpose-built blueprints with content pre-loaded. TAM Check-ins, CSM Success Planning, and a General Meeting blueprint, each with pre-wired data connections. The constraint creates consistency across 30+ customer relationships and makes onboarding faster than a blank canvas would.
 
 ### Live data that freezes on close
 
-Widgets display current data while a loop is open, then snapshot that state when the meeting closes. This preserves historical accuracy. You can see exactly what the Cloud Score looked like in February, not what it looks like today. A subtle decision that changes the archival value of every loop significantly.
+Widgets display current data while a loop is open, then snapshot that state when the meeting closes. This preserves historical accuracy. You can see exactly what the environment looked like in February, not what it looks like today. A subtle decision that changes the archival value of every loop significantly.
 
-### Manual creation over automation for launch
+### Two audiences, one view
 
-We deliberately scoped out auto-generated loops for the beta. TAMs creating loops themselves meant they had intent and ownership. Automating it risked loops being ignored because nobody asked for them. Adoption over elegance.
+TAMs and customers see the same loop. Not a stripped-down customer version and a full internal version. The same view. That forced us to design every element to be legible to both audiences and to think carefully about what's visible, editable, and commentable by each role. It's harder to build, but it's what makes the collaboration real instead of performative.
 
----
+### Ownership through manual creation
 
-{/* TODO: Add view-mission and view-customer images */}
-<AssetRow>
-	<Asset caption="Mission view: the full operational layer with internal notes, action items, and configuration controls." />
-	<Asset caption="Customer view: a curated view that gives them context and a reason to engage before the meeting." />
-</AssetRow>
-
-The same loop renders differently based on role. Customers see a curated view that gives them context and a reason to engage before the meeting. Mission team members see the full operational layer. One space, two entry points.
-
----
-
-{/* TODO: Add process-artifact image */}
-<Asset caption="An early concept from discovery, showing how the blueprint structure was originally framed before the widget model emerged from feedback." />
+We deliberately scoped out auto-generated loops for the beta. TAMs creating loops themselves meant they had intent and ownership over what they were presenting. Automating it risked loops being ignored because nobody asked for them. Adoption over elegance.
 
 ---
 
 ## Outcomes
 
-- Beta launched at AWS Re:Invent, December 2025
-- GA rollout to full customer base, March 2026
-- Customer quote: "I can see this getting big and keeping customers engaged." — Beta customer, validation session
+<Stats columns={2}>
+	<Stat value="5 hrs → 5 min" label="Check-in creation time per customer" />
+	<Stat value="0 docs" label="TAMs stopped writing slide decks entirely" />
+</Stats>
+
+TAMs completely stopped building Google Slides. The workflow that took up to five hours per customer now takes five to ten minutes.
+
+<PullQuote citation="Beta customer, validation session">
+	"I can see this getting big and keeping customers engaged."
+</PullQuote>
 
 {/* TODO: Add Heap usage metrics week of March 23 */}
+
+It's live. Feedback is rolling in. More integrations to build, more data to pull in, and I'm in discovery on five more blueprint types for other service teams. The foundation shipped. Now to expand.
