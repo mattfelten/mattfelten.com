@@ -1,0 +1,23 @@
+---
+const { citation, title } = Astro.props;
+---
+
+<blockquote
+	class="not-prose text-strong border-accent my-8 border-l-3 py-2 pl-5 text-2xl leading-snug font-light md:text-3xl"
+>
+	{
+		title && (
+			<span class="text-subdued mb-2 block text-sm font-medium tracking-wide uppercase">
+				{title}
+			</span>
+		)
+	}
+	<slot />
+	{
+		citation && (
+			<cite class="text-subdued mt-3 block text-base not-italic">
+				{citation}
+			</cite>
+		)
+	}
+</blockquote>
