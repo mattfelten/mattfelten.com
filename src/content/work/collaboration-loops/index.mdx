@@ -52,7 +52,9 @@ I dug into the two-sided nature of the problem.
 <div class="not-prose my-8 grid gap-4 sm:grid-cols-2">
 	<Card>
 		<div class="flex items-center gap-3">
-			<div class="h-10 w-10 shrink-0 overflow-hidden rounded-full"><Placeholder /></div>
+			<div class="h-10 w-10 shrink-0 overflow-hidden rounded-full">
+				<Placeholder />
+			</div>
 			<span class="text-strong text-lg font-medium">Customers</span>
 		</div>
 		<ul class="text-default flex flex-col gap-1.5 text-sm leading-snug">
@@ -63,7 +65,9 @@ I dug into the two-sided nature of the problem.
 	</Card>
 	<Card>
 		<div class="flex items-center gap-3">
-			<div class="h-10 w-10 shrink-0 overflow-hidden rounded-full"><Placeholder /></div>
+			<div class="h-10 w-10 shrink-0 overflow-hidden rounded-full">
+				<Placeholder />
+			</div>
 			<span class="text-strong text-lg font-medium">TAMs & CSMs</span>
 		</div>
 		<ul class="text-default flex flex-col gap-1.5 text-sm leading-snug">
@@ -77,8 +81,12 @@ I dug into the two-sided nature of the problem.
 {/* TODO: Add problem statement verbatim from work. Matt to provide exact text. */}
 
 <PullQuote title="Problem Statement">
-	TODO. Placeholder for the problem statement from discovery. Matt to provide
-	verbatim text.
+	Delivering Mission services involves coordination across many **teams, tools, and touchpoints**.
+
+Today, key conversations and context are often spread out across **siloed systems**, making it harder for both **customers and internal teams** to stay aligned.
+
+Without a **central place to manage collaboration**, it becomes challenging to maintain **clarity** and drive consisten **follow-through**.
+
 </PullQuote>
 
 {/* TODO: Add discovery artifact image, personas, journey map, or similar */}
@@ -97,13 +105,16 @@ That meant solving for several constraints at once.
 
 <div class="not-prose my-8 grid gap-4 sm:grid-cols-3">
 	<Card title="Stay current">
-		The space had to stay up to date between meetings without anyone manually updating it.
+		The space had to stay up to date between meetings without anyone
+		manually updating it.
 	</Card>
 	<Card title="Preserve history">
-		It had to capture what was true at the time of each conversation so nothing got rewritten in hindsight.
+		It had to capture what was true at the time of each conversation so
+		nothing got rewritten in hindsight.
 	</Card>
 	<Card title="Serve both sides">
-		Two audiences with fundamentally different needs, sharing the same view, without feeling like two products stitched together.
+		Two audiences with fundamentally different needs, sharing the same view,
+		without feeling like two products stitched together.
 	</Card>
 </div>
 
@@ -173,6 +184,8 @@ We deliberately scoped out auto-generated loops for the beta. TAMs creating loop
 
 ## Outcomes
 
+{/* TODO: Add more compelling stats */}
+
 <Stats columns={2}>
 	<Stat value="5 hrs → 5 min" label="Check-in creation time per customer" />
 	<Stat value="0 docs" label="TAMs stopped writing slide decks entirely" />
@@ -180,7 +193,7 @@ We deliberately scoped out auto-generated loops for the beta. TAMs creating loop
 
 TAMs completely stopped building Google Slides. The workflow that took up to five hours per customer now takes five to ten minutes.
 
-<PullQuote citation="Beta customer, validation session">
+<PullQuote citation="CTO after user testing">
 	"I can see this getting big and keeping customers engaged."
 </PullQuote>
 
