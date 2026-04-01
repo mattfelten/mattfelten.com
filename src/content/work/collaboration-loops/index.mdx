@@ -7,7 +7,7 @@ type: case-study
 featured: true
 intro: Turning a static meeting document into a living collaboration space, shared between a service team and their customers.
 role: Product Designer
-cover: ./cover.png
+cover: ./imgs/cover.png
 coverAlt: A TAM check-in loop in Mission Control showing live Cloud Score data, recommendations, and meeting agenda
 ---
 
@@ -18,6 +18,14 @@ import Placeholder from '../../../components/Placeholder.astro';
 import PullQuote from '../../../components/PullQuote.astro';
 import Stat from '../../../components/Stat.astro';
 import Stats from '../../../components/Stats.astro';
+
+import agenda from './imgs/agenda.mp4';
+import cloudScore from './imgs/cloud-score.png';
+import fullLoop from './imgs/full-loop.png';
+import initial1 from './imgs/initial-1.png';
+import initial2 from './imgs/initial-2.png';
+import initial3 from './imgs/initial-3.png';
+import initial4 from './imgs/initial-4.png';
 
 [Mission Cloud](https://missioncloud.com/) sells AWS managed services. Mission Control is the platform that connects their internal team with customers. I spent 14 months designing and building Collaboration Loops, the feature that replaced their most painful recurring workflow.
 
@@ -33,7 +41,10 @@ The tools that existed treated these meetings as one-sided reporting events. Wha
 
 {/* TODO: Add image representing the fragmented old process */}
 
-<Asset caption="The old workflow. TAMs pulled data from multiple tools and manually assembled slides before every check-in, spending hours on a document that went stale immediately." />
+<Asset
+	expand
+	caption="The old workflow. TAMs pulled data from multiple tools and manually assembled slides before every check-in, spending hours on a document that went stale immediately."
+/>
 
 ---
 
@@ -91,7 +102,10 @@ Without a **central place to manage collaboration**, it becomes challenging to m
 
 {/* TODO: Add discovery artifact image, personas, journey map, or similar */}
 
-<Asset caption="Discovery artifacts from workshops with internal teams and customers, mapping the recurring pain points on both sides of the check-in experience." />
+<Asset
+	expand
+	caption="Discovery artifacts from workshops with internal teams and customers, mapping the recurring pain points on both sides of the check-in experience."
+/>
 
 ---
 
@@ -130,35 +144,58 @@ Each TAM's presentation is their own narrative of their customer's AWS environme
 
 {/* TODO: Add affinity map image */}
 
-<Asset caption="Affinity mapping 15-20 real meeting artifacts from TAMs and CSMs. The repeating building blocks that emerged here became the configurable sections in each loop." />
+<Asset
+	expand
+	caption="Affinity mapping 15-20 real meeting artifacts from TAMs and CSMs. The repeating building blocks that emerged here became the configurable sections in each loop."
+/>
 
 {/* TODO: Add early wireframe/exploration images */}
 
-<Asset caption="Early explorations of the loop structure, testing how the building blocks from discovery could be arranged into a reusable, configurable format." />
+<p>
+	<small>
+		Early explorations of the loop structure, testing how the building
+		blocks from discovery could be arranged into a reusable, configurable
+		format.
+	</small>
+</p>
+
+<div class="asset-row-wrap not-prose grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+	<Asset src={initial1} expand />
+	<Asset src={initial3} expand />
+	<Asset src={initial2} expand />
+	<Asset src={initial4} expand />
+</div>
 
 ---
 
 ## The Product
 
-{/* TODO: Add entry-point image */}
+<Asset
+	src={fullLoop}
+	caption="A complete TAM check-in loop. Cloud Score trending, open recommendations, case metrics, agenda sections, and the activity feed. All in one view. This replaced a slide deck that was rebuilt from scratch every month."
+/>
 
-<Asset caption="Where Loops lives inside Mission Control. The TAM's full customer list alongside open loops, giving them a single starting point instead of navigating across tools." />
+<Asset
+	src={cloudScore}
+	expand
+	caption="The Cloud Score widget pulls a month of trend data and surfaces actionable recommendations with approve, archive, and snooze actions inline. Live data that was previously copied and pasted from a separate tool."
+/>
 
-{/* TODO: Add hero image */}
-
-<Asset caption="A complete TAM check-in loop. Cloud Score trending, open recommendations, case metrics, agenda sections, and the activity feed. All in one view. This replaced a slide deck that was rebuilt from scratch every month." />
-
-{/* TODO: Add cloud-score-widget image */}
-
-<Asset caption="The Cloud Score widget pulls six months of trend data and surfaces actionable recommendations with approve, archive, and snooze actions inline. Live data that was previously copied and pasted from a separate tool." />
-
-{/* TODO: Add configurable-agenda image */}
-
-<Asset caption="The configurable agenda. TAMs reorder sections and toggle blocks per customer, adapting the blueprint to each relationship without starting from scratch." />
+<Asset
+	src={agenda}
+	caption="The configurable agenda. TAMs reorder sections and toggle blocks per customer, adapting the blueprint to each relationship without starting from scratch."
+/>
 
 {/* TODO: Add commenting/collaboration image */}
 
 <Asset caption="Commenting, tagging, and notifications. This is the layer that makes the collaboration real. Both sides can prepare before meetings and follow up after without leaving the platform." />
+
+{/* TODO: Add entry-point image */}
+
+<Asset
+	expand
+	caption="Where Loops lives inside Mission Control. The TAM's full customer list alongside open loops, giving them a single starting point instead of navigating across tools."
+/>
 
 ---
 
@@ -193,8 +230,8 @@ We deliberately scoped out auto-generated loops for the beta. TAMs creating loop
 
 TAMs completely stopped building Google Slides. The workflow that took up to five hours per customer now takes five to ten minutes.
 
-<PullQuote citation="CTO after user testing">
-	"I can see this getting big and keeping customers engaged."
+<PullQuote inline citation="CTO after user testing">
+	I can see this getting big and keeping customers engaged.
 </PullQuote>
 
 {/* TODO: Add Heap usage metrics week of March 23 */}

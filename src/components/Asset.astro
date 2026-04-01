@@ -6,8 +6,10 @@ import Placeholder from './Placeholder.astro';
 
 const {
 	alt = '',
+	autoplay = true,
 	caption,
 	className,
+	controls = false,
 	expand,
 	href,
 	src,
@@ -16,7 +18,7 @@ const {
 } = Astro.props;
 
 const classes = cx(
-	'Assets',
+	'Assets rounded-lg bg-accent',
 	fullWidth && 'Assets--full-width',
 	className,
 );
@@ -71,16 +73,26 @@ const classes = cx(
 				};
 				const getLink = () => {
 					if (href) return href;
-					if (expand) return src;
+					if (expand) {
+						if (typeof src === 'string') return src;
+						if (typeof src.src === 'string')
+							return src.src;
+						return false;
+					}
 					return false;
 				};
 
 				const getAssetContent = () => {
-					if (isExtension('mov'))
+					if (
+						isExtension('mov') ||
+						isExtension('mp4') ||
+						isExtension('webm')
+					)
 						return (
 							<video
 								src={src}
-								controls
+								autoplay={autoplay}
+								controls={controls}
 								class={classes}
 								{...props}
 							>

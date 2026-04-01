@@ -2,20 +2,9 @@
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 
-import Section from '@components/Section.astro';
-
 const work = (await getCollection('work'))
 	.filter(item => item.data.featured)
-	.sort((a, b) => {
-		// Sort by most recent year (active first, then by endYear/year)
-		const aYear = a.data.active
-			? Infinity
-			: a.data.endYear || a.data.year;
-		const bYear = b.data.active
-			? Infinity
-			: b.data.endYear || b.data.year;
-		return bYear - aYear;
-	});
+	.sort((a, b) => b.data.year - a.data.year);
 
 const [hero, ...rest] = work;
 ---
@@ -63,7 +52,7 @@ const [hero, ...rest] = work;
 										class="group block"
 									>
 										{cover && coverAlt && (
-											<div class="bg-accent/80 group-hover:bg-accent aspect-[16/10] overflow-hidden rounded-lg shadow-2xl transition-colors">
+											<div class="bg-accent/80 group-hover:bg-accent aspect-video overflow-hidden rounded-lg shadow-2xl transition-colors">
 												<Image
 													src={cover}
 													alt={coverAlt}
@@ -84,7 +73,7 @@ const [hero, ...rest] = work;
 						)}
 					</ul>
 				)}
-				</div>
+			</div>
 		</section>
 	)
 }
