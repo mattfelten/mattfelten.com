@@ -60,32 +60,45 @@ We started with workshops across internal teams and customers to understand what
 
 I dug into the two-sided nature of the problem.
 
-<div class="not-prose my-8 grid gap-4 sm:grid-cols-2">
-	<Card>
-		<div class="flex items-center gap-3">
-			<div class="h-10 w-10 shrink-0 overflow-hidden rounded-full">
-				<Placeholder />
-			</div>
+<div class="not-prose my-8 grid gap-4 lg:grid-cols-4 xl:grid-cols-3">
+	<Card class="mx-auto flex flex-row gap-6 lg:col-span-2 xl:col-span-1 xl:flex-col xl:gap-4">
+		<div class="size-8 shrink-0 overflow-hidden rounded-full">
+			<img src="/public/faces/yellow.svg" />
+		</div>
+		<div class="flex flex-col gap-3">
 			<span class="text-strong text-lg font-medium">Customers</span>
+			<ul class="m-0! flex flex-col gap-1.5 text-sm">
+				<li>Accurate, current data</li>
+				<li>Don't make me repeat myself across team members</li>
+				<li>Show me what Mission has done for us</li>
+			</ul>
 		</div>
-		<ul class="text-default flex flex-col gap-1.5 text-sm leading-snug">
-			<li>Accurate, current data</li>
-			<li>Don't make me repeat myself across team members</li>
-			<li>Show me what Mission has done for us</li>
-		</ul>
 	</Card>
-	<Card>
-		<div class="flex items-center gap-3">
-			<div class="h-10 w-10 shrink-0 overflow-hidden rounded-full">
-				<Placeholder />
-			</div>
-			<span class="text-strong text-lg font-medium">TAMs & CSMs</span>
+	<Card class="mx-auto flex flex-row gap-6 lg:col-span-2 xl:col-span-1 xl:flex-col xl:gap-4">
+		<div class="size-8 shrink-0 overflow-hidden rounded-full">
+			<img src="/public/faces/pink.svg" />
 		</div>
-		<ul class="text-default flex flex-col gap-1.5 text-sm leading-snug">
-			<li>Stop rebuilding docs every month</li>
-			<li>Visibility into each other's customer conversations</li>
-			<li>History that follows when customers transition</li>
-		</ul>
+		<div class="flex flex-col gap-3">
+			<span class="text-strong text-lg font-medium">TAMs & CSMs</span>
+			<ul class="m-0! flex flex-col gap-1.5 text-sm">
+				<li>Stop rebuilding docs every month</li>
+				<li>Visibility into each other's customer conversations</li>
+				<li>History that follows when customers transition</li>
+			</ul>
+		</div>
+	</Card>
+	<Card class="mx-auto flex flex-row gap-6 lg:col-span-2 lg:col-start-2 xl:col-span-1 xl:col-start-auto xl:flex-col xl:gap-4">
+		<div class="size-8 shrink-0 overflow-hidden rounded-full">
+			<img src="/public/faces/light-blue.svg" />
+		</div>
+		<div class="flex flex-col gap-3">
+			<span class="text-strong text-lg font-medium">TAMs & CSMs</span>
+			<ul class="m-0! flex flex-col gap-1.5 text-sm">
+				<li>Stop rebuilding docs every month</li>
+				<li>Visibility into each other's customer conversations</li>
+				<li>History that follows when customers transition</li>
+			</ul>
+		</div>
 	</Card>
 </div>
 
