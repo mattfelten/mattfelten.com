@@ -19,13 +19,16 @@ import PullQuote from '../../../components/PullQuote.astro';
 import Stat from '../../../components/Stat.astro';
 import Stats from '../../../components/Stats.astro';
 
+import affinity from './imgs/affinity.png';
 import agenda from './imgs/agenda.mp4';
+import atlas from './imgs/atlas.png';
 import cloudScore from './imgs/cloud-score.png';
 import fullLoop from './imgs/full-loop.png';
 import initial1 from './imgs/initial-1.png';
 import initial2 from './imgs/initial-2.png';
 import initial3 from './imgs/initial-3.png';
 import initial4 from './imgs/initial-4.png';
+import textEditing from './imgs/text-editing.mp4';
 
 [Mission Cloud](https://missioncloud.com/) sells AWS managed services. Mission Control is the platform that connects their internal team with customers. I spent 14 months designing and building Collaboration Loops, the feature that replaced their most painful recurring workflow.
 
@@ -60,52 +63,95 @@ We started with workshops across internal teams and customers to understand what
 
 I dug into the two-sided nature of the problem.
 
-<div class="not-prose my-8 grid gap-4 lg:grid-cols-4 xl:grid-cols-3">
-	<Card class="mx-auto flex flex-row gap-6 lg:col-span-2 xl:col-span-1 xl:flex-col xl:gap-4">
+<div class="my-8 not-prose max-lg:mx-auto! max-w-xl lg:max-w-none grid gap-4 lg:grid-cols-4 xl:grid-cols-3">
+	<Card class="flex flex-row gap-6 lg:col-span-2 xl:col-span-1 xl:flex-col xl:gap-4">
 		<div class="size-8 shrink-0 overflow-hidden rounded-full">
-			<img src="/public/faces/yellow.svg" />
+			<img src="/faces/yellow.svg" />
 		</div>
-		<div class="flex flex-col gap-3">
-			<span class="text-strong text-lg font-medium">Customers</span>
-			<ul class="m-0! flex flex-col gap-1.5 text-sm">
-				<li>Accurate, current data</li>
-				<li>Don't make me repeat myself across team members</li>
-				<li>Show me what Mission has done for us</li>
-			</ul>
-		</div>
-	</Card>
-	<Card class="mx-auto flex flex-row gap-6 lg:col-span-2 xl:col-span-1 xl:flex-col xl:gap-4">
-		<div class="size-8 shrink-0 overflow-hidden rounded-full">
-			<img src="/public/faces/pink.svg" />
-		</div>
-		<div class="flex flex-col gap-3">
-			<span class="text-strong text-lg font-medium">TAMs & CSMs</span>
-			<ul class="m-0! flex flex-col gap-1.5 text-sm">
-				<li>Stop rebuilding docs every month</li>
-				<li>Visibility into each other's customer conversations</li>
-				<li>History that follows when customers transition</li>
-			</ul>
-		</div>
-	</Card>
-	<Card class="mx-auto flex flex-row gap-6 lg:col-span-2 lg:col-start-2 xl:col-span-1 xl:col-start-auto xl:flex-col xl:gap-4">
-		<div class="size-8 shrink-0 overflow-hidden rounded-full">
-			<img src="/public/faces/light-blue.svg" />
-		</div>
-		<div class="flex flex-col gap-3">
-			<span class="text-strong text-lg font-medium">TAMs & CSMs</span>
-			<ul class="m-0! flex flex-col gap-1.5 text-sm">
-				<li>Stop rebuilding docs every month</li>
-				<li>Visibility into each other's customer conversations</li>
-				<li>History that follows when customers transition</li>
-			</ul>
-		</div>
-	</Card>
+		<div class="flex flex-col gap-2">
+			<span class="text-strong text-lg font-medium">Customer CTO</span>
+			<div class="flex flex-col gap-3">
+				<div class="flex flex-col gap-1">
+					<span class="text-subdued block text-sm font-medium tracking-wide uppercase">
+						Goal
+					</span>
+					<ul class="m-0! flex flex-col gap-1.5 text-sm">
+						<li>Confidenence in their AWS environment</li>
+						<li>Fewer surprises</li>
+					</ul>
+				</div>
+				<div class="flex flex-col gap-1">
+					<span class="text-subdued block text-sm font-medium tracking-wide uppercase">
+						Pain
+					</span>
+					<span class="text-sm">"Every meeting starts from zero"</span>
+				</div>
+    		</div>
+    	</div>
+    </Card>
+    <Card class="flex flex-row gap-6 lg:col-span-2 xl:col-span-1 xl:flex-col xl:gap-4">
+    	<div class="size-8 shrink-0 overflow-hidden rounded-full">
+    		<img src="/faces/green.svg" />
+    	</div>
+    	<div class="flex flex-col gap-2">
+    		<span class="text-strong text-lg font-medium">
+    			Technical Account Manager
+    		</span>
+    		<div class="flex flex-col gap-3">
+				<div class="flex flex-col gap-1">
+					<span class="text-subdued block text-sm font-medium tracking-wide uppercase">
+						Goal
+					</span>
+					<ul class="m-0! flex flex-col gap-1.5 text-sm">
+						<li>Proactive cloud health reviews</li>
+						<li>building long term trust</li>
+					</ul>
+				</div>
+				<div class="flex flex-col gap-1">
+					<span class="text-subdued block text-sm font-medium tracking-wide uppercase">
+						Pain
+					</span>
+					<span class="text-sm">
+						"I rebuild the same slide deck every month."
+					</span>
+				</div>
+    		</div>
+    	</div>
+    </Card>
+    <Card class="flex flex-row gap-6 lg:col-span-2 lg:col-start-2 xl:col-span-1 xl:col-start-auto xl:flex-col xl:gap-4">
+    	<div class="size-8 shrink-0 overflow-hidden rounded-full">
+    		<img src="/faces/light-blue.svg" />
+    	</div>
+    	<div class="flex flex-col gap-2">
+    		<span class="text-strong text-lg font-medium">
+    			Customer Success Manager
+    		</span>
+    		<div class="flex flex-col gap-3">
+				<div class="flex flex-col gap-1">
+					<span class="text-subdued block text-sm font-medium tracking-wide uppercase">
+						Goal
+					</span>
+					<ul class="m-0! flex flex-col gap-1.5 text-sm">
+						<li>Align on goals</li>
+						<li>Drive service adoption</li>
+					</ul>
+				</div>
+				<div class="flex flex-col gap-1">
+					<span class="text-subdued block text-sm font-medium tracking-wide uppercase">
+						Pain
+					</span>
+					<span class="text-sm">
+						"I can never find what we agreed to last quarter"
+					</span>
+				</div>
+    		</div>
+    	</div>
+    </Card>
+
 </div>
 
-{/* TODO: Add problem statement verbatim from work. Matt to provide exact text. */}
-
 <PullQuote title="Problem Statement">
-	Delivering Mission services involves coordination across many **teams, tools, and touchpoints**.
+Delivering Mission services involves coordination across many **teams, tools, and touchpoints**.
 
 Today, key conversations and context are often spread out across **siloed systems**, making it harder for both **customers and internal teams** to stay aligned.
 
@@ -113,11 +159,10 @@ Without a **central place to manage collaboration**, it becomes challenging to m
 
 </PullQuote>
 
-{/* TODO: Add discovery artifact image, personas, journey map, or similar */}
-
 <Asset
+	src={affinity}
 	expand
-	caption="Discovery artifacts from workshops with internal teams and customers, mapping the recurring pain points on both sides of the check-in experience."
+	caption="Discovery artifacts from workshops with internal teams and customers, mapping the topics of the check-in experience and brainstorming feature ideas."
 />
 
 ---
@@ -155,15 +200,6 @@ Those building blocks became the configurable sections in each loop. Cloud Score
 
 Each TAM's presentation is their own narrative of their customer's AWS environment. They structure it however makes sense for that relationship. We support that.
 
-{/* TODO: Add affinity map image */}
-
-<Asset
-	expand
-	caption="Affinity mapping 15-20 real meeting artifacts from TAMs and CSMs. The repeating building blocks that emerged here became the configurable sections in each loop."
-/>
-
-{/* TODO: Add early wireframe/exploration images */}
-
 <p>
 	<small>
 		Early explorations of the loop structure, testing how the building
@@ -199,15 +235,15 @@ Each TAM's presentation is their own narrative of their customer's AWS environme
 	caption="The configurable agenda. TAMs reorder sections and toggle blocks per customer, adapting the blueprint to each relationship without starting from scratch."
 />
 
-{/* TODO: Add commenting/collaboration image */}
-
-<Asset caption="Commenting, tagging, and notifications. This is the layer that makes the collaboration real. Both sides can prepare before meetings and follow up after without leaving the platform." />
-
-{/* TODO: Add entry-point image */}
+<Asset
+	src={textEditing}
+	caption="Commenting, tagging, and notifications. This is the layer that makes the collaboration real. Both sides can prepare before meetings and follow up after without leaving the platform."
+/>
 
 <Asset
+	src={atlas}
 	expand
-	caption="Where Loops lives inside Mission Control. The TAM's full customer list alongside open loops, giving them a single starting point instead of navigating across tools."
+	caption="An internal tool showing an employee's full list of loops across customers, giving them a single starting point instead of navigating across tools."
 />
 
 ---
