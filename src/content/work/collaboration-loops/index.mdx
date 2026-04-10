@@ -30,7 +30,7 @@ import initial3 from './imgs/initial-3.png';
 import initial4 from './imgs/initial-4.png';
 import textEditing from './imgs/text-editing.mp4';
 
-[Mission Cloud's](https://missioncloud.com/) Technical Account Managers spent up to five hours rebuilding the same slide deck for each customer, every month. I spent 14 months replacing it with Collaboration Loops, a feature inside Mission Control, Mission's web app for customers to manage their services and view insights about their AWS environments. Sole designer across the full arc, working with one PM and nine engineers, a ton of stakeholders, and a handful of customer interviews. Research through production React.
+[Mission Cloud's](https://missioncloud.com/) Technical Account Managers spent up to five hours rebuilding the same slide deck for each customer, every month. I spent 14 months replacing it with Collaboration Loops, a feature inside Mission Control, Mission's web app for customers to manage their services and view insights about their AWS environments. I was the sole designer, working with one PM, nine engineers, and stakeholders across the company. From customer interviews in discovery to writing production React with engineers, I was involved in every phase.
 
 ---
 
@@ -42,13 +42,20 @@ Customers had no way to see what was discussed before. If a TAM transitioned a c
 
 The tools that existed treated these meetings as one-sided reporting events. What we needed was a space where both Mission's team and their customers could prepare, contribute, and look back together.
 
+<PullQuote title="Problem Statement">
+Delivering Mission services involves coordination across many **teams, tools, and touchpoints**.
+
+Today, key conversations and context are often spread out across **siloed systems**, making it harder for both **customers and internal teams** to stay aligned.
+
+Without a **central place to manage collaboration**, it becomes challenging to maintain **clarity** and drive consistent **follow-through**.
+
+</PullQuote>
+
 ---
 
 ## The Design Challenge
 
-This framing didn't come together all at once. But here's where we landed.
-
-The obvious solution was a better template, a structured document TAMs could fill out instead of building slides. We deliberately didn't build that.
+The obvious solution was a better template. A nicer slide deck, a structured doc, something easier to fill out before each meeting. We deliberately didn't build that.
 
 A document is static. It captures a moment, then goes stale. What we needed was something that stayed alive between meetings, pulling fresh data from multiple systems, preserving what was decided last time, and giving customers a reason to come back and actually contribute. Add topics to the agenda before a meeting. Approve recommendations themselves. Make the space theirs too, not just something they're invited to view.
 
@@ -230,21 +237,38 @@ Each TAM's presentation is their own narrative of their customer's AWS environme
 
 ## Key Decisions
 
-### Blueprints over free-form templates
+<div class="not-prose my-8 grid gap-4 sm:grid-cols-2">
+	<Card title="Blueprints not templates">
+		Purpose-built blueprints with pre-loaded content and pre-wired data connections. Consistency across 30+ customers, faster onboarding than a blank canvas.
+	</Card>
+	<Card title="Live data that freezes">
+		Widgets display current data while a loop is open, then snapshot when the meeting closes. You can see exactly what the environment looked like in February, not what it looks like today.
+	</Card>
+	<Card title="Two audiences, one view">
+		TAMs and customers see the same loop. Not a stripped-down customer version and a full internal one. That forced every element to be legible to both audiences. Harder to build, but it's what makes the collaboration real.
+	</Card>
+	<Card title="Moments of connection">
+		Every widget supports comments, tagging, and notifications. Both sides can prepare before meetings and follow up after. We kept asking ourselves where we could add another moment of connection.
+	</Card>
+</div>
 
-Instead of a single flexible template, we shipped purpose-built blueprints with content pre-loaded. TAM Check-ins and CSM Success Planning, each with pre-wired data connections. The constraint creates consistency across 30+ customer relationships and makes onboarding faster than a blank canvas would. (More on how we got there below.)
+---
 
-### Live data that freezes on close
+## What I learned
 
-Widgets display current data while a loop is open, then snapshot that state when the meeting closes. This preserves historical accuracy. You can see exactly what the environment looked like in February, not what it looks like today. A subtle decision that changes the archival value of every loop significantly.
+### One hammer, two nails
 
-### Two audiences, one view
+Midway through, my PM and I had a theory: we could collapse our three purpose-built blueprints into one flexible, general-purpose template. Easier to maintain, broader reach, obviously better on paper. It wasn't. Reactions were room-temperature. The concept was minorly helpful to everyone and perfectly helpful to no one. We pivoted back to specialized, focused blueprints, then descoped further to just TAMs and CSMs. Those blueprints got infinitely better the moment we stopped trying to make them work for everyone else. Being mildly useful to a wide audience is worse than being deeply useful to a narrow one.
 
-TAMs and customers see the same loop. Not a stripped-down customer version and a full internal version. The same view. That forced us to design every element to be legible to both audiences and to think carefully about what's visible, editable, and commentable by each role. It's harder to build, but it's what makes the collaboration real instead of performative.
+### Designing for screen sharing
 
-### Ownership through manual creation
+TAMs run customer meetings by sharing their screen. Loops would replace the content they'd historically pulled up, but the meeting format wasn't going away. So the product had to be safe to present by default, which was harder than it sounds when TAMs have internal notes and admin actions the customer shouldn't see.
 
-We deliberately scoped out auto-generated loops for the beta. TAMs creating loops themselves meant they had intent and ownership over what they were presenting. Automating it risked loops being ignored because nobody asked for them. Adoption over elegance.
+I tried a two-view approach first, then tried pulling all loop management into a separate internal tool. Both created more surface area for mistakes or bounced TAMs between interfaces. Where I landed was simpler: one page that looks the same to everyone, with an actions dropdown on each widget. Same canvas, role-based actions. The safest private view is the one that doesn't exist.
+
+### Every widget was its own project
+
+When I sketched the first blueprint, I thought of widgets as containers. Standard rectangles holding standard data. They weren't. Cloud Score is a live data pull with trend logic and inline approve/archive/snooze. The agenda is a free-form editor with reorderable sections and per-customer toggling. Some widgets create content, some display it, some make the user pick what to show. I thought I was designing one feature with five sections. I was actually designing five features that happened to live in one shell. A consistent surface can hide wildly different problems underneath.
 
 ---
 
@@ -262,31 +286,3 @@ The beta is still small, and I'm trying not to read too much into the numbers th
 </PullQuote>
 
 The slide deck workflow is gone. The pattern works, and Mission's already asking what else we can do with it. I'm in discovery on five more blueprint types for other service teams, and on enhancements coming back from beta feedback. More loops to close.
-
----
-
-## What I learned
-
-### One hammer, two nails
-
-Midway through the project, I convinced myself we could collapse our three purpose-built blueprints into one flexible, general-purpose one. Easier to maintain, broader reach. On paper, obviously better.
-
-It wasn't. The general-purpose version was minorly helpful to everyone and perfectly helpful to no one. Reviews were polite. People went back to their slide decks.
-
-We pivoted back, then went further: descoped to just TAMs and CSMs, where the efficiency win was highest and the meeting structure was most consistent. Those blueprints got infinitely better the moment we stopped trying to make them work for everyone else. Being mildly useful to a wide audience is worse than being deeply useful to a narrow one.
-
-### Designing for the screenshare
-
-TAMs run customer meetings by screensharing. Loops would replace the content of that screenshare, but not the screenshare itself. So Loops had to be screenshare-safe by default.
-
-The problem: TAMs have internal notes and admin actions the customer shouldn't see, with the customer watching in real time. I first tried a two-view approach, internal and customer-facing, side by side. It was obvious within a week that mistakes would happen. Wrong tab, wrong scroll, stray click.
-
-Next I tried moving all loop management into Atlas, our internal tool, so Mission Control would only ever show the customer view. Cleaner, but TAMs were bouncing between interfaces and we were effectively building the feature twice.
-
-Where I landed was simpler than either: one page that looks the same to everyone, with an actions dropdown on every widget. Same canvas, role-based actions. The screenshare is safe because there's nothing to hide.
-
-### Every widget was its own project
-
-When I sketched the first blueprint, I thought of widgets as containers. Standard rectangles holding standard data. They weren't.
-
-Each widget turned out to be its own design project. Cloud Score is a live data pull with trend logic and inline approve, archive, and snooze. The agenda is a free-form editor with reorderable sections and per-customer toggling. Some widgets create content, some display it, some make the user pick what to show. I thought I was designing one feature with five sections. I was actually designing five features that happened to live in one shell.
