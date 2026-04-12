@@ -54,6 +54,14 @@ Configured in `tsconfig.json`:
 - Custom utilities in `src/assets/utilities.css` (e.g., `line-length-*` classes)
 - Prose styling for article content in `src/assets/prose.css`
 
+### Newsletter Pipeline
+
+Newsletters are fetched at build time from the Buttondown `/v1/emails` API (not via Astro Content Collections like the rest of `src/content/`). The API returns a single `body` field per email, which can be either markdown or HTML depending on the Buttondown editor mode used when the newsletter was authored.
+
+The `body` is parsed with `marked` before `set:html` in `src/pages/newsletter/[slug].astro`. HTML inside markdown passes through unchanged (per CommonMark spec), so the same code path handles both authoring modes.
+
+`BUTTONDOWN_TOKEN` env var is required at build. Without it, `getStaticPaths()` returns `[]` and no newsletter routes are emitted.
+
 ### Server Actions
 
 Newsletter subscription handled via server action in `src/actions/index.ts` using Buttondown API.
