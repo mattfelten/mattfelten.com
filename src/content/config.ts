@@ -30,7 +30,6 @@ export const collections = {
 				type: z.enum(['case-study', 'showcase']).default('case-study'),
 				featured: z.boolean().optional(), // Appears on homepage
 				intro: z.string(), // Brief description
-				role: z.string().optional(), // Functional role label
 				cover: image(),
 				coverAlt: z.string(),
 			}),
