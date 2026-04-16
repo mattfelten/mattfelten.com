@@ -1,5 +1,6 @@
 ---
 import { format } from 'date-fns';
+import { marked } from 'marked';
 
 import Prose from '@layouts/prose.astro';
 
@@ -41,5 +42,5 @@ const niceDate = format(publish_date, 'MMMM d, yyyy');
 			<span>{niceDate}</span>
 		</div>
 	</div>
-	<div set:html={body} />
+	<div set:html={marked.parse(body)} />
 </Prose>

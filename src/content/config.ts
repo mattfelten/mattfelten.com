@@ -31,7 +31,6 @@ export const collections = {
 				featured: z.boolean().optional(), // Appears on homepage
 				parent: z.string().optional(), // Slug of parent case study
 				intro: z.string(), // Brief description
-				role: z.string().optional(), // Functional role label
 				cover: image(),
 				coverAlt: z.string(),
 			}),

@@ -22,7 +22,6 @@ const {
 	cover,
 	coverAlt,
 	intro,
-	role,
 } = entry.data;
 const { Content } = await render(entry);
 
@@ -60,7 +59,6 @@ function formatYear(
 			<span class="text-subdued text-sm font-medium"
 				>{company}</span
 			>
-			{role && <span class="text-subdued text-sm">{role}</span>}
 			<span class="text-subdued text-sm"
 				>{formatYear(year, endYear, active)}</span
 			>
