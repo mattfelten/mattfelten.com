@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import { getCollection, render } from 'astro:content';
 
+import WorkCard from '@components/WorkCard.astro';
 import Prose from '@layouts/prose.astro';
 
 export async function getStaticPaths() {
@@ -35,8 +36,8 @@ function formatYear(
 	endYear?: number,
 	active?: boolean,
 ) {
-	if (active) return `${year} – Present`;
-	if (endYear && endYear !== year) return `${year}–${endYear}`;
+	if (active) return `${year} \u2013 Present`;
+	if (endYear && endYear !== year) return `${year}\u2013${endYear}`;
 	return year.toString();
 }
 ---
@@ -76,74 +77,21 @@ function formatYear(
 		)
 	}
 	<Content />
-	{
-		children.length > 0 && (
-			<>
-				<hr />
-				<div class="not-prose">
-					<div class="mb-8 flex flex-col gap-2">
-						<h2 class="text-strong text-3xl font-medium">
-							Case Studies
-						</h2>
-						<p class="text-subdued line-length-md">
-							Deeper dives into specific projects under{' '}
-							{title}.
-						</p>
-					</div>
-					<ul class="flex flex-col gap-10">
-						{children.map((child, i) => (
-							<li>
-								<a
-									href={`/work/${child.id}`}
-									class="group block"
-								>
-									{child.data.cover &&
-										child.data.coverAlt && (
-											<div class="bg-accent/80 group-hover:bg-accent aspect-video overflow-hidden rounded-lg shadow-2xl transition-colors">
-												<Image
-													src={
-														child.data
-															.cover
-													}
-													alt={
-														child.data
-															.coverAlt
-													}
-													class="h-full w-full object-cover"
-												/>
-											</div>
-										)}
-									<div class="mt-4 flex flex-col gap-1">
-										<h3 class="text-strong text-xl font-medium">
-											<span class="decoration-accent underline decoration-2 underline-offset-4 group-hover:decoration-3">
-												{child.data.title}
-											</span>
-										</h3>
-										<div class="text-subdued flex flex-wrap gap-x-3 text-sm">
-											{child.data.role && (
-												<span>
-													{child.data.role}
-												</span>
-											)}
-											<span>
-												{formatYear(
-													child.data.year,
-													child.data
-														.endYear,
-													child.data.active,
-												)}
-											</span>
-										</div>
-										<p class="text-default line-length-lg mt-2 text-lg leading-snug">
-											{child.data.intro}
-										</p>
-									</div>
-								</a>
-							</li>
-						))}
-					</ul>
-				</div>
-			</>
-		)
-	}
+	{children.length > 0 && (
+		<>
+			<hr />
+			<div class="not-prose not-fullwidth">
+				<h2 class="text-strong mb-6 text-3xl font-medium">
+					Case Studies
+				</h2>
+				<ul class="grid gap-6 sm:grid-cols-2">
+					{children.map(child => (
+						<li>
+							<WorkCard entry={child} />
+						</li>
+					))}
+				</ul>
+			</div>
+		</>
+	)}
 </Prose>
