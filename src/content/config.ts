@@ -29,6 +29,7 @@ export const collections = {
 				active: z.boolean().optional(), // Shows "year – Present"
 				type: z.enum(['case-study', 'showcase']).default('case-study'),
 				featured: z.boolean().optional(), // Appears on homepage
+				parent: z.string().optional(), // Slug of parent case study
 				intro: z.string(), // Brief description
 				cover: image(),
 				coverAlt: z.string(),

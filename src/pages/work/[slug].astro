@@ -2,7 +2,8 @@
 import { Image } from 'astro:assets';
 import { getCollection, render } from 'astro:content';
 
-import CaseStudy from '@layouts/CaseStudy.astro';
+import WorkCard from '@components/WorkCard.astro';
+import Prose from '@layouts/prose.astro';
 
 export async function getStaticPaths() {
 	const workEntries = await getCollection('work');
@@ -25,19 +26,24 @@ const {
 } = entry.data;
 const { Content } = await render(entry);
 
+const allWork = await getCollection('work');
+const children = allWork
+	.filter(w => w.data.parent === entry.id)
+	.sort((a, b) => b.data.year - a.data.year);
+
 function formatYear(
 	year: number,
 	endYear?: number,
 	active?: boolean,
 ) {
-	if (active) return `${year} – Present`;
-	if (endYear && endYear !== year) return `${year}–${endYear}`;
+	if (active) return `${year} \u2013 Present`;
+	if (endYear && endYear !== year) return `${year}\u2013${endYear}`;
 	return year.toString();
 }
 ---
 
-<CaseStudy title={title}>
-	<div class="not-prose mb-8 flex flex-col gap-5">
+<Prose title={title} className="prose-case-study max-w-[85ch]">
+	<div class="not-prose not-fullwidth mb-8 flex flex-col gap-5">
 		<div class="flex flex-col gap-3">
 			<h1 class="text-strong mb-0! leading-tight font-medium">
 				{title}
@@ -71,4 +77,21 @@ function formatYear(
 		)
 	}
 	<Content />
-</CaseStudy>
+	{children.length > 0 && (
+		<>
+			<hr />
+			<div class="not-prose not-fullwidth">
+				<h2 class="text-strong mb-6 text-3xl font-medium">
+					Case Studies
+				</h2>
+				<ul class="grid gap-6 sm:grid-cols-2">
+					{children.map(child => (
+						<li>
+							<WorkCard entry={child} />
+						</li>
+					))}
+				</ul>
+			</div>
+		</>
+	)}
+</Prose>
