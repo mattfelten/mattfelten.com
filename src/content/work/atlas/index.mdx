@@ -1,0 +1,162 @@
+---
+title: Atlas
+company: Mission Cloud
+year: 2024
+active: true
+type: case-study
+featured: true
+parent: mission-control
+intro: An internal tools platform I pitched, designed, and built on spare cycles while the team focused on other priorities. It's now where over a third of the engineering team's roadmap lives.
+cover: ./imgs/cover.png
+coverAlt: The Atlas internal tools platform showing a dashboard of customer data and navigation
+---
+
+import Card from '../../../components/Card.astro';
+import Stat from '../../../components/Stat.astro';
+import Stats from '../../../components/Stats.astro';
+
+[Mission Cloud's](https://missioncloud.com/) customer-facing app, Mission Control, kept bumping into a gap. The Product Development team I was on kept running into projects that weren't straightforward customer-facing features, like cross-customer reports, internal workflows, data that customers shouldn't see. We had an older internal tool, but it hadn't been updated in years and some queries took 10 minutes to return. The appetite to maintain and improve it was non-existent. Meanwhile, new features in Mission Control were starting to include internal data and behind-the-scenes workflows that had to be carefully hidden because our teams screen-share with customers constantly.
+
+I spent two months of spare cycles designing and building Atlas, an internal tools platform that now accounts for over a third of the engineering team's roadmap.
+
+---
+
+## The Problem
+
+We kept running into the same problem from different directions.
+
+We kept scoping features that needed a home. Internal reports across all customers, operational data, tools for managing third-party integrations. None of it belonged in the customer-facing app, but there was nowhere else to put it.
+
+The legacy internal tool was on life support. Slow, outdated, and carrying security issues that made leadership uneasy. But nobody wanted to invest in modernizing it because the codebase was disconnected from everything else we'd built.
+
+Then there was screen-sharing. Mission's service teams share their screens with customers constantly, during check-ins, troubleshooting sessions, onboarding. Anything visible in Mission Control was effectively visible to customers. That made it risky to surface internal data there, even behind feature flags or permission checks. One wrong click during a live call and a customer sees something they shouldn't.
+
+Internal data needed its own space. Not hidden inside the customer app, not trapped in a dying legacy tool. Somewhere purpose-built.
+
+---
+
+## The Pitch
+
+I pitched Atlas as a second app, but not a second codebase. The key insight was that a monorepo structure would let both Mission Control and Atlas share authentication, API access, and UI components. We wouldn't be starting from scratch. We'd be extending the system we'd already spent two years building.
+
+I spent time designing what Atlas could become. Not just the value proposition on paper, but the actual interface. Conceptual designs showing where internal data would live, how it could scale over time, what it would feel like to use. Seeing the app made the idea tangible in a way that a pitch doc by itself couldn't. I framed it as an MVP approach. We didn't have to build everything at once. Start with one useful view, prove the architecture, and add from there.
+
+Leadership liked the vision. But they heard "second app" and thought about the many months it took to stand up Mission Control. The authentication layer, the APIs, the build tooling, the CI. Engineering was already stretched thin, let alone taking on a speculative project. The answer was that they loved the idea, but couldn't prioritize it.
+
+The concern was understandable. It was also solvable. The technical objections, the months of infrastructure work, the resource cost. Those were exactly the problems the monorepo architecture was designed to eliminate. I made the case that I could do the infrastructure work on spare cycles without pulling anyone off the existing roadmap. They gave me the green light. So I started solving them.
+
+---
+
+## Building It
+
+Over about two months of spare cycles, from December 2023 to February 2024, I did the infrastructure work myself. I phased it into small, reviewable chunks. Each pull request improved the existing system on its own, so even if Atlas never shipped, the codebase would be better for it. Good engineering practice that also happened to build organizational trust.
+
+<div class="not-prose my-8 grid gap-4 sm:grid-cols-2">
+	<Card title="Monorepo migration">
+		Converted the single Mission Control repository into a monorepo so both apps could live side by side, sharing code and dependencies while being deployed independently.
+	</Card>
+	<Card title="Webpack to Vite">
+		Swapped the build tool to Vite, which was significantly easier to configure for a multi-app setup and gave us faster builds across the board.
+	</Card>
+	<Card title="Shared design system">
+		Extracted UI components out of Mission Control into a shared library that both apps consume. Same components, same visual language, one source of truth.
+	</Card>
+	<Card title="Auth and API refactor">
+		Worked with another engineer to decouple the authentication layer and GraphQL connections from Mission Control so both apps could authenticate users and query data independently.
+	</Card>
+</div>
+
+The MVP was a searchable list of customers, built on existing API endpoints. That was it. One useful view that proved the architecture worked and gave people something real to use.
+
+---
+
+## Growth
+
+We didn't announce Atlas to the broader company for about a year. There wasn't much to announce. For a while, it was just that customer list.
+
+Instead, we shared it quietly with individuals who'd find it useful. An Account Manager who needed to look up customer details. An engineer who wanted AWS account information without waiting 10 minutes for our legacy tool to return the data. They started using it more than we expected. Then they started requesting features. Then they started sharing it with colleagues.
+
+Each addition was almost a side project. Customer detail pages, an AWS accounts list, individual tool integrations, entitlement data. I'd design features ahead of time and review them with coworkers or stakeholders from other teams, staying a few steps ahead because I never knew when the next spare cycle would land. We built what people asked for, when we had time. The backlog kept growing. Feature requests went from occasional Slack messages to a formal list. Eventually Atlas had to be actively planned in quarterly roadmaps because the demand for new features outpaced what spare cycles could handle.
+
+About a year and a half in, we'd reached near feature parity with the legacy tool. Combined with that tool's mounting security issues, we made the call to port over the remaining functionality and sunset it entirely. The tool nobody wanted to maintain was finally gone, replaced by something built on the same foundation as everything else.
+
+---
+
+## What It Is Today
+
+Atlas has grown into six primary areas, each cross-linked to the others and to Mission Control.
+
+<div class="not-prose my-8 grid gap-4 sm:grid-cols-2">
+	<Card title="Dashboard">
+		A personalized starting point. Surfaces data relevant to the logged-in user, including assigned customer information for team members who manage customer relationships.
+	</Card>
+	<Card title="Customers">
+		A searchable, filterable list of every customer. Drill into any customer to see their products and services, AWS accounts, third-party integrations, and contracts.
+	</Card>
+	<Card title="AWS Accounts">
+		A searchable, filterable list of every AWS account across all customers. Each account surfaces its support type, associated customer, access information, organization structure, and sync status.
+	</Card>
+	<Card title="Entitlements">
+		A full entitlements system for managing products and services with audit tracking. Gives teams visibility into what each customer has access to and how those entitlements have changed over time.
+	</Card>
+	<Card title="Billing and Finance">
+		A dedicated area for finance teams to get the data they need to do their jobs. Revenue data, contract details, and reporting that previously lived in spreadsheets or third-party tools.
+	</Card>
+	<Card title="Loops">
+		All Collaboration Loops across all customers in one view. The internal counterpart to the customer-facing loop experience, giving service teams a single starting point for all their recurring meetings.
+	</Card>
+</div>
+
+No matter where you start your journey, you can get to the information you need. And when you need the customer-facing context, a link takes you directly to that customer's Mission Control instance.
+
+---
+
+## Key Decisions
+
+<div class="not-prose my-8 grid gap-4 sm:grid-cols-2">
+	<Card title="Monorepo, not a second codebase">
+		Atlas isn't a separate product with its own infrastructure. It's a second entry point into the same system. Shared auth, shared API layer, shared component library. That's what made it cheap to build and easy to maintain.
+	</Card>
+	<Card title="MVP scope">
+		A customer list. Nothing more. It proved the architecture, gave people something useful on day one, and created space for organic growth. Starting small was the strategy, not a compromise.
+	</Card>
+	<Card title="Phased infrastructure">
+		Every infrastructure PR improved the existing codebase on its own merits. The monorepo made Mission Control's build faster. The shared design system reduced duplication. Even if Atlas never shipped, the work paid for itself.
+	</Card>
+	<Card title="Cross-linking over duplication">
+		Atlas doesn't recreate customer-facing views. It links directly to Mission Control when you need that context. Two apps that work as one system, not two apps that duplicate each other's work.
+	</Card>
+</div>
+
+---
+
+## What I Learned
+
+### Infrastructure as product design
+
+The monorepo migration, shared design system, and build tool swap were the hardest things to get buy-in for. They sounded like engineering overhead, the kind of work that delays the thing people actually want. But they were the product decision. Every feature Atlas shipped after the MVP was cheap because the foundation was shared. The auth refactor meant no new login flow. The shared components meant no new design system. The monorepo meant no new deploy pipeline.
+
+The infrastructure wasn't a prerequisite for the product. It was the product. The customer list was just proof that it worked.
+
+### The quiet launch
+
+I've been in the industry long enough to know that "if you build it, they will come" works less often than we'd like. But the alternative here was pouring effort into an app on life support that nobody believed in. Atlas had a better foundation and a clearer path forward. It just needed time to prove that.
+
+So we didn't announce it. We shared it with people one at a time, and we paid attention to what they did with it. They used it. They asked for more. They told their colleagues. The backlog grew until it couldn't be handled on spare cycles anymore and had to be formally planned.
+
+Building something people pull toward you is more durable than pushing something out and hoping for adoption. The demand made the case better than any pitch deck could have.
+
+---
+
+## Outcomes
+
+{/* TODO: Replace placeholder stats with real DAU/WAU/MAU data */}
+
+<Stats columns={2}>
+	<Stat value="XX%" label="Weekly active rate across internal teams" />
+	<Stat value="35%" label="of engineering roadmap is Atlas projects" />
+</Stats>
+
+Atlas went from "great idea, but we can't prioritize it" to a permanent fixture in the team's quarterly planning. Over a third of the engineering roadmap is now Atlas work, not because the project spiraled, but because the company kept finding problems Atlas was the right place to solve. The legacy tool that nobody wanted to maintain has been fully sunset.
+
+Internal teams have a single, modern platform for customer data, operational tools, and cross-team workflows, built on the same codebase as the customer-facing product. The engineering cost of new internal features is a fraction of what it would have been with a separate codebase. That's the compounding return of the infrastructure investment. Every new feature is cheaper than the last because the foundation is already there.
