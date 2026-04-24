@@ -1,6 +1,10 @@
 ---
+import { format } from 'date-fns';
+
 import Section from '@components/Section.astro';
 import Layout from '@layouts/default.astro';
+import Newsletter from '@sections/newsletter.astro';
+
 let posts = [];
 
 if (import.meta.env.BUTTONDOWN_TOKEN) {
@@ -14,20 +18,57 @@ if (import.meta.env.BUTTONDOWN_TOKEN) {
 
 	const response = await fetch(url.toString(), options);
 	const data = await response.json();
-	posts = data.results;
+	posts = data.results
+		.filter(post => post.slug && post.publish_date)
+		.sort(
+			(a, b) =>
+				new Date(b.publish_date).valueOf() -
+				new Date(a.publish_date).valueOf(),
+		);
 }
+
+const postsByYear = posts.reduce((acc, post) => {
+	const year = new Date(post.publish_date).getFullYear();
+	if (!acc[year]) {
+		acc[year] = [];
+	}
+	acc[year].push(post);
+	return acc;
+}, {});
+
+const years = Object.keys(postsByYear)
+	.map(Number)
+	.sort((a, b) => b - a);
 ---
 
 <Layout>
-	{
-		posts.length > 0 && (
-			<Section title="Newsletters">
-				{posts.map(post => (
-					<a href={`/newsletter/${post.slug}`}>
-						<h2>{post.subject}</h2>
-					</a>
-				))}
-			</Section>
-		)
-	}
+	<div class="space-y-5">
+		{
+			years.map(year => (
+				<Section title={year.toString()}>
+					<ul class="space-y-2">
+						{postsByYear[year].map(post => (
+							<li>
+								<a
+									href={`/newsletter/${post.slug}`}
+									class="group flex items-baseline gap-2 transition-transform hover:translate-x-1 focus:outline-0"
+								>
+									<time class="text-subdued font-mono font-medium whitespace-nowrap">
+										{format(
+											new Date(post.publish_date),
+											'MMM dd',
+										)}
+									</time>
+									<span class="font-medium">
+										{post.subject}
+									</span>
+								</a>
+							</li>
+						))}
+					</ul>
+				</Section>
+			))
+		}
+		<Newsletter />
+	</div>
 </Layout>
