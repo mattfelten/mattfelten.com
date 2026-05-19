@@ -44,77 +44,88 @@
 	}
 }
 
-.prose h1,
-.prose h2,
-.prose h3,
-.prose h4,
-.prose h5,
-.prose h6 {
-	text-wrap: pretty;
-}
+.prose :not(.not-prose) {
+	h1,
+	h2,
+	h3,
+	h4,
+	h5,
+	h6 {
+		text-wrap: pretty;
+	}
 
-.prose h1 {
-	font-size: 1.875em;
-	font-weight: 500;
-	margin-top: 1rlh;
-	margin-bottom: 1rlh;
-}
+	h1 {
+		font-size: 1.875em;
+		font-weight: 500;
+		margin-top: 1rlh;
+		margin-bottom: 1rlh;
+	}
 
-.prose h2 {
-	font-size: 1.5em;
-	font-weight: 500;
-	margin-top: 2rlh;
-	margin-bottom: 1rlh;
-}
+	h2 {
+		font-size: 1.5em;
+		font-weight: 500;
+		margin-top: 2rlh;
+		margin-bottom: 1rlh;
+	}
 
-.prose h3 {
-	font-size: 1.125em;
-	font-weight: 600;
-	margin-top: 2rlh;
-	margin-bottom: 1rlh;
-}
+	h3 {
+		font-size: 1.125em;
+		font-weight: 600;
+		margin-top: 2rlh;
+		margin-bottom: 1rlh;
+	}
 
-.prose h4,
-.prose h5,
-.prose h6 {
-	font-size: 1em;
-	font-weight: 600;
-	margin-top: 2rlh;
-	margin-bottom: 1rlh;
-}
+	h4,
+	h5,
+	h6 {
+		font-size: 1em;
+		font-weight: 600;
+		margin-top: 2rlh;
+		margin-bottom: 1rlh;
+	}
 
-.prose p + p {
-	margin-top: 1rlh;
-}
+	p + p {
+		margin-top: 1rlh;
+	}
 
-.prose ul,
-.prose ol {
-	margin-top: 1rlh;
-	margin-bottom: 1rlh;
-}
+	& > .asset-wrap {
+		margin-top: 2rlh;
+		margin-bottom: 2rlh;
+	}
 
-.prose ul {
-	list-style-type: '– ';
-}
+	ul,
+	ol {
+		margin-top: 1rlh;
+		margin-bottom: 1rlh;
+	}
 
-.prose ::marker {
-	color: var(--color-weak);
-}
+	ul {
+		list-style-type: '– ';
+	}
 
-.prose hr {
-	opacity: 0.5;
-	height: 2px;
-	border: none;
-	background-color: var(--color-weak);
-}
+	::marker {
+		color: var(--color-weak);
+	}
 
-.prose a:hover,
-.prose a:focus-visible {
-	text-decoration-color: var(--color-accent);
-}
+	hr {
+		opacity: 0.5;
+		height: 2px;
+		border: none;
+		background-color: var(--color-weak);
+	}
 
-.prose a:focus {
-	outline: none;
+	a:hover,
+	a:focus-visible {
+		text-decoration-color: var(--color-accent);
+	}
+
+	a:focus {
+		outline: none;
+	}
+
+	picture {
+		margin-bottom: 0;
+	}
 }
 
 .prose :where(:not(pre) > code):not(:where([class~='not-prose'] *)) {
@@ -131,18 +142,4 @@
 .prose :where(:not(pre) > code):not(:where([class~='not-prose'] *))::before,
 .prose :where(:not(pre) > code):not(:where([class~='not-prose'] *))::after {
 	content: none;
-}
-
-/* Case study: images break out of prose column.
-   Adaptive formula: breakout grows as viewport widens but never exceeds
-   available space (viewport minus body padding), so images are never clipped.
-   3rem = total body horizontal padding at sm+ (1.5rem each side). */
-.prose-case-study :not(.asset-row-wrap) .asset-wrap,
-.prose-case-study .asset-row-wrap {
-	margin-left: max(-4rem, min(0rem, calc((100% + 3rem - 100vw) / 2)));
-	margin-right: max(-4rem, min(0rem, calc((100% + 3rem - 100vw) / 2)));
-}
-
-.prose-case-study .asset-row-wrap picture {
-	margin: 0;
 }

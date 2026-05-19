@@ -2,9 +2,14 @@
 import { Picture } from 'astro:assets';
 import cx from 'clsx';
 
+import Placeholder from './Placeholder.astro';
+
 const {
 	alt = '',
+	autoplay = true,
+	caption,
 	className,
+	controls = false,
 	expand,
 	href,
 	src,
@@ -13,7 +18,7 @@ const {
 } = Astro.props;
 
 const classes = cx(
-	'Assets',
+	'Assets rounded-lg bg-accent',
 	fullWidth && 'Assets--full-width',
 	className,
 );
@@ -59,61 +64,77 @@ const classes = cx(
 
 <div class="asset-wrap">
 	{
-		() => {
-			const isExtension = (ext: string) => {
-				if (typeof src === 'string') return src.endsWith(ext);
-				return src.src.endsWith(ext);
-			};
-			const getLink = () => {
-				if (href) return href;
-				if (expand) return src;
-				return false;
-			};
+		src ? (
+			() => {
+				const isExtension = (ext: string) => {
+					if (typeof src === 'string')
+						return src.endsWith(ext);
+					return src.src.endsWith(ext);
+				};
+				const getLink = () => {
+					if (href) return href;
+					if (expand) {
+						if (typeof src === 'string') return src;
+						if (typeof src.src === 'string')
+							return src.src;
+						return false;
+					}
+					return false;
+				};
 
-			const getAssetContent = () => {
-				if (isExtension('mov'))
+				const getAssetContent = () => {
+					if (
+						isExtension('mov') ||
+						isExtension('mp4') ||
+						isExtension('webm')
+					)
+						return (
+							<video
+								src={src}
+								autoplay={autoplay}
+								controls={controls}
+								class={classes}
+								loop
+								{...props}
+							>
+								{alt}
+							</video>
+						);
+
+					if (isExtension('gif') || isExtension('svg'))
+						return (
+							<img
+								src={
+									typeof src === 'string'
+										? src
+										: src.src
+								}
+								alt={alt}
+								class={classes}
+								{...props}
+							/>
+						);
+
 					return (
-						<video
+						<Picture
 							src={src}
-							controls
-							class={classes}
-							{...props}
-						>
-							{alt}
-						</video>
-					);
-
-				if (isExtension('gif'))
-					return (
-						<img
-							src={src.src}
 							alt={alt}
 							class={classes}
 							{...props}
 						/>
 					);
+				};
 
-				return (
-					<Picture
-						src={src}
-						alt={alt}
-						class={classes}
-						{...props}
-					/>
-				);
-			};
-
-			if (getLink())
-				return <a href={getLink()}>{getAssetContent()}</a>;
-			return getAssetContent();
-		}
-	}
-
-	{
-		Astro.slots.has('default') && (
-			<small>
-				<slot />
-			</small>
+				if (getLink())
+					return (
+						<a href={getLink()}>{getAssetContent()}</a>
+					);
+				return getAssetContent();
+			}
+		) : (
+			<Placeholder />
 		)
 	}
+
+	{caption && <small set:html={caption} />}
 </div>

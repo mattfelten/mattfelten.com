@@ -2,12 +2,12 @@
 import Layout from './default.astro';
 
 const { title } = Astro.props.frontmanter || Astro.props;
+
+const { className } = Astro.props;
 ---
 
 <Layout title={title}>
-	<article
-		class="prose dark:prose-white mx-auto"
-	>
+	<article class={`prose dark:prose-white mx-auto ${className}`}>
 		<slot />
 	</article>
 	<slot name="after-article" />

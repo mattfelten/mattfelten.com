@@ -3,5 +3,6 @@
 @import './components.css';
 @import './utilities.css';
 @import './prose.css';
+@import './case-study.css';
 
 @plugin '@tailwindcss/typography';

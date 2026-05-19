@@ -1,19 +1,28 @@
----
-const { description } = Astro.props;
----
-
-<style>
-	.placeholder {
-		border: 2px dashed var(--color-subtle, #ccc);
-		border-radius: 8px;
-		padding: 2rem;
-		text-align: center;
-		color: var(--color-subtle, #999);
-		margin: 1.5rem 0;
-		font-style: italic;
-	}
-</style>
-
-<div class="placeholder">
-	{description}
-</div>
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	viewBox="0 0 16 9"
+	class="Assets"
+>
+	<rect
+		width="16"
+		height="9"
+		stroke="currentColor"
+		opacity="0.2"
+		stroke-width="0.03"></rect>
+	<line
+		x1="0"
+		y1="0"
+		x2="16"
+		y2="9"
+		stroke="currentColor"
+		stroke-width="0.03"
+		opacity="0.2"></line>
+	<line
+		x1="16"
+		y1="0"
+		x2="0"
+		y2="9"
+		stroke="currentColor"
+		stroke-width="0.03"
+		opacity="0.2"></line>
+</svg>
