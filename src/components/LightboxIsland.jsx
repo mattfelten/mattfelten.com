@@ -1,0 +1,272 @@
+import { useEffect, useRef, useState } from 'react';
+import './LightboxIsland.css';
+
+const PARAM = 'lightbox';
+
+const getCurrentId = () => {
+	if (typeof window === 'undefined') return null;
+	return new URLSearchParams(window.location.search).get(PARAM);
+};
+
+const urlWith = id => {
+	const url = new URL(window.location.href);
+	if (id) url.searchParams.set(PARAM, id);
+	else url.searchParams.delete(PARAM);
+	return url.pathname + (url.search || '') + url.hash;
+};
+
+const readAssetById = id => {
+	if (!id) return null;
+	const el = document.querySelector(
+		`a[data-lightbox="${CSS.escape(id)}"]`,
+	);
+	if (!el) return null;
+	return {
+		id,
+		src:
+			el.getAttribute('data-lightbox-src') ||
+			el.getAttribute('href'),
+		alt: el.getAttribute('data-lightbox-alt') || '',
+		caption: el.getAttribute('data-lightbox-caption') || '',
+	};
+};
+
+export const LightboxIsland = () => {
+	const [asset, setAsset] = useState(null);
+	const [zoomed, setZoomed] = useState(false);
+	const [canZoom, setCanZoom] = useState(false);
+	const cardRef = useRef(null);
+	const imageAreaRef = useRef(null);
+	const imgRef = useRef(null);
+
+	useEffect(() => {
+		// Deep-link: if the page loads with ?lightbox=<id>, open that asset.
+		// Replace the current entry with a clean URL, then push the lightbox
+		// URL on top, so back-while-open closes the overlay instead of
+		// leaving the site.
+		const initialId = getCurrentId();
+		if (initialId) {
+			const found = readAssetById(initialId);
+			if (found) {
+				window.history.replaceState({}, '', urlWith(null));
+				window.history.pushState(
+					{ lightbox: initialId },
+					'',
+					urlWith(initialId),
+				);
+				setAsset(found);
+			} else {
+				window.history.replaceState({}, '', urlWith(null));
+			}
+		}
+
+		const onClick = e => {
+			if (
+				e.defaultPrevented ||
+				e.metaKey ||
+				e.ctrlKey ||
+				e.shiftKey ||
+				e.altKey ||
+				e.button !== 0
+			)
+				return;
+			const anchor = e.target.closest('a[data-lightbox]');
+			if (!anchor) return;
+			const id = anchor.getAttribute('data-lightbox');
+			if (!id) return;
+			e.preventDefault();
+			const next = {
+				id,
+				src:
+					anchor.getAttribute('data-lightbox-src') ||
+					anchor.getAttribute('href'),
+				alt: anchor.getAttribute('data-lightbox-alt') || '',
+				caption:
+					anchor.getAttribute('data-lightbox-caption') || '',
+			};
+			// Push so browser back closes the overlay and keeps you on the
+			// case study page.
+			window.history.pushState(
+				{ lightbox: id },
+				'',
+				urlWith(id),
+			);
+			setAsset(next);
+		};
+
+		const onPopState = () => {
+			const id = getCurrentId();
+			if (!id) {
+				setAsset(null);
+				return;
+			}
+			setAsset(readAssetById(id));
+		};
+
+		const onKeyDown = e => {
+			if (e.key === 'Escape' && getCurrentId()) {
+				closeLightbox();
+			}
+		};
+
+		document.addEventListener('click', onClick);
+		window.addEventListener('popstate', onPopState);
+		document.addEventListener('keydown', onKeyDown);
+
+		return () => {
+			document.removeEventListener('click', onClick);
+			window.removeEventListener('popstate', onPopState);
+			document.removeEventListener('keydown', onKeyDown);
+		};
+	}, []);
+
+	// Closes via X / Esc / backdrop. Replace the pushed entry's URL with a
+	// clean one *before* going back, so the popped entry doesn't sit in
+	// forward history as a re-openable lightbox URL.
+	const closeLightbox = () => {
+		window.history.replaceState({}, '', urlWith(null));
+		window.history.back();
+	};
+
+	useEffect(() => {
+		if (!asset) return;
+		const prev = document.body.style.overflow;
+		document.body.style.overflow = 'hidden';
+		cardRef.current?.focus({ preventScroll: true });
+		setZoomed(false);
+		setCanZoom(false);
+		return () => {
+			document.body.style.overflow = prev;
+		};
+	}, [asset?.id]);
+
+	// Faster arrow-key scrolling while zoomed
+	useEffect(() => {
+		if (!zoomed) return;
+		const STEP = 120;
+		const handler = e => {
+			const container = imageAreaRef.current;
+			if (!container) return;
+			let dx = 0,
+				dy = 0;
+			if (e.key === 'ArrowUp') dy = -STEP;
+			else if (e.key === 'ArrowDown') dy = STEP;
+			else if (e.key === 'ArrowLeft') dx = -STEP;
+			else if (e.key === 'ArrowRight') dx = STEP;
+			else return;
+			e.preventDefault();
+			container.scrollBy({ left: dx, top: dy, behavior: 'auto' });
+		};
+		document.addEventListener('keydown', handler);
+		return () => document.removeEventListener('keydown', handler);
+	}, [zoomed]);
+
+	if (!asset) return null;
+
+	const close = closeLightbox;
+
+	const onImgLoad = e => {
+		const img = e.currentTarget;
+		setCanZoom(
+			img.naturalWidth > img.clientWidth ||
+				img.naturalHeight > img.clientHeight,
+		);
+	};
+
+	const onImgClick = e => {
+		if (!canZoom) return;
+		if (zoomed) {
+			setZoomed(false);
+			return;
+		}
+		const rect = e.currentTarget.getBoundingClientRect();
+		const xRatio = (e.clientX - rect.left) / rect.width;
+		const yRatio = (e.clientY - rect.top) / rect.height;
+		setZoomed(true);
+		requestAnimationFrame(() => {
+			const container = imageAreaRef.current;
+			const img = imgRef.current;
+			if (!container || !img) return;
+			const scrollX =
+				img.naturalWidth * xRatio - container.clientWidth / 2;
+			const scrollY =
+				img.naturalHeight * yRatio - container.clientHeight / 2;
+			container.scrollTo({
+				left: scrollX,
+				top: scrollY,
+				behavior: 'auto',
+			});
+		});
+	};
+
+	const imgClass = [
+		'lb-image',
+		zoomed ? 'zoomed' : 'contained',
+		canZoom && !zoomed ? 'zoomable' : '',
+	]
+		.filter(Boolean)
+		.join(' ');
+
+	return (
+		<div className="lb-backdrop" onClick={close}>
+			<div
+				ref={cardRef}
+				tabIndex={-1}
+				role="dialog"
+				aria-modal="true"
+				aria-label={asset.alt || 'Image viewer'}
+				className="lb-card"
+				onClick={e => e.stopPropagation()}
+			>
+				<div
+					ref={imageAreaRef}
+					className={`lb-image-area${zoomed ? ' zoomed' : ''}`}
+				>
+					<img
+						key={asset.id}
+						ref={imgRef}
+						src={asset.src}
+						alt={asset.alt}
+						onLoad={onImgLoad}
+						onClick={onImgClick}
+						className={imgClass}
+					/>
+				</div>
+
+				{asset.caption && (
+					<div className="lb-caption">
+						<div
+							className="lb-caption-inner"
+							dangerouslySetInnerHTML={{
+								__html: asset.caption,
+							}}
+						/>
+					</div>
+				)}
+
+				<button
+					type="button"
+					onClick={close}
+					aria-label="Close image viewer"
+					className="lb-close"
+				>
+					<svg
+						width="18"
+						height="18"
+						viewBox="0 0 18 18"
+						fill="none"
+						stroke="currentColor"
+						strokeWidth="1.75"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+						aria-hidden="true"
+					>
+						<path d="M4 4 L14 14 M14 4 L4 14" />
+					</svg>
+				</button>
+			</div>
+		</div>
+	);
+};
+
+export default LightboxIsland;

@@ -22,6 +22,17 @@ const classes = cx(
 	fullWidth && 'Assets--full-width',
 	className,
 );
+
+const srcUrl = src ? (typeof src === 'string' ? src : src.src) : '';
+const isVideoSrc = /\.(mp4|mov|webm)(?:$|[?#])/i.test(srcUrl);
+const filenameStem = srcUrl
+	.split(/[?#]/)[0]
+	.split('/')
+	.pop()
+	?.replace(/\.[^.]+$/, '')
+	.replace(/\.[A-Za-z0-9_-]{6,}$/, '');
+const lightboxId =
+	expand && !href && srcUrl && !isVideoSrc ? filenameStem : null;
 ---
 
 <style>
@@ -127,7 +138,23 @@ const classes = cx(
 
 				if (getLink())
 					return (
-						<a href={getLink()}>{getAssetContent()}</a>
+						<a
+							href={getLink()}
+							data-lightbox={lightboxId || undefined}
+							data-lightbox-src={
+								lightboxId ? srcUrl : undefined
+							}
+							data-lightbox-alt={
+								lightboxId ? alt : undefined
+							}
+							data-lightbox-caption={
+								lightboxId && caption
+									? caption
+									: undefined
+							}
+						>
+							{getAssetContent()}
+						</a>
 					);
 				return getAssetContent();
 			}
