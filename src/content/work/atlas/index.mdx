@@ -63,17 +63,25 @@ Without a **dedicated home for internal tools**, teams lose time, take on **secu
 
 ---
 
+## The Plan
+
+The problem was clear. The harder question was what to do about it. That took weeks of parallel work on two tracks.
+
+On the **what**, I ran 10-15 stakeholder interviews across customer-facing and product teams at different seniority levels. Some sessions confirmed what I already suspected. Others surfaced needs that ended up shaping the post-MVP backlog. I designed conceptual screens to make the idea tangible. Where internal data would live, how it could scale, what it would feel like to use.
+
+On the **how**, I worked through the architecture with our Principal Engineering Architect and the five frontend engineers on the team I was managing. Could a second app share Mission Control's authentication, API access, and UI components? Was a monorepo viable without turning into a multi-year migration? The conversations went deep on dependency boundaries, build tooling, and deploy paths. By the time they wound down, the IC engineers were on board with a phased approach.
+
+When the what and the how came together, I went in for the pitch.
+
+---
+
 ## The Pitch
 
-To make the idea tangible, I designed conceptual screens showing where internal data would live and how it could scale. I framed it as an MVP. One useful view, prove the architecture, add from there.
-
-Leadership liked the vision. But they heard "second app" and thought about the many months it took to stand up Mission Control. The auth layer, the APIs, the build tooling, the CI. Engineering was already stretched thin, let alone on a speculative project. They loved the idea but couldn't prioritize it.
-
-The concern was understandable. It was also solvable. Those were exactly the problems a monorepo architecture was designed to eliminate. I expanded my pitch to explain that Atlas was a second app, but not a second codebase. A monorepo would let both apps share authentication, API access, and UI components. I made the case that I could do the infrastructure work on spare cycles without pulling anyone off the existing roadmap. They gave me the green light.
+I pitched to the Director of Product Management, Director of Engineering, and VP of Product Development. The vision landed. So did the architecture, because the engineers already in the room had vetted it. The blocker was time. No one wanted to pull people off the existing roadmap for a speculative project, which was fair and the one piece I couldn't argue around with a better technical answer. So I made the offer. I'd do the infrastructure work myself, on spare cycles, without anyone leaving the existing roadmap. They gave me the green light.
 
 ## Building It
 
-Two months of spare cycles, December 2023 to February 2024. I phased the work into small, reviewable chunks where each PR improved the existing codebase on its own. Even if Atlas never shipped, the work would pay for itself. The MVP was a searchable list of customers, built on existing API endpoints. That was it.
+Two months of spare cycles, December 2023 to February 2024. Spare cycles meant some nights and slow Friday afternoons. Focused blocks I carved out without letting the work spill into my day-to-day. I was managing the frontend engineering team at the time, so the five engineers on it reviewed every PR and architecture decision along the way. I phased the work into small, reviewable chunks where each PR improved the existing codebase on its own. Even if Atlas never shipped, the work would pay for itself. The MVP was a searchable list of customers, built on existing API endpoints. That was it.
 
 <div class="not-prose my-8 grid gap-4 sm:grid-cols-2">
 	<Card title="Monorepo migration">
@@ -89,8 +97,10 @@ Two months of spare cycles, December 2023 to February 2024. I phased the work in
 		Same components, same visual language, one source of truth.
 	</Card>
 	<Card title="Auth and API refactor">
-		Decoupled the authentication layer and GraphQL connections from Mission
-		Control so both apps could authenticate and query independently.
+		Worked with our Principal Engineering Architect to decouple the
+		authentication layer and GraphQL connections from Mission Control. The
+		most coupled part of the codebase, and the one I wasn't going to get
+		right alone.
 	</Card>
 </div>
 
@@ -116,7 +126,7 @@ Two months of spare cycles, December 2023 to February 2024. I phased the work in
 
 ## Growth
 
-We didn't announce Atlas to the broader company for about a year. Instead, we shared it quietly with individuals who'd find it useful. An Account Manager looking up customer details. An engineer who wanted AWS account information without waiting 10 minutes for the legacy tool. They used it more than expected, shared it with more coworkers, and started requested features. Each new feature was a side project that I designed ahead of time so the team could ship whenever the next spare cycle landed. The backlog kept growing until Atlas had to be actively planned in quarterly roadmaps.
+We didn't announce Atlas to the broader company for about a year. Instead, we shared it quietly with individuals who'd find it useful. An Account Manager looking up customer details. An engineer who wanted AWS account information without waiting 10 minutes for the legacy tool. They used it more than expected, shared it with more coworkers, and started requesting features. Each new feature was a side project that I designed ahead of time so the team could ship whenever the next spare cycle landed. Once the backlog grew past what I could keep up with alone, I brought one of the product designers on my team in to help work through new page designs. Eventually Atlas had to be actively planned in quarterly roadmaps.
 
 About a year and a half in, we'd reached near feature parity with the legacy tool. Combined with that legacy tool's mounting security issues, we made the call to port over the remaining functionality and sunset it entirely.
 
