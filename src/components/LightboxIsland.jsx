@@ -15,20 +15,20 @@ const urlWith = id => {
 	return url.pathname + (url.search || '') + url.hash;
 };
 
+const readFromAnchor = (el, id) => ({
+	id: id ?? el.getAttribute('data-lightbox'),
+	src:
+		el.getAttribute('data-lightbox-src') || el.getAttribute('href'),
+	alt: el.getAttribute('data-lightbox-alt') || '',
+	caption: el.getAttribute('data-lightbox-caption') || '',
+});
+
 const readAssetById = id => {
 	if (!id) return null;
 	const el = document.querySelector(
 		`a[data-lightbox="${CSS.escape(id)}"]`,
 	);
-	if (!el) return null;
-	return {
-		id,
-		src:
-			el.getAttribute('data-lightbox-src') ||
-			el.getAttribute('href'),
-		alt: el.getAttribute('data-lightbox-alt') || '',
-		caption: el.getAttribute('data-lightbox-caption') || '',
-	};
+	return el ? readFromAnchor(el, id) : null;
 };
 
 export const LightboxIsland = () => {
@@ -72,24 +72,15 @@ export const LightboxIsland = () => {
 				return;
 			const anchor = e.target.closest('a[data-lightbox]');
 			if (!anchor) return;
-			const id = anchor.getAttribute('data-lightbox');
-			if (!id) return;
+			const next = readFromAnchor(anchor);
+			if (!next.id) return;
 			e.preventDefault();
-			const next = {
-				id,
-				src:
-					anchor.getAttribute('data-lightbox-src') ||
-					anchor.getAttribute('href'),
-				alt: anchor.getAttribute('data-lightbox-alt') || '',
-				caption:
-					anchor.getAttribute('data-lightbox-caption') || '',
-			};
 			// Push so browser back closes the overlay and keeps you on the
 			// case study page.
 			window.history.pushState(
-				{ lightbox: id },
+				{ lightbox: next.id },
 				'',
-				urlWith(id),
+				urlWith(next.id),
 			);
 			setAsset(next);
 		};
@@ -163,8 +154,6 @@ export const LightboxIsland = () => {
 
 	if (!asset) return null;
 
-	const close = closeLightbox;
-
 	const onImgLoad = e => {
 		const img = e.currentTarget;
 		setCanZoom(
@@ -199,16 +188,8 @@ export const LightboxIsland = () => {
 		});
 	};
 
-	const imgClass = [
-		'lb-image',
-		zoomed ? 'zoomed' : 'contained',
-		canZoom && !zoomed ? 'zoomable' : '',
-	]
-		.filter(Boolean)
-		.join(' ');
-
 	return (
-		<div className="lb-backdrop" onClick={close}>
+		<div className="lb-backdrop" onClick={closeLightbox}>
 			<div
 				ref={cardRef}
 				tabIndex={-1}
@@ -229,7 +210,11 @@ export const LightboxIsland = () => {
 						alt={asset.alt}
 						onLoad={onImgLoad}
 						onClick={onImgClick}
-						className={imgClass}
+						className={
+							canZoom && !zoomed
+								? 'lb-image zoomable'
+								: 'lb-image'
+						}
 					/>
 				</div>
 
@@ -246,7 +231,7 @@ export const LightboxIsland = () => {
 
 				<button
 					type="button"
-					onClick={close}
+					onClick={closeLightbox}
 					aria-label="Close image viewer"
 					className="lb-close"
 				>
