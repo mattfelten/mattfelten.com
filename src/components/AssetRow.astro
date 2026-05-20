@@ -1,3 +1,7 @@
+---
+const { caption } = Astro.props;
+---
+
 <style>
 	div {
 		margin-top: 2em;
@@ -30,3 +34,4 @@
 <div class="asset-row-wrap">
 	<slot />
 </div>
+{caption && <small class="-mt-6 mb-6 block" set:html={caption} />}

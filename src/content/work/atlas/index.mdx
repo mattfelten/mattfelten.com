@@ -21,6 +21,8 @@ import Stats from '../../../components/Stats.astro';
 import awsAccountOverview from './imgs/aws-account-overview.png';
 import billingAdjustment from './imgs/billing-adjustment.png';
 import billingRules from './imgs/billing-rules.png';
+import conceptCustomers from './imgs/concept-customers.png';
+import conceptDashboard from './imgs/concept-dashboard.png';
 import contractUpload from './imgs/contract-upload.png';
 import customerOverview from './imgs/customer-overview.png';
 import loopTimeline from './imgs/loop-timeline.png';
@@ -67,9 +69,38 @@ Without a **dedicated home for internal tools**, teams lose time, take on **secu
 
 The problem was clear. The harder question was what to do about it. That took weeks of parallel work on two tracks.
 
-On the **what**, I ran 10-15 stakeholder interviews across customer-facing and product teams at different seniority levels. Some sessions confirmed what I already suspected. Others surfaced needs that ended up shaping the post-MVP backlog. I designed conceptual screens to make the idea tangible. Where internal data would live, how it could scale, what it would feel like to use.
+#### What do we build?
 
-On the **how**, I worked through the architecture with our Principal Engineering Architect and the five frontend engineers on the team I was managing. Could a second app share Mission Control's authentication, API access, and UI components? Was a monorepo viable without turning into a multi-year migration? The conversations went deep on dependency boundaries, build tooling, and deploy paths. By the time they wound down, the IC engineers were on board with a phased approach.
+I ran 10-15 stakeholder interviews across customer-facing and product teams at different seniority levels. Some sessions confirmed what I already suspected. Others surfaced needs that ended up shaping the post-MVP backlog. I designed conceptual screens to make the idea tangible. Where internal data would live, how it could scale, what it would feel like to use.
+
+<AssetRow caption="Two of the conceptual screens from the pitch. They didn't match what we eventually built. The Dashboard came later, the Customers page evolved substantially, AWS Accounts wasn't even in the first concept. But seeing the app made the idea land in a way a pitch doc by itself couldn't have.">
+	<Asset src={conceptDashboard} alt="A rough conceptual dashboard from the pitch, showing customer activity and team data" expand />
+	<Asset src={conceptCustomers} alt="A rough conceptual customers page from the pitch, showing a list of customers with quick details" expand />
+</AssetRow>
+
+#### How do we build it?
+
+I worked through the architecture with our Principal Architect and the five Frontend Engineers on the team I was managing. Could a second app share Mission Control's authentication, API access, and UI components? Was a monorepo viable without turning into a multi-year migration? The conversations went deep on dependency boundaries, build tooling, and deploy paths. By the time they wrapped up, the engineers were on board with a phased approach.
+
+<div class="not-prose my-8 grid gap-4 sm:grid-cols-2">
+	<Card title="Monorepo migration">
+		Convert the single Mission Control repo into a monorepo so both apps
+		could share code and dependencies while being deployed independently.
+	</Card>
+	<Card title="Webpack to Vite">
+		Swap the build tool to Vite. Easier to configure for a multi-app setup,
+		faster builds across the board.
+	</Card>
+	<Card title="Shared design system">
+		Extract UI components into a shared library that both apps would consume.
+		Same components, same visual language, one source of truth.
+	</Card>
+	<Card title="Auth and API refactor">
+		Decouple the authentication layer and GraphQL connections from Mission
+		Control. The most coupled part of the codebase, the one I'd need our
+		Principal Architect's help on.
+	</Card>
+</div>
 
 When the what and the how came together, I went in for the pitch.
 
@@ -77,32 +108,31 @@ When the what and the how came together, I went in for the pitch.
 
 ## The Pitch
 
-I pitched to the Director of Product Management, Director of Engineering, and VP of Product Development. The vision landed. So did the architecture, because the engineers already in the room had vetted it. The blocker was time. No one wanted to pull people off the existing roadmap for a speculative project, which was fair and the one piece I couldn't argue around with a better technical answer. So I made the offer. I'd do the infrastructure work myself, on spare cycles, without anyone leaving the existing roadmap. They gave me the green light.
+I pitched to the Director of Product Management, Director of Engineering, and VP of Product Development. The vision landed. So did the architecture, because the engineers already in the room had vetted it. The blocker was time. No one wanted to pull people off the existing roadmap for a speculative project, which was fair. That's the only concern I could argue against with fancy concepts and infrastructure diagrams. So I made the offer. I'd do the infrastructure work myself, on spare cycles, without anyone leaving the existing roadmap commitments. They gave me the green light.
+
+---
 
 ## Building It
 
-Two months of spare cycles, December 2023 to February 2024. Spare cycles meant some nights and slow Friday afternoons. Focused blocks I carved out without letting the work spill into my day-to-day. I was managing the frontend engineering team at the time, so the five engineers on it reviewed every PR and architecture decision along the way. I phased the work into small, reviewable chunks where each PR improved the existing codebase on its own. Even if Atlas never shipped, the work would pay for itself. The MVP was a searchable list of customers, built on existing API endpoints. That was it.
+Over the course of two months, using slow Friday afternoons, occasional evenings, and a few focused blocks I carved out, I got to work. I was managing the frontend engineering team at the time, so the engineers on my team reviewed every PR and architecture decision along the way. I phased the work into small, reviewable chunks where each PR improved the existing codebase on its own. Even if Atlas never shipped, the work would pay for itself. The MVP was a searchable list of customers, built on existing API endpoints. That was it.
 
-<div class="not-prose my-8 grid gap-4 sm:grid-cols-2">
-	<Card title="Monorepo migration">
-		Converted the single Mission Control repo into a monorepo so both apps
-		could share code and dependencies while being deployed independently.
-	</Card>
-	<Card title="Webpack to Vite">
-		Swapped the build tool to Vite. Easier to configure for a multi-app
-		setup, faster builds across the board.
-	</Card>
-	<Card title="Shared design system">
-		Extracted UI components into a shared library that both apps consume.
-		Same components, same visual language, one source of truth.
-	</Card>
-	<Card title="Auth and API refactor">
-		Worked with our Principal Engineering Architect to decouple the
-		authentication layer and GraphQL connections from Mission Control. The
-		most coupled part of the codebase, and the one I wasn't going to get
-		right alone.
-	</Card>
-</div>
+```
+.
+├── .storybook/
+├── apps/
+│   ├── atlas/
+│   └── mission-control/
+├── packages/
+│   ├── api/
+│   ├── auth/
+│   └── ui/
+├── jest.config.js
+├── playwright.config.js
+├── tsconfig.json
+└── vite.config.ts
+```
+
+What the tree doesn't show is the work behind it. Auth, the API layer, and UI components had to be pulled out of code that wasn't built to be reused. Each extraction was its own refactor. Storybook, Jest, and Playwright kept running across everything the whole way through.
 
 <AssetRow>
 	<Asset
@@ -162,20 +192,6 @@ Atlas has grown into six primary areas, each cross-linked to the others and to M
 	</Card>
 </div>
 
----
-
-## Designing for multiple mental models
-
-Atlas serves several teams at Mission, each approaching the same data with a different mental model. Account Managers start with a customer. Engineers start with an AWS account. Finance starts with a customer to find a contract. Support starts with whichever piece of information the case gives them. The naive IA would pick one of those mental models and force everyone through it. Atlas does both.
-
-So every data object has two homes. A top-level list view for when you don't yet know which one you're looking for. A contextual placement inside a related object's detail page for when you do. AWS accounts live in a top-level AWS Accounts list and inside each customer's detail page. Loops live in a top-level view and inside each customer. Contracts, users, integrations all follow the same pattern.
-
-We kept the maintenance cost manageable with one strict rule. Actions only live on detail pages. The top-level AWS Accounts list and the customer-scoped list both render as read-only directories. Click any row from either path and you arrive at the same AWS Account Details page. One canonical detail view per object, regardless of how you got there.
-
----
-
-## The Product
-
 <Asset
 	src={customerOverview}
 	expand
@@ -229,6 +245,10 @@ Finance needed more than surfaced data. They needed workflow tools. Uploading co
 ### Infrastructure as product design
 
 The monorepo, shared design system, and build tool swap were the hardest things to get buy-in for. They sounded like engineering overhead. They were actually the product decision. Every feature after the MVP was cheap because the foundation was shared. The auth refactor meant no new login flow. The shared components meant no new design system. The monorepo meant no new deploy pipeline. The infrastructure wasn't a prerequisite for Atlas. It was the whole project, why we could do it in the first place. The customer list was just proof that it worked.
+
+### IA for multiple mental models
+
+Different teams approached the same data from different directions. Account Managers started with a customer, engineers with an AWS account, finance with a contract. We made a choice for Atlas to have multiple paths to reach the information you're looking for. A top-level list view for browsing and searching, and a contextual placement inside related objects when you did. We kept the maintenance manageable with one strict rule. Actions only live on detail pages. One canonical detail view per object, regardless of how you got there.
 
 ---
 
