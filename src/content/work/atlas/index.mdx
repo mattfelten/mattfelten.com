@@ -1,0 +1,306 @@
+---
+title: Atlas
+company: Mission Cloud
+year: 2024
+active: true
+type: case-study
+featured: true
+parent: mission-control
+intro: An internal tools platform I pitched, designed, and built on spare cycles while the team focused on other priorities. It's now where over a third of the engineering team's roadmap lives.
+cover: ./imgs/dashboard.png
+coverAlt: The Atlas dashboard showing a personalized overview of customer activity, assigned work, and recent updates
+---
+
+import Asset from '../../../components/Asset.astro';
+import AssetRow from '../../../components/AssetRow.astro';
+import Card from '../../../components/Card.astro';
+import PullQuote from '../../../components/PullQuote.astro';
+import Stat from '../../../components/Stat.astro';
+import Stats from '../../../components/Stats.astro';
+import UsageChart from '../../../components/UsageChart.jsx';
+
+import awsAccountOverview from './imgs/aws-account-overview.png';
+import billingAdjustment from './imgs/billing-adjustment.png';
+import billingRules from './imgs/billing-rules.png';
+import conceptCustomers from './imgs/concept-customers.png';
+import conceptDashboard from './imgs/concept-dashboard.png';
+import contractUpload from './imgs/contract-upload.png';
+import customerOverview from './imgs/customer-overview.png';
+import loopTimeline from './imgs/loop-timeline.png';
+import mvpCustomerOverview from './imgs/mvp-customer-overview.png';
+import mvpCustomerTeam from './imgs/mvp-customer-team.png';
+import mvpCustomers from './imgs/mvp-customers.png';
+import pricingDimensions from './imgs/pricing-dimensions.png';
+
+[Mission Cloud's](https://missioncloud.com/) customer-facing app, Mission Control, kept bumping into a gap. The Product Development team I was on ran into projects that weren't straightforward customer features. Cross-customer reports. Internal workflows. Data customers shouldn't see. Our legacy internal tool was a decade out of date, slow, and unmaintained. So I spent two months of spare cycles designing and building Atlas, an internal tools platform that now accounts for over a third of the engineering team's roadmap.
+
+---
+
+## The Problem
+
+<PullQuote title="Problem Statement">
+Supporting Mission's customers takes more than a customer-facing app. Internal teams need their own **data, workflows, and tools** to do their work.
+
+Today, that work is scattered across a **customer-facing app where it doesn't belong**, a **legacy tool that's been left to rot**, and one-off scripts and spreadsheets.
+
+Without a **dedicated home for internal tools**, teams lose time, take on **security risk**, and avoid building the features they actually need.
+
+</PullQuote>
+
+<div class="not-prose my-8 grid gap-4 sm:grid-cols-3">
+	<Card title="Features without a home">
+		Internal reports, operational data, tools for managing third-party
+		integrations. None of it belonged in the customer-facing app, but there
+		was nowhere else to put it.
+	</Card>
+	<Card title="A legacy tool on life support">
+		Queries that took 10 minutes. Security issues nobody wanted to touch. A
+		codebase disconnected from everything else we'd built.
+	</Card>
+	<Card title="Screen-sharing risk">
+		Mission's teams share their screens with customers constantly. Internal
+		data in the customer app was a wrong-click away from being visible
+		during a live call.
+	</Card>
+</div>
+
+---
+
+## The Plan
+
+The problem was clear. The harder question was what to do about it. That took weeks of parallel work on two tracks.
+
+#### What do we build?
+
+I ran 10-15 stakeholder interviews across customer-facing and product teams at different seniority levels. Some sessions confirmed what I already suspected. Others surfaced needs that ended up shaping the post-MVP backlog. I designed conceptual screens to make the idea tangible. Where internal data would live, how it could scale, what it would feel like to use.
+
+<AssetRow caption="Two of the conceptual screens from the pitch. They didn't match what we eventually built. The Dashboard came later, the Customers page evolved substantially, AWS Accounts wasn't even in the first concept. But seeing the app made the idea land in a way a pitch doc by itself couldn't have.">
+	<Asset src={conceptDashboard} alt="A rough conceptual dashboard from the pitch, showing customer activity and team data" expand />
+	<Asset src={conceptCustomers} alt="A rough conceptual customers page from the pitch, showing a list of customers with quick details" expand />
+</AssetRow>
+
+#### How do we build it?
+
+I worked through the architecture with our Principal Architect and the five Frontend Engineers on the team I was managing. Could a second app share Mission Control's authentication, API access, and UI components? Was a monorepo viable without turning into a multi-year migration? The conversations went deep on dependency boundaries, build tooling, and deploy paths. By the time they wrapped up, the engineers were on board with a phased approach.
+
+<div class="not-prose my-8 grid gap-4 sm:grid-cols-2">
+	<Card title="Monorepo migration">
+		Convert the single Mission Control repo into a monorepo so both apps
+		could share code and dependencies while being deployed independently.
+	</Card>
+	<Card title="Webpack to Vite">
+		Swap the build tool to Vite. Easier to configure for a multi-app setup,
+		faster builds across the board.
+	</Card>
+	<Card title="Shared design system">
+		Extract UI components into a shared library that both apps would consume.
+		Same components, same visual language, one source of truth.
+	</Card>
+	<Card title="Auth and API refactor">
+		Decouple the authentication layer and GraphQL connections from Mission
+		Control. The most coupled part of the codebase, the one I'd need our
+		Principal Architect's help on.
+	</Card>
+</div>
+
+When the what and the how came together, I went in for the pitch.
+
+---
+
+## The Pitch
+
+I pitched to the Director of Product Management, Director of Engineering, and VP of Product Development. The vision landed. So did the architecture, because the engineers already in the room had vetted it. The blocker was time. No one wanted to pull people off the existing roadmap for a speculative project, which was fair. That's the only concern I could argue against with fancy concepts and infrastructure diagrams. So I made the offer. I'd do the infrastructure work myself, on spare cycles, without anyone leaving the existing roadmap commitments. They gave me the green light.
+
+---
+
+## Building It
+
+Over the course of two months, using slow Friday afternoons, occasional evenings, and a few focused blocks I carved out, I got to work. I was managing the frontend engineering team at the time, so the engineers on my team reviewed every PR and architecture decision along the way. I phased the work into small, reviewable chunks where each PR improved the existing codebase on its own. Even if Atlas never shipped, the work would pay for itself. The MVP was a searchable list of customers, built on existing API endpoints. That was it.
+
+```
+.
+├── .storybook/
+├── apps/
+│   ├── atlas/
+│   └── mission-control/
+├── packages/
+│   ├── api/
+│   ├── auth/
+│   └── ui/
+├── jest.config.js
+├── playwright.config.js
+├── tsconfig.json
+└── vite.config.ts
+```
+
+What the tree doesn't show is the work behind it. Auth, the API layer, and UI components had to be pulled out of code that wasn't built to be reused. Each extraction was its own refactor. Storybook, Jest, and Playwright kept running across everything the whole way through.
+
+<AssetRow>
+	<Asset
+		src={mvpCustomers}
+		alt="The MVP Customers list view, a simple searchable directory of every customer"
+		expand
+	/>
+	<Asset
+		src={mvpCustomerOverview}
+		alt="The MVP customer overview page for an example customer, showing basic account information"
+		expand
+	/>
+	<Asset
+		src={mvpCustomerTeam}
+		alt="The MVP customer team page showing the Mission staff assigned to that customer"
+		expand
+	/>
+</AssetRow>
+
+---
+
+## Growth
+
+We didn't announce Atlas to the broader company for about a year. Instead, we shared it quietly with individuals who'd find it useful. An Account Manager looking up customer details. An engineer who wanted AWS account information without waiting 10 minutes for the legacy tool. They used it more than expected, shared it with more coworkers, and started requesting features. Each new feature was a side project that I designed ahead of time so the team could ship whenever the next spare cycle landed. Once the backlog grew past what I could keep up with alone, I brought one of the product designers on my team in to help work through new page designs. Eventually Atlas had to be actively planned in quarterly roadmaps.
+
+About a year and a half in, we'd reached near feature parity with the legacy tool. Combined with that legacy tool's mounting security issues, we made the call to port over the remaining functionality and sunset it entirely.
+
+<Card title="Monthly Active Users" class="my-8">
+	<span class="text-subdued text-xs mb-2 -mt-1">2024 - 2026</span>
+	<UsageChart
+		client:only="react"
+		data={[
+			{ month: 'Feb 2024', value: 4 },
+			{ month: 'Mar 2024', value: 5 },
+			{ month: 'Apr 2024', value: 12 },
+			{ month: 'May 2024', value: 9 },
+			{ month: 'Jun 2024', value: 12 },
+			{ month: 'Jul 2024', value: 13 },
+			{ month: 'Aug 2024', value: 23 },
+			{ month: 'Sep 2024', value: 27 },
+			{ month: 'Oct 2024', value: 24 },
+			{ month: 'Nov 2024', value: 27 },
+			{ month: 'Dec 2024', value: 30 },
+			{ month: 'Jan 2025', value: 47 },
+			{ month: 'Feb 2025', value: 53 },
+			{ month: 'Mar 2025', value: 73 },
+			{ month: 'Apr 2025', value: 88 },
+			{ month: 'May 2025', value: 106 },
+			{ month: 'Jun 2025', value: 106 },
+			{ month: 'Jul 2025', value: 114 },
+			{ month: 'Aug 2025', value: 119 },
+			{ month: 'Sep 2025', value: 128 },
+			{ month: 'Oct 2025', value: 148 },
+			{ month: 'Nov 2025', value: 122 },
+			{ month: 'Dec 2025', value: 118 },
+			{ month: 'Jan 2026', value: 123 },
+			{ month: 'Feb 2026', value: 126 },
+			{ month: 'Mar 2026', value: 128 },
+			{ month: 'Apr 2026', value: 131 },
+		]}
+	/>
+</Card>
+
+---
+
+## What It Is Today
+
+Atlas has grown into six primary areas, each cross-linked to the others and to Mission Control.
+
+<div class="not-prose my-8 grid gap-4 sm:grid-cols-2">
+	<Card title="Dashboard">
+		A personalized starting point surfacing data relevant to the logged-in
+		user.
+	</Card>
+	<Card title="Customers">
+		Every customer, drillable into products, AWS accounts, integrations, and
+		contracts.
+	</Card>
+	<Card title="AWS Accounts">
+		Every AWS account across all customers, with support type, access, org
+		structure, and sync state.
+	</Card>
+	<Card title="Entitlements">
+		A full entitlements system with audit tracking for what each customer
+		can access.
+	</Card>
+	<Card title="Billing and Finance">
+		Workflow tools for finance teams. Contracts, billing rules, adjustments,
+		and reporting.
+	</Card>
+	<Card title="Loops">
+		All Collaboration Loops across all customers in a single internal view.
+	</Card>
+</div>
+
+<Asset
+	src={customerOverview}
+	expand
+	caption="A customer's overview page. AWS accounts, contracts, integrations, and Loops all show up in context for teams that start with a customer in mind."
+/>
+
+<Asset
+	src={awsAccountOverview}
+	expand
+	caption="An AWS account overview. Same data, accessed account-first. The customer is preserved as a link, not duplicated as a view."
+/>
+
+<Asset
+	src={loopTimeline}
+	expand
+	caption="The Loop Timeline view inside a customer. Every meeting and its state, without bouncing between tools."
+/>
+
+Finance needed more than surfaced data. They needed workflow tools. Uploading contracts, applying billing adjustments, configuring tiered support fee rules with the SQL that drives the billing engine. These are the screens finance teams stare at every month. They deserved the same care as any customer-facing surface.
+
+<AssetRow>
+	<Asset
+		src={contractUpload}
+		expand
+		caption="The Contract Upload modal. A structured form for what used to be tracked in spreadsheets."
+	/>
+	<Asset
+		src={pricingDimensions}
+		expand
+		caption="Pricing dimensions, the building blocks for billing rules and adjustments."
+	/>
+</AssetRow>
+
+<AssetRow>
+	<Asset
+		src={billingAdjustment}
+		expand
+		caption="The Billing Adjustment modal. A guided flow for corrections that used to require an engineer."
+	/>
+	<Asset
+		src={billingRules}
+		expand
+		caption="The Billing Rules modal. Finance can read and verify the underlying SQL without an engineer translating it."
+	/>
+</AssetRow>
+
+---
+
+## What I Learned
+
+### Infrastructure as product design
+
+The monorepo, shared design system, and build tool swap were the hardest things to get buy-in for. They sounded like engineering overhead. They were actually the product decision. Every feature after the MVP was cheap because the foundation was shared. The auth refactor meant no new login flow. The shared components meant no new design system. The monorepo meant no new deploy pipeline. The infrastructure wasn't a prerequisite for Atlas. It was the whole project, why we could do it in the first place. The customer list was just proof that it worked.
+
+### IA for multiple mental models
+
+Different teams approached the same data from different directions. Account Managers started with a customer, engineers with an AWS account, finance with a contract. We made a choice for Atlas to have multiple paths to reach the information you're looking for. A top-level list view for browsing and searching, and a contextual placement inside related objects when you did. We kept the maintenance manageable with one strict rule. Actions only live on detail pages. One canonical detail view per object, regardless of how you got there.
+
+### Internal tools forgive too much
+
+Internal users don't churn, they use what they're given. The list views haven't been redesigned since launch. The lift-and-shift pages still feel like a different app. The entitlements UX has been on my list for a year now. None of it generated the feedback that would have forced improvement. Customer-facing products fix themselves because users vote with their attention. Internal tools have to be improved deliberately. The thing I'd do differently is set up deliberate feedback cycles with the early users from day one to build the feedback muscle quicker.
+
+---
+
+## Outcomes
+
+<Stats columns={3}>
+	<Stat value="30k+" label="monthly views across Atlas's primary surfaces" />
+	<Stat value="70%" label="of Mission employees have used Atlas" />
+	<Stat value="35%" label="of engineering roadmap is Atlas projects" />
+</Stats>
+
+Atlas is the daily-driver for Mission's customer-facing teams. Account Managers, Customer Success, Support Engineers, Onboarding, Finance, Revenue Ops, and the engineers keeping it all running. The AWS Accounts list alone saw 18,400 views in March.
+
+The roadmap share isn't scope creep. The company kept finding problems where the right place to solve them was inside Atlas. The legacy tool has been fully sunset, and every new internal feature now costs a fraction of what it would have with a separate codebase.
