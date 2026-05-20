@@ -111,6 +111,20 @@ No matter where you start your journey, you can get to the information you need.
 
 ---
 
+## Designing for multiple mental models
+
+Atlas serves several teams at Mission, each approaching the same data with a different mental model. Account Managers start with a customer. Engineers start with an AWS account. Finance starts with a customer to find a contract. Support starts with whichever piece of information the case gives them. The naive IA would pick one of those mental models and force everyone through it. Atlas does both.
+
+This came directly out of user interviews and stakeholder conversations during the pitch and early build. People described their work in different ways depending on their role, and forcing them into one structure would have made the app feel wrong to half the company.
+
+So every data object has two homes. A top-level list view for when you don't yet know which one you're looking for. A contextual placement inside a related object's detail page for when you do. AWS accounts live in a top-level AWS Accounts list and inside each customer's detail page. Loops live in a top-level view and inside each customer. Contracts, users, integrations all follow the same pattern.
+
+The cost of dual paths is maintenance and consistency. We kept that manageable by being strict about one rule. Actions only live on detail pages. The top-level AWS Accounts list and the customer-scoped AWS Accounts list both render as read-only directories. Click any row from either path and you arrive at the same AWS Account Details page, where the data and the actions both live. One canonical detail view per object, regardless of how you got there.
+
+That same constraint helped with screen sharing. Mission's internal teams share their screens with customers constantly, and Atlas had to be safe enough to have open during a call. List views are clean directories. Action-heavy detail pages are pulled up deliberately. The dual-path IA wasn't designed for screen sharing, but it ended up being well-suited to it.
+
+---
+
 ## Key Decisions
 
 <div class="not-prose my-8 grid gap-4 sm:grid-cols-2">
@@ -142,18 +156,14 @@ The infrastructure wasn't a prerequisite for the product. It was the product. Th
 
 I've been in the industry long enough to know that "if you build it, they will come" works less often than we'd like. But the alternative here was pouring effort into an app on life support that nobody believed in. Atlas had a better foundation and a clearer path forward. It just needed time to prove that.
 
-So we didn't announce it. We shared it with people one at a time, and we paid attention to what they did with it. They used it. They asked for more. They told their colleagues. The backlog grew until it couldn't be handled on spare cycles anymore and had to be formally planned.
-
-Building something people pull toward you is more durable than pushing something out and hoping for adoption. The demand made the case better than any pitch deck could have.
+So we didn't announce it. We shared it with people one at a time, and we paid attention to what they did with it. They used it. They asked for more. They told their colleagues. The backlog grew until it couldn't be handled on spare cycles anymore and had to be formally planned. The demand made the case better than any pitch deck could have.
 
 ---
 
 ## Outcomes
 
-{/* TODO: Replace placeholder stats with real DAU/WAU/MAU data */}
-
 <Stats columns={2}>
-	<Stat value="XX%" label="Weekly active rate across internal teams" />
+	<Stat value="43%" label="of monthly users return every week" />
 	<Stat value="35%" label="of engineering roadmap is Atlas projects" />
 </Stats>
 
