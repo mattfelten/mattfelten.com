@@ -7,13 +7,26 @@ type: case-study
 featured: true
 parent: mission-control
 intro: An internal tools platform I pitched, designed, and built on spare cycles while the team focused on other priorities. It's now where over a third of the engineering team's roadmap lives.
-cover: ./imgs/cover.png
-coverAlt: The Atlas internal tools platform showing a dashboard of customer data and navigation
+cover: ./imgs/dashboard.png
+coverAlt: The Atlas dashboard showing a personalized overview of customer activity, assigned work, and recent updates
 ---
 
+import Asset from '../../../components/Asset.astro';
+import AssetRow from '../../../components/AssetRow.astro';
 import Card from '../../../components/Card.astro';
 import Stat from '../../../components/Stat.astro';
 import Stats from '../../../components/Stats.astro';
+
+import awsAccountOverview from './imgs/aws-account-overview.png';
+import billingAdjustment from './imgs/billing-adjustment.png';
+import billingRules from './imgs/billing-rules.png';
+import contractUpload from './imgs/contract-upload.png';
+import customerOverview from './imgs/customer-overview.png';
+import loopTimeline from './imgs/loop-timeline.png';
+import mvpCustomerOverview from './imgs/mvp-customer-overview.png';
+import mvpCustomerTeam from './imgs/mvp-customer-team.png';
+import mvpCustomers from './imgs/mvp-customers.png';
+import pricingDimensions from './imgs/pricing-dimensions.png';
 
 [Mission Cloud's](https://missioncloud.com/) customer-facing app, Mission Control, kept bumping into a gap. The Product Development team I was on kept running into projects that weren't straightforward customer-facing features, like cross-customer reports, internal workflows, data that customers shouldn't see. We had an older internal tool, but it hadn't been updated in years and some queries took 10 minutes to return. The appetite to maintain and improve it was non-existent. Meanwhile, new features in Mission Control were starting to include internal data and behind-the-scenes workflows that had to be carefully hidden because our teams screen-share with customers constantly.
 
@@ -68,6 +81,18 @@ Over about two months of spare cycles, from December 2023 to February 2024, I di
 
 The MVP was a searchable list of customers, built on existing API endpoints. That was it. One useful view that proved the architecture worked and gave people something real to use.
 
+<AssetRow>
+	<Asset src={mvpCustomers} alt="The MVP Customers list view, a simple searchable directory of every customer" expand />
+	<Asset src={mvpCustomerOverview} alt="The MVP customer overview page for an example customer, showing basic account information" expand />
+	<Asset src={mvpCustomerTeam} alt="The MVP customer team page showing the Mission staff assigned to that customer" expand />
+</AssetRow>
+
+<p>
+	<small>
+		The first quiet release. A customer list, a customer overview page, and a team page. Nothing fancy. Enough to prove the architecture and give people something to use.
+	</small>
+</p>
+
 ---
 
 ## Growth
@@ -121,7 +146,55 @@ So every data object has two homes. A top-level list view for when you don't yet
 
 The cost of dual paths is maintenance and consistency. We kept that manageable by being strict about one rule. Actions only live on detail pages. The top-level AWS Accounts list and the customer-scoped AWS Accounts list both render as read-only directories. Click any row from either path and you arrive at the same AWS Account Details page, where the data and the actions both live. One canonical detail view per object, regardless of how you got there.
 
-That same constraint helped with screen sharing. Mission's internal teams share their screens with customers constantly, and Atlas had to be safe enough to have open during a call. List views are clean directories. Action-heavy detail pages are pulled up deliberately. The dual-path IA wasn't designed for screen sharing, but it ended up being well-suited to it.
+---
+
+## The Product
+
+<Asset
+	src={customerOverview}
+	expand
+	caption="A customer's overview page. AWS accounts, contracts, integrations, and Loops all show up in context here for teams that start with a customer in mind."
+/>
+
+<Asset
+	src={awsAccountOverview}
+	expand
+	caption="An AWS account overview page. Same account data, accessed account-first for engineers who start with an alert or a configuration question. The customer relationship is preserved as a link, not duplicated as a view."
+/>
+
+<Asset
+	src={loopTimeline}
+	expand
+	caption="The Loop Timeline view inside a customer. The internal counterpart to the customer-facing Collaboration Loops experience, surfacing every meeting and its state without bouncing between tools."
+/>
+
+The Billing and Finance area is where Atlas had to do more than surface data. Finance needed actual workflow tools. Uploading contracts, applying billing adjustments, configuring tiered support fee rules with the SQL that drives the billing engine. These are the screens finance teams stare at every month. They deserved the same care as any customer-facing surface.
+
+<AssetRow>
+	<Asset
+		src={contractUpload}
+		expand
+		caption="The Contract Upload modal. A focused, structured form for what used to be an out-of-band process tracked in spreadsheets."
+	/>
+	<Asset
+		src={pricingDimensions}
+		expand
+		caption="Pricing dimensions, the building blocks finance uses to compose billing rules and adjustments."
+	/>
+</AssetRow>
+
+<AssetRow>
+	<Asset
+		src={billingAdjustment}
+		expand
+		caption="The Billing Adjustment modal. A guided flow for one-off corrections that previously required filing a ticket and waiting for an engineer."
+	/>
+	<Asset
+		src={billingRules}
+		expand
+		caption="The Billing Rules modal for tiered Support Fees, showing the underlying SQL as it's composed. Finance can read and verify the rule logic without needing an engineer to translate it."
+	/>
+</AssetRow>
 
 ---
 
