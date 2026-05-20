@@ -41,17 +41,23 @@ Supporting Mission's customers takes more than a customer-facing app. Internal t
 Today, that work is scattered across a **customer-facing app where it doesn't belong**, a **legacy tool that's been left to rot**, and one-off scripts and spreadsheets.
 
 Without a **dedicated home for internal tools**, teams lose time, take on **security risk**, and avoid building the features they actually need.
+
 </PullQuote>
 
 <div class="not-prose my-8 grid gap-4 sm:grid-cols-3">
 	<Card title="Features without a home">
-		Internal reports, operational data, tools for managing third-party integrations. None of it belonged in the customer-facing app, but there was nowhere else to put it.
+		Internal reports, operational data, tools for managing third-party
+		integrations. None of it belonged in the customer-facing app, but there
+		was nowhere else to put it.
 	</Card>
 	<Card title="A legacy tool on life support">
-		Queries that took 10 minutes. Security issues nobody wanted to touch. A codebase disconnected from everything else we'd built.
+		Queries that took 10 minutes. Security issues nobody wanted to touch. A
+		codebase disconnected from everything else we'd built.
 	</Card>
 	<Card title="Screen-sharing risk">
-		Mission's teams share their screens with customers constantly. Internal data in the customer app was a wrong-click away from being visible during a live call.
+		Mission's teams share their screens with customers constantly. Internal
+		data in the customer app was a wrong-click away from being visible
+		during a live call.
 	</Card>
 </div>
 
@@ -59,54 +65,60 @@ Without a **dedicated home for internal tools**, teams lose time, take on **secu
 
 ## The Pitch
 
-I pitched Atlas as a second app, but not a second codebase. A monorepo would let both apps share authentication, API access, and UI components. To make the idea tangible, I designed conceptual screens showing where internal data would live and how it could scale. Seeing the app landed better than a pitch doc would have. I framed it as an MVP. One useful view, prove the architecture, add from there.
+To make the idea tangible, I designed conceptual screens showing where internal data would live and how it could scale. I framed it as an MVP. One useful view, prove the architecture, add from there.
 
 Leadership liked the vision. But they heard "second app" and thought about the many months it took to stand up Mission Control. The auth layer, the APIs, the build tooling, the CI. Engineering was already stretched thin, let alone on a speculative project. They loved the idea but couldn't prioritize it.
 
-The concern was understandable. It was also solvable. Those were exactly the problems the monorepo architecture was designed to eliminate. I made the case that I could do the infrastructure work on spare cycles without pulling anyone off the existing roadmap. They gave me the green light.
-
----
+The concern was understandable. It was also solvable. Those were exactly the problems a monorepo architecture was designed to eliminate. I expanded my pitch to explain that Atlas was a second app, but not a second codebase. A monorepo would let both apps share authentication, API access, and UI components. I made the case that I could do the infrastructure work on spare cycles without pulling anyone off the existing roadmap. They gave me the green light.
 
 ## Building It
 
-Two months of spare cycles, December 2023 to February 2024. I phased the work into small, reviewable chunks where each PR improved the existing codebase on its own. Even if Atlas never shipped, the work would pay for itself.
+Two months of spare cycles, December 2023 to February 2024. I phased the work into small, reviewable chunks where each PR improved the existing codebase on its own. Even if Atlas never shipped, the work would pay for itself. The MVP was a searchable list of customers, built on existing API endpoints. That was it.
 
 <div class="not-prose my-8 grid gap-4 sm:grid-cols-2">
 	<Card title="Monorepo migration">
-		Converted the single Mission Control repo into a monorepo so both apps could share code and dependencies while being deployed independently.
+		Converted the single Mission Control repo into a monorepo so both apps
+		could share code and dependencies while being deployed independently.
 	</Card>
 	<Card title="Webpack to Vite">
-		Swapped the build tool to Vite. Easier to configure for a multi-app setup, faster builds across the board.
+		Swapped the build tool to Vite. Easier to configure for a multi-app
+		setup, faster builds across the board.
 	</Card>
 	<Card title="Shared design system">
-		Extracted UI components into a shared library that both apps consume. Same components, same visual language, one source of truth.
+		Extracted UI components into a shared library that both apps consume.
+		Same components, same visual language, one source of truth.
 	</Card>
 	<Card title="Auth and API refactor">
-		Decoupled the authentication layer and GraphQL connections from Mission Control so both apps could authenticate and query independently.
+		Decoupled the authentication layer and GraphQL connections from Mission
+		Control so both apps could authenticate and query independently.
 	</Card>
 </div>
 
-The MVP was a searchable list of customers, built on existing API endpoints. That was it.
-
 <AssetRow>
-	<Asset src={mvpCustomers} alt="The MVP Customers list view, a simple searchable directory of every customer" expand />
-	<Asset src={mvpCustomerOverview} alt="The MVP customer overview page for an example customer, showing basic account information" expand />
-	<Asset src={mvpCustomerTeam} alt="The MVP customer team page showing the Mission staff assigned to that customer" expand />
+	<Asset
+		src={mvpCustomers}
+		alt="The MVP Customers list view, a simple searchable directory of every customer"
+		expand
+	/>
+	<Asset
+		src={mvpCustomerOverview}
+		alt="The MVP customer overview page for an example customer, showing basic account information"
+		expand
+	/>
+	<Asset
+		src={mvpCustomerTeam}
+		alt="The MVP customer team page showing the Mission staff assigned to that customer"
+		expand
+	/>
 </AssetRow>
-
-<p>
-	<small>
-		The first quiet release. A customer list, an overview page, and a team page. Enough to prove the architecture worked.
-	</small>
-</p>
 
 ---
 
 ## Growth
 
-We didn't announce Atlas to the broader company for about a year. Instead, we shared it quietly with individuals who'd find it useful. An Account Manager looking up customer details. An engineer who wanted AWS account information without waiting 10 minutes for the legacy tool. They used it more than expected, requested features, and shared it with colleagues. Each new feature was a side project, designed ahead of time so I could ship whenever the next spare cycle landed. The backlog grew until Atlas had to be actively planned in quarterly roadmaps.
+We didn't announce Atlas to the broader company for about a year. Instead, we shared it quietly with individuals who'd find it useful. An Account Manager looking up customer details. An engineer who wanted AWS account information without waiting 10 minutes for the legacy tool. They used it more than expected, shared it with more coworkers, and started requested features. Each new feature was a side project that I designed ahead of time so the team could ship whenever the next spare cycle landed. The backlog kept growing until Atlas had to be actively planned in quarterly roadmaps.
 
-About a year and a half in, we'd reached near feature parity with the legacy tool. Combined with that tool's mounting security issues, we made the call to port over the remaining functionality and sunset it entirely.
+About a year and a half in, we'd reached near feature parity with the legacy tool. Combined with that legacy tool's mounting security issues, we made the call to port over the remaining functionality and sunset it entirely.
 
 ---
 
@@ -116,19 +128,24 @@ Atlas has grown into six primary areas, each cross-linked to the others and to M
 
 <div class="not-prose my-8 grid gap-4 sm:grid-cols-2">
 	<Card title="Dashboard">
-		A personalized starting point surfacing data relevant to the logged-in user.
+		A personalized starting point surfacing data relevant to the logged-in
+		user.
 	</Card>
 	<Card title="Customers">
-		Every customer, drillable into products, AWS accounts, integrations, and contracts.
+		Every customer, drillable into products, AWS accounts, integrations, and
+		contracts.
 	</Card>
 	<Card title="AWS Accounts">
-		Every AWS account across all customers, with support type, access, org structure, and sync state.
+		Every AWS account across all customers, with support type, access, org
+		structure, and sync state.
 	</Card>
 	<Card title="Entitlements">
-		A full entitlements system with audit tracking for what each customer can access.
+		A full entitlements system with audit tracking for what each customer
+		can access.
 	</Card>
 	<Card title="Billing and Finance">
-		Workflow tools for finance teams. Contracts, billing rules, adjustments, and reporting.
+		Workflow tools for finance teams. Contracts, billing rules, adjustments,
+		and reporting.
 	</Card>
 	<Card title="Loops">
 		All Collaboration Loops across all customers in a single internal view.
@@ -143,7 +160,7 @@ Atlas serves several teams at Mission, each approaching the same data with a dif
 
 So every data object has two homes. A top-level list view for when you don't yet know which one you're looking for. A contextual placement inside a related object's detail page for when you do. AWS accounts live in a top-level AWS Accounts list and inside each customer's detail page. Loops live in a top-level view and inside each customer. Contracts, users, integrations all follow the same pattern.
 
-The cost of dual paths is maintenance and consistency. We kept that manageable with one strict rule. Actions only live on detail pages. The top-level AWS Accounts list and the customer-scoped list both render as read-only directories. Click any row from either path and you arrive at the same AWS Account Details page. One canonical detail view per object, regardless of how you got there.
+We kept the maintenance cost manageable with one strict rule. Actions only live on detail pages. The top-level AWS Accounts list and the customer-scoped list both render as read-only directories. Click any row from either path and you arrive at the same AWS Account Details page. One canonical detail view per object, regardless of how you got there.
 
 ---
 
@@ -201,15 +218,18 @@ Finance needed more than surfaced data. They needed workflow tools. Uploading co
 
 ### Infrastructure as product design
 
-The monorepo, shared design system, and build tool swap were the hardest things to get buy-in for. They sounded like engineering overhead. They were actually the product decision. Every feature after the MVP was cheap because the foundation was shared. The auth refactor meant no new login flow. The shared components meant no new design system. The monorepo meant no new deploy pipeline. The infrastructure wasn't a prerequisite for Atlas. It was Atlas. The customer list was just proof that it worked.
+The monorepo, shared design system, and build tool swap were the hardest things to get buy-in for. They sounded like engineering overhead. They were actually the product decision. Every feature after the MVP was cheap because the foundation was shared. The auth refactor meant no new login flow. The shared components meant no new design system. The monorepo meant no new deploy pipeline. The infrastructure wasn't a prerequisite for Atlas. It was the whole project, why we could do it in the first place. The customer list was just proof that it worked.
 
 ---
 
 ## Outcomes
 
-<Stats columns={2}>
-	<Stat value="43%" label="of monthly users return every week" />
+<Stats columns={3}>
+	<Stat value="34k+" label="monthly views across Atlas's primary surfaces" />
+	<Stat value="70%" label="of Mission employees have used Atlas" />
 	<Stat value="35%" label="of engineering roadmap is Atlas projects" />
 </Stats>
 
-Atlas went from "great idea, but we can't prioritize it" to a permanent fixture in quarterly planning. Over a third of the engineering roadmap is now Atlas work, not because the project spiraled, but because the company kept finding problems Atlas was the right place to solve. The legacy tool has been fully sunset, and every new internal feature now costs a fraction of what it would have with a separate codebase. The compounding return of the infrastructure investment.
+Atlas is the daily-driver for Mission's customer-facing teams. Account Managers, Customer Success, Support Engineers, Onboarding, Finance, Revenue Ops, and the engineers keeping it all running. The AWS Accounts list alone saw 18,400 views in March.
+
+The roadmap share isn't scope creep. The company kept finding problems where the right place to solve them was inside Atlas. The legacy tool has been fully sunset, and every new internal feature now costs a fraction of what it would have with a separate codebase.
