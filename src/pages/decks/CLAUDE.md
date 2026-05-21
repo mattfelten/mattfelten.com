@@ -241,11 +241,15 @@ first, the payoff lands last.
 
 ### Planning a thesis deck
 
-**The thesis is a planning artifact, not a slide.** Write it down to
-choose projects, decide depth, and order Act II. The audience never sees
-it stated. If the thesis is clear from the projects you picked and the
-order you put them in, the deck worked. If not, it didn't. Show, don't
-tell.
+**The thesis lives in `index.astro`'s `meta` object, not as a slide.**
+Write it down to choose projects, decide depth, and order Act II. The
+audience never sees it stated. If the thesis is clear from the projects
+you picked and the order you put them in, the deck worked. If not, it
+didn't. Show, don't tell.
+
+The `meta.thesis` field (see "How to build a new deck") preserves the
+sentence you spent crafting so it doesn't get lost. It's also what a
+future maintainer reads first to understand what the deck is arguing.
 
 Act II is project mini-arcs, end to end. 2 to 4 projects, each gets:
 
@@ -314,16 +318,30 @@ imports accordingly.
 
 1. Create `src/pages/decks/YYYY-<slug>/` with `index.astro`, `_slides/`,
    `images/`.
-2. `index.astro` mounts `<DeckShell>` + `<Deck title="…">`. Title goes on
-   `<Deck>` so it flows to slides via context.
-3. Use a top-level TOC array (`const toc = ['Section 1', 'Section 2', …]`)
+2. At the top of `index.astro`, define a `meta` const:
+
+   ```ts
+   const meta = {
+       title: 'Deck Title',
+       description: 'One-line description for SEO/head',
+       thesis: 'One sentence. The deck\'s argument, kept private.',
+   };
+   ```
+
+   `<DeckShell {...meta}>` uses `title` and `description` for the HTML
+   head. `thesis` is ignored by the shell but preserved as the source of
+   truth for what the deck argues. The audience never sees it. See "How
+   to think about a deck" for what belongs there.
+3. Mount the deck: `<DeckShell {...meta}><Deck title={meta.title}>`.
+   Title goes on `<Deck>` so it flows to slides via context.
+4. Use a top-level TOC array (`const toc = ['Section 1', 'Section 2', …]`)
    and render `<TocSlide items={toc} />` (no active) at the start, plus
    `<TocSlide items={toc} active="…" />` before each section.
-4. To reuse a slide from another deck, either `import` it directly
-   (sharing — old deck's edits propagate) or `cp` the file into the new
+5. To reuse a slide from another deck, either `import` it directly
+   (sharing; old deck's edits propagate) or `cp` the file into the new
    `_slides/` and tweak (true freezing).
-5. Images: copy what you need into the new deck's `images/`. Even if
-   logos are the same as another deck, copy — assets freeze with the
+6. Images: copy what you need into the new deck's `images/`. Even if
+   logos are the same as another deck, copy. Assets freeze with the
    deck too.
 
 ## Freezing principle
