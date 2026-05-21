@@ -1,5 +1,6 @@
 ---
 title: The Image Overlay I Wanted
+date: 2026-05-20
 description: Building a custom image overlay for this site. URL state that doesn't pollute browser history, click-to-zoom for retina screenshots, focus-trap-react for accessibility, motion on a gentle curve.
 ---
 
