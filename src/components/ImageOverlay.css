@@ -34,6 +34,7 @@
 	--overlay-btn-bg: rgba(248, 246, 243, 0.78);
 	--overlay-btn-bg-hover: rgba(248, 246, 243, 1);
 	--overlay-btn-border: rgba(17, 24, 39, 0.18);
+	--overlay-caption-max-width: 35rem; /* ~Tailwind max-w-xl (36rem) */
 
 	position: fixed;
 	inset: 0;
@@ -158,7 +159,7 @@
 }
 
 .overlay-caption-inner {
-	max-width: 560px;
+	max-width: var(--overlay-caption-max-width);
 	font-size: 15px;
 	line-height: 1.6;
 	color: var(--color-strong);
