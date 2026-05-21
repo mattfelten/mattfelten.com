@@ -1,3 +1,4 @@
+import { FocusTrap } from 'focus-trap-react';
 import { useEffect, useRef, useState } from 'react';
 import './LightboxIsland.css';
 
@@ -189,7 +190,16 @@ export const LightboxIsland = () => {
 	};
 
 	return (
-		<div className="lb-backdrop" onClick={closeLightbox}>
+		<FocusTrap
+			focusTrapOptions={{
+				initialFocus: false,
+				fallbackFocus: () => cardRef.current,
+				escapeDeactivates: false,
+				clickOutsideDeactivates: false,
+				allowOutsideClick: true,
+			}}
+		>
+			<div className="lb-backdrop" onClick={closeLightbox}>
 			<div
 				ref={cardRef}
 				tabIndex={-1}
@@ -251,6 +261,7 @@ export const LightboxIsland = () => {
 				</button>
 			</div>
 		</div>
+		</FocusTrap>
 	);
 };
 
