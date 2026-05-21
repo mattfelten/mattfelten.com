@@ -1,5 +1,4 @@
 ---
-import { ImageOverlay } from '../components/ImageOverlay.jsx';
 import Layout from './default.astro';
 
 const { title } = Astro.props.frontmanter || Astro.props;
@@ -12,5 +11,4 @@ const { className } = Astro.props;
 		<slot />
 	</article>
 	<slot name="after-article" />
-	<ImageOverlay client:only="react" />
 </Layout>
