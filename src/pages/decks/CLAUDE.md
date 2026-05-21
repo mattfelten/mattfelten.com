@@ -241,21 +241,23 @@ first, the payoff lands last.
 
 ### Planning a thesis deck
 
-Act II beats:
+**The thesis is a planning artifact, not a slide.** Write it down to
+choose projects, decide depth, and order Act II. The audience never sees
+it stated. If the thesis is clear from the projects you picked and the
+order you put them in, the deck worked. If not, it didn't. Show, don't
+tell.
 
-1. Thesis statement. One sentence, load-bearing phrases highlighted.
-2. Why this thesis (optional). What pattern the thesis is reacting to.
-   Skip if it adds nothing.
-3. Evidence. 2 to 4 project mini-arcs. Each project gets:
-   - Context (1 slide). Stripped down vs. a case study deck.
-   - The decision specific to the thesis (1 to 2 slides). For a
-     "highest-leverage problem" thesis, this is the leverage decision.
-     For a different thesis, a different beat.
-   - What shipped and the outcome (1 slide).
-4. Synthesis. One slide pulling the pattern across all the projects.
+Act II is project mini-arcs, end to end. 2 to 4 projects, each gets:
 
-The variable beat in step 3 is the most important one to nail. Every
-project section must demonstrate that specific verb.
+- Context (1 slide). Stripped down vs. a case study deck.
+- The decision specific to the thesis (1 to 2 slides). For a
+  "highest-leverage problem" thesis, this is the leverage decision. For
+  a different thesis, a different beat.
+- What shipped and the outcome (1 slide).
+
+The decision beat is the most important one to nail. Every project
+section must demonstrate the same verb. Order the projects so the
+cumulative reading lands the thesis without anyone naming it.
 
 Project depth signals which evidence is strongest. A 5-slide project is
 your headline; a 2-slide project is a supporting example. Use the count.
@@ -264,17 +266,20 @@ your headline; a 2-slide project is a supporting example. Use the count.
 
 Before drafting any slide:
 
-1. Write the thesis (or project arc) in one sentence. If you can't write
-   it crisply, the deck isn't ready.
+1. Write the one-sentence purpose. For a case study deck, the project
+   arc. For a thesis deck, the thesis. The thesis stays private; the
+   audience inducts it from the work. If you can't write the sentence
+   crisply, the deck isn't ready.
 2. For thesis decks: list candidate projects. Cut anything that doesn't
    *demonstrate* the thesis (versus "happens to be a project you worked
    on").
 3. For each surviving project, write the load-bearing decision in one
    sentence.
 4. Decide depth per project.
-5. Draft the synthesis (thesis) or results (case study) slide first. If
-   you can't articulate the takeaway, iterate the thesis before drafting
-   anything else.
+5. For case study decks, draft the results slide first; it's the
+   endpoint everything else aims at. For thesis decks, draft the
+   strongest project's decision slide first; it sets the bar for the
+   others.
 6. Assemble Act I and III from the parts bin to set up and close *this*
    deck specifically.
 
