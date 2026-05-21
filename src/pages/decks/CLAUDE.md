@@ -241,15 +241,15 @@ first, the payoff lands last.
 
 ### Planning a thesis deck
 
-**The thesis lives in `index.astro`'s `meta` object, not as a slide.**
-Write it down to choose projects, decide depth, and order Act II. The
-audience never sees it stated. If the thesis is clear from the projects
-you picked and the order you put them in, the deck worked. If not, it
-didn't. Show, don't tell.
+**The thesis lives in `index.astro`'s `meta.description`, not as a
+slide.** Write it down to choose projects, decide depth, and order
+Act II. The audience never sees it stated. If the thesis is clear from
+the projects you picked and the order you put them in, the deck worked.
+If not, it didn't. Show, don't tell.
 
-The `meta.thesis` field (see "How to build a new deck") preserves the
-sentence you spent crafting so it doesn't get lost. It's also what a
-future maintainer reads first to understand what the deck is arguing.
+`meta.description` is where the sentence you spent crafting lives. It's
+also what a future maintainer reads first to understand what the deck
+is arguing. See "How to build a new deck" for the convention.
 
 Act II is project mini-arcs, end to end. 2 to 4 projects, each gets:
 
@@ -323,15 +323,16 @@ imports accordingly.
    ```ts
    const meta = {
        title: 'Deck Title',
-       description: 'One-line description for SEO/head',
-       thesis: 'One sentence. The deck\'s argument, kept private.',
+       description: 'One sentence stating the deck\'s argument.',
    };
    ```
 
-   `<DeckShell {...meta}>` uses `title` and `description` for the HTML
-   head. `thesis` is ignored by the shell but preserved as the source of
-   truth for what the deck argues. The audience never sees it. See "How
-   to think about a deck" for what belongs there.
+   `<DeckShell {...meta}>` reads both. `title` is the document title.
+   `description` carries the deck's thesis (or project arc) as the
+   source of truth for what the deck argues; it lands in the HTML
+   `<meta name="description">` but the deck is robots-disallowed, so
+   no crawler reads it and no slide displays it. See "How to think
+   about a deck" for what belongs there.
 3. Mount the deck: `<DeckShell {...meta}><Deck title={meta.title}>`.
    Title goes on `<Deck>` so it flows to slides via context.
 4. Use a top-level TOC array (`const toc = ['Section 1', 'Section 2', …]`)
