@@ -1,56 +1,61 @@
 ---
 title: The Image Overlay I Wanted
 date: 2026-05-20
-description: Building a custom image overlay for this site. URL state that doesn't pollute browser history, click-to-zoom for retina screenshots, focus-trap-react for accessibility, motion on a gentle curve.
+description: Building a custom image overlay for this site. URL state that doesn't pollute browser history, click-to-zoom for retina screenshots, accessibility wiring, and motion on a gentle curve.
 ---
+
+import Asset from '../../components/Asset.astro';
+import demoImage from '../work/atlas/imgs/aws-account-overview.png';
 
 Image overlays are a solved problem on paper. There are dozens of libraries. But every time I tried one for this site, something was off. The URL didn't update. The back button reopened images I'd already closed. The zoom didn't work on retina screenshots. Accessibility was rough or missing. So I built one that does what I want.
 
-The code is on GitHub. [LightboxIsland.jsx](https://github.com/mattfelten/mattfelten.com/blob/main/src/components/LightboxIsland.jsx) and [LightboxIsland.css](https://github.com/mattfelten/mattfelten.com/blob/main/src/components/LightboxIsland.css). The rest of this post is what's interesting about how it works.
+You can try it. Click the image. The entrance is choreographed. Click the image again to zoom to its natural pixel size, then click anywhere to return.
+
+<Asset src={demoImage} alt="A customer's overview page in the Atlas dashboard, showing the customer header, billing activity, and the assigned AWS account" expand caption="Click the image to open the overlay. Click the image again to zoom to its native pixel size. Press Esc, click the X, or click the dimmed area to close." />
+
+The code is on GitHub. [ImageOverlay.jsx](https://github.com/mattfelten/mattfelten.com/blob/main/src/components/ImageOverlay.jsx) and [ImageOverlay.css](https://github.com/mattfelten/mattfelten.com/blob/main/src/components/ImageOverlay.css). The rest of this post is what's interesting about how it works.
 
 ## UI options I considered
 
 I started with a 350px right rail. Close button on top, caption underneath.
 
-```jsx
-<div className="flex h-screen">
-  <div className="flex-1">{/* image */}</div>
-  <aside className="w-[350px] border-l">
-    <button>Close</button>
-    {caption && <p>{caption}</p>}
+<div class="not-prose my-6 mx-auto max-w-xl rounded-lg border border-weak/30 overflow-hidden" style="aspect-ratio: 16 / 9; display: flex; background: #f8f6f3;">
+  <div style="flex: 1; background: linear-gradient(135deg, #d9e4f0 0%, #6b9bd1 100%); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.85); font-size: 12px; letter-spacing: 0.05em;">image</div>
+  <aside style="width: 32%; border-left: 1px solid rgba(17,24,39,0.08); padding: 16px; display: flex; flex-direction: column; gap: 10px; box-sizing: border-box;">
+    <div style="align-self: flex-end; width: 28px; height: 28px; border: 1px solid rgba(17,24,39,0.2); border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #111827;">×</div>
+    <div style="background: rgba(17,24,39,0.1); height: 6px; width: 90%; border-radius: 2px;"></div>
+    <div style="background: rgba(17,24,39,0.1); height: 6px; width: 70%; border-radius: 2px;"></div>
+    <div style="background: rgba(17,24,39,0.1); height: 6px; width: 80%; border-radius: 2px;"></div>
   </aside>
 </div>
-```
 
 Looked editorial in mockups. The problem became obvious as soon as I had it on the page. Case study images are usually 16:9, and a side rail just steals horizontal space from the image. Images may or may not have captions, so the rail was often empty. It existed to hold something that wasn't there.
 
 Next try was a row at the bottom. Caption left, close right.
 
-```jsx
-<div className="flex flex-col h-screen">
-  <div className="flex-1">{/* image */}</div>
-  <div className="flex justify-between border-t pt-4">
-    {caption && <p className="max-w-md">{caption}</p>}
-    <button>Close</button>
+<div class="not-prose my-6 mx-auto max-w-xl rounded-lg border border-weak/30 overflow-hidden" style="aspect-ratio: 16 / 9; display: flex; flex-direction: column; background: #f8f6f3;">
+  <div style="flex: 1; background: linear-gradient(135deg, #d9e4f0 0%, #6b9bd1 100%); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.85); font-size: 12px; letter-spacing: 0.05em;">image</div>
+  <div style="border-top: 1px solid rgba(17,24,39,0.08); padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+    <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; max-width: 60%;">
+      <div style="background: rgba(17,24,39,0.1); height: 6px; width: 100%; border-radius: 2px;"></div>
+      <div style="background: rgba(17,24,39,0.1); height: 6px; width: 70%; border-radius: 2px;"></div>
+    </div>
+    <div style="width: 28px; height: 28px; border: 1px solid rgba(17,24,39,0.2); border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #111827; flex-shrink: 0;">×</div>
   </div>
 </div>
-```
 
 Better, but still chrome wrapped around the image. When there was no caption, the row sat there waiting for something that wasn't going to show up.
 
 The version that shipped doesn't have a row. The close button floats top-right. The caption, when one exists, floats bottom-left. The image fills everything in between.
 
-```jsx
-<div className="relative h-screen">
-  <div className="flex h-full items-center justify-center">
-    {/* image */}
+<div class="not-prose my-6 mx-auto max-w-xl rounded-lg border border-weak/30 overflow-hidden" style="aspect-ratio: 16 / 9; position: relative; background: #f8f6f3;">
+  <div style="position: absolute; inset: 24px; background: linear-gradient(135deg, #d9e4f0 0%, #6b9bd1 100%); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.85); font-size: 12px; letter-spacing: 0.05em;">image</div>
+  <div style="position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; border: 1px solid rgba(17,24,39,0.2); border-radius: 999px; background: rgba(248,246,243,0.85); display: flex; align-items: center; justify-content: center; font-size: 14px; color: #111827; backdrop-filter: blur(6px);">×</div>
+  <div style="position: absolute; bottom: 16px; left: 20px; right: 60%; display: flex; flex-direction: column; gap: 4px;">
+    <div style="background: rgba(17,24,39,0.2); height: 6px; width: 100%; border-radius: 2px;"></div>
+    <div style="background: rgba(17,24,39,0.2); height: 6px; width: 75%; border-radius: 2px;"></div>
   </div>
-  {caption && (
-    <p className="absolute bottom-8 left-8 max-w-md">{caption}</p>
-  )}
-  <button className="absolute top-6 right-6">×</button>
 </div>
-```
 
 If neither caption nor close interrupts the frame, the image owns it. That was the goal from the start.
 
@@ -58,7 +63,7 @@ If neither caption nor close interrupts the frame, the image owns it. That was t
 
 Three things I wanted from the URL behavior, simultaneously.
 
-**Shareable URLs.** Opening an image updates the URL to `/work/atlas?lightbox=concept-dashboard`. Send the link, the recipient sees the same view.
+**Shareable URLs.** Opening an image updates the URL to `/work/atlas?overlay=concept-dashboard`. Send the link, the recipient sees the same view.
 
 **Back-button-closes.** Press the browser back button while the overlay is open and the overlay closes. The user stays on the case study.
 
@@ -67,7 +72,7 @@ Three things I wanted from the URL behavior, simultaneously.
 The first two are normal `history.pushState` behavior. The third one needs a trick.
 
 ```js
-const closeLightbox = () => {
+const closeOverlay = () => {
   window.history.replaceState({}, '', urlWith(null));
   window.history.back();
 };
@@ -78,7 +83,7 @@ const closeLightbox = () => {
 Opening is regular pushState.
 
 ```js
-window.history.pushState({ lightbox: id }, '', urlWith(id));
+window.history.pushState({ overlay: id }, '', urlWith(id));
 setAsset(next);
 ```
 
@@ -88,19 +93,19 @@ This approach doesn't fight the platform. The browser still owns history. I'm ju
 
 ## Click to zoom
 
-Cursor changes to `zoom-in` over the image. Clicking renders it at its natural pixel size. The container scrolls. For retina case study screenshots, usually 2880×1800 or larger, this lets readers inspect details without leaving the page.
+Open the demo at the top of the post and try it. Cursor changes to `zoom-in` over the image. Clicking renders it at its natural pixel size. The container scrolls. For retina case study screenshots, usually 2880×1800 or larger, this lets readers inspect details without leaving the page.
 
 Two states. CSS handles both.
 
 ```css
-.lb-image {
+.overlay-image {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
 }
-.lb-image.zoomable { cursor: zoom-in; }
+.overlay-image.zoomable { cursor: zoom-in; }
 
-.lb-image-area.zoomed > .lb-image {
+.overlay-image-area.zoomed > .overlay-image {
   max-width: none;
   max-height: none;
   width: auto;
@@ -149,7 +154,7 @@ No point offering zoom on a thumbnail that's already at native size. The cursor 
 
 ## Animation
 
-Three things choreographed on open.
+The entrance you saw is three things choreographed.
 
 **Backdrop fades in.** 280ms, ease-out. Sets the surface.
 
@@ -158,13 +163,13 @@ Three things choreographed on open.
 **Close button and caption fade up.** Staggered 200ms and 240ms delays.
 
 ```css
-@keyframes lb-image-in {
+@keyframes overlay-image-in {
   from { opacity: 0; transform: scale(0.975); }
   to { opacity: 1; transform: scale(1); }
 }
 
-.lb-image {
-  animation: lb-image-in 440ms cubic-bezier(0.16, 1, 0.3, 1) 60ms both;
+.overlay-image {
+  animation: overlay-image-in 440ms cubic-bezier(0.16, 1, 0.3, 1) 60ms both;
 }
 ```
 
@@ -175,20 +180,6 @@ The curve is `cubic-bezier(0.16, 1, 0.3, 1)`. A gentle deceleration with no over
 The dialog uses `role="dialog"` with `aria-modal="true"` and an `aria-label` set to the image's alt text. When focus moves into the dialog, screen readers announce it. I considered an explicit `aria-live` region for the open event but skipped it. The dialog's label covers the same purpose without risking double-announcement.
 
 Focus management uses [focus-trap-react](https://github.com/focus-trap/focus-trap-react). When the overlay opens, Tab and Shift+Tab cycle through focusable elements inside the card (the close button, plus any links in a caption). Tab can't escape into the case study content behind the overlay.
-
-```jsx
-<FocusTrap focusTrapOptions={{
-  initialFocus: false,
-  fallbackFocus: () => cardRef.current,
-  escapeDeactivates: false,
-  clickOutsideDeactivates: false,
-  allowOutsideClick: true,
-}}>
-  <div className="lb-backdrop" onClick={closeLightbox}>
-    {/* card and contents */}
-  </div>
-</FocusTrap>
-```
 
 The card itself has `tabIndex={-1}` and `outline: none`. That lets me move focus to it programmatically when the overlay opens without lighting up a visible focus ring. The close button only gets its keyboard focus ring when you actually tab to it.
 
