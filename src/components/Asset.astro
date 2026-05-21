@@ -31,7 +31,7 @@ const filenameStem = srcUrl
 	.pop()
 	?.replace(/\.[^.]+$/, '')
 	.replace(/\.[A-Za-z0-9_-]{6,}$/, '');
-const lightboxId =
+const overlayId =
 	expand && !href && srcUrl && !isVideoSrc ? filenameStem : null;
 ---
 
@@ -140,15 +140,15 @@ const lightboxId =
 					return (
 						<a
 							href={getLink()}
-							data-lightbox={lightboxId || undefined}
-							data-lightbox-src={
-								lightboxId ? srcUrl : undefined
+							data-overlay={overlayId || undefined}
+							data-overlay-src={
+								overlayId ? srcUrl : undefined
 							}
-							data-lightbox-alt={
-								lightboxId ? alt : undefined
+							data-overlay-alt={
+								overlayId ? alt : undefined
 							}
-							data-lightbox-caption={
-								lightboxId && caption
+							data-overlay-caption={
+								overlayId && caption
 									? caption
 									: undefined
 							}

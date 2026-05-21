@@ -1,8 +1,8 @@
 import { FocusTrap } from 'focus-trap-react';
 import { useEffect, useRef, useState } from 'react';
-import './LightboxIsland.css';
+import './ImageOverlay.css';
 
-const PARAM = 'lightbox';
+const PARAM = 'overlay';
 
 const getCurrentId = () => {
 	if (typeof window === 'undefined') return null;
@@ -17,22 +17,22 @@ const urlWith = id => {
 };
 
 const readFromAnchor = (el, id) => ({
-	id: id ?? el.getAttribute('data-lightbox'),
+	id: id ?? el.getAttribute('data-overlay'),
 	src:
-		el.getAttribute('data-lightbox-src') || el.getAttribute('href'),
-	alt: el.getAttribute('data-lightbox-alt') || '',
-	caption: el.getAttribute('data-lightbox-caption') || '',
+		el.getAttribute('data-overlay-src') || el.getAttribute('href'),
+	alt: el.getAttribute('data-overlay-alt') || '',
+	caption: el.getAttribute('data-overlay-caption') || '',
 });
 
 const readAssetById = id => {
 	if (!id) return null;
 	const el = document.querySelector(
-		`a[data-lightbox="${CSS.escape(id)}"]`,
+		`a[data-overlay="${CSS.escape(id)}"]`,
 	);
 	return el ? readFromAnchor(el, id) : null;
 };
 
-export const LightboxIsland = () => {
+export const ImageOverlay = () => {
 	const [asset, setAsset] = useState(null);
 	const [zoomed, setZoomed] = useState(false);
 	const [canZoom, setCanZoom] = useState(false);
@@ -41,8 +41,8 @@ export const LightboxIsland = () => {
 	const imgRef = useRef(null);
 
 	useEffect(() => {
-		// Deep-link: if the page loads with ?lightbox=<id>, open that asset.
-		// Replace the current entry with a clean URL, then push the lightbox
+		// Deep-link: if the page loads with ?overlay=<id>, open that asset.
+		// Replace the current entry with a clean URL, then push the overlay
 		// URL on top, so back-while-open closes the overlay instead of
 		// leaving the site.
 		const initialId = getCurrentId();
@@ -51,7 +51,7 @@ export const LightboxIsland = () => {
 			if (found) {
 				window.history.replaceState({}, '', urlWith(null));
 				window.history.pushState(
-					{ lightbox: initialId },
+					{ overlay: initialId },
 					'',
 					urlWith(initialId),
 				);
@@ -71,7 +71,7 @@ export const LightboxIsland = () => {
 				e.button !== 0
 			)
 				return;
-			const anchor = e.target.closest('a[data-lightbox]');
+			const anchor = e.target.closest('a[data-overlay]');
 			if (!anchor) return;
 			const next = readFromAnchor(anchor);
 			if (!next.id) return;
@@ -79,7 +79,7 @@ export const LightboxIsland = () => {
 			// Push so browser back closes the overlay and keeps you on the
 			// case study page.
 			window.history.pushState(
-				{ lightbox: next.id },
+				{ overlay: next.id },
 				'',
 				urlWith(next.id),
 			);
@@ -97,7 +97,7 @@ export const LightboxIsland = () => {
 
 		const onKeyDown = e => {
 			if (e.key === 'Escape' && getCurrentId()) {
-				closeLightbox();
+				closeOverlay();
 			}
 		};
 
@@ -114,8 +114,8 @@ export const LightboxIsland = () => {
 
 	// Closes via X / Esc / backdrop. Replace the pushed entry's URL with a
 	// clean one *before* going back, so the popped entry doesn't sit in
-	// forward history as a re-openable lightbox URL.
-	const closeLightbox = () => {
+	// forward history as a re-openable overlay URL.
+	const closeOverlay = () => {
 		window.history.replaceState({}, '', urlWith(null));
 		window.history.back();
 	};
@@ -199,19 +199,19 @@ export const LightboxIsland = () => {
 				allowOutsideClick: true,
 			}}
 		>
-			<div className="lb-backdrop" onClick={closeLightbox}>
+			<div className="overlay-backdrop" onClick={closeOverlay}>
 			<div
 				ref={cardRef}
 				tabIndex={-1}
 				role="dialog"
 				aria-modal="true"
 				aria-label={asset.alt || 'Image viewer'}
-				className="lb-card"
+				className="overlay-card"
 				onClick={e => e.stopPropagation()}
 			>
 				<div
 					ref={imageAreaRef}
-					className={`lb-image-area${zoomed ? ' zoomed' : ''}`}
+					className={`overlay-image-area${zoomed ? ' zoomed' : ''}`}
 				>
 					<img
 						key={asset.id}
@@ -222,16 +222,16 @@ export const LightboxIsland = () => {
 						onClick={onImgClick}
 						className={
 							canZoom && !zoomed
-								? 'lb-image zoomable'
-								: 'lb-image'
+								? 'overlay-image zoomable'
+								: 'overlay-image'
 						}
 					/>
 				</div>
 
 				{asset.caption && (
-					<div className="lb-caption">
+					<div className="overlay-caption">
 						<div
-							className="lb-caption-inner"
+							className="overlay-caption-inner"
 							dangerouslySetInnerHTML={{
 								__html: asset.caption,
 							}}
@@ -241,9 +241,9 @@ export const LightboxIsland = () => {
 
 				<button
 					type="button"
-					onClick={closeLightbox}
+					onClick={closeOverlay}
 					aria-label="Close image viewer"
-					className="lb-close"
+					className="overlay-close"
 				>
 					<svg
 						width="18"
@@ -265,4 +265,4 @@ export const LightboxIsland = () => {
 	);
 };
 
-export default LightboxIsland;
+export default ImageOverlay;
