@@ -5,6 +5,7 @@ description: Building a custom image overlay for this site. URL state that doesn
 ---
 
 import Asset from '../../components/Asset.astro';
+import LayoutDemo from '../../components/LayoutDemo.astro';
 import demoImage from '../work/atlas/imgs/aws-account-overview.png';
 
 Image overlays are a solved problem on paper. There are dozens of libraries. But every time I tried one for this site, something was off. The URL didn't update. The back button reopened images I'd already closed. The zoom didn't work on retina screenshots. Accessibility was rough or missing. So I built one that does what I want.
@@ -19,43 +20,19 @@ The code is on GitHub. [ImageOverlay.jsx](https://github.com/mattfelten/mattfelt
 
 I started with a 350px right rail. Close button on top, caption underneath.
 
-<div class="not-prose my-6 mx-auto max-w-xl rounded-lg border border-weak/30 overflow-hidden" style="aspect-ratio: 16 / 9; display: flex; background: #f8f6f3;">
-  <div style="flex: 1; background: linear-gradient(135deg, #d9e4f0 0%, #6b9bd1 100%); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.85); font-size: 12px; letter-spacing: 0.05em;">image</div>
-  <aside style="width: 32%; border-left: 1px solid rgba(17,24,39,0.08); padding: 16px; display: flex; flex-direction: column; gap: 10px; box-sizing: border-box;">
-    <div style="align-self: flex-end; width: 28px; height: 28px; border: 1px solid rgba(17,24,39,0.2); border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #111827;">×</div>
-    <div style="background: rgba(17,24,39,0.1); height: 6px; width: 90%; border-radius: 2px;"></div>
-    <div style="background: rgba(17,24,39,0.1); height: 6px; width: 70%; border-radius: 2px;"></div>
-    <div style="background: rgba(17,24,39,0.1); height: 6px; width: 80%; border-radius: 2px;"></div>
-  </aside>
-</div>
+<LayoutDemo variant="side-rail" />
 
 Looked editorial in mockups. The problem became obvious as soon as I had it on the page. Case study images are usually 16:9, and a side rail just steals horizontal space from the image. Images may or may not have captions, so the rail was often empty. It existed to hold something that wasn't there.
 
 Next try was a row at the bottom. Caption left, close right.
 
-<div class="not-prose my-6 mx-auto max-w-xl rounded-lg border border-weak/30 overflow-hidden" style="aspect-ratio: 16 / 9; display: flex; flex-direction: column; background: #f8f6f3;">
-  <div style="flex: 1; background: linear-gradient(135deg, #d9e4f0 0%, #6b9bd1 100%); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.85); font-size: 12px; letter-spacing: 0.05em;">image</div>
-  <div style="border-top: 1px solid rgba(17,24,39,0.08); padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; gap: 16px;">
-    <div style="display: flex; flex-direction: column; gap: 4px; flex: 1; max-width: 60%;">
-      <div style="background: rgba(17,24,39,0.1); height: 6px; width: 100%; border-radius: 2px;"></div>
-      <div style="background: rgba(17,24,39,0.1); height: 6px; width: 70%; border-radius: 2px;"></div>
-    </div>
-    <div style="width: 28px; height: 28px; border: 1px solid rgba(17,24,39,0.2); border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #111827; flex-shrink: 0;">×</div>
-  </div>
-</div>
+<LayoutDemo variant="bottom-row" />
 
 Better, but still chrome wrapped around the image. When there was no caption, the row sat there waiting for something that wasn't going to show up.
 
 The version that shipped doesn't have a row. The close button floats top-right. The caption, when one exists, floats bottom-left. The image fills everything in between.
 
-<div class="not-prose my-6 mx-auto max-w-xl rounded-lg border border-weak/30 overflow-hidden" style="aspect-ratio: 16 / 9; position: relative; background: #f8f6f3;">
-  <div style="position: absolute; inset: 24px; background: linear-gradient(135deg, #d9e4f0 0%, #6b9bd1 100%); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.85); font-size: 12px; letter-spacing: 0.05em;">image</div>
-  <div style="position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; border: 1px solid rgba(17,24,39,0.2); border-radius: 999px; background: rgba(248,246,243,0.85); display: flex; align-items: center; justify-content: center; font-size: 14px; color: #111827; backdrop-filter: blur(6px);">×</div>
-  <div style="position: absolute; bottom: 16px; left: 20px; right: 60%; display: flex; flex-direction: column; gap: 4px;">
-    <div style="background: rgba(17,24,39,0.2); height: 6px; width: 100%; border-radius: 2px;"></div>
-    <div style="background: rgba(17,24,39,0.2); height: 6px; width: 75%; border-radius: 2px;"></div>
-  </div>
-</div>
+<LayoutDemo variant="floating" />
 
 If neither caption nor close interrupts the frame, the image owns it. That was the goal from the start.
 
