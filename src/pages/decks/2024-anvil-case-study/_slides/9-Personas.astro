@@ -1,0 +1,93 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+import emily from '../images/5 Personas 1.svg?url';
+import tiff from '../images/5 Personas 2.svg?url';
+import sarah from '../images/5 Personas 6.svg?url';
+
+// Figma frame 182:59654. Body at slide y=284, three persona cards 512w
+// each with 112px gaps. Avatar ~106h at top, then 56px gap, name, then
+// occupation / traits / pain points sections.
+
+interface Persona {
+	avatar: string;
+	name: string;
+	occupation: string;
+	traits: string;
+	painPoints: string;
+}
+
+const personas: Persona[] = [
+	{
+		avatar: emily,
+		name: 'Emily',
+		occupation: 'Product Designer',
+		traits: 'Empathetic, Detail-Oriented, Creative, Patient',
+		painPoints:
+			'No Shared UI, Collaborating on Details, Onboarding Designers, Tooling',
+	},
+	{
+		avatar: tiff,
+		name: 'Tiff',
+		occupation: 'React Engineer',
+		traits: 'Analytical, Curious, Collaborative, Adaptable',
+		painPoints:
+			'Development Time, Maintenance Overhead, Scalability, QA',
+	},
+	{
+		avatar: sarah,
+		name: 'Sarah',
+		occupation: 'Product Manager',
+		traits: 'Communicative, Organized, Adaptable, Analytical',
+		painPoints:
+			'Maintenance Costs, Wants Shorter Development Time, Poor User Feedback',
+	},
+];
+---
+
+<Slide subtitle="Personas">
+	<div class="grid grid-cols-3 gap-x-14">
+		{
+			personas.map(p => (
+				<div class="flex flex-col items-start gap-6">
+					<img
+						src={p.avatar}
+						alt={p.name}
+						class="m-0! block h-[106px] w-auto"
+					/>
+					<div class="flex flex-col gap-2">
+						<h3 class="text-strong mb-0 text-4xl leading-none font-medium">
+							{p.name}
+						</h3>
+						<dl class="m-0 grid grid-cols-1 gap-4">
+							<div>
+								<dt class="text-strong text-xl font-medium">
+									Occupation
+								</dt>
+								<dd class="text-subdued m-0 mt-1 text-2xl">
+									{p.occupation}
+								</dd>
+							</div>
+							<div>
+								<dt class="text-strong text-xl font-medium">
+									Traits
+								</dt>
+								<dd class="text-subdued m-0 mt-1 text-2xl leading-[1.3]">
+									{p.traits}
+								</dd>
+							</div>
+							<div>
+								<dt class="text-strong text-xl font-medium">
+									Pain Points
+								</dt>
+								<dd class="text-subdued m-0 mt-1 text-2xl leading-[1.3]">
+									{p.painPoints}
+								</dd>
+							</div>
+						</dl>
+					</div>
+				</div>
+			))
+		}
+	</div>
+</Slide>

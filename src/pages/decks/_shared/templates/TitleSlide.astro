@@ -1,0 +1,46 @@
+---
+import profile from './profile.png?url';
+import Slide from './Slide.astro';
+
+interface Props {
+	name: string;
+	subtitle?: string;
+	showAvatar?: boolean;
+	avatarSrc?: string;
+}
+
+const {
+	name,
+	subtitle,
+	showAvatar = false,
+	avatarSrc = '/decks/images/avatar.jpg',
+} = Astro.props;
+---
+
+<Slide hideHeader align="top">
+	<div class="flex items-center gap-6">
+		{
+			showAvatar && (
+				<img
+					class="border-weak/40 size-28.25 rounded-full border object-cover"
+					src={profile}
+					alt={name}
+				/>
+			)
+		}
+		<div class="flex flex-col items-start gap-2">
+			<h1
+				class="text-strong m-0! text-7xl leading-none font-medium tracking-[-0.02em]"
+			>
+				{name}
+			</h1>
+			{
+				subtitle && (
+					<p class="text-subdued font-regular text-5xl leading-none">
+						{subtitle}
+					</p>
+				)
+			}
+		</div>
+	</div>
+</Slide>

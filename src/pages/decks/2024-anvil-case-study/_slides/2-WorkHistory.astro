@@ -1,0 +1,74 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+import missionLogo from '../images/mission.svg?url';
+import opengovLogo from '../images/opengov.svg?url';
+import servicetitanLogo from '../images/servicetitan.svg?url';
+import youcaringLogo from '../images/youcaring.png?url';
+
+const jobs = [
+	{
+		company: 'Mission Cloud',
+		logo: missionLogo,
+		logoHeight: 38,
+		role: 'Principal Design Engineer',
+		dates: '2025 – Present',
+	},
+	{
+		company: 'OpenGov',
+		logo: opengovLogo,
+		role: 'Director, Product Design',
+		dates: '2024 – 2025',
+	},
+	{
+		company: 'Mission Cloud',
+		logo: missionLogo,
+		logoHeight: 38,
+		role: 'Manager, Product Design & Frontend Engineering',
+		dates: '2022 – 2024',
+	},
+	{
+		company: 'ServiceTitan',
+		logo: servicetitanLogo,
+		logoHeight: 52,
+		role: 'Senior Manager, Design Systems',
+		dates: '2018 – 2022',
+	},
+	{
+		company: 'YouCaring',
+		logo: youcaringLogo,
+		logoHeight: 52,
+		role: 'Design System Lead',
+		dates: '2017 – 2018',
+	},
+];
+
+const footnote =
+	'Previous 11 years spent designing at DreamHost, The Phuse, Silver Lion Design, Evolve Media, and Spoonfactory';
+---
+
+<Slide title="Work History">
+	<div class="flex flex-col gap-[72px]">
+		{
+			jobs.map(job => (
+				<div class="items-top grid grid-cols-[320px_minmax(0,840px)] gap-x-[200px]">
+					<img
+						src={job.logo}
+						alt={job.company}
+						class="m-0! block max-h-none! w-auto!"
+						height={job.logoHeight}
+					/>
+					<div>
+						<div class="text-strong text-2xl font-medium">
+							{job.role}
+						</div>
+						<div class="text-subdued mt-1 text-xl">
+							{job.dates}
+						</div>
+					</div>
+				</div>
+			))
+		}
+		<p class="text-subdued text-xl">{footnote}</p>
+	</div>
+</Slide>

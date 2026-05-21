@@ -1,0 +1,55 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+// Figma frame 166:38570. Body row at slide y=284: two unequal cards.
+// Left card 591w (Interviews), right card 1089w (Challenges), 80px gap.
+// Card padding 32px sides / 24px top, label-to-body gap 24px (label y=24
+// h=32, body y=80).
+
+const interviews = [
+	'Product Design',
+	'Engineering',
+	'Product Management',
+	'Marketing',
+	'Sales',
+	'QA',
+];
+
+const challenges = [
+	'Very little consistency across applications',
+	'No alignment across teams on scope or solution',
+	'No established processes for making and distributing changes',
+];
+---
+
+<Slide subtitle="Kickoff">
+	<div class="grid grid-cols-[591px_1089px] gap-x-7">
+		<div
+			class="border-weak/[0.18] bg-[#111827]/60 text-subdued rounded-[20px] border px-4 py-3"
+		>
+			<h3 class="text-strong m-0 text-3xl font-medium">
+				Interviews
+			</h3>
+			<p class="text-2xl">13 interviews across</p>
+			<ul>
+				{
+					interviews.map((item, idx) => (
+						<li class:list={['text-2xl leading-[1.4]']}>
+							{item}
+						</li>
+					))
+				}
+			</ul>
+		</div>
+		<div
+			class="border-weak/[0.18] bg-[#111827]/60 h-fit rounded-[20px] border px-4 py-3"
+		>
+			<h3 class="text-strong m-0 text-3xl font-medium">
+				Challenges
+			</h3>
+			<ul class="text-subdued list-none text-2xl">
+				{challenges.map(item => <li>{item}</li>)}
+			</ul>
+		</div>
+	</div>
+</Slide>

@@ -1,0 +1,17 @@
+---
+import { Slide, BleedImage } from '@decks';
+
+import img from '../images/16 Release.png?url';
+
+// Figma frame 181:55192. Edge-to-edge collage at slide (25, 0), 1895×1080.
+// Bleeds right and bottom; 25px left gutter; header overlays top-left.
+---
+
+<Slide subtitle="Release">
+	<BleedImage
+		src={img}
+		alt="Release artifacts: in-app changelog modal, GitHub release notes, and contributor stats"
+		bleed={['right', 'bottom']}
+		class="h-[1080px] w-[1895px] object-cover"
+	/>
+</Slide>

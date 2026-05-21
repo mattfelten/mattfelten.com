@@ -1,0 +1,76 @@
+---
+// The deck wrapper. Outputs the .reveal > .slides shell, embeds the slide
+// children via <slot>, and initializes Reveal.js client-side. All Reveal
+// config options are accepted as props with sensible defaults; pass any
+// override to tweak per-deck.
+//
+// The deck's `title` (the strong-color line on every content slide) flows
+// to descendant Slide components via Astro.locals.
+
+import 'reveal.js/reveal.css';
+
+type RevealTransition =
+	| 'none'
+	| 'fade'
+	| 'slide'
+	| 'convex'
+	| 'concave'
+	| 'zoom';
+
+interface Props {
+	title?: string;
+	width?: number;
+	height?: number;
+	margin?: number;
+	center?: boolean;
+	controls?: boolean;
+	progress?: boolean;
+	transition?: RevealTransition;
+	hash?: boolean;
+}
+
+const {
+	title,
+	width = 1920,
+	height = 1080,
+	margin = 0,
+	center = false,
+	controls = false,
+	progress = false,
+	transition = 'fade',
+	hash = true,
+} = Astro.props;
+
+// Stash the deck-level title so Slide.astro can default its title prop.
+Astro.locals.deckTitle = title;
+
+const revealConfig = JSON.stringify({
+	width,
+	height,
+	margin,
+	center,
+	controls,
+	progress,
+	transition,
+	hash,
+});
+---
+
+<div class="reveal">
+	<div class="slides">
+		<slot />
+	</div>
+</div>
+
+<script is:inline define:vars={{ revealConfig }}>
+	window.__deckRevealConfig = JSON.parse(revealConfig);
+</script>
+
+<script>
+	import Reveal from 'reveal.js';
+
+	document.addEventListener('DOMContentLoaded', () => {
+		const config = (window as any).__deckRevealConfig ?? {};
+		Reveal.initialize(config);
+	});
+</script>

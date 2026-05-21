@@ -1,0 +1,51 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+import dots from '../images/dots.svg?url';
+import squiggle from '../images/squiggle.svg?url';
+import star from '../images/star.svg?url';
+
+const items = [
+	{
+		title: 'I thrive in complexity and the unknown',
+		body: 'I’m frequently dropped into problem spaces that are not well defined and don’t have a roadmap. I love the challenge of painting a picture of what the future can be, building alignment, and paving the way there. I know how to design at scale.',
+		icon: squiggle,
+	},
+	{
+		title: 'I believe building software is team sport',
+		body: 'I bring people together to solve problems because a connected, supported, and invested team can do anything. Creating easy to understand tools and processes makes it way more fun.',
+		icon: star,
+	},
+	{
+		title: 'I care a lot about the details<br /> <br />',
+		body: 'The smallest details matter. I aim to have a clear rationale for every design choice and be able to tie it to goals and investing as much effort in the unseen parts as the visible ones.',
+		icon: dots,
+	},
+];
+---
+
+<Slide title="Why me?" align="center">
+	<div class="grid grid-cols-3 gap-14">
+		{
+			items.map(item => (
+				<div class="flex flex-col items-start gap-13">
+					<img
+						src={item.icon}
+						alt=""
+						class="m-0! block h-[115px] w-auto"
+					/>
+					<div class="flex flex-col gap-3">
+						<div
+							class="text-strong text-4xl leading-[40px] font-medium"
+							set:html={item.title}
+						/>
+						<div
+							class="text-subdued text-2xl leading-4.5"
+							set:html={item.body}
+						/>
+					</div>
+				</div>
+			))
+		}
+	</div>
+</Slide>

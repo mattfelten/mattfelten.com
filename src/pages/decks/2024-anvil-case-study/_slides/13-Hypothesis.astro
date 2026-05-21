@@ -1,0 +1,18 @@
+---
+import { Slide, BleedImage } from '@decks';
+
+import img from '../images/10 Hypothesis.png?url';
+
+// Figma frame 166:39675. Composition is 1531×1080, full slide height.
+// Bleeds top and bottom, horizontally centered. Header sits on top of
+// the image at the top-left.
+---
+
+<Slide subtitle="Hypothesis">
+	<BleedImage
+		src={img}
+		alt="Hypothesis-framing artifacts: What is this, The problem, The proposal, and Why we need to do this"
+		bleed={['top', 'bottom']}
+		class="h-[1080px] w-[1531px] object-cover"
+	/>
+</Slide>

@@ -1,0 +1,17 @@
+---
+import { Slide, BleedImage } from '@decks';
+
+import img from '../images/14 Component Proposal.png?url';
+
+// Figma frame 181:49556. Image at slide (905, 0), 1015×1080 — big right
+// sidebar that bleeds top, right, and bottom.
+---
+
+<Slide subtitle="Refinement → Component Proposal">
+	<BleedImage
+		src={img}
+		alt="Input component proposal showing visual spec, state examples, and potential problem areas"
+		bleed={['top', 'right', 'bottom']}
+		class="h-[1080px] w-[1015px] object-cover"
+	/>
+</Slide>

@@ -1,0 +1,29 @@
+---
+import Slide from './Slide.astro';
+
+interface Props {
+	title?: string;
+	subtitle?: string;
+	src: string;
+	alt: string;
+	/** Vertical anchor within the padded body. */
+	align?: 'center' | 'bottom';
+}
+
+const { title, subtitle, src, alt, align = 'center' } = Astro.props;
+---
+
+<Slide title={title} subtitle={subtitle}>
+	<div
+		class:list={[
+			'flex h-full justify-center',
+			align === 'bottom' ? 'items-end' : 'items-center',
+		]}
+	>
+		<img
+			class="max-h-[80%] max-w-full rounded-xl object-contain"
+			src={src}
+			alt={alt}
+		/>
+	</div>
+</Slide>
