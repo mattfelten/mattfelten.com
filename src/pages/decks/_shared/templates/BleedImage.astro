@@ -1,0 +1,81 @@
+---
+// Absolutely positioned image inside any <Slide>. Two ways to anchor an
+// edge:
+//   - `bleed`: edge sits at offset 0 (touching the slide boundary).
+//   - `inset`: edge sits 80px in (matching the slide's standard padding).
+// Bleed overrides inset if both name the same edge. Edges absent from
+// both are auto: on an axis where neither side is anchored, the image
+// is centered via `left-1/2 -translate-x-1/2` (or vertical equivalent).
+// If only one side of an axis is anchored, the other side computes
+// from the explicit width/height set via `class`.
+//
+// m-0! / max-h-none! / max-w-none! / rounded-none! defeat Reveal's
+// `.reveal img` defaults (margin: 0.4em 0; max-height: 70vh;
+// border-radius: 8px). Bleed images are always square-cornered.
+
+type Edge = 'top' | 'right' | 'bottom' | 'left';
+
+interface Props {
+	src: string;
+	alt: string;
+	/** Edges that touch the slide boundary. */
+	bleed?: Edge | Edge[];
+	/** Edges that sit 80px from the slide boundary. */
+	inset?: Edge | Edge[];
+	/** Extra classes — usually width/height/object-fit. */
+	class?: string;
+}
+
+const {
+	src,
+	alt,
+	bleed,
+	inset,
+	class: extraClass,
+} = Astro.props;
+
+const toArr = <T,>(x: T | T[] | undefined): T[] =>
+	x == null ? [] : Array.isArray(x) ? x : [x];
+
+const bleedArr = toArr(bleed);
+const insetArr = toArr(inset);
+
+const edgeClass = (
+	edge: Edge,
+	zero: string,
+	eighty: string,
+): string | null =>
+	bleedArr.includes(edge)
+		? zero
+		: insetArr.includes(edge)
+			? eighty
+			: null;
+
+const top = edgeClass('top', 'top-0', 'top-7');
+const right = edgeClass('right', 'right-0', 'right-7');
+const bottom = edgeClass('bottom', 'bottom-0', 'bottom-7');
+const left = edgeClass('left', 'left-0', 'left-7');
+
+const hasHorizontal = left != null || right != null;
+const hasVertical = top != null || bottom != null;
+
+const horizontalCenter = hasHorizontal
+	? null
+	: 'left-1/2 -translate-x-1/2';
+const verticalCenter = hasVertical ? null : 'top-1/2 -translate-y-1/2';
+---
+
+<img
+	class:list={[
+		'absolute m-0! block max-h-none! max-w-none! rounded-none!',
+		top,
+		right,
+		bottom,
+		left,
+		horizontalCenter,
+		verticalCenter,
+		extraClass,
+	]}
+	src={src}
+	alt={alt}
+/>

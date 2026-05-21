@@ -5,7 +5,9 @@
 			"@assets/*": ["src/assets/*"],
 			"@components/*": ["src/components/*"],
 			"@layouts/*": ["src/layouts/*"],
-			"@sections/*": ["src/sections/*"]
+			"@sections/*": ["src/sections/*"],
+			"@decks": ["src/pages/decks/_shared/index.ts"],
+			"@decks/*": ["src/pages/decks/_shared/*"]
 		},
 		"strictNullChecks": true // Note: Not needed if you extend "astro/tsconfigs/strict" or "astro/tsconfigs/strictest"
 	},

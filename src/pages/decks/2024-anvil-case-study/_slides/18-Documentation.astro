@@ -1,0 +1,39 @@
+---
+import { Slide, BleedImage } from '@decks';
+
+import screenshot from '../images/15 Documentation.png?url';
+
+// Figma frame 181:50695. Left "Sections" card at slide (80, 244), 404w.
+// Right docs screenshot at slide (504, 215), 1416×865 — bleeds bottom-right.
+
+const sections = [
+	'Purpose',
+	'Anatomy',
+	'How & When To Use',
+	'Variations',
+	'Interactions & Animation',
+	'Content Guidelines',
+	'Localisation',
+	'Accessibility Considerations',
+	'Real Life Examples',
+	'Component Pairings',
+	'Related Components',
+];
+---
+
+<Slide subtitle="Refinement → Documentation">
+	<div
+		class="border-weak/[0.18] bg-[#111827]/60 h-fit w-[404px] rounded-[20px] border px-4 py-3"
+	>
+		<h3 class="text-strong m-0 text-3xl font-medium">Sections</h3>
+		<ul class="text-subdued list-none text-2xl">
+			{sections.map(item => <li>{item}</li>)}
+		</ul>
+	</div>
+	<BleedImage
+		src={screenshot}
+		alt="Anvil docs site showing the Button component page with sections, hierarchy, and examples"
+		bleed={['right', 'bottom']}
+		class="h-[865px] w-[1416px] object-cover"
+	/>
+</Slide>

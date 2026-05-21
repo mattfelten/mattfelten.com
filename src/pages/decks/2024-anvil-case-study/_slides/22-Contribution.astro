@@ -1,0 +1,19 @@
+---
+import { Slide, BleedImage } from '@decks';
+
+import img from '../images/17 Contribution.png?url';
+
+// Bleeds top and bottom, with an 80px right gutter. Width derived from
+// Figma frame 182:57430 (image natural ~1325×1073, stretched to 1080
+// fill via object-cover).
+---
+
+<Slide subtitle="Contribution">
+	<BleedImage
+		src={img}
+		alt="Contribution workflow: open issue, propose component, design review, build, ship"
+		bleed={['top', 'bottom']}
+		inset="right"
+		class="h-[1080px] w-[1325px] object-cover"
+	/>
+</Slide>

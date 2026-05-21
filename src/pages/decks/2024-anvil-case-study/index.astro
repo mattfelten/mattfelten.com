@@ -1,0 +1,79 @@
+---
+import { DeckShell, Deck, TocSlide } from '@decks';
+import {
+	Title,
+	WorkHistory,
+	DesignPrinciples,
+	ManagementPrinciples,
+	WhatIsServiceTitan,
+	ProjectContext,
+	Kickoff,
+	PriorArt,
+	Personas,
+	ProblemStatement,
+	DesignProcess,
+	Discovery,
+	Hypothesis,
+	DesignDetails,
+	Accessibility,
+	Prototyping,
+	ComponentProposal,
+	Documentation,
+	FigmaComponents,
+	Build,
+	Release,
+	Contribution,
+	SystemPrinciples,
+	Results,
+	WhyMe,
+	Testimonials,
+	ThankYou,
+} from './_slides';
+
+const meta = {
+	title: 'Anvil Design System',
+	description: 'Anvil Design System case study',
+};
+
+const toc = ['About Me', 'Anvil Design System', 'Closing'];
+---
+
+<DeckShell {...meta}>
+	<Deck title="Anvil Design System">
+		<Title />
+
+		<TocSlide items={toc} />
+
+		<TocSlide items={toc} active="About Me" />
+		<WorkHistory />
+		<DesignPrinciples />
+		<ManagementPrinciples />
+
+		<TocSlide items={toc} active="Anvil Design System" />
+		<WhatIsServiceTitan />
+		<ProjectContext />
+		<Kickoff />
+		<PriorArt />
+		<Personas />
+		<ProblemStatement />
+		<DesignProcess />
+		<Discovery />
+		<Hypothesis />
+		<DesignDetails />
+		<Accessibility />
+		<Prototyping />
+		<ComponentProposal />
+		<Documentation />
+		<FigmaComponents />
+		<Build />
+		<Release />
+		<Contribution />
+		<SystemPrinciples />
+		<Results />
+
+		<TocSlide items={toc} active="Closing" />
+		<WhyMe />
+		<Testimonials />
+		<ThankYou />
+	</Deck>
+</DeckShell>

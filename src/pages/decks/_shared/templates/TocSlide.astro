@@ -1,0 +1,31 @@
+---
+import Slide from './Slide.astro';
+
+interface Props {
+	items: string[];
+	active?: string;
+}
+
+const { items, active } = Astro.props;
+const hasActive = active != null;
+---
+
+<Slide hideHeader padding="wide" align="center">
+	<ol class="m-0! flex! list-none flex-col gap-6 p-0">
+		{
+			items.map(item => {
+				const dim = hasActive && item !== active;
+				return (
+					<li
+						class:list={[
+							'font-regular m-0! text-7xl leading-none tracking-[-0.015em] transition-colors duration-200',
+							dim ? 'text-weak' : 'text-strong',
+						]}
+					>
+						{item}
+					</li>
+				);
+			})
+		}
+	</ol>
+</Slide>
