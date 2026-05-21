@@ -168,6 +168,127 @@ These are **rules**, not suggestions.
 - Use smart quotes (`'` `"`) in slide content where the Figma source has
   them.
 
+## How to think about a deck
+
+Before any slides, decide what kind of deck this is and write the spine.
+The format is honest: the deck reads thin if these aren't sharp upstream.
+
+### Deck types
+
+- **Case study deck.** One project, deep. The spine *is* the project,
+  told roughly in the order experienced. `2024-anvil-case-study` is the
+  reference.
+- **Thesis deck.** One argument, 2 to 4 projects as evidence. The spine
+  is the claim. Each project is sized by how strongly it supports the
+  claim.
+
+Both are mono-narrative. Not necessarily mono-project. One story spine
+runs through every slide.
+
+### Invariants (across all decks)
+
+- Three acts: who you are, then the work, then reflection.
+- TOC interstitials between sections. No standalone section banners.
+- Subtitle carries each slide's identity. Title stays the deck name.
+- Distill text into lists. Prose is rare and short when it appears.
+- Images carry meaning when they can. Bleed them when they're hero
+  content.
+- Don't frame quotes. Don't include CTAs. Don't summarize for the
+  audience.
+- Slide count is editorial. What got slides is what mattered. What
+  didn't get slides doesn't go in.
+
+### Act I and Act III are kits, not templates
+
+Assemble per deck. Bring what argues *this* deck specifically.
+
+Act I parts:
+
+- Title (always)
+- Work History (almost always; credibility frame)
+- Design Principles (when the audience cares about taste / approach)
+- Management Principles (when the role or thesis involves leading teams)
+- A custom "about" slide (when the deck has a specific framing to set up)
+- TOC
+
+Act III parts:
+
+- Why Me (evergreen)
+- Testimonials (optional; recurate per deck. Pick quotes that reinforce
+  *this* deck's thesis, not generic ones.)
+- Thank You (always)
+
+### Planning a case study deck
+
+Act II beats, in order:
+
+1. Context. Company, role, team, timeline.
+2. Kickoff. Interviews and challenges (the gap that motivated the work).
+3. Prior art. Research or audit.
+4. Personas. 1 to 4 named people with traits and pain points. Count is
+   signal: one persona means a single-user story; four means the problem
+   cuts across a constellation.
+5. Problem statement. One sentence, load-bearing phrases highlighted.
+6. Framework (optional). A diagram of your process. Use it when the
+   methodology itself is the interesting move; skip otherwise.
+7. Execution. One or two slides per framework phase, each anchored by an
+   artifact.
+8. Outputs. System principles, components, etc.
+9. Results. Quantified outcomes (CardGridSlide pattern).
+
+Results land at the *end* of Act II, not the middle. The argument builds
+first, the payoff lands last.
+
+### Planning a thesis deck
+
+**The thesis lives in `index.astro`'s `meta.description`, not as a
+slide.** Write it down to choose projects, decide depth, and order
+Act II. The audience never sees it stated. If the thesis is clear from
+the projects you picked and the order you put them in, the deck worked.
+If not, it didn't. Show, don't tell.
+
+`meta.description` is where the sentence you spent crafting lives. It's
+also what a future maintainer reads first to understand what the deck
+is arguing. See "How to build a new deck" for the convention.
+
+Act II is project mini-arcs, end to end. 2 to 4 projects, each gets:
+
+- Context (1 slide). Stripped down vs. a case study deck.
+- The decision specific to the thesis (1 to 2 slides). For a
+  "highest-leverage problem" thesis, this is the leverage decision. For
+  a different thesis, a different beat.
+- What shipped and the outcome (1 slide).
+
+The decision beat is the most important one to nail. Every project
+section must demonstrate the same verb. Order the projects so the
+cumulative reading lands the thesis without anyone naming it.
+
+Project depth signals which evidence is strongest. A 5-slide project is
+your headline; a 2-slide project is a supporting example. Use the count.
+
+### Pre-slide checklist
+
+Before drafting any slide:
+
+1. Write the one-sentence purpose. For a case study deck, the project
+   arc. For a thesis deck, the thesis. The thesis stays private; the
+   audience inducts it from the work. If you can't write the sentence
+   crisply, the deck isn't ready.
+2. For thesis decks: list candidate projects. Cut anything that doesn't
+   *demonstrate* the thesis (versus "happens to be a project you worked
+   on").
+3. For each surviving project, write the load-bearing decision in one
+   sentence.
+4. Decide depth per project.
+5. For case study decks, draft the results slide first; it's the
+   endpoint everything else aims at. For thesis decks, draft the
+   strongest project's decision slide first; it sets the bar for the
+   others.
+6. Assemble Act I and III from the parts bin to set up and close *this*
+   deck specifically.
+
+The work is upstream of any template.
+
 ## How to build a new slide
 
 1. Get the Figma reference. Either Matt links a node, or look up the
@@ -197,16 +318,31 @@ imports accordingly.
 
 1. Create `src/pages/decks/YYYY-<slug>/` with `index.astro`, `_slides/`,
    `images/`.
-2. `index.astro` mounts `<DeckShell>` + `<Deck title="…">`. Title goes on
-   `<Deck>` so it flows to slides via context.
-3. Use a top-level TOC array (`const toc = ['Section 1', 'Section 2', …]`)
+2. At the top of `index.astro`, define a `meta` const:
+
+   ```ts
+   const meta = {
+       title: 'Deck Title',
+       description: 'One sentence stating the deck\'s argument.',
+   };
+   ```
+
+   `<DeckShell {...meta}>` reads both. `title` is the document title.
+   `description` carries the deck's thesis (or project arc) as the
+   source of truth for what the deck argues; it lands in the HTML
+   `<meta name="description">` but the deck is robots-disallowed, so
+   no crawler reads it and no slide displays it. See "How to think
+   about a deck" for what belongs there.
+3. Mount the deck: `<DeckShell {...meta}><Deck title={meta.title}>`.
+   Title goes on `<Deck>` so it flows to slides via context.
+4. Use a top-level TOC array (`const toc = ['Section 1', 'Section 2', …]`)
    and render `<TocSlide items={toc} />` (no active) at the start, plus
    `<TocSlide items={toc} active="…" />` before each section.
-4. To reuse a slide from another deck, either `import` it directly
-   (sharing — old deck's edits propagate) or `cp` the file into the new
+5. To reuse a slide from another deck, either `import` it directly
+   (sharing; old deck's edits propagate) or `cp` the file into the new
    `_slides/` and tweak (true freezing).
-5. Images: copy what you need into the new deck's `images/`. Even if
-   logos are the same as another deck, copy — assets freeze with the
+6. Images: copy what you need into the new deck's `images/`. Even if
+   logos are the same as another deck, copy. Assets freeze with the
    deck too.
 
 ## Freezing principle
