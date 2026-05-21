@@ -1,9 +1,10 @@
 ---
-import { Picture } from 'astro:assets';
-
-import demoImage from '../content/work/atlas/imgs/aws-account-overview.png';
-
 const { variant } = Astro.props;
+
+// Same picsum seed as the design exploration file — keeps the calm
+// landscape across all three layout demos so the variable being shown
+// is the chrome, not the image.
+const placeholderSrc = 'https://picsum.photos/seed/atlas-16x9/1600/900';
 ---
 
 <div class="ld-frame">
@@ -12,13 +13,7 @@ const { variant } = Astro.props;
 			variant === 'side-rail' && (
 				<>
 					<div class="ld-image-area">
-						<Picture
-							src={demoImage}
-							alt=""
-							class="ld-image"
-							widths={[800]}
-							sizes="800px"
-						/>
+						<img src={placeholderSrc} alt="" class="ld-image" loading="lazy" />
 					</div>
 					<aside class="ld-rail">
 						<button class="ld-close-icon" aria-hidden="true">
@@ -49,13 +44,7 @@ const { variant } = Astro.props;
 			variant === 'bottom-row' && (
 				<>
 					<div class="ld-image-area">
-						<Picture
-							src={demoImage}
-							alt=""
-							class="ld-image"
-							widths={[1000]}
-							sizes="1000px"
-						/>
+						<img src={placeholderSrc} alt="" class="ld-image" loading="lazy" />
 					</div>
 					<div class="ld-bottom-strip">
 						<div class="ld-bottom-row">
@@ -86,13 +75,7 @@ const { variant } = Astro.props;
 			variant === 'floating' && (
 				<>
 					<div class="ld-image-area">
-						<Picture
-							src={demoImage}
-							alt=""
-							class="ld-image"
-							widths={[1000]}
-							sizes="1000px"
-						/>
+						<img src={placeholderSrc} alt="" class="ld-image" loading="lazy" />
 					</div>
 					<button class="ld-close-icon ld-close-floating" aria-hidden="true">
 						<svg
