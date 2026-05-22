@@ -78,6 +78,31 @@ Reach for these in order:
 - **2×2 stat cards** → `CardGridSlide`
 - **Anything else** → `<Slide>` directly with custom children
 
+### Common composition: content left, image right
+
+Two-column slide with bullets/prose on the left and a non-bleed image
+on the right. Not a template — just a grid. Used heavily for project
+context slides where viewers need to see the whole image (UI
+screenshots, artifacts) and `object-cover` cropping would hide content.
+
+```astro
+<Slide title="Project" subtitle="Slide name">
+  <div class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-12">
+    <div>...bullets or prose...</div>
+    <img
+      src={image}
+      alt="…"
+      class="m-0! block max-h-none! w-[Xpx] max-w-none! rounded-2xl"
+    />
+  </div>
+</Slide>
+```
+
+Set the image's width as an explicit pixel value matching the source's
+natural aspect; let height auto so the image renders at full aspect
+with no crop. Reach for `BleedImage` only when the image is atmospheric
+or hero, not when its content needs to be readable.
+
 ## BleedImage
 
 `_shared/templates/BleedImage.astro` is the absolute-positioned image
@@ -104,6 +129,33 @@ Behavior:
 - The component already applies `m-0! max-h-none! max-w-none! rounded-none!`
   to defeat Reveal's `.reveal img` defaults — **don't duplicate**.
 - Corners are always square. Rounding next to a slide edge looks off.
+
+## Card
+
+`_shared/templates/Card.astro` is the rounded stat-card primitive used
+by `CardGridSlide` and standalone in deck-specific layouts (Anvil
+Project Context, CL What Shipped, Atlas, Anvil Design System).
+
+Props:
+
+- `title: string` — strong-color headline. Usually a stat or category.
+- `items: string[]` — subdued-color list under the title.
+- `size?: 'default' | 'small'` — default matches Anvil Results sizing
+  (text-3xl title, text-2xl items, px-4 py-3). `'small'` shrinks both
+  text and padding (text-2xl / text-xl / px-3 py-2) for tighter 3-card
+  rows where the default would crowd.
+
+## TocSlide
+
+`_shared/templates/TocSlide.astro` renders the section list.
+
+Props:
+
+- `items: string[]` — section names (length usually 3-7).
+- `active?: string` — when set, non-active items dim to `text-weak`.
+- `gap?: 'default' | 'tight'` — default 24px between items (suits 3-4
+  items). `'tight'` shrinks to 16px (suits 5+ items so the list doesn't
+  stretch the whole slide).
 
 ## TextBlockSlide
 
@@ -167,6 +219,19 @@ These are **rules**, not suggestions.
   Use periods, commas, or colons for thought breaks.
 - Use smart quotes (`'` `"`) in slide content where the Figma source has
   them.
+
+### Section labels
+
+Small uppercase faded labels above body content (e.g. "PROBLEM
+STATEMENT" above prose, "ONLINE AT" above a URL) use the same recipe:
+
+```astro
+<span class="text-subdued text-xs font-medium uppercase">Label</span>
+```
+
+Paired with a `gap-3` (24px) below to the next content block. See
+Anvil's "Online at" URL row (`16-AnvilDesignSystem.astro`) or CL
+Context's "Problem statement" label (`10-CLContext.astro`).
 
 ## How to think about a deck
 
@@ -373,3 +438,19 @@ for a specific deck, copy the template into that deck's folder and edit.
     line-heights, use `<div>` instead of `<p>`.
   - `.reveal a` → adds a 3px accent underline. Override with `border-b-0!`
     if you want a plain link.
+- **Bleeding *past* a slide edge** requires a raw `<img>`, not
+  `BleedImage`. The `bleed` prop only sets the edge to offset 0
+  (touching); it does not accept negative offsets. To extend an image
+  past the slide bottom (or any edge), use absolute positioning with an
+  inline negative offset, e.g.:
+  ```astro
+  <img
+    src={...}
+    class="absolute left-1/2 m-0! block h-[Hpx] w-[Wpx] -translate-x-1/2 max-h-none! max-w-none! rounded-none!"
+    style="bottom: -60px;"
+  />
+  ```
+  Don't forget the Reveal-reset overrides (`m-0!`, `max-h-none!`,
+  `max-w-none!`, and either `rounded-none!` or a directional class like
+  `rounded-t-2xl!`). See `5-MCWhatIsMissionCloud.astro` and
+  `6-MCBeta.astro` in `2026-portfolio-review` for working examples.
