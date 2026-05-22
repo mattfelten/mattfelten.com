@@ -1,0 +1,27 @@
+---
+import { BleedImage, Slide } from '@decks';
+import Card from '@decks/templates/Card.astro';
+
+import tamCheckin2 from '../images/TAM Checkin 2.png?url';
+
+// Layout mirrors Anvil's Project Context slide (text-left / bleed-image-
+// right). Image bleeds top, right, and bottom (full vertical bleed on
+// the right). Metric cards run in a row on the left.
+//
+// Verbal note (not on slide): replaced a 5-hour monthly rebuild across
+// 30+ customers. Beta nearly doubled. Mission asking what else — 5 more
+// blueprints in discovery.
+---
+
+<Slide title="Collaboration Loops" subtitle="What shipped">
+	<div class="grid w-1/2 grid-cols-2 gap-7">
+		<Card title="98%" items={['Prep-time reduction']} />
+		<Card title="86%" items={['Repeat customer views']} />
+	</div>
+	<BleedImage
+		src={tamCheckin2}
+		alt="TAM Check-in Loop"
+		inset={['top', 'right', 'bottom']}
+		class="h-[1080px] w-[800px] object-cover"
+	/>
+</Slide>

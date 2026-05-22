@@ -1,0 +1,30 @@
+---
+import Card from '@decks/templates/Card.astro';
+import Slide from '@decks/templates/Slide.astro';
+
+const cards = [
+	{
+		title: '$500M+',
+		items: ['Platform-managed yearly AWS spend'],
+	},
+	{
+		title: '5 minute onboarding',
+		items: [
+			'Removed ~15 hours of customer and Onboarding Manager time',
+		],
+	},
+	{
+		title: 'Immediate invoicing',
+		items: [
+			'Automated week-long invoice cycle',
+			'$1M+ processed',
+		],
+	},
+];
+---
+
+<Slide title="Mission Control" subtitle="Impact">
+	<div class="grid grid-cols-3 gap-7">
+		{cards.map(c => <Card title={c.title} items={c.items} />)}
+	</div>
+</Slide>

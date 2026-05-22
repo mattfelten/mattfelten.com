@@ -1,0 +1,53 @@
+---
+import Card from '@decks/templates/Card.astro';
+import Slide from '@decks/templates/Slide.astro';
+
+import atlasDashboard from '../images/Atlas Dashboard.png?url';
+---
+
+<Slide title="Atlas" subtitle="Internal Platform">
+	<div
+		class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-8"
+	>
+		<div class="flex flex-col gap-7">
+			<ul
+				class="text-subdued flex list-none flex-col gap-4 text-2xl leading-snug"
+			>
+				<li>
+					Internal work scattered across the customer app
+					and a dying legacy tool
+				</li>
+				<li>
+					No one would pull people off the roadmap. So I
+					built the foundation on spare cycles.
+				</li>
+				<li>
+					Pitched it, the org adopted it. Legacy tool fully
+					sunset.
+				</li>
+			</ul>
+			<div class="grid grid-cols-3 gap-3">
+				<Card
+					title="35%"
+					items={['current roadmap']}
+					size="small"
+				/>
+				<Card
+					title="70%"
+					items={['employee usage']}
+					size="small"
+				/>
+				<Card
+					title="30k+"
+					items={['monthly views']}
+					size="small"
+				/>
+			</div>
+		</div>
+		<img
+			src={atlasDashboard}
+			alt="Atlas Dashboard"
+			class="m-0! block max-h-none! w-115 max-w-none! rounded-2xl"
+		/>
+	</div>
+</Slide>

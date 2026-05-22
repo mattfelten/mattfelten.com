@@ -41,7 +41,8 @@ const showHeader = !hideHeader && (effectiveTitle || subtitle);
 
 const paddingClass = padding === 'wide' ? 'px-[260px] py-7' : 'p-7';
 const headerInFlow = align === 'top';
-const headerSpacing = align === 'top' ? 'mb-8' : 'mb-0';
+const headerSpacing =
+	align === 'top' ? 'mb-8' : subtitle ? '-mb-4' : 'mb-0';
 
 // Body wrapper:
 // - align="top": flex-1 (fills remaining below header) + justify-start

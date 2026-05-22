@@ -1,0 +1,36 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+import affinity from '../images/cl-affinity.png?url';
+
+// Verbal note (not on slide): the obvious fix was a nicer template. We
+// deliberately didn’t build that.
+---
+
+<Slide title="Collaboration Loops" subtitle="Discovery">
+	<div
+		class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-20"
+	>
+		<ul
+			class="text-subdued flex list-none flex-col gap-4 text-3xl leading-snug"
+		>
+			<li>
+				Mapped 18 meeting artifacts and built personas for both
+				sides. TAM, CSM, and the customer CTO.
+			</li>
+			<li>
+				We thought the answer was one flexible,
+				general-purpose loop. Reactions were room-temperature.
+			</li>
+			<li>
+				The real insight. Deeply useful to a narrow audience
+				beats mildly useful to a wide one.
+			</li>
+		</ul>
+		<img
+			src={affinity}
+			alt="Affinity map from discovery"
+			class="m-0! block max-h-none! w-[900px] max-w-none! rounded-2xl"
+		/>
+	</div>
+</Slide>
