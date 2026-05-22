@@ -26,6 +26,7 @@ interface Props {
 	controls?: boolean;
 	progress?: boolean;
 	transition?: RevealTransition;
+	transitionSpeed?: 'fast' | 'slow' | 'default';
 	hash?: boolean;
 }
 
@@ -38,6 +39,7 @@ const {
 	controls = false,
 	progress = false,
 	transition = 'fade',
+	transitionSpeed = 'fast',
 	hash = true,
 } = Astro.props;
 
@@ -52,6 +54,7 @@ const revealConfig = JSON.stringify({
 	controls,
 	progress,
 	transition,
+	transitionSpeed,
 	hash,
 });
 ---
