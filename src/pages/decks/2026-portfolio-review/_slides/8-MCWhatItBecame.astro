@@ -1,0 +1,47 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+import billing from '../images/MC - Billing.png?url';
+import cloudScore from '../images/MC - Cloud Score.png?url';
+import costAlert from '../images/MC - Cost Alert.png?url';
+import dashboard from '../images/MC - Dashboard.png?url';
+import devops from '../images/MC - DevOps.png?url';
+import rio from '../images/MC - RIO.png?url';
+
+// 6 webapp screens in a 3-column masonry layout via CSS multi-column.
+// Images of varying heights stack tightly within each column. The
+// whole masonry is then tilted in 3D as one unit so all images share
+// the same rotation. Edge bleeds clip at the slide boundary via
+// overflow-hidden on the section.
+const screens = [
+	{ src: billing, alt: 'Mission Control Billing' },
+	{ src: devops, alt: 'Mission Control DevOps' },
+	{ src: dashboard, alt: 'Mission Control Dashboard' },
+	{ src: dashboard, alt: 'Mission Control Dashboard' },
+	{ src: cloudScore, alt: 'Mission Control Cloud Score' },
+	{ src: costAlert, alt: 'Mission Control Cost Alert' },
+	{ src: rio, alt: 'Mission Control RIO' },
+];
+---
+
+<Slide hideHeader class="overflow-hidden p-0!">
+	<div
+		class="flex h-full w-full items-center justify-center"
+		style="perspective: 1600px;"
+	>
+		<div
+			class="w-200 columns-3"
+			style="transform: translate3d(-9%, 275px, 0px) scale3d(1.5, 1.5, 1) rotateX(15deg) rotateY(-9deg) rotateZ(8deg); transform-style: preserve-3d; will-change: transform;"
+		>
+			{
+				screens.map(s => (
+					<img
+						src={s.src}
+						alt={s.alt}
+						class="border-strong/8 m-0! mb-3! block max-h-none! w-full max-w-none! break-inside-avoid rounded-2xl border shadow-[0_24px_48px_-12px_rgba(0,0,0,0.5)]"
+					/>
+				))
+			}
+		</div>
+	</div>
+</Slide>

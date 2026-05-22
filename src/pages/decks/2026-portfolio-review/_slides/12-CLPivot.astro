@@ -1,0 +1,41 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+import { RxArrowRight } from 'react-icons/rx';
+
+import genericLoop from '../images/Generic Loop.png?url';
+import tamCheckin from '../images/TAM Checkin.png?url';
+---
+
+<Slide title="Collaboration Loops" subtitle="Pivot">
+	<div
+		class="mt-4 grid grid-cols-[1fr_60px_1fr] items-center gap-0"
+	>
+		<figure class="m-0 flex flex-col items-center gap-3">
+			<img
+				src={genericLoop}
+				alt="Generic Loop"
+				class="m-0! block max-h-none! w-full max-w-none! rounded-2xl"
+			/>
+			<figcaption
+				class="text-subdued text-sm font-medium uppercase"
+			>
+				Generic Loop
+			</figcaption>
+		</figure>
+		<div class="text-accent flex justify-center">
+			<RxArrowRight size={32} />
+		</div>
+		<figure class="m-0 flex flex-col items-center gap-3">
+			<img
+				src={tamCheckin}
+				alt="TAM Check-in Loop"
+				class="m-0! block max-h-none! w-full max-w-none! rounded-2xl"
+			/>
+			<figcaption
+				class="text-subdued text-sm font-medium uppercase"
+			>
+				TAM Check-in Loop
+			</figcaption>
+		</figure>
+	</div>
+</Slide>

@@ -1,0 +1,79 @@
+---
+import { Deck, DeckShell, TocSlide } from '@decks';
+
+import {
+	AnvilContext,
+	AnvilDesignSystem,
+	Atlas,
+	CLContext,
+	CLDiscovery,
+	CLPivot,
+	CLWhatShipped,
+	DesignPrinciples,
+	MCBeta,
+	MCBuildingTheDesignPractice,
+	MCImpact,
+	MCWhatIsMissionCloud,
+	MCWhatItBecame,
+	Testimonials,
+	ThankYou,
+	Title,
+	WhoIAm,
+	WhyMe,
+	WorkHistory,
+} from './_slides';
+
+const meta = {
+	title: 'Portfolio Review',
+	// TODO: Matt to paste the internal thesis sentence here verbatim.
+	// Private; carried only in the HTML meta description, never displayed.
+	description: 'TODO: internal thesis sentence',
+};
+
+const toc = [
+	'About Me',
+	'Mission Control',
+	'Collaboration Loops',
+	'Atlas',
+	'Anvil',
+	'Closing',
+];
+---
+
+<DeckShell {...meta}>
+	<Deck title="Portfolio Review">
+		<Title />
+
+		<TocSlide gap="tight" items={toc} />
+
+		<TocSlide gap="tight" items={toc} active="About Me" />
+		<WhoIAm />
+		<WorkHistory />
+		<DesignPrinciples />
+
+		<TocSlide gap="tight" items={toc} active="Mission Control" />
+		<MCWhatIsMissionCloud />
+		<MCBeta />
+		<MCBuildingTheDesignPractice />
+		<MCWhatItBecame />
+		<MCImpact />
+
+		<TocSlide gap="tight" items={toc} active="Collaboration Loops" />
+		<CLContext />
+		<CLDiscovery />
+		<CLPivot />
+		<CLWhatShipped />
+
+		<TocSlide gap="tight" items={toc} active="Atlas" />
+		<Atlas />
+
+		<TocSlide gap="tight" items={toc} active="Anvil" />
+		{/* <AnvilContext /> */}
+		<AnvilDesignSystem />
+
+		<TocSlide gap="tight" items={toc} active="Closing" />
+		<WhyMe />
+		<Testimonials />
+		<ThankYou />
+	</Deck>
+</DeckShell>

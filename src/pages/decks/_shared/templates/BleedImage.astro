@@ -26,13 +26,7 @@ interface Props {
 	class?: string;
 }
 
-const {
-	src,
-	alt,
-	bleed,
-	inset,
-	class: extraClass,
-} = Astro.props;
+const { src, alt, bleed, inset, class: extraClass } = Astro.props;
 
 const toArr = <T,>(x: T | T[] | undefined): T[] =>
 	x == null ? [] : Array.isArray(x) ? x : [x];
@@ -62,12 +56,15 @@ const hasVertical = top != null || bottom != null;
 const horizontalCenter = hasHorizontal
 	? null
 	: 'left-1/2 -translate-x-1/2';
-const verticalCenter = hasVertical ? null : 'top-1/2 -translate-y-1/2';
+const verticalCenter = hasVertical
+	? null
+	: 'top-1/2 -translate-y-1/2';
 ---
 
 <img
 	class:list={[
-		'absolute m-0! block max-h-none! max-w-none! rounded-none!',
+		'absolute m-0! block max-h-none! max-w-none!',
+		bleed && 'rounded-none!',
 		top,
 		right,
 		bottom,

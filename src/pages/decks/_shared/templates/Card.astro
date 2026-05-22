@@ -1,25 +1,49 @@
 ---
 // A single rounded card. Title + bulleted list of items. Used by
-// CardGridSlide (2x2 stats grid).
+// CardGridSlide (2x2 stats grid) and standalone as metric callouts.
 
 interface Props {
 	title: string;
 	items: string[];
+	/** Card size variant.
+	 * - `default` matches the Anvil Results sizing (text-3xl title, text-2xl items, px-4 py-3).
+	 * - `small` shrinks text and padding for tighter grids (text-2xl title, text-xl items, px-3 py-2). */
+	size?: 'default' | 'small';
 }
 
-const { title, items } = Astro.props;
+const { title, items, size = 'default' } = Astro.props;
+
+const isSmall = size === 'small';
+const containerPadding = isSmall ? 'px-3 py-2' : 'px-4 py-3';
+const titleSize = isSmall ? 'text-2xl' : 'text-3xl';
+const titleMargin = isSmall ? 'mb-0!' : 'mb-1!';
+const itemSize = isSmall ? 'text-xl' : 'text-2xl';
 ---
 
 <div
-	class="rounded-[20px] border border-weak/[0.18] bg-[#111827]/60 px-4 py-3"
+	class:list={[
+		'border-weak/[0.18] rounded-[20px] border bg-[#111827]/60',
+		containerPadding,
+	]}
 >
-	<h3 class="m-0 mb-2 text-3xl font-medium leading-[1.1] text-strong">
+	<h3
+		class:list={[
+			'text-strong m-0! leading-[1.1] font-medium',
+			titleSize,
+			titleMargin,
+		]}
+	>
 		{title}
 	</h3>
-	<ul class="m-0 list-none p-0">
+	<ul class="m-0 flex list-none flex-col gap-1.5 p-0">
 		{
 			items.map(item => (
-				<li class="my-[10px] text-2xl leading-[1.4] text-subdued">
+				<li
+					class:list={[
+						'text-subdued m-0! leading-[1.4]',
+						itemSize,
+					]}
+				>
 					{item}
 				</li>
 			))
