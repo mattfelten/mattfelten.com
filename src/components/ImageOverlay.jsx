@@ -163,15 +163,7 @@ export const ImageOverlay = () => {
 		);
 	};
 
-	const onImgClick = e => {
-		if (!canZoom) return;
-		if (zoomed) {
-			setZoomed(false);
-			return;
-		}
-		const rect = e.currentTarget.getBoundingClientRect();
-		const xRatio = (e.clientX - rect.left) / rect.width;
-		const yRatio = (e.clientY - rect.top) / rect.height;
+	const zoomTo = (xRatio, yRatio) => {
 		setZoomed(true);
 		requestAnimationFrame(() => {
 			const container = imageAreaRef.current;
@@ -187,6 +179,27 @@ export const ImageOverlay = () => {
 				behavior: 'auto',
 			});
 		});
+	};
+
+	const onImgClick = e => {
+		if (!canZoom) return;
+		if (zoomed) {
+			setZoomed(false);
+			return;
+		}
+		const rect = e.currentTarget.getBoundingClientRect();
+		zoomTo(
+			(e.clientX - rect.left) / rect.width,
+			(e.clientY - rect.top) / rect.height,
+		);
+	};
+
+	const onImgKeyDown = e => {
+		if (!canZoom) return;
+		if (e.key !== 'Enter' && e.key !== ' ') return;
+		e.preventDefault();
+		if (zoomed) setZoomed(false);
+		else zoomTo(0.5, 0.5);
 	};
 
 	return (
@@ -220,6 +233,10 @@ export const ImageOverlay = () => {
 						alt={asset.alt}
 						onLoad={onImgLoad}
 						onClick={onImgClick}
+						onKeyDown={canZoom ? onImgKeyDown : undefined}
+						role={canZoom ? 'button' : undefined}
+						tabIndex={canZoom ? 0 : undefined}
+						aria-pressed={canZoom ? zoomed : undefined}
 						className={
 							canZoom && !zoomed
 								? 'overlay-image zoomable'
