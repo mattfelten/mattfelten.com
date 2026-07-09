@@ -8,18 +8,15 @@ interface Props {
 }
 
 const { title, description, isbn, url, cover } = Astro.props;
-const linkUrl =
-	url ?? (isbn ? `https://amazon.com/dp/${isbn}` : undefined);
-const coverUrl = cover
-	?? (isbn ? `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg` : '/book-placeholder.svg');
+const linkUrl = url ?? (isbn ? `https://amazon.com/dp/${isbn}` : undefined);
+const coverUrl =
+	cover ??
+	(isbn
+		? `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`
+		: '/book-placeholder.svg');
 ---
 
-<a
-	href={linkUrl}
-	target="_blank"
-	rel="noopener noreferrer"
-	class="group block"
->
+<a href={linkUrl} target="_blank" rel="noopener noreferrer" class="group block">
 	<div
 		class="mb-3 flex h-24 items-end transition-transform duration-200 group-hover:-translate-y-1 sm:h-32"
 	>

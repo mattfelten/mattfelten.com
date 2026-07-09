@@ -45,6 +45,7 @@ Schemas are defined in `src/content/config.ts`.
 ### Path Aliases
 
 Configured in `tsconfig.json`:
+
 - `@assets`, `@components`, `@layouts`, `@sections`
 
 ### Styling
@@ -81,5 +82,6 @@ Newsletter subscription handled via server action in `src/actions/index.ts` usin
 ## Formatting
 
 Uses both Biome and Prettier:
+
 - Biome: tabs, double quotes, organized imports
 - Prettier: tabs, single quotes, Tailwind class sorting

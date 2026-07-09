@@ -1,7 +1,7 @@
 // 1. Import utilities from `astro:content`
 
-import { glob } from 'astro/loaders';
 import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
 
 // 3. Export a single `collections` object to register your collection(s)
 //    This key should match your collection directory name in "src/content"
@@ -37,7 +37,10 @@ export const collections = {
 	}),
 	// Projects: Lightweight side projects (links to external URLs)
 	projects: defineCollection({
-		loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/projects' }),
+		loader: glob({
+			pattern: '**/*.{md,mdx}',
+			base: './src/content/projects',
+		}),
 		schema: ({ image }) =>
 			z.object({
 				title: z.string(),
@@ -48,7 +51,10 @@ export const collections = {
 			}),
 	}),
 	roles: defineCollection({
-		loader: glob({ pattern: '**/*.{md,mdx,yaml,yml}', base: './src/content/roles' }),
+		loader: glob({
+			pattern: '**/*.{md,mdx,yaml,yml}',
+			base: './src/content/roles',
+		}),
 		schema: z.object({
 			acquired: z.string().optional(),
 			company: z.string(),
@@ -60,7 +66,10 @@ export const collections = {
 		}),
 	}),
 	speaking: defineCollection({
-		loader: glob({ pattern: '**/*.{md,mdx,yaml,yml}', base: './src/content/speaking' }),
+		loader: glob({
+			pattern: '**/*.{md,mdx,yaml,yml}',
+			base: './src/content/speaking',
+		}),
 		schema: z.object({
 			date: z.date(),
 			description: z.string(),
@@ -69,11 +78,19 @@ export const collections = {
 		}),
 	}),
 	library: defineCollection({
-		loader: glob({ pattern: '**/*.{md,mdx,yaml,yml}', base: './src/content/library' }),
+		loader: glob({
+			pattern: '**/*.{md,mdx,yaml,yml}',
+			base: './src/content/library',
+		}),
 		schema: z.object({
 			title: z.string(),
 			description: z.string(),
-			category: z.enum(['classics', 'craft', 'communication', 'collaboration']),
+			category: z.enum([
+				'classics',
+				'craft',
+				'communication',
+				'collaboration',
+			]),
 			isbn: z.string().optional(), // ISBN-10; drives auto Amazon URL
 			url: z.string().optional(), // explicit URL; overrides auto-generated Amazon link
 			cover: z.string().optional(), // local cover image path (e.g. /books/foo.jpg)

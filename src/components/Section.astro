@@ -5,11 +5,16 @@ const { title, href, linkText = 'View all →', class: className } = Astro.props
 <section class={className}>
 	<div class="mb-1 flex items-baseline justify-between">
 		<h3 class="text-subdued font-medium">{title}</h3>
-		{href && (
-			<a href={href} class="text-subdued hover:text-accent text-sm font-medium transition-colors">
-				{linkText}
-			</a>
-		)}
+		{
+			href && (
+				<a
+					href={href}
+					class="text-subdued hover:text-accent text-sm font-medium transition-colors"
+				>
+					{linkText}
+				</a>
+			)
+		}
 	</div>
 	<slot />
 </section>

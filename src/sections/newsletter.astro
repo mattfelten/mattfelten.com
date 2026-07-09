@@ -6,9 +6,9 @@ import Section from '@components/Section.astro';
 
 <Section title="Subscribe to my newsletter" class="line-length-lg">
 	<p class="mb-2">
-		This is where I drop quick notes about design, music, life,
-		and whatever catches my attention. Think of it like a slow,
-		quiet feed of things I'd send a friend.
+		This is where I drop quick notes about design, music, life, and whatever
+		catches my attention. Think of it like a slow, quiet feed of things I'd
+		send a friend.
 	</p>
 	<div class="flex flex-col gap-2">
 		<form id="newsletter-form" class="flex gap-2">
@@ -75,26 +75,18 @@ import Section from '@components/Section.astro';
 	import { actions } from 'astro:actions';
 
 	const form = document.getElementById(
-		'newsletter-form'
+		'newsletter-form',
 	) as HTMLFormElement | null;
 	const emailInput = document.getElementById(
-		'newsletter-email'
+		'newsletter-email',
 	) as HTMLInputElement | null;
 	const submitButton = document.getElementById(
-		'newsletter-submit'
+		'newsletter-submit',
 	) as HTMLButtonElement | null;
-	const successMessage = document.getElementById(
-		'newsletter-success'
-	);
+	const successMessage = document.getElementById('newsletter-success');
 	const errorMessage = document.getElementById('newsletter-error');
 
-	if (
-		form &&
-		emailInput &&
-		submitButton &&
-		successMessage &&
-		errorMessage
-	) {
+	if (form && emailInput && submitButton && successMessage && errorMessage) {
 		form.addEventListener('submit', async e => {
 			e.preventDefault();
 

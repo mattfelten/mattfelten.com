@@ -78,16 +78,14 @@ const overlayId =
 		src ? (
 			() => {
 				const isExtension = (ext: string) => {
-					if (typeof src === 'string')
-						return src.endsWith(ext);
+					if (typeof src === 'string') return src.endsWith(ext);
 					return src.src.endsWith(ext);
 				};
 				const getLink = () => {
 					if (href) return href;
 					if (expand) {
 						if (typeof src === 'string') return src;
-						if (typeof src.src === 'string')
-							return src.src;
+						if (typeof src.src === 'string') return src.src;
 						return false;
 					}
 					return false;
@@ -115,11 +113,7 @@ const overlayId =
 					if (isExtension('gif') || isExtension('svg'))
 						return (
 							<img
-								src={
-									typeof src === 'string'
-										? src
-										: src.src
-								}
+								src={typeof src === 'string' ? src : src.src}
 								alt={alt}
 								class={classes}
 								{...props}
@@ -141,16 +135,10 @@ const overlayId =
 						<a
 							href={getLink()}
 							data-overlay={overlayId || undefined}
-							data-overlay-src={
-								overlayId ? srcUrl : undefined
-							}
-							data-overlay-alt={
-								overlayId ? alt : undefined
-							}
+							data-overlay-src={overlayId ? srcUrl : undefined}
+							data-overlay-alt={overlayId ? alt : undefined}
 							data-overlay-caption={
-								overlayId && caption
-									? caption
-									: undefined
+								overlayId && caption ? caption : undefined
 							}
 						>
 							{getAssetContent()}
