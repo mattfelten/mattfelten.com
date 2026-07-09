@@ -1,0 +1,164 @@
+---
+const placeholderSrc = 'https://picsum.photos/seed/atlas-16x9/1600/900';
+
+// Click point coordinates as percentages of the source image bounds.
+// Chosen off-center so the "snap" case clearly loses it from the viewport.
+const clickX = 68;
+const clickY = 58;
+
+// When the zoomed viewport is scaled 3x, positioning the source point at the
+// viewport center requires background-position of -(clickX * 3 - 50)%.
+const followX = -(clickX * 3 - 50);
+const followY = -(clickY * 3 - 50);
+---
+
+<div class="zd-frame">
+	<div class="zd-panel">
+		<div class="zd-label">Snap to top-left</div>
+		<div class="zd-thumb">
+			<img src={placeholderSrc} alt="" loading="lazy" />
+			<div class="zd-dot" style={`left: ${clickX}%; top: ${clickY}%`}></div>
+		</div>
+		<div class="zd-caret" aria-hidden="true">↓</div>
+		<div class="zd-viewport">
+			<img
+				src={placeholderSrc}
+				alt=""
+				loading="lazy"
+				class="zd-zoomed"
+				style="left: 0%; top: 0%"
+			/>
+			<div
+				class="zd-dot zd-dot--offscreen"
+				style={`left: ${clickX * 3}%; top: ${clickY * 3}%`}
+			></div>
+		</div>
+	</div>
+
+	<div class="zd-panel">
+		<div class="zd-label">Follow the cursor</div>
+		<div class="zd-thumb">
+			<img src={placeholderSrc} alt="" loading="lazy" />
+			<div class="zd-dot" style={`left: ${clickX}%; top: ${clickY}%`}></div>
+		</div>
+		<div class="zd-caret" aria-hidden="true">↓</div>
+		<div class="zd-viewport">
+			<img
+				src={placeholderSrc}
+				alt=""
+				loading="lazy"
+				class="zd-zoomed"
+				style={`left: ${followX}%; top: ${followY}%`}
+			/>
+			<div class="zd-dot zd-dot--centered" style="left: 50%; top: 50%"></div>
+		</div>
+	</div>
+</div>
+
+<style>
+	.zd-frame {
+		--zd-bg: #f4f0e9;
+		--zd-border: rgba(17, 24, 39, 0.14);
+		--zd-label: rgba(17, 24, 39, 0.6);
+		--zd-caret: rgba(17, 24, 39, 0.3);
+		--zd-dot: #111827;
+		--zd-dot-ring: rgba(255, 255, 255, 0.9);
+
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 24px;
+		max-width: 720px;
+		margin: 32px auto;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.zd-frame {
+			--zd-bg: #1a1a1c;
+			--zd-border: rgba(255, 255, 255, 0.14);
+			--zd-label: rgba(255, 255, 255, 0.55);
+			--zd-caret: rgba(255, 255, 255, 0.28);
+			--zd-dot: #f9fafb;
+			--zd-dot-ring: rgba(0, 0, 0, 0.7);
+		}
+	}
+
+	.zd-panel {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 8px;
+		min-width: 0;
+	}
+
+	.zd-label {
+		font-size: 12px;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: var(--zd-label);
+		font-weight: 500;
+	}
+
+	.zd-thumb,
+	.zd-viewport {
+		position: relative;
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		background: var(--zd-bg);
+		border: 1px solid var(--zd-border);
+		border-radius: 6px;
+		overflow: hidden;
+	}
+
+	.zd-thumb img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.zd-viewport {
+		/* second box in each panel is the zoomed viewport */
+	}
+
+	.zd-zoomed {
+		position: absolute;
+		width: 300%;
+		height: 300%;
+		object-fit: cover;
+		max-width: none;
+	}
+
+	.zd-caret {
+		font-size: 18px;
+		line-height: 1;
+		color: var(--zd-caret);
+	}
+
+	.zd-dot {
+		position: absolute;
+		width: 12px;
+		height: 12px;
+		border-radius: 9999px;
+		background: var(--zd-dot);
+		border: 2px solid var(--zd-dot-ring);
+		transform: translate(-50%, -50%);
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.28);
+	}
+
+	.zd-dot--offscreen {
+		/*
+		 * The click point at 68%,58% of the source image lands at
+		 * (68% * 3, 58% * 3) = (204%, 174%) of the viewport, which is
+		 * off-viewport in the "snap" case. overflow: hidden on the parent
+		 * clips it — the reader can see there's no dot inside, which is
+		 * exactly the point.
+		 */
+	}
+
+	@media (max-width: 640px) {
+		.zd-frame {
+			grid-template-columns: 1fr;
+			gap: 16px;
+		}
+	}
+</style>
