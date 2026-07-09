@@ -18,7 +18,7 @@ yarn-error.log*
 
 # favicons
 public/favicons/
-src/layout/favicon.html
+src/layouts/favicon.html
 
 # astro
 .astro/
