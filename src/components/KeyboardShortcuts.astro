@@ -1,0 +1,161 @@
+---
+const rows = [
+	{ keys: ['Esc'], desc: 'Close the overlay' },
+	{ keys: ['Tab'], desc: 'Cycle focus forward inside the card' },
+	{ keys: ['Shift', 'Tab'], desc: 'Cycle focus backward', joiner: '+' },
+	{
+		keys: ['Enter'],
+		alt: ['Space'],
+		desc: 'Toggle zoom on the focused image',
+	},
+	{
+		keys: ['←', '↑', '→', '↓'],
+		desc: 'Pan the zoomed view',
+		joiner: ' ',
+	},
+];
+---
+
+<div class="ks-card" aria-label="Keyboard shortcuts for the image overlay">
+	<div class="ks-label">Keyboard</div>
+	<dl class="ks-list">
+		{
+			rows.map(row => (
+				<div class="ks-row">
+					<dt class="ks-keys">
+						{row.keys.map((k, i) => (
+							<>
+								{i > 0 && (
+									<span class="ks-joiner">{row.joiner ?? ' '}</span>
+								)}
+								<kbd>{k}</kbd>
+							</>
+						))}
+						{row.alt && (
+							<>
+								<span class="ks-or">or</span>
+								{row.alt.map((k, i) => (
+									<>
+										{i > 0 && <span class="ks-joiner">+</span>}
+										<kbd>{k}</kbd>
+									</>
+								))}
+							</>
+						)}
+					</dt>
+					<dd class="ks-desc">{row.desc}</dd>
+				</div>
+			))
+		}
+	</dl>
+</div>
+
+<style>
+	.ks-card {
+		--ks-bg: #f4f0e9;
+		--ks-border: rgba(17, 24, 39, 0.14);
+		--ks-label: rgba(17, 24, 39, 0.55);
+		--ks-desc: rgba(17, 24, 39, 0.8);
+		--ks-kbd-bg: #fff;
+		--ks-kbd-border: rgba(17, 24, 39, 0.22);
+		--ks-kbd-shadow: rgba(17, 24, 39, 0.12);
+		--ks-strong: #111827;
+
+		max-width: 640px;
+		margin: 28px auto;
+		padding: 22px 26px;
+		background: var(--ks-bg);
+		border: 1px solid var(--ks-border);
+		border-radius: 8px;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.ks-card {
+			--ks-bg: #1a1a1c;
+			--ks-border: rgba(255, 255, 255, 0.14);
+			--ks-label: rgba(255, 255, 255, 0.55);
+			--ks-desc: rgba(255, 255, 255, 0.85);
+			--ks-kbd-bg: rgba(255, 255, 255, 0.08);
+			--ks-kbd-border: rgba(255, 255, 255, 0.22);
+			--ks-kbd-shadow: rgba(0, 0, 0, 0.4);
+			--ks-strong: #f9fafb;
+		}
+	}
+
+	.ks-label {
+		font-size: 11px;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+		color: var(--ks-label);
+		font-weight: 600;
+		margin-bottom: 14px;
+	}
+
+	.ks-list {
+		margin: 0;
+		display: grid;
+		grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+		gap: 10px 24px;
+	}
+
+	.ks-row {
+		display: contents;
+	}
+
+	.ks-keys {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		flex-wrap: wrap;
+		margin: 0;
+	}
+
+	.ks-keys kbd {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 26px;
+		padding: 3px 7px;
+		font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+			monospace;
+		font-size: 12px;
+		font-weight: 500;
+		color: var(--ks-strong);
+		background: var(--ks-kbd-bg);
+		border: 1px solid var(--ks-kbd-border);
+		border-radius: 4px;
+		box-shadow: 0 1px 0 var(--ks-kbd-shadow);
+		line-height: 1;
+	}
+
+	.ks-joiner {
+		font-size: 12px;
+		color: var(--ks-label);
+	}
+
+	.ks-or {
+		font-size: 11px;
+		color: var(--ks-label);
+		margin: 0 4px;
+		text-transform: lowercase;
+		letter-spacing: 0.04em;
+	}
+
+	.ks-desc {
+		margin: 0;
+		align-self: center;
+		font-size: 14px;
+		color: var(--ks-desc);
+		line-height: 1.5;
+	}
+
+	@media (max-width: 520px) {
+		.ks-list {
+			grid-template-columns: 1fr;
+			gap: 14px;
+		}
+		.ks-desc {
+			font-size: 13px;
+		}
+	}
+</style>

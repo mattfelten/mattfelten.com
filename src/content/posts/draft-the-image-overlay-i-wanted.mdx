@@ -1,52 +1,55 @@
 ---
 title: The Image Overlay I Wanted
-date: 2026-05-20
+date: 2026-07-08
 description: Building a custom image overlay for this site. URL state that doesn't pollute browser history, click-to-zoom for retina screenshots, accessibility wiring, and motion on a gentle curve.
 ---
 
 import Asset from '../../components/Asset.astro';
 import LayoutDemo from '../../components/LayoutDemo.astro';
-import demoImage from '../work/atlas/imgs/aws-account-overview.png';
+import AnimationDemo from '../../components/AnimationDemo.astro';
+import ZoomDemo from '../../components/ZoomDemo.astro';
+import KeyboardShortcuts from '../../components/KeyboardShortcuts.astro';
+import demoImage from './assets/image-overlay-placeholder.jpg';
 
-Image overlays are a solved problem on paper. There are dozens of libraries. But every time I tried one for this site, something was off. The URL didn't update. The back button reopened images I'd already closed. The zoom didn't work on retina screenshots. Accessibility was rough or missing. So I built one that does what I want.
+Image overlays are a solved problem on paper. There are dozens of libraries. Each one I tried for this site had a compromise I couldn't accept. The URL wouldn't update. The back button reopened images I'd already closed. Zoom didn't work on retina screenshots. Accessibility was rough or missing. So I wrote my own.
 
-You can try it. Click the image. The entrance is choreographed. Click the image again to zoom to its natural pixel size, then click anywhere to return.
+Click the image to try it. Click again to zoom to natural pixel size, then click anywhere to return.
 
-<Asset src={demoImage} alt="A customer's overview page in the Atlas dashboard, showing the customer header, billing activity, and the assigned AWS account" expand caption="Click the image to open the overlay. Click the image again to zoom to its native pixel size. Press Esc, click the X, or click the dimmed area to close." />
+<Asset src={demoImage} alt="A placeholder landscape photograph used to demonstrate the image overlay" expand caption="Click the image to open the overlay. Click the image again to zoom to its native pixel size. Press Esc, click the X, or click the dimmed area to close." />
 
-The code is on GitHub. [ImageOverlay.jsx](https://github.com/mattfelten/mattfelten.com/blob/main/src/components/ImageOverlay.jsx) and [ImageOverlay.css](https://github.com/mattfelten/mattfelten.com/blob/main/src/components/ImageOverlay.css). The rest of this post is what's interesting about how it works.
+Source is on GitHub. [ImageOverlay.jsx](https://github.com/mattfelten/mattfelten.com/blob/main/src/components/ImageOverlay.jsx) and [ImageOverlay.css](https://github.com/mattfelten/mattfelten.com/blob/main/src/components/ImageOverlay.css).
 
 ## UI options I considered
 
-I started with a 350px right rail. Close button on top, caption underneath.
+The first attempt was a 350px right rail. Close button on top, caption underneath.
 
 <LayoutDemo variant="side-rail" />
 
-Looked editorial in mockups. The problem became obvious as soon as I had it on the page. Case study images are usually 16:9, and a side rail just steals horizontal space from the image. Images may or may not have captions, so the rail was often empty. It existed to hold something that wasn't there.
+It looked editorial in mockups. In context, the problem became clear. My case study images are usually 16:9, and a fixed side rail takes horizontal space from the image whether that space is earned or not. Not every image has a caption, so the rail was often sitting empty, reserved for content that wasn't there.
 
-Next try was a row at the bottom. Caption left, close right.
+The second attempt was a row at the bottom. Caption left, close right.
 
 <LayoutDemo variant="bottom-row" />
 
-Better, but still chrome wrapped around the image. When there was no caption, the row sat there waiting for something that wasn't going to show up.
+Better, but the row still consumed vertical space that could have gone to the image. When there was no caption, the row remained, holding space it didn't need.
 
-The version that shipped doesn't have a row. The close button floats top-right. The caption, when one exists, floats bottom-left. The image fills everything in between.
+The version that shipped removed the row entirely. The close button floats top-right. The caption, when one exists, sits in a low-priority band at the bottom that only appears when needed. The image fills the rest.
 
 <LayoutDemo variant="floating" />
 
-If neither caption nor close interrupts the frame, the image owns it. That was the goal from the start.
+When neither caption nor close interrupts the frame, the image gets the whole space. That was the goal.
 
 ## URL state
 
-Three things I wanted from the URL behavior, simultaneously.
+I wanted three properties from the URL behavior, at the same time.
 
-**Shareable URLs.** Opening an image updates the URL to `/work/atlas?overlay=concept-dashboard`. Send the link, the recipient sees the same view.
+**Shareable URLs.** Opening an image appends an `overlay` query parameter to the current page URL. The pattern is `<page url>?overlay=<image-id>`. A query param rather than a route parameter means every page supports the overlay without routing changes. Sending the link reproduces the same view for the recipient.
 
-**Back-button-closes.** Press the browser back button while the overlay is open and the overlay closes. The user stays on the case study.
+**Back-button-closes.** Pressing the browser back button while the overlay is open should close it. The user stays on the case study.
 
-**No history pollution.** Open ten images, close each, then press back. You should go to the previous page, not cycle back through ten previously closed images.
+**No history pollution.** Opening ten images and closing each shouldn't leave ten history entries. The back button should return to the page before the case study, not cycle through ten previously closed images.
 
-The first two are normal `history.pushState` behavior. The third one needs a trick.
+The first two are straightforward `history.pushState` behavior. The third requires a small workaround.
 
 ```js
 const closeOverlay = () => {
@@ -55,115 +58,50 @@ const closeOverlay = () => {
 };
 ```
 
-`replaceState` cleans the URL of the current entry first. Then `history.back()` pops it. The popped entry no longer contains an overlay URL, so even if a user navigates forward into it later, the overlay doesn't reopen.
+`replaceState` clears the overlay parameter from the current entry. `history.back()` then pops that entry. Because the entry no longer carries an overlay URL, forward-navigating into it later doesn't reopen anything.
 
-Opening is regular pushState.
-
-```js
-window.history.pushState({ overlay: id }, '', urlWith(id));
-setAsset(next);
-```
-
-And a `popstate` listener reconciles state with the URL when the browser navigates within the same document.
-
-This approach doesn't fight the platform. The browser still owns history. I'm just making sure each pushed entry leaves no trace once it's been popped.
+The browser still owns the history stack. Each pushed entry leaves no trace once popped.
 
 ## Click to zoom
 
-Open the demo at the top of the post and try it. Cursor changes to `zoom-in` over the image. Clicking renders it at its natural pixel size. The container scrolls. For retina case study screenshots, usually 2880×1800 or larger, this lets readers inspect details without leaving the page.
+Try it in the demo above. The cursor changes to `zoom-in` over the image. Clicking renders the image at its native pixel size and the container becomes scrollable. For retina case study screenshots, typically 2880×1800 or larger, this lets readers inspect fine details without leaving the page.
 
-Two states. CSS handles both.
+The detail worth explaining is where the container scrolls to. A common approach snaps to the top-left of the image, which forces the reader to hunt for the region they were looking at.
 
-```css
-.overlay-image {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
-.overlay-image.zoomable { cursor: zoom-in; }
+<ZoomDemo />
 
-.overlay-image-area.zoomed > .overlay-image {
-  max-width: none;
-  max-height: none;
-  width: auto;
-  height: auto;
-  cursor: zoom-out;
-}
-```
+This overlay captures the cursor's position as a ratio of the image bounds before zooming, then scrolls so that same ratio lands at the center of the viewport after the transition. The point under the cursor stays under the cursor. The effect reads less as a state change and more as the image expanding outward from where the reader pointed.
 
-The click handler captures coordinates and scrolls so the click point ends up roughly centered after the zoom.
-
-```js
-const onImgClick = e => {
-  if (!canZoom) return;
-  if (zoomed) {
-    setZoomed(false);
-    return;
-  }
-  const rect = e.currentTarget.getBoundingClientRect();
-  const xRatio = (e.clientX - rect.left) / rect.width;
-  const yRatio = (e.clientY - rect.top) / rect.height;
-  setZoomed(true);
-  requestAnimationFrame(() => {
-    const container = imageAreaRef.current;
-    const img = imgRef.current;
-    container.scrollTo({
-      left: img.naturalWidth * xRatio - container.clientWidth / 2,
-      top: img.naturalHeight * yRatio - container.clientHeight / 2,
-    });
-  });
-};
-```
-
-The `.zoomable` class only gets added when the image is actually larger than its displayed size. The check happens on load.
-
-```js
-const onImgLoad = e => {
-  const img = e.currentTarget;
-  setCanZoom(
-    img.naturalWidth > img.clientWidth ||
-      img.naturalHeight > img.clientHeight,
-  );
-};
-```
-
-No point offering zoom on a thumbnail that's already at native size. The cursor stays default and the click is a no-op.
+Zoom is disabled when the source isn't larger than its rendered size. The cursor stays default and the click is a no-op.
 
 ## Animation
 
-The entrance you saw is three things choreographed.
+Three animations play in sequence when the overlay opens.
 
-**Backdrop fades in.** 280ms, ease-out. Sets the surface.
+**Backdrop fades in.** 280ms, ease-out. Establishes the surface.
 
 **Image scales in.** From 0.975 to 1.0 with a fade. 440ms, 60ms delay.
 
 **Close button and caption fade up.** Staggered 200ms and 240ms delays.
 
-```css
-@keyframes overlay-image-in {
-  from { opacity: 0; transform: scale(0.975); }
-  to { opacity: 1; transform: scale(1); }
-}
+<AnimationDemo />
 
-.overlay-image {
-  animation: overlay-image-in 440ms cubic-bezier(0.16, 1, 0.3, 1) 60ms both;
-}
-```
+The image uses `cubic-bezier(0.16, 1, 0.3, 1)`. It scales up quickly at first, then eases into the final size without bouncing past it. That curve reads less mechanically than `ease-out` for short transitions.
 
-The curve is `cubic-bezier(0.16, 1, 0.3, 1)`. A gentle deceleration with no overshoot. Feels less mechanical than `ease-out` for short transitions.
+The stagger matters more than the curve, because the stagger is what tells the reader where to look. If everything animates at once, the overlay reads as a single state flip. Delaying the close button and caption by 200ms after the image makes them feel like they're settling around a picture that already opened.
 
 ## Accessibility
 
-The dialog uses `role="dialog"` with `aria-modal="true"` and an `aria-label` set to the image's alt text. When focus moves into the dialog, screen readers announce it. I considered an explicit `aria-live` region for the open event but skipped it. The dialog's label covers the same purpose without risking double-announcement.
+The dialog uses `role="dialog"` with `aria-modal="true"` and an `aria-label` bound to the image's alt text. When focus moves into the dialog, screen readers announce it. I considered adding an explicit `aria-live` region for the open event but skipped it. The dialog's label covers the same purpose without the risk of double-announcement.
 
-Focus management uses [focus-trap-react](https://github.com/focus-trap/focus-trap-react). When the overlay opens, Tab and Shift+Tab cycle through focusable elements inside the card (the close button, plus any links in a caption). Tab can't escape into the case study content behind the overlay.
+Focus is trapped inside the card using [focus-trap-react](https://github.com/focus-trap/focus-trap-react). Tab and Shift+Tab cycle through the close button, the image itself when zoom is available, and any links inside the caption. Tab can't escape into the case study content behind the overlay.
 
-The card itself has `tabIndex={-1}` and `outline: none`. That lets me move focus to it programmatically when the overlay opens without lighting up a visible focus ring. The close button only gets its keyboard focus ring when you actually tab to it.
+<KeyboardShortcuts />
 
-Escape closes the overlay. Body scroll is locked while it's open.
+The card carries `tabIndex={-1}` and `outline: none`, which lets the overlay move focus to it programmatically on open without surfacing a visible focus ring. Focusable elements only get their keyboard focus ring when a reader tabs to them. Body scroll is locked while the overlay is open.
 
-The one accessibility gap left is the zoom interaction. The image isn't keyboard-focusable, which means keyboard users can't toggle zoom. Adding `tabIndex={0}` to the image plus a key handler for Enter and Space would close that. Not in this version.
+Keyboard zoom uses the image's midpoint as the target, since there's no cursor position to work from. Mouse zoom keeps the point under the cursor stable. Keyboard zoom keeps the center stable. Different reference points, same idea. After the transition, the reader's attention lands somewhere they can predict.
 
-## Source
+---
 
-The component is two files. About 250 lines of JSX, about 200 lines of CSS. Both live in [the repo](https://github.com/mattfelten/mattfelten.com/tree/main/src/components).
+Every choice above traded generality for fit. The libraries weren't wrong. They were built for a context that wasn't this one.

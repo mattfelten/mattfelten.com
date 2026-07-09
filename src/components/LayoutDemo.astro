@@ -269,15 +269,22 @@ const placeholderSrc = 'https://picsum.photos/seed/atlas-16x9/1600/900';
 		margin-left: auto;
 	}
 
-	/* Floating variant */
+	/* Floating variant — caption pushes the image area shorter, matching the
+	   real ImageOverlay: card is a flex column with image-area (flex:1) above
+	   caption (flex-shrink:0). Close is still absolutely positioned. */
+	.ld-overlay--floating {
+		display: flex;
+		flex-direction: column;
+	}
 	.ld-overlay--floating .ld-image-area {
-		position: absolute;
-		inset: 0;
+		position: relative;
+		z-index: 2;
+		flex: 1;
+		min-height: 0;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: 24px;
-		z-index: 2;
+		padding: 24px 24px 12px;
 	}
 	.ld-overlay--floating .ld-close-floating {
 		position: absolute;
@@ -286,14 +293,14 @@ const placeholderSrc = 'https://picsum.photos/seed/atlas-16x9/1600/900';
 		z-index: 3;
 	}
 	.ld-overlay--floating .ld-caption-floating {
-		position: absolute;
-		bottom: 16px;
-		left: 20px;
-		right: 50%;
+		position: relative;
 		z-index: 3;
+		flex-shrink: 0;
+		padding: 0 24px 20px;
 		display: flex;
 		flex-direction: column;
 		gap: 6px;
+		max-width: 60%;
 	}
 	.ld-overlay--floating .ld-caption-floating span {
 		display: block;
