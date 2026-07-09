@@ -36,15 +36,7 @@
 .prose {
 	font-size: var(--text-lg);
 	line-height: var(--line-height-base);
-}
 
-@variant md {
-	.prose {
-		font-size: var(--text-xl);
-	}
-}
-
-.prose :not(.not-prose) {
 	h1,
 	h2,
 	h3,
@@ -108,10 +100,12 @@
 	}
 
 	hr {
-		opacity: 0.5;
-		height: 2px;
 		border: none;
-		background-color: var(--color-weak);
+		background: none;
+		opacity: 0;
+		height: 0;
+		margin-top: 4rlh;
+		margin-bottom: 4rlh;
 	}
 
 	a:hover,
@@ -125,6 +119,12 @@
 
 	picture {
 		margin-bottom: 0;
+	}
+}
+
+@variant md {
+	.prose {
+		font-size: var(--text-xl);
 	}
 }
 
