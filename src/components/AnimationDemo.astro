@@ -1,0 +1,264 @@
+---
+const placeholderSrc = 'https://picsum.photos/seed/atlas-16x9/1600/900';
+---
+
+<div class="ad-frame" aria-hidden="true">
+	<div class="ad-page">
+		<span class="ad-heading" style="width: 42%"></span>
+		<span class="ad-line" style="width: 96%"></span>
+		<span class="ad-line" style="width: 88%"></span>
+		<span class="ad-line" style="width: 72%"></span>
+		<span class="ad-line ad-line--pad" style="width: 94%"></span>
+		<span class="ad-line" style="width: 84%"></span>
+		<span class="ad-line" style="width: 58%"></span>
+	</div>
+
+	<div class="ad-overlay">
+		<div class="ad-backdrop"></div>
+		<div class="ad-image-area">
+			<img src={placeholderSrc} alt="" class="ad-image" loading="lazy" />
+		</div>
+		<button class="ad-close" tabindex="-1">
+			<svg
+				width="14"
+				height="14"
+				viewBox="0 0 18 18"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="1.75"
+				stroke-linecap="round"
+			>
+				<path d="M4 4 L14 14 M14 4 L4 14"></path>
+			</svg>
+		</button>
+		<div class="ad-caption">
+			<span style="width: 100%"></span>
+			<span style="width: 70%"></span>
+		</div>
+	</div>
+</div>
+
+<style>
+	.ad-frame {
+		--ad-page-bg: #e8e3da;
+		--ad-page-line: rgba(17, 24, 39, 0.16);
+		--ad-page-heading: rgba(17, 24, 39, 0.32);
+		--ad-bg: #f4f0e9;
+		--ad-btn-bg: rgba(244, 240, 233, 0.78);
+		--ad-btn-border: rgba(17, 24, 39, 0.18);
+		--ad-strong: #111827;
+		--ad-line: rgba(17, 24, 39, 0.22);
+
+		position: relative;
+		aspect-ratio: 16 / 9;
+		max-width: 720px;
+		margin: 32px auto;
+		border: 1px solid rgba(17, 24, 39, 0.1);
+		border-radius: 8px;
+		overflow: hidden;
+		box-shadow: 0 30px 60px -30px rgba(17, 24, 39, 0.18);
+		background: var(--ad-page-bg);
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.ad-frame {
+			--ad-page-bg: #0e0e10;
+			--ad-page-line: rgba(255, 255, 255, 0.14);
+			--ad-page-heading: rgba(255, 255, 255, 0.32);
+			--ad-bg: #1a1a1c;
+			--ad-btn-bg: rgba(26, 26, 28, 0.7);
+			--ad-btn-border: rgba(255, 255, 255, 0.22);
+			--ad-strong: #f9fafb;
+			--ad-line: rgba(255, 255, 255, 0.28);
+			border-color: rgba(0, 0, 0, 0.6);
+		}
+	}
+
+	.ad-page {
+		position: absolute;
+		inset: 0;
+		padding: 26px 32px;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.ad-page .ad-heading {
+		display: block;
+		height: 12px;
+		background: var(--ad-page-heading);
+		border-radius: 3px;
+		margin-bottom: 8px;
+	}
+
+	.ad-page .ad-line {
+		display: block;
+		height: 6px;
+		background: var(--ad-page-line);
+		border-radius: 2px;
+	}
+
+	.ad-page .ad-line--pad {
+		margin-top: 10px;
+	}
+
+	.ad-overlay {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.ad-backdrop {
+		position: absolute;
+		inset: 0;
+		background: var(--ad-bg);
+		animation: ad-backdrop 4200ms ease-in-out infinite;
+		opacity: 0;
+	}
+
+	.ad-backdrop::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		opacity: 0.35;
+		mix-blend-mode: multiply;
+		background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.ad-backdrop::after {
+			opacity: 0.55;
+			mix-blend-mode: screen;
+		}
+	}
+
+	.ad-image-area {
+		position: relative;
+		z-index: 2;
+		flex: 1;
+		min-height: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 24px 24px 12px;
+	}
+
+	.ad-image {
+		display: block;
+		max-width: 100%;
+		max-height: 100%;
+		object-fit: contain;
+		border-radius: 4px;
+		box-shadow:
+			0 20px 40px -16px rgba(17, 24, 39, 0.18),
+			0 6px 14px -8px rgba(17, 24, 39, 0.1);
+		animation: ad-image 4200ms cubic-bezier(0.16, 1, 0.3, 1) infinite;
+		opacity: 0;
+		transform: scale(0.975);
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.ad-image {
+			box-shadow:
+				0 20px 40px -16px rgba(0, 0, 0, 0.7),
+				0 6px 14px -8px rgba(0, 0, 0, 0.5);
+			outline: 1px solid rgba(255, 255, 255, 0.05);
+		}
+	}
+
+	.ad-close {
+		position: absolute;
+		top: 14px;
+		right: 14px;
+		z-index: 3;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 28px;
+		height: 28px;
+		color: var(--ad-strong);
+		background: var(--ad-btn-bg);
+		border: 1px solid var(--ad-btn-border);
+		border-radius: 9999px;
+		backdrop-filter: blur(6px);
+		-webkit-backdrop-filter: blur(6px);
+		padding: 0;
+		animation: ad-chrome 4200ms ease-out infinite;
+		animation-delay: -60ms;
+		opacity: 0;
+		transform: translateY(4px);
+	}
+
+	.ad-caption {
+		position: relative;
+		z-index: 3;
+		flex-shrink: 0;
+		padding: 0 24px 20px;
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		max-width: 60%;
+		animation: ad-chrome 4200ms ease-out infinite;
+		animation-delay: -20ms;
+		opacity: 0;
+		transform: translateY(4px);
+	}
+
+	.ad-caption span {
+		display: block;
+		height: 5px;
+		background: var(--ad-line);
+		opacity: 0.9;
+		border-radius: 2px;
+	}
+
+	/*
+	 * Loop timeline (4200ms):
+	 *   0 – 280ms   backdrop fades in over page content
+	 *   60 – 500ms  image scales + fades in
+	 *   200 – 400ms close fades up
+	 *   240 – 440ms caption fades up
+	 *   500 – 3400ms hold
+	 *   3400 – 3900ms everything fades back to hidden, revealing page content
+	 *   3900 – 4200ms reset pause before the next cycle
+	 */
+
+	@keyframes ad-backdrop {
+		0%   { opacity: 0; }
+		7%   { opacity: 1; }
+		81%  { opacity: 1; }
+		93%  { opacity: 0; }
+		100% { opacity: 0; }
+	}
+
+	@keyframes ad-image {
+		0%   { opacity: 0; transform: scale(0.975); }
+		1%   { opacity: 0; transform: scale(0.975); }
+		12%  { opacity: 1; transform: scale(1); }
+		81%  { opacity: 1; transform: scale(1); }
+		93%  { opacity: 0; transform: scale(0.985); }
+		100% { opacity: 0; transform: scale(0.975); }
+	}
+
+	@keyframes ad-chrome {
+		0%   { opacity: 0; transform: translateY(4px); }
+		5%   { opacity: 0; transform: translateY(4px); }
+		12%  { opacity: 1; transform: translateY(0); }
+		81%  { opacity: 1; transform: translateY(0); }
+		93%  { opacity: 0; transform: translateY(2px); }
+		100% { opacity: 0; transform: translateY(4px); }
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.ad-backdrop,
+		.ad-image,
+		.ad-close,
+		.ad-caption {
+			animation: none;
+			opacity: 1;
+			transform: none;
+		}
+	}
+</style>
