@@ -2,7 +2,7 @@
 const { variant } = Astro.props;
 ---
 
-<div class="cst-frame">
+<div class={`cst-frame cst-frame--${variant}`}>
 	<div class={`cst-surface cst-surface--${variant}`}>
 		{
 			variant === 'showcase' && (
@@ -58,39 +58,33 @@ const { variant } = Astro.props;
 
 		{
 			variant === 'case-study' && (
-				<div class="cst-case">
-					<div class="cst-case-row">
-						{/* Slide 1 — title / chapter opener */}
-						<div class="cst-slide cst-slide--title">
-							<div class="cst-slide-title-stack">
-								<span class="cst-slide-title-bar" style="width: 68%" />
-								<span class="cst-slide-subtitle-bar" style="width: 42%" />
-							</div>
+				<div class="cst-case-row">
+					{/* Slide 1 — title / chapter opener */}
+					<div class="cst-slide cst-slide--title">
+						<div class="cst-slide-title-stack">
+							<span class="cst-slide-title-bar" style="width: 68%" />
+							<span class="cst-slide-subtitle-bar" style="width: 42%" />
 						</div>
-						{/* Slide 2 — image-first */}
-						<div class="cst-slide cst-slide--image">
-							<div class="cst-slide-image" />
-							<span class="cst-slide-caption" style="width: 60%" />
+					</div>
+					{/* Slide 2 — image-first */}
+					<div class="cst-slide cst-slide--image">
+						<div class="cst-slide-image" />
+						<span class="cst-slide-caption" style="width: 60%" />
+					</div>
+					{/* Slide 3 — bullet list */}
+					<div class="cst-slide cst-slide--bullets">
+						<span class="cst-slide-heading" style="width: 44%" />
+						<div class="cst-lines cst-lines--bullets">
+							<span style="width: 82%" />
+							<span style="width: 66%" />
+							<span style="width: 74%" />
+							<span style="width: 56%" />
 						</div>
-						{/* Slide 3 — bullet list */}
-						<div class="cst-slide cst-slide--bullets">
-							<span class="cst-slide-heading" style="width: 44%" />
-							<div class="cst-lines cst-lines--bullets">
-								<span style="width: 82%" />
-								<span style="width: 66%" />
-								<span style="width: 74%" />
-								<span style="width: 56%" />
-							</div>
-						</div>
-						{/* Slide 4 — split layout (cropped by the right edge) */}
-						<div class="cst-slide cst-slide--split">
-							<div class="cst-slide-split-image" />
-							<div class="cst-slide-split-text">
-								<span class="cst-slide-heading" style="width: 70%" />
-								<span class="cst-slide-caption" style="width: 88%" />
-								<span class="cst-slide-caption" style="width: 74%" />
-							</div>
-						</div>
+					</div>
+					{/* Slide 4 — bleeds off the right edge */}
+					<div class="cst-slide cst-slide--image">
+						<div class="cst-slide-image" />
+						<span class="cst-slide-caption" style="width: 60%" />
 					</div>
 				</div>
 			)
@@ -121,13 +115,22 @@ const { variant } = Astro.props;
 		--cst-pad: 24px;
 
 		position: relative;
-		aspect-ratio: 16 / 9;
-		max-width: 720px;
-		margin: 32px auto;
+		margin: 32px 0;
 		border: 1px solid rgba(17, 24, 39, 0.1);
 		border-radius: 8px;
 		overflow: hidden;
 		box-shadow: 0 30px 60px -30px rgba(17, 24, 39, 0.18);
+	}
+
+	/* 16:9 frames for grid & page-preview variants */
+	.cst-frame--showcase,
+	.cst-frame--project-feature {
+		aspect-ratio: 16 / 9;
+	}
+
+	/* Case-study frame: content-sized height, container for cqw sizing */
+	.cst-frame--case-study {
+		container-type: inline-size;
 	}
 
 	@media (prefers-color-scheme: dark) {
@@ -151,6 +154,14 @@ const { variant } = Astro.props;
 		position: absolute;
 		inset: 0;
 		background: var(--cst-bg);
+	}
+
+	/* Case-study surface flows in normal document flow so the frame sizes
+	   to the slide row's height rather than being locked to 16:9. */
+	.cst-frame--case-study .cst-surface {
+		position: relative;
+		inset: auto;
+		padding: var(--cst-pad) 0 var(--cst-pad) var(--cst-pad);
 	}
 
 	.cst-surface::after {
@@ -285,29 +296,16 @@ const { variant } = Astro.props;
 	}
 
 	/* --- Case study (horizontal deck strip) --- */
-	.cst-surface--case-study {
-		display: flex;
-	}
-	.cst-case {
+	.cst-case-row {
 		position: relative;
 		z-index: 2;
-		flex: 1;
-		overflow: hidden;
 		display: flex;
-		align-items: center;
-		padding-left: var(--cst-pad);
-		/* No right padding — the last slide bleeds off the frame edge, which
-		   is the "there are more slides" tell. No scrollbar needed. */
-	}
-	.cst-case-row {
-		display: flex;
-		flex-direction: row;
 		gap: var(--cst-gap-md);
-		flex-shrink: 0;
+		align-items: center;
 	}
 	.cst-slide {
 		flex-shrink: 0;
-		width: 180px;
+		width: 27cqw;
 		aspect-ratio: 16 / 9;
 		background: var(--cst-slide-bg);
 		border: 1px solid var(--cst-slide-border);
@@ -346,7 +344,7 @@ const { variant } = Astro.props;
 		border-radius: 2px;
 	}
 
-	/* Slide 2 — image-first */
+	/* Slide 2 & 4 — image-first */
 	.cst-slide-image {
 		flex: 1;
 		background: var(--cst-tile-strong);
@@ -391,25 +389,6 @@ const { variant } = Astro.props;
 		border-radius: 50%;
 		background: var(--cst-line-strong);
 		opacity: 0.7;
-	}
-
-	/* Slide 4 — split (cropped by the right edge of the frame) */
-	.cst-slide--split {
-		flex-direction: row;
-		gap: var(--cst-gap-sm);
-		align-items: stretch;
-	}
-	.cst-slide-split-image {
-		flex: 0 0 46%;
-		background: var(--cst-tile-strong);
-		border-radius: 3px;
-	}
-	.cst-slide-split-text {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		gap: 4px;
 	}
 
 	/* --- Scrollbar (used by project-feature) --- */
