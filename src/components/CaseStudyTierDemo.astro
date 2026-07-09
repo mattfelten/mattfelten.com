@@ -19,59 +19,78 @@ const { variant } = Astro.props;
 
 		{
 			variant === 'project-feature' && (
-				<div class="cst-feature">
-					<div class="cst-feature-hero" />
-					<div class="cst-feature-body">
-						<div class="cst-feature-main">
-							<div class="cst-lines">
-								<span class="cst-heading" style="width: 55%" />
-								<span style="width: 92%" />
-								<span style="width: 78%" />
-							</div>
-							<div class="cst-feature-pair">
-								<div class="cst-tile" />
-								<div class="cst-tile" />
-							</div>
-							<div class="cst-lines">
-								<span style="width: 88%" />
-								<span style="width: 96%" />
-								<span style="width: 64%" />
+				<>
+					<div class="cst-feature-scroll">
+						<div class="cst-feature">
+							<div class="cst-feature-hero" />
+							<div class="cst-feature-body">
+								<div class="cst-feature-main">
+									<div class="cst-lines">
+										<span class="cst-heading" style="width: 55%" />
+										<span style="width: 92%" />
+										<span style="width: 78%" />
+									</div>
+									<div class="cst-feature-pair">
+										<div class="cst-tile" />
+										<div class="cst-tile" />
+									</div>
+									<div class="cst-lines">
+										<span style="width: 88%" />
+										<span style="width: 96%" />
+										<span style="width: 64%" />
+									</div>
+								</div>
+								<aside class="cst-feature-role">
+									<span class="cst-heading" style="width: 45%" />
+									<span style="width: 90%" />
+									<span style="width: 75%" />
+									<span style="width: 82%" />
+								</aside>
 							</div>
 						</div>
-						<aside class="cst-feature-role">
-							<span class="cst-heading" style="width: 45%" />
-							<span style="width: 90%" />
-							<span style="width: 75%" />
-							<span style="width: 82%" />
-						</aside>
 					</div>
-				</div>
+					<div class="cst-scrollbar" aria-hidden="true">
+						<div class="cst-scrollbar-thumb" />
+					</div>
+				</>
 			)
 		}
 
 		{
 			variant === 'case-study' && (
 				<div class="cst-case">
-					<div class="cst-case-inner">
-						<div class="cst-slide">
-							<div class="cst-slide-image" />
-							<span class="cst-slide-title" style="width: 40%" />
+					<div class="cst-case-row">
+						{/* Slide 1 — title / chapter opener */}
+						<div class="cst-slide cst-slide--title">
+							<div class="cst-slide-title-stack">
+								<span class="cst-slide-title-bar" style="width: 68%" />
+								<span class="cst-slide-subtitle-bar" style="width: 42%" />
+							</div>
 						</div>
-						<div class="cst-slide">
+						{/* Slide 2 — image-first */}
+						<div class="cst-slide cst-slide--image">
 							<div class="cst-slide-image" />
-							<span class="cst-slide-title" style="width: 32%" />
+							<span class="cst-slide-caption" style="width: 60%" />
 						</div>
-						<div class="cst-slide">
-							<div class="cst-slide-image" />
-							<span class="cst-slide-title" style="width: 36%" />
+						{/* Slide 3 — bullet list */}
+						<div class="cst-slide cst-slide--bullets">
+							<span class="cst-slide-heading" style="width: 44%" />
+							<div class="cst-lines cst-lines--bullets">
+								<span style="width: 82%" />
+								<span style="width: 66%" />
+								<span style="width: 74%" />
+								<span style="width: 56%" />
+							</div>
 						</div>
-						<div class="cst-slide">
-							<div class="cst-slide-image" />
-							<span class="cst-slide-title" style="width: 30%" />
+						{/* Slide 4 — split layout (cropped by the right edge) */}
+						<div class="cst-slide cst-slide--split">
+							<div class="cst-slide-split-image" />
+							<div class="cst-slide-split-text">
+								<span class="cst-slide-heading" style="width: 70%" />
+								<span class="cst-slide-caption" style="width: 88%" />
+								<span class="cst-slide-caption" style="width: 74%" />
+							</div>
 						</div>
-					</div>
-					<div class="cst-scrollbar" aria-hidden="true">
-						<div class="cst-scrollbar-thumb" />
 					</div>
 				</div>
 			)
@@ -197,31 +216,38 @@ const { variant } = Astro.props;
 		background: var(--cst-tile-strong);
 	}
 
-	/* --- Project feature --- */
+	/* --- Project feature (scroll-clipped page preview) --- */
 	.cst-surface--project-feature {
+		display: flex;
+		flex-direction: row;
+	}
+	.cst-feature-scroll {
+		position: relative;
+		z-index: 2;
+		flex: 1;
+		min-width: 0;
+		overflow: hidden;
 		display: flex;
 		flex-direction: column;
 	}
 	.cst-feature {
-		position: relative;
-		z-index: 2;
 		display: flex;
 		flex-direction: column;
-		flex: 1;
-		padding: var(--cst-pad);
+		flex-shrink: 0;
+		padding: var(--cst-pad) var(--cst-pad) 0 var(--cst-pad);
 		gap: var(--cst-gap-md);
 	}
 	.cst-feature-hero {
-		flex: 0 0 42%;
+		height: 170px;
 		background: var(--cst-tile-strong);
 		border-radius: 4px;
+		flex-shrink: 0;
 	}
 	.cst-feature-body {
-		flex: 1;
 		display: grid;
 		grid-template-columns: 1fr 26%;
 		gap: var(--cst-gap-lg);
-		min-height: 0;
+		align-items: start;
 	}
 	.cst-feature-main {
 		display: flex;
@@ -233,12 +259,9 @@ const { variant } = Astro.props;
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		gap: var(--cst-gap-sm);
-		flex: 1;
-		min-height: 0;
 	}
 	.cst-feature-pair .cst-tile {
-		aspect-ratio: auto;
-		height: 100%;
+		aspect-ratio: 4 / 3;
 	}
 	.cst-feature-role {
 		background: var(--cst-card);
@@ -247,7 +270,6 @@ const { variant } = Astro.props;
 		display: flex;
 		flex-direction: column;
 		gap: var(--cst-gap-sm);
-		align-self: flex-start;
 	}
 	.cst-feature-role span {
 		display: block;
@@ -262,7 +284,7 @@ const { variant } = Astro.props;
 		opacity: 0.7;
 	}
 
-	/* --- Case study (scrolling slide deck) --- */
+	/* --- Case study (horizontal deck strip) --- */
 	.cst-surface--case-study {
 		display: flex;
 	}
@@ -270,22 +292,22 @@ const { variant } = Astro.props;
 		position: relative;
 		z-index: 2;
 		flex: 1;
-		display: flex;
 		overflow: hidden;
-	}
-	.cst-case-inner {
-		flex: 1;
-		padding: var(--cst-pad) var(--cst-pad) 0 var(--cst-pad);
 		display: flex;
-		flex-direction: column;
-		gap: var(--cst-gap-md);
 		align-items: center;
-		/* Slides are intentionally taller than the frame — the bottom slide
-		   clips and the scrollbar thumb near the top signals many more below. */
+		padding-left: var(--cst-pad);
+		/* No right padding — the last slide bleeds off the frame edge, which
+		   is the "there are more slides" tell. No scrollbar needed. */
+	}
+	.cst-case-row {
+		display: flex;
+		flex-direction: row;
+		gap: var(--cst-gap-md);
+		flex-shrink: 0;
 	}
 	.cst-slide {
 		flex-shrink: 0;
-		width: 34%;
+		width: 180px;
 		aspect-ratio: 16 / 9;
 		background: var(--cst-slide-bg);
 		border: 1px solid var(--cst-slide-border);
@@ -294,23 +316,103 @@ const { variant } = Astro.props;
 		display: flex;
 		flex-direction: column;
 		gap: var(--cst-gap-xs);
-		box-shadow: 0 2px 6px -2px rgba(17, 24, 39, 0.06);
+		box-shadow: 0 4px 10px -6px rgba(17, 24, 39, 0.18);
 	}
+
+	/* Slide 1 — title / chapter opener */
+	.cst-slide--title {
+		align-items: center;
+		justify-content: center;
+	}
+	.cst-slide-title-stack {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 6px;
+		width: 100%;
+	}
+	.cst-slide-title-bar {
+		display: block;
+		height: 7px;
+		background: var(--cst-line-strong);
+		opacity: 0.8;
+		border-radius: 2px;
+	}
+	.cst-slide-subtitle-bar {
+		display: block;
+		height: 4px;
+		background: var(--cst-line);
+		opacity: 0.55;
+		border-radius: 2px;
+	}
+
+	/* Slide 2 — image-first */
 	.cst-slide-image {
 		flex: 1;
 		background: var(--cst-tile-strong);
 		border-radius: 3px;
 		min-height: 0;
 	}
-	.cst-slide-title {
+	.cst-slide-caption {
+		display: block;
+		height: 4px;
+		background: var(--cst-line);
+		opacity: 0.55;
+		border-radius: 2px;
+	}
+
+	/* Slide 3 — bullets */
+	.cst-slide--bullets {
+		gap: 6px;
+	}
+	.cst-slide-heading {
 		display: block;
 		height: 5px;
 		background: var(--cst-line-strong);
-		opacity: 0.7;
+		opacity: 0.75;
 		border-radius: 2px;
-		flex-shrink: 0;
+	}
+	.cst-lines--bullets {
+		gap: 5px;
+		padding-left: 7px;
+	}
+	.cst-lines--bullets span {
+		position: relative;
+		height: 4px;
+	}
+	.cst-lines--bullets span::before {
+		content: '';
+		position: absolute;
+		left: -7px;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 2.5px;
+		height: 2.5px;
+		border-radius: 50%;
+		background: var(--cst-line-strong);
+		opacity: 0.7;
 	}
 
+	/* Slide 4 — split (cropped by the right edge of the frame) */
+	.cst-slide--split {
+		flex-direction: row;
+		gap: var(--cst-gap-sm);
+		align-items: stretch;
+	}
+	.cst-slide-split-image {
+		flex: 0 0 46%;
+		background: var(--cst-tile-strong);
+		border-radius: 3px;
+	}
+	.cst-slide-split-text {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: 4px;
+	}
+
+	/* --- Scrollbar (used by project-feature) --- */
 	.cst-scrollbar {
 		position: relative;
 		z-index: 3;
@@ -325,7 +427,7 @@ const { variant } = Astro.props;
 		top: 0;
 		left: 0;
 		right: 0;
-		height: 18%;
+		height: 22%;
 		background: var(--cst-scroll-thumb);
 		border-radius: 2px;
 	}
