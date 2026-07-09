@@ -100,10 +100,12 @@
 	}
 
 	hr {
-		opacity: 0.5;
-		height: 2px;
 		border: none;
-		background-color: var(--color-weak);
+		background: none;
+		opacity: 0;
+		height: 0;
+		margin-top: 4rlh;
+		margin-bottom: 4rlh;
 	}
 
 	a:hover,
