@@ -33,10 +33,7 @@ const years = Object.keys(postsByYear)
 				<Section title={year.toString()}>
 					<ul class="space-y-2">
 						{postsByYear[year].map(
-							({
-								data: { title, date, redirect },
-								id,
-							}) => (
+							({ data: { title, date, redirect }, id }) => (
 								<li>
 									<a
 										href={redirect || '/articles/' + id}
@@ -55,7 +52,7 @@ const years = Object.keys(postsByYear)
 										</span>
 									</a>
 								</li>
-							)
+							),
 						)}
 					</ul>
 				</Section>

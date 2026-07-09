@@ -75,8 +75,16 @@ The problem was clear. The harder question was what to do about it. That took we
 I ran 10-15 stakeholder interviews across customer-facing and product teams at different seniority levels. Some sessions confirmed what I already suspected. Others surfaced needs that ended up shaping the post-MVP backlog. I designed conceptual screens to make the idea tangible. Where internal data would live, how it could scale, what it would feel like to use.
 
 <AssetRow caption="Two of the conceptual screens from the pitch. They didn't match what we eventually built. The Dashboard came later, the Customers page evolved substantially, AWS Accounts wasn't even in the first concept. But seeing the app made the idea land in a way a pitch doc by itself couldn't have.">
-	<Asset src={conceptDashboard} alt="A rough conceptual dashboard from the pitch, showing customer activity and team data" expand />
-	<Asset src={conceptCustomers} alt="A rough conceptual customers page from the pitch, showing a list of customers with quick details" expand />
+	<Asset
+		src={conceptDashboard}
+		alt="A rough conceptual dashboard from the pitch, showing customer activity and team data"
+		expand
+	/>
+	<Asset
+		src={conceptCustomers}
+		alt="A rough conceptual customers page from the pitch, showing a list of customers with quick details"
+		expand
+	/>
 </AssetRow>
 
 #### How do we build it?
@@ -93,8 +101,8 @@ I worked through the architecture with our Principal Architect and the five Fron
 		faster builds across the board.
 	</Card>
 	<Card title="Shared design system">
-		Extract UI components into a shared library that both apps would consume.
-		Same components, same visual language, one source of truth.
+		Extract UI components into a shared library that both apps would
+		consume. Same components, same visual language, one source of truth.
 	</Card>
 	<Card title="Auth and API refactor">
 		Decouple the authentication layer and GraphQL connections from Mission
@@ -162,7 +170,7 @@ We didn't announce Atlas to the broader company for about a year. Instead, we sh
 About a year and a half in, we'd reached near feature parity with the legacy tool. Combined with that legacy tool's mounting security issues, we made the call to port over the remaining functionality and sunset it entirely.
 
 <Card title="Monthly Active Users" class="my-8">
-	<span class="text-subdued text-xs mb-2 -mt-1">2024 - 2026</span>
+	<span class="text-subdued -mt-1 mb-2 text-xs">2024 - 2026</span>
 	<UsageChart
 		client:only="react"
 		data={[

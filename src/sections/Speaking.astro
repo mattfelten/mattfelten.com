@@ -6,7 +6,7 @@ import List from '@components/List.astro';
 import Section from '@components/Section.astro';
 
 const speaking = (await getCollection('speaking')).sort(
-	(a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 ---
 
