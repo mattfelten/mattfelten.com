@@ -25,7 +25,7 @@ const { variant, caption } = Astro.props;
 						<div class="cst-feature-body">
 							<div class="cst-feature-main">
 								<div class="cst-lines">
-									<span style="width: 55%; height: 8px" />
+									<span class="cst-heading" style="width: 55%" />
 									<span style="width: 92%" />
 									<span style="width: 78%" />
 								</div>
@@ -40,7 +40,7 @@ const { variant, caption } = Astro.props;
 								</div>
 							</div>
 							<aside class="cst-feature-role">
-								<span style="width: 40%; height: 4px" />
+								<span class="cst-heading" style="width: 45%" />
 								<span style="width: 90%" />
 								<span style="width: 75%" />
 								<span style="width: 82%" />
@@ -54,62 +54,72 @@ const { variant, caption } = Astro.props;
 				variant === 'case-study' && (
 					<div class="cst-case">
 						<div class="cst-case-inner">
+							<span class="cst-case-title" style="width: 58%" />
+
 							<div class="cst-case-section">
-								<div class="cst-tile cst-tile--wide" />
-								<div class="cst-lines">
-									<span style="width: 50%; height: 7px" />
-									<span style="width: 92%" />
-									<span style="width: 86%" />
+								<div class="cst-lines cst-lines--prose">
+									<span style="width: 100%" />
+									<span style="width: 96%" />
+									<span style="width: 88%" />
 									<span style="width: 74%" />
 								</div>
 							</div>
+
 							<div class="cst-case-section">
-								<div class="cst-case-row">
-									<div class="cst-tile" />
-									<div class="cst-lines cst-lines--tight">
-										<span style="width: 60%" />
-										<span style="width: 90%" />
-										<span style="width: 78%" />
-										<span style="width: 68%" />
+								<span class="cst-heading" style="width: 34%" />
+								<div class="cst-case-split cst-case-split--image-right">
+									<div class="cst-lines cst-lines--prose">
+										<span style="width: 100%" />
+										<span style="width: 92%" />
+										<span style="width: 96%" />
+										<span style="width: 88%" />
+										<span style="width: 66%" />
 									</div>
+									<div class="cst-tile cst-tile--inline" />
 								</div>
 							</div>
+
 							<div class="cst-case-section">
-								<div class="cst-lines">
-									<span style="width: 45%; height: 7px" />
+								<span class="cst-heading" style="width: 40%" />
+								<div class="cst-lines cst-lines--prose">
+									<span style="width: 100%" />
+									<span style="width: 90%" />
 									<span style="width: 94%" />
-									<span style="width: 88%" />
-								</div>
-								<div class="cst-case-triptych">
-									<div class="cst-tile" />
-									<div class="cst-tile" />
-									<div class="cst-tile" />
+									<span style="width: 82%" />
+									<span style="width: 70%" />
 								</div>
 							</div>
+
 							<div class="cst-case-section">
-								<div class="cst-case-row cst-case-row--reverse">
-									<div class="cst-lines cst-lines--tight">
-										<span style="width: 55%" />
-										<span style="width: 90%" />
-										<span style="width: 82%" />
-										<span style="width: 70%" />
+								<span class="cst-heading" style="width: 32%" />
+								<div class="cst-case-split cst-case-split--image-left">
+									<div class="cst-tile cst-tile--inline" />
+									<div class="cst-lines cst-lines--prose">
+										<span style="width: 100%" />
+										<span style="width: 88%" />
+										<span style="width: 94%" />
+										<span style="width: 72%" />
+										<span style="width: 60%" />
 									</div>
-									<div class="cst-tile" />
 								</div>
 							</div>
+
 							<div class="cst-case-section">
-								<div class="cst-tile cst-tile--wide" />
-								<div class="cst-lines">
+								<span class="cst-heading" style="width: 30%" />
+								<div class="cst-lines cst-lines--prose">
+									<span style="width: 100%" />
 									<span style="width: 92%" />
-									<span style="width: 78%" />
+									<span style="width: 84%" />
 									<span style="width: 60%" />
 								</div>
 							</div>
+
 							<div class="cst-case-section">
-								<div class="cst-case-metrics">
-									<div class="cst-metric" />
-									<div class="cst-metric" />
-									<div class="cst-metric" />
+								<span class="cst-heading" style="width: 38%" />
+								<div class="cst-lines cst-lines--prose">
+									<span style="width: 100%" />
+									<span style="width: 96%" />
+									<span style="width: 82%" />
 								</div>
 							</div>
 						</div>
@@ -139,14 +149,23 @@ const { variant, caption } = Astro.props;
 	}
 
 	.cst-frame {
+		/* Palette */
 		--cst-bg: #f4f0e9;
 		--cst-rule: rgba(17, 24, 39, 0.08);
 		--cst-tile: rgba(17, 24, 39, 0.1);
 		--cst-tile-strong: rgba(17, 24, 39, 0.14);
 		--cst-line: rgba(17, 24, 39, 0.18);
+		--cst-line-strong: rgba(17, 24, 39, 0.42);
 		--cst-card: rgba(17, 24, 39, 0.04);
 		--cst-scroll-track: rgba(17, 24, 39, 0.06);
 		--cst-scroll-thumb: rgba(17, 24, 39, 0.24);
+
+		/* Spacing scale — single source of truth for the frame */
+		--cst-gap-xs: 4px;
+		--cst-gap-sm: 8px;
+		--cst-gap-md: 14px;
+		--cst-gap-lg: 22px;
+		--cst-pad: 24px;
 
 		position: relative;
 		aspect-ratio: 16 / 9;
@@ -165,6 +184,7 @@ const { variant, caption } = Astro.props;
 			--cst-tile: rgba(255, 255, 255, 0.08);
 			--cst-tile-strong: rgba(255, 255, 255, 0.12);
 			--cst-line: rgba(255, 255, 255, 0.22);
+			--cst-line-strong: rgba(255, 255, 255, 0.55);
 			--cst-card: rgba(255, 255, 255, 0.04);
 			--cst-scroll-track: rgba(255, 255, 255, 0.06);
 			--cst-scroll-thumb: rgba(255, 255, 255, 0.28);
@@ -195,25 +215,20 @@ const { variant, caption } = Astro.props;
 		}
 	}
 
-	/* Shared primitives */
+	/* --- Shared primitives --- */
 	.cst-tile {
 		background: var(--cst-tile);
 		border-radius: 4px;
 		aspect-ratio: 4 / 3;
 	}
 
-	.cst-tile--wide {
-		aspect-ratio: 16 / 4;
-		width: 100%;
-	}
-
 	.cst-lines {
 		display: flex;
 		flex-direction: column;
-		gap: 5px;
+		gap: var(--cst-gap-sm);
 	}
-	.cst-lines--tight {
-		gap: 4px;
+	.cst-lines--prose {
+		gap: var(--cst-gap-xs);
 	}
 	.cst-lines span {
 		display: block;
@@ -222,10 +237,17 @@ const { variant, caption } = Astro.props;
 		opacity: 0.55;
 		border-radius: 2px;
 	}
+	.cst-heading {
+		display: block;
+		height: 7px;
+		background: var(--cst-line-strong);
+		opacity: 0.75;
+		border-radius: 2px;
+	}
 
 	/* --- Showcase --- */
 	.cst-surface--showcase {
-		padding: 6%;
+		padding: var(--cst-pad);
 		display: flex;
 	}
 	.cst-grid {
@@ -235,7 +257,7 @@ const { variant, caption } = Astro.props;
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		grid-template-rows: repeat(2, 1fr);
-		gap: 3.5%;
+		gap: var(--cst-gap-sm);
 	}
 	.cst-grid .cst-tile {
 		aspect-ratio: auto;
@@ -253,8 +275,8 @@ const { variant, caption } = Astro.props;
 		display: flex;
 		flex-direction: column;
 		flex: 1;
-		padding: 4%;
-		gap: 3%;
+		padding: var(--cst-pad);
+		gap: var(--cst-gap-md);
 	}
 	.cst-feature-hero {
 		flex: 0 0 42%;
@@ -264,20 +286,20 @@ const { variant, caption } = Astro.props;
 	.cst-feature-body {
 		flex: 1;
 		display: grid;
-		grid-template-columns: 1fr 28%;
-		gap: 3%;
+		grid-template-columns: 1fr 26%;
+		gap: var(--cst-gap-lg);
 		min-height: 0;
 	}
 	.cst-feature-main {
 		display: flex;
 		flex-direction: column;
-		gap: 8px;
+		gap: var(--cst-gap-md);
 		min-width: 0;
 	}
 	.cst-feature-pair {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		gap: 8px;
+		gap: var(--cst-gap-sm);
 		flex: 1;
 		min-height: 0;
 	}
@@ -288,10 +310,10 @@ const { variant, caption } = Astro.props;
 	.cst-feature-role {
 		background: var(--cst-card);
 		border-radius: 4px;
-		padding: 10px;
+		padding: var(--cst-gap-md);
 		display: flex;
 		flex-direction: column;
-		gap: 5px;
+		gap: var(--cst-gap-sm);
 		align-self: flex-start;
 	}
 	.cst-feature-role span {
@@ -301,8 +323,13 @@ const { variant, caption } = Astro.props;
 		opacity: 0.6;
 		border-radius: 2px;
 	}
+	.cst-feature-role .cst-heading {
+		height: 6px;
+		background: var(--cst-line-strong);
+		opacity: 0.7;
+	}
 
-	/* --- Case study --- */
+	/* --- Case study (long-form prose) --- */
 	.cst-surface--case-study {
 		display: flex;
 	}
@@ -315,49 +342,42 @@ const { variant, caption } = Astro.props;
 	}
 	.cst-case-inner {
 		flex: 1;
-		padding: 3% 5% 0 4%;
+		padding: var(--cst-pad) var(--cst-pad) 0 var(--cst-pad);
 		display: flex;
 		flex-direction: column;
-		gap: 14px;
-		/* Content is intentionally taller than the frame — sections are clipped
-		   at the bottom edge and the scrollbar thumb near the top sells the idea
-		   that there is much more below. */
+		gap: var(--cst-gap-lg);
+		/* Content is intentionally taller than the frame. The bottom clips and
+		   the scrollbar thumb near the top sells the idea that there is more
+		   below. */
+	}
+	.cst-case-title {
+		display: block;
+		height: 11px;
+		background: var(--cst-line-strong);
+		opacity: 0.85;
+		border-radius: 3px;
+		flex-shrink: 0;
 	}
 	.cst-case-section {
 		display: flex;
 		flex-direction: column;
-		gap: 4px;
+		gap: var(--cst-gap-sm);
 		flex-shrink: 0;
 	}
-	.cst-case-row {
+	.cst-case-split {
 		display: grid;
-		grid-template-columns: 22% 1fr;
-		gap: 10px;
+		gap: var(--cst-gap-md);
 		align-items: start;
 	}
-	.cst-case-row--reverse {
-		grid-template-columns: 1fr 22%;
+	.cst-case-split--image-right {
+		grid-template-columns: 1fr 26%;
 	}
-	.cst-case-row .cst-tile {
+	.cst-case-split--image-left {
+		grid-template-columns: 26% 1fr;
+	}
+	.cst-tile--inline {
 		aspect-ratio: 4 / 3;
-	}
-	.cst-case-triptych {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 6px;
-	}
-	.cst-case-triptych .cst-tile {
-		aspect-ratio: 4 / 3;
-	}
-	.cst-case-metrics {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		gap: 6px;
-	}
-	.cst-metric {
-		height: 16px;
-		background: var(--cst-tile);
-		border-radius: 3px;
+		width: 100%;
 	}
 
 	.cst-scrollbar {
@@ -365,7 +385,7 @@ const { variant, caption } = Astro.props;
 		z-index: 3;
 		flex-shrink: 0;
 		width: 4px;
-		margin: 8px 6px 8px 0;
+		margin: var(--cst-gap-sm) var(--cst-gap-sm) var(--cst-gap-sm) 0;
 		background: var(--cst-scroll-track);
 		border-radius: 2px;
 	}
@@ -374,7 +394,7 @@ const { variant, caption } = Astro.props;
 		top: 0;
 		left: 0;
 		right: 0;
-		height: 22%;
+		height: 18%;
 		background: var(--cst-scroll-thumb);
 		border-radius: 2px;
 	}
