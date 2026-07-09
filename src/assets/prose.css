@@ -44,7 +44,7 @@
 	}
 }
 
-.prose :not(.not-prose) {
+.prose:not(.not-prose) {
 	h1,
 	h2,
 	h3,
