@@ -1,0 +1,9 @@
+export { default as DeckShell } from './DeckShell.astro';
+export { default as Deck } from './Deck.astro';
+export { default as Slide } from './templates/Slide.astro';
+export { default as TocSlide } from './templates/TocSlide.astro';
+export { default as TitleSlide } from './templates/TitleSlide.astro';
+export { default as TextBlockSlide } from './templates/TextBlockSlide.astro';
+export { default as CardGridSlide } from './templates/CardGridSlide.astro';
+export { default as ImageSlide } from './templates/ImageSlide.astro';
+export { default as BleedImage } from './templates/BleedImage.astro';

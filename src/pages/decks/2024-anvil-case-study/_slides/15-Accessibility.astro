@@ -1,0 +1,38 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+import diagram from '../images/12 Accessibility.png?url';
+
+// Figma frame 179:42608. Body at slide y=372: left Considerations card
+// (457w, 372h) with label + 6 items; right color-vision grid (1067w, 308h)
+// starting at x=773 in slide coords. Card padding 32px sides, 24px top.
+
+const considerations = [
+	'Responsiveness',
+	'Color Contrast',
+	'UX Affordances',
+	'Screen Readers',
+	'Various Input Devices',
+	'Language Differences',
+];
+---
+
+<Slide subtitle="Exploration → Accessibility">
+	<div class="flex items-start gap-[236px]">
+		<div
+			class="border-weak/[0.18] bg-[#111827]/60 h-fit w-[457px] shrink-0 rounded-[20px] border px-4 py-3"
+		>
+			<h3 class="text-strong m-0 text-3xl font-medium">
+				Considerations
+			</h3>
+			<ul class="text-subdued list-none text-2xl">
+				{considerations.map(item => <li>{item}</li>)}
+			</ul>
+		</div>
+		<img
+			src={diagram}
+			alt="Color vision simulations: Expected vs Protanomaly, Deuteranomaly, Tritanomaly, Achromatomaly, and matching -opia variants"
+			class="m-0! block w-[1067px] flex-1"
+		/>
+	</div>
+</Slide>

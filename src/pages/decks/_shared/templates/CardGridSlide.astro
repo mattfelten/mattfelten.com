@@ -1,0 +1,24 @@
+---
+import Slide from './Slide.astro';
+import Card from './Card.astro';
+import CardGrid from './CardGrid.astro';
+
+interface CardData {
+	title: string;
+	items: string[];
+}
+
+interface Props {
+	title?: string;
+	subtitle?: string;
+	cards: CardData[];
+}
+
+const { title, subtitle, cards } = Astro.props;
+---
+
+<Slide title={title} subtitle={subtitle}>
+	<CardGrid>
+		{cards.map(card => <Card title={card.title} items={card.items} />)}
+	</CardGrid>
+</Slide>

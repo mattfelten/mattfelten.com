@@ -1,0 +1,70 @@
+---
+import { BleedImage, Slide } from '@decks';
+import { RxArrowTopRight } from 'react-icons/rx';
+
+import screenshot from '../images/2 Context.png?url';
+
+// Figma frame 159:13653. Body block at slide (80, 372): three labeled
+// columns (Role / Timeline / Team) and a URL row. Screenshot at slide
+// (1007, 157), 913×923 — bleeds bottom-right.
+
+const columns = [
+	{
+		label: 'Role',
+		items: ['Lead Designer', 'Lead Engineer', 'Product Manager'],
+	},
+	{
+		label: 'Timeline',
+		items: ['5 months to 1.0', '4 years total'],
+	},
+	{
+		label: 'Team',
+		items: [
+			'2 Product Designers',
+			'2 Frontend Engineers',
+			'2 Visual Designers',
+		],
+	},
+];
+
+const url = 'https://v1.anvil.servicetitan.com';
+---
+
+<Slide subtitle="Project Context">
+	<div class="flex flex-col gap-12">
+		<div class="grid w-1/2 grid-cols-3 gap-x-4">
+			{
+				columns.map(col => (
+					<div>
+						<div class="text-strong text-2xl font-medium">
+							{col.label}
+						</div>
+						<ul class="m-0! mt-2 list-none p-0">
+							{col.items.map(item => (
+								<li class="text-subdued my-1 text-2xl leading-[40px] font-medium">
+									{item}
+								</li>
+							))}
+						</ul>
+					</div>
+				))
+			}
+		</div>
+		<div class="flex flex-col items-start gap-1">
+			<span class="text-subdued text-xs font-medium uppercase"
+				>Online at</span
+			>
+			<a href={url} class="text-default relative text-2xl"
+				>{url}<RxArrowTopRight
+					className="text-weak absolute top-0.5 -right-4 inline-block align-text-top"
+				/></a
+			>
+		</div>
+	</div>
+	<BleedImage
+		src={screenshot}
+		alt="Anvil Design System documentation site"
+		bleed={['right', 'bottom']}
+		class="h-[923px] w-[913px] object-cover"
+	/>
+</Slide>

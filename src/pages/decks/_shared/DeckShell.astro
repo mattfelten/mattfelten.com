@@ -1,0 +1,323 @@
+---
+import favicons from '../../../layouts/favicon.html?raw';
+
+import '@assets/fonts/nudica.css';
+import '@assets/global.css';
+import 'reveal.js/reveal.css';
+
+const { title: deckTitle, description } = Astro.props;
+
+const titleParts: string[] = [];
+if (deckTitle) titleParts.push(deckTitle);
+titleParts.push('Matt Felten');
+const pageTitle = titleParts.join(' → ');
+---
+
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1.0"
+		/>
+		<meta name="robots" content="noindex,nofollow" />
+		<meta name="theme-color" content="#000000" />
+		{
+			description && (
+				<meta name="description" content={description} />
+			)
+		}
+		<title>{pageTitle}</title>
+		<Fragment set:html={favicons} />
+	</head>
+	<body
+		class="deck-body bg-background text-default font-sans antialiased"
+	>
+		<slot />
+		<script>
+			// Window-level handlers — independent of Reveal/React. The popup
+			// pop-out and the popup/PWA aspect-ratio lock both belong to the
+			// shell, not the slide tree.
+
+			// Shift+F opens the current deck (at the current slide) in a
+			// minimal-chrome popup sized to full screen height × 16:9 width,
+			// anchored top-left. Capture phase so we intercept before Reveal's
+			// F-for-fullscreen handler.
+			document.addEventListener(
+				'keydown',
+				event => {
+					if (
+						!event.shiftKey ||
+						event.ctrlKey ||
+						event.metaKey ||
+						event.altKey
+					) {
+						return;
+					}
+					if (event.code !== 'KeyF') return;
+					event.preventDefault();
+					event.stopPropagation();
+					const url =
+						location.pathname +
+						location.search +
+						location.hash;
+					const buffer = 16;
+					const maxH = screen.availHeight - buffer;
+					const maxW = screen.availWidth - buffer;
+					let h: number;
+					let w: number;
+					if ((maxH * 16) / 9 <= maxW) {
+						h = maxH;
+						w = Math.round((h * 16) / 9);
+					} else {
+						w = maxW;
+						h = Math.round((w * 9) / 16);
+					}
+					window.open(
+						url,
+						'mf-deck-popout',
+						`popup=yes,width=${w},height=${h},left=0,top=0,resizable=yes`,
+					);
+				},
+				true,
+			);
+
+			// Aspect-ratio lock for popup and PWA windows. Snaps the window
+			// to 16:9 inner dimensions on first load and after every resize.
+			const isPopup = window.opener != null;
+			const isPWA = window.matchMedia(
+				'(display-mode: standalone)',
+			).matches;
+			if (isPopup || isPWA) {
+				const aspect = 16 / 9;
+				let lastW = window.innerWidth;
+				let lastH = window.innerHeight;
+				let snapTimer: ReturnType<typeof setTimeout>;
+				let snapping = false;
+
+				const snapTo = (
+					driver: 'width' | 'height' | 'auto',
+				) => {
+					const w = window.innerWidth;
+					const h = window.innerHeight;
+					let targetW: number;
+					let targetH: number;
+					if (driver === 'width') {
+						targetW = w;
+						targetH = Math.round(w / aspect);
+					} else if (driver === 'height') {
+						targetH = h;
+						targetW = Math.round(h * aspect);
+					} else {
+						if (w / h > aspect) {
+							targetH = h;
+							targetW = Math.round(h * aspect);
+						} else {
+							targetW = w;
+							targetH = Math.round(w / aspect);
+						}
+					}
+
+					if (
+						Math.abs(targetW - w) < 2 &&
+						Math.abs(targetH - h) < 2
+					) {
+						lastW = w;
+						lastH = h;
+						return;
+					}
+
+					const outerOffsetW =
+						window.outerWidth - window.innerWidth;
+					const outerOffsetH =
+						window.outerHeight - window.innerHeight;
+					snapping = true;
+					window.resizeTo(
+						targetW + outerOffsetW,
+						targetH + outerOffsetH,
+					);
+					lastW = targetW;
+					lastH = targetH;
+					setTimeout(() => {
+						snapping = false;
+					}, 200);
+				};
+
+				setTimeout(() => snapTo('auto'), 60);
+
+				window.addEventListener('resize', () => {
+					if (snapping) return;
+					clearTimeout(snapTimer);
+					snapTimer = setTimeout(() => {
+						const w = window.innerWidth;
+						const h = window.innerHeight;
+						const dw = Math.abs(w - lastW);
+						const dh = Math.abs(h - lastH);
+						snapTo(dw >= dh ? 'width' : 'height');
+					}, 120);
+				});
+			}
+		</script>
+	</body>
+</html>
+
+<style is:global>
+	/*
+	 * Deck styles. All colors via theme tokens so the deck flips with
+	 * prefers-color-scheme alongside the rest of the site.
+	 */
+
+	.deck-body {
+		margin: 0;
+		height: 100vh;
+		height: 100dvh;
+		overflow: hidden;
+		line-height: 1.4;
+	}
+
+	/* ---------- Reveal token wiring ---------- */
+
+	.reveal {
+		--r-background-color: var(--color-background);
+		--r-main-font: var(--font-sans);
+		/* Body type from Figma: 30px Regular. */
+		--r-main-font-size: 30px;
+		--r-main-color: var(--color-default);
+		--r-heading-font: var(--font-sans);
+		--r-heading-color: var(--color-strong);
+		--r-heading-font-weight: 500;
+		--r-heading-text-shadow: none;
+		--r-heading-text-transform: none;
+		/* Heading scale from Figma: 72 / 48 / 36 / 30. */
+		--r-heading1-size: 2.4em;
+		--r-heading2-size: 1.6em;
+		--r-heading3-size: 1.2em;
+		--r-heading4-size: 1em;
+		--r-link-color: var(--color-accent);
+		--r-link-color-hover: var(--color-accent);
+		--r-selection-background-color: var(--color-accent);
+		--r-selection-color: var(--color-background);
+		--r-controls-color: var(--color-subdued);
+		background-color: var(--color-background);
+	}
+
+	.reveal .controls {
+		color: var(--color-subdued);
+	}
+
+	.reveal .progress {
+		color: var(--color-accent);
+		height: 2px;
+	}
+
+	/* ---------- Slide defaults ---------- */
+
+	.reveal .slides {
+		text-align: left;
+	}
+
+	.reveal .slides section,
+	.reveal .slides section > section {
+		text-align: left;
+		line-height: 1.2;
+	}
+
+	.reveal h1,
+	.reveal h2,
+	.reveal h3,
+	.reveal h4 {
+		letter-spacing: -0.015em;
+		margin-top: 0;
+		margin-bottom: 0.4em;
+	}
+
+	.reveal p {
+		line-height: 1.45;
+	}
+
+	.reveal ul:not(.list-none),
+	.reveal ol:not(.list-none) {
+		margin: 0.4em 0 0 1.2em;
+	}
+
+	.reveal ul:not(.list-none) {
+		list-style-type: '– ';
+	}
+
+	.reveal li {
+		margin: 0.2em 0;
+		line-height: 1.4;
+	}
+
+	.reveal a {
+		text-decoration: none;
+		border-bottom: 3px solid var(--color-accent);
+	}
+
+	.reveal img {
+		border: none;
+		box-shadow: none;
+		background: transparent;
+		border-radius: 8px;
+		max-height: 70vh;
+		margin: 0.4em 0;
+	}
+
+	.reveal blockquote {
+		background: transparent;
+		box-shadow: none;
+		border-left: 2px solid var(--color-subdued);
+		padding: 0.2em 0 0.2em 1em;
+		font-style: normal;
+		color: var(--color-subdued);
+		width: auto;
+	}
+
+	/* ---------- Dotted grid background ---------- */
+
+	.reveal .backgrounds,
+	.reveal::before {
+		background-color: var(--color-background);
+	}
+
+	.reveal::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		height: 28%;
+		background-image: radial-gradient(
+			circle,
+			var(--color-default) 0.9px,
+			transparent 1.2px
+		);
+		background-size: 22px 22px;
+		background-repeat: repeat;
+		opacity: 0.18;
+		pointer-events: none;
+		z-index: 0;
+		mask-image: linear-gradient(
+			to top,
+			black 0%,
+			transparent 100%
+		);
+		-webkit-mask-image: linear-gradient(
+			to top,
+			black 0%,
+			transparent 100%
+		);
+	}
+
+	.reveal .slides {
+		z-index: 1;
+	}
+
+	/* ---------- Print / PDF export ---------- */
+
+	@media print {
+		.reveal::after {
+			display: none;
+		}
+	}
+</style>

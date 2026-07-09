@@ -1,0 +1,40 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+import monthlyReport from '../images/monthly-cloud-report.png?url';
+
+// Problem statement carried from the Collaboration Loops case study.
+// `<strong>` accents match the bolded phrases in that source.
+const paragraphs = [
+	'Delivering Mission services involves coordination across many <strong>teams, tools, and touchpoints</strong>.',
+	'Today, key conversations and context are often spread out across <strong>siloed systems</strong>, making it harder for both <strong>customers and internal teams</strong> to stay aligned.',
+	'Without a <strong>central place to manage collaboration</strong>, it becomes challenging to maintain <strong>clarity</strong> and drive consistent <strong>follow-through</strong>.',
+];
+---
+
+<Slide title="Collaboration Loops" subtitle="Context">
+	<div
+		class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-10"
+	>
+		<div class="flex flex-col gap-2">
+			<span class="text-subdued text-sm font-medium uppercase">
+				Problem statement
+			</span>
+			<div class="flex flex-col gap-6">
+				{
+					paragraphs.map(p => (
+						<div
+							class="text-subdued [&>strong]:text-strong text-3xl leading-snug [&>strong]:font-medium"
+							set:html={p}
+						/>
+					))
+				}
+			</div>
+		</div>
+		<img
+			src={monthlyReport}
+			alt="Monthly cloud report artifact"
+			class="m-0! block max-h-none! w-100 max-w-none! rounded-2xl"
+		/>
+	</div>
+</Slide>

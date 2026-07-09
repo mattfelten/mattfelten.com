@@ -1,0 +1,31 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+import portrait from '../images/IMG_8170.jpeg?url';
+---
+
+<Slide title="👋 Hey! I’m Matt">
+	<div
+		class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-20"
+	>
+		<ul class="flex list-none flex-col gap-4">
+			<li class="text-subdued text-3xl leading-snug">
+				20 years in design
+			</li>
+			<li class="text-subdued text-3xl leading-snug">
+				9 years managing teams, mostly as Player-Coach
+			</li>
+			<li class="text-subdued text-3xl leading-snug">
+				Live in Pasadena, CA with my wife and 4 year old son
+			</li>
+			<li class="text-subdued text-3xl leading-snug">
+				Recently started learning golf
+			</li>
+		</ul>
+		<img
+			src={portrait}
+			alt="Matt Felten"
+			class="m-0! block max-h-none! w-[832px] max-w-none! rounded-2xl"
+		/>
+	</div>
+</Slide>

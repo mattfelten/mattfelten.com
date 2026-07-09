@@ -1,0 +1,40 @@
+---
+import { BleedImage, Slide } from '@decks';
+import Card from '@decks/templates/Card.astro';
+import { RxArrowTopRight } from 'react-icons/rx';
+
+import anvilContext from '../images/anvil-context.png?url';
+
+const url = 'https://v1.anvil.servicetitan.com';
+---
+
+<Slide title="Anvil" subtitle="Design System">
+	<div class="flex flex-col gap-12">
+		<div class="grid w-1/2 grid-cols-2 gap-3">
+			<Card title="+$5.3M / yr" items={['ROI']} />
+			<Card title="71%" items={['Adoption across 32 teams']} />
+			<Card title="77%" items={['CSAT']} />
+			<Card
+				title="55 components"
+				items={['40k inserts a month']}
+			/>
+		</div>
+		<div class="flex flex-col items-start gap-1">
+			<span class="text-subdued text-xs font-medium uppercase">
+				Online at
+			</span>
+			<a href={url} class="text-default relative text-2xl">
+				{url}
+				<RxArrowTopRight
+					className="text-weak absolute top-0.5 -right-4 inline-block align-text-top"
+				/>
+			</a>
+		</div>
+	</div>
+	<BleedImage
+		src={anvilContext}
+		alt="Anvil Design System documentation site"
+		bleed={['right', 'bottom']}
+		class="h-[923px] w-[913px] object-cover"
+	/>
+</Slide>

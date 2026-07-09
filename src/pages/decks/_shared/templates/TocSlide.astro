@@ -1,0 +1,35 @@
+---
+import Slide from './Slide.astro';
+
+interface Props {
+	items: string[];
+	active?: string;
+	/** Vertical gap between items. `default` = 24px (3-item lists);
+	 * `tight` = 16px (6+ item lists). */
+	gap?: 'default' | 'tight';
+}
+
+const { items, active, gap = 'default' } = Astro.props;
+const hasActive = active != null;
+const gapClass = gap === 'tight' ? 'gap-4' : 'gap-6';
+---
+
+<Slide hideHeader padding="wide" align="center">
+	<ol class:list={['m-0! flex! list-none flex-col p-0', gapClass]}>
+		{
+			items.map(item => {
+				const dim = hasActive && item !== active;
+				return (
+					<li
+						class:list={[
+							'font-regular m-0! text-7xl leading-none tracking-[-0.015em] transition-colors duration-200',
+							dim ? 'text-weak' : 'text-strong',
+						]}
+					>
+						{item}
+					</li>
+				);
+			})
+		}
+	</ol>
+</Slide>

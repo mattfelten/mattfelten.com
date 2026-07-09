@@ -1,0 +1,97 @@
+---
+// The base slide primitive. Every typed layout wraps this. New layout
+// rules (alignment, padding presets, header behavior) live here.
+//
+// align: 'top' puts the header in flow with the body stacked below it.
+//   Used when the slide is naturally top-anchored (Work History, etc.).
+// align: 'center' (default) and 'bottom' position the header absolutely
+//   so body content centers on the actual slide midpoint, not the smaller
+//   region below the header.
+
+interface Props {
+	/** Strong-color line. Falls back to the deck-level title from context. */
+	title?: string;
+	/** Subdued-color line. The section label. */
+	subtitle?: string;
+	/** Suppress the auto-injected header. */
+	hideHeader?: boolean;
+	/** Vertical alignment of body content. Default: 'center'. */
+	align?: 'top' | 'center' | 'bottom';
+	/** Padding preset.
+	 * - 'default' (80px all sides) — standard content slides.
+	 * - 'wide' (260px horizontal, 80px vertical) — TOC and other inset layouts.
+	 */
+	padding?: 'default' | 'wide';
+	/** Extra class names on the <section>. */
+	class?: string;
+}
+
+const {
+	title: explicitTitle,
+	subtitle,
+	hideHeader = false,
+	align = 'center',
+	padding = 'default',
+	class: extraClass,
+} = Astro.props;
+
+const deckTitle = Astro.locals.deckTitle as string | undefined;
+const effectiveTitle = explicitTitle ?? deckTitle;
+const showHeader = !hideHeader && (effectiveTitle || subtitle);
+
+const paddingClass = padding === 'wide' ? 'px-[260px] py-7' : 'p-7';
+const headerInFlow = align === 'top';
+const headerSpacing =
+	align === 'top' ? 'mb-8' : subtitle ? '-mb-4' : 'mb-0';
+
+// Body wrapper:
+// - align="top": flex-1 (fills remaining below header) + justify-start
+// - align="center": h-full (fills full section box, header is absolute) + justify-center
+// - align="bottom": h-full + justify-end
+const bodySizingClass = headerInFlow ? 'flex-1' : 'h-full';
+const bodyJustifyClass =
+	align === 'center'
+		? 'justify-center'
+		: align === 'bottom'
+			? 'justify-end'
+			: 'justify-start';
+---
+
+<section
+	class:list={[
+		'text-default relative flex h-full flex-col',
+		paddingClass,
+		extraClass,
+	]}
+>
+	{
+		showHeader && (
+			<header
+				class:list={[
+					'flex flex-col gap-1.5 leading-none',
+					headerSpacing,
+				]}
+			>
+				{effectiveTitle && (
+					<div class="text-strong text-4xl font-medium">
+						{effectiveTitle}
+					</div>
+				)}
+				{subtitle && (
+					<div class="text-subdued font-regular text-4xl">
+						{subtitle}
+					</div>
+				)}
+			</header>
+		)
+	}
+	<div
+		class:list={[
+			'flex flex-col',
+			bodySizingClass,
+			bodyJustifyClass,
+		]}
+	>
+		<slot />
+	</div>
+</section>
