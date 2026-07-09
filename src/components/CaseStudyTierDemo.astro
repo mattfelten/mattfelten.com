@@ -1,0 +1,381 @@
+---
+const { variant, caption } = Astro.props;
+---
+
+<div class="asset-wrap">
+	<div class="cst-frame">
+		<div class={`cst-surface cst-surface--${variant}`}>
+			{
+				variant === 'showcase' && (
+					<div class="cst-grid">
+						<div class="cst-tile" />
+						<div class="cst-tile" />
+						<div class="cst-tile" />
+						<div class="cst-tile" />
+						<div class="cst-tile" />
+						<div class="cst-tile" />
+					</div>
+				)
+			}
+
+			{
+				variant === 'project-feature' && (
+					<div class="cst-feature">
+						<div class="cst-feature-hero" />
+						<div class="cst-feature-body">
+							<div class="cst-feature-main">
+								<div class="cst-lines">
+									<span style="width: 55%; height: 8px" />
+									<span style="width: 92%" />
+									<span style="width: 78%" />
+								</div>
+								<div class="cst-feature-pair">
+									<div class="cst-tile" />
+									<div class="cst-tile" />
+								</div>
+								<div class="cst-lines">
+									<span style="width: 88%" />
+									<span style="width: 96%" />
+									<span style="width: 64%" />
+								</div>
+							</div>
+							<aside class="cst-feature-role">
+								<span style="width: 40%; height: 4px" />
+								<span style="width: 90%" />
+								<span style="width: 75%" />
+								<span style="width: 82%" />
+							</aside>
+						</div>
+					</div>
+				)
+			}
+
+			{
+				variant === 'case-study' && (
+					<div class="cst-case">
+						<div class="cst-case-inner">
+							<div class="cst-case-section">
+								<div class="cst-tile cst-tile--wide" />
+								<div class="cst-lines">
+									<span style="width: 50%; height: 7px" />
+									<span style="width: 92%" />
+									<span style="width: 86%" />
+									<span style="width: 74%" />
+								</div>
+							</div>
+							<div class="cst-case-section">
+								<div class="cst-case-row">
+									<div class="cst-tile" />
+									<div class="cst-lines cst-lines--tight">
+										<span style="width: 60%" />
+										<span style="width: 90%" />
+										<span style="width: 78%" />
+										<span style="width: 68%" />
+									</div>
+								</div>
+							</div>
+							<div class="cst-case-section">
+								<div class="cst-lines">
+									<span style="width: 45%; height: 7px" />
+									<span style="width: 94%" />
+									<span style="width: 88%" />
+								</div>
+								<div class="cst-case-triptych">
+									<div class="cst-tile" />
+									<div class="cst-tile" />
+									<div class="cst-tile" />
+								</div>
+							</div>
+							<div class="cst-case-section">
+								<div class="cst-case-row cst-case-row--reverse">
+									<div class="cst-lines cst-lines--tight">
+										<span style="width: 55%" />
+										<span style="width: 90%" />
+										<span style="width: 82%" />
+										<span style="width: 70%" />
+									</div>
+									<div class="cst-tile" />
+								</div>
+							</div>
+							<div class="cst-case-section">
+								<div class="cst-tile cst-tile--wide" />
+								<div class="cst-lines">
+									<span style="width: 92%" />
+									<span style="width: 78%" />
+									<span style="width: 60%" />
+								</div>
+							</div>
+							<div class="cst-case-section">
+								<div class="cst-case-metrics">
+									<div class="cst-metric" />
+									<div class="cst-metric" />
+									<div class="cst-metric" />
+								</div>
+							</div>
+						</div>
+						<div class="cst-scrollbar" aria-hidden="true">
+							<div class="cst-scrollbar-thumb" />
+						</div>
+					</div>
+				)
+			}
+		</div>
+	</div>
+	{caption && <small set:html={caption} />}
+</div>
+
+<style>
+	.asset-wrap {
+		margin-block: 32px;
+	}
+
+	small {
+		display: block;
+		margin-top: 1em;
+	}
+
+	small :global(*) {
+		margin: 0;
+	}
+
+	.cst-frame {
+		--cst-bg: #f4f0e9;
+		--cst-rule: rgba(17, 24, 39, 0.08);
+		--cst-tile: rgba(17, 24, 39, 0.1);
+		--cst-tile-strong: rgba(17, 24, 39, 0.14);
+		--cst-line: rgba(17, 24, 39, 0.18);
+		--cst-card: rgba(17, 24, 39, 0.04);
+		--cst-scroll-track: rgba(17, 24, 39, 0.06);
+		--cst-scroll-thumb: rgba(17, 24, 39, 0.24);
+
+		position: relative;
+		aspect-ratio: 16 / 9;
+		max-width: 720px;
+		margin: 0 auto;
+		border: 1px solid rgba(17, 24, 39, 0.1);
+		border-radius: 8px;
+		overflow: hidden;
+		box-shadow: 0 30px 60px -30px rgba(17, 24, 39, 0.18);
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.cst-frame {
+			--cst-bg: #1a1a1c;
+			--cst-rule: rgba(255, 255, 255, 0.08);
+			--cst-tile: rgba(255, 255, 255, 0.08);
+			--cst-tile-strong: rgba(255, 255, 255, 0.12);
+			--cst-line: rgba(255, 255, 255, 0.22);
+			--cst-card: rgba(255, 255, 255, 0.04);
+			--cst-scroll-track: rgba(255, 255, 255, 0.06);
+			--cst-scroll-thumb: rgba(255, 255, 255, 0.28);
+			border-color: rgba(0, 0, 0, 0.6);
+		}
+	}
+
+	.cst-surface {
+		position: absolute;
+		inset: 0;
+		background: var(--cst-bg);
+	}
+
+	.cst-surface::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		opacity: 0.35;
+		mix-blend-mode: multiply;
+		background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.cst-surface::after {
+			opacity: 0.55;
+			mix-blend-mode: screen;
+		}
+	}
+
+	/* Shared primitives */
+	.cst-tile {
+		background: var(--cst-tile);
+		border-radius: 4px;
+		aspect-ratio: 4 / 3;
+	}
+
+	.cst-tile--wide {
+		aspect-ratio: 16 / 4;
+		width: 100%;
+	}
+
+	.cst-lines {
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+	}
+	.cst-lines--tight {
+		gap: 4px;
+	}
+	.cst-lines span {
+		display: block;
+		height: 5px;
+		background: var(--cst-line);
+		opacity: 0.55;
+		border-radius: 2px;
+	}
+
+	/* --- Showcase --- */
+	.cst-surface--showcase {
+		padding: 6%;
+		display: flex;
+	}
+	.cst-grid {
+		position: relative;
+		z-index: 2;
+		flex: 1;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		grid-template-rows: repeat(2, 1fr);
+		gap: 3.5%;
+	}
+	.cst-grid .cst-tile {
+		aspect-ratio: auto;
+		background: var(--cst-tile-strong);
+	}
+
+	/* --- Project feature --- */
+	.cst-surface--project-feature {
+		display: flex;
+		flex-direction: column;
+	}
+	.cst-feature {
+		position: relative;
+		z-index: 2;
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		padding: 4%;
+		gap: 3%;
+	}
+	.cst-feature-hero {
+		flex: 0 0 42%;
+		background: var(--cst-tile-strong);
+		border-radius: 4px;
+	}
+	.cst-feature-body {
+		flex: 1;
+		display: grid;
+		grid-template-columns: 1fr 28%;
+		gap: 3%;
+		min-height: 0;
+	}
+	.cst-feature-main {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		min-width: 0;
+	}
+	.cst-feature-pair {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 8px;
+		flex: 1;
+		min-height: 0;
+	}
+	.cst-feature-pair .cst-tile {
+		aspect-ratio: auto;
+		height: 100%;
+	}
+	.cst-feature-role {
+		background: var(--cst-card);
+		border-radius: 4px;
+		padding: 10px;
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+		align-self: flex-start;
+	}
+	.cst-feature-role span {
+		display: block;
+		height: 4px;
+		background: var(--cst-line);
+		opacity: 0.6;
+		border-radius: 2px;
+	}
+
+	/* --- Case study --- */
+	.cst-surface--case-study {
+		display: flex;
+	}
+	.cst-case {
+		position: relative;
+		z-index: 2;
+		flex: 1;
+		display: flex;
+		overflow: hidden;
+	}
+	.cst-case-inner {
+		flex: 1;
+		padding: 3% 5% 0 4%;
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		/* Content is intentionally taller than the frame — sections are clipped
+		   at the bottom edge and the scrollbar thumb near the top sells the idea
+		   that there is much more below. */
+	}
+	.cst-case-section {
+		display: flex;
+		flex-direction: column;
+		gap: 4px;
+		flex-shrink: 0;
+	}
+	.cst-case-row {
+		display: grid;
+		grid-template-columns: 22% 1fr;
+		gap: 10px;
+		align-items: start;
+	}
+	.cst-case-row--reverse {
+		grid-template-columns: 1fr 22%;
+	}
+	.cst-case-row .cst-tile {
+		aspect-ratio: 4 / 3;
+	}
+	.cst-case-triptych {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 6px;
+	}
+	.cst-case-triptych .cst-tile {
+		aspect-ratio: 4 / 3;
+	}
+	.cst-case-metrics {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 6px;
+	}
+	.cst-metric {
+		height: 16px;
+		background: var(--cst-tile);
+		border-radius: 3px;
+	}
+
+	.cst-scrollbar {
+		position: relative;
+		z-index: 3;
+		flex-shrink: 0;
+		width: 4px;
+		margin: 8px 6px 8px 0;
+		background: var(--cst-scroll-track);
+		border-radius: 2px;
+	}
+	.cst-scrollbar-thumb {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 22%;
+		background: var(--cst-scroll-thumb);
+		border-radius: 2px;
+	}
+</style>
