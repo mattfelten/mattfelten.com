@@ -1,5 +1,6 @@
 import { FocusTrap } from 'focus-trap-react';
 import { useEffect, useRef, useState } from 'react';
+
 import './ImageOverlay.css';
 
 const PARAM = 'overlay';
@@ -18,17 +19,14 @@ const urlWith = id => {
 
 const readFromAnchor = (el, id) => ({
 	id: id ?? el.getAttribute('data-overlay'),
-	src:
-		el.getAttribute('data-overlay-src') || el.getAttribute('href'),
+	src: el.getAttribute('data-overlay-src') || el.getAttribute('href'),
 	alt: el.getAttribute('data-overlay-alt') || '',
 	caption: el.getAttribute('data-overlay-caption') || '',
 });
 
 const readAssetById = id => {
 	if (!id) return null;
-	const el = document.querySelector(
-		`a[data-overlay="${CSS.escape(id)}"]`,
-	);
+	const el = document.querySelector(`a[data-overlay="${CSS.escape(id)}"]`);
 	return el ? readFromAnchor(el, id) : null;
 };
 
@@ -200,67 +198,67 @@ export const ImageOverlay = () => {
 			}}
 		>
 			<div className="overlay-backdrop" onClick={closeOverlay}>
-			<div
-				ref={cardRef}
-				tabIndex={-1}
-				role="dialog"
-				aria-modal="true"
-				aria-label={asset.alt || 'Image viewer'}
-				className="overlay-card"
-				onClick={e => e.stopPropagation()}
-			>
 				<div
-					ref={imageAreaRef}
-					className={`overlay-image-area${zoomed ? ' zoomed' : ''}`}
+					ref={cardRef}
+					tabIndex={-1}
+					role="dialog"
+					aria-modal="true"
+					aria-label={asset.alt || 'Image viewer'}
+					className="overlay-card"
+					onClick={e => e.stopPropagation()}
 				>
-					<img
-						key={asset.id}
-						ref={imgRef}
-						src={asset.src}
-						alt={asset.alt}
-						onLoad={onImgLoad}
-						onClick={onImgClick}
-						className={
-							canZoom && !zoomed
-								? 'overlay-image zoomable'
-								: 'overlay-image'
-						}
-					/>
-				</div>
-
-				{asset.caption && (
-					<div className="overlay-caption">
-						<div
-							className="overlay-caption-inner"
-							dangerouslySetInnerHTML={{
-								__html: asset.caption,
-							}}
+					<div
+						ref={imageAreaRef}
+						className={`overlay-image-area${zoomed ? ' zoomed' : ''}`}
+					>
+						<img
+							key={asset.id}
+							ref={imgRef}
+							src={asset.src}
+							alt={asset.alt}
+							onLoad={onImgLoad}
+							onClick={onImgClick}
+							className={
+								canZoom && !zoomed
+									? 'overlay-image zoomable'
+									: 'overlay-image'
+							}
 						/>
 					</div>
-				)}
 
-				<button
-					type="button"
-					onClick={closeOverlay}
-					aria-label="Close image viewer"
-					className="overlay-close"
-				>
-					<svg
-						width="18"
-						height="18"
-						viewBox="0 0 18 18"
-						fill="none"
-						stroke="currentColor"
-						strokeWidth="1.75"
-						strokeLinecap="round"
-						strokeLinejoin="round"
-						aria-hidden="true"
+					{asset.caption && (
+						<div className="overlay-caption">
+							<div
+								className="overlay-caption-inner"
+								dangerouslySetInnerHTML={{
+									__html: asset.caption,
+								}}
+							/>
+						</div>
+					)}
+
+					<button
+						type="button"
+						onClick={closeOverlay}
+						aria-label="Close image viewer"
+						className="overlay-close"
 					>
-						<path d="M4 4 L14 14 M14 4 L4 14" />
-					</svg>
-				</button>
+						<svg
+							width="18"
+							height="18"
+							viewBox="0 0 18 18"
+							fill="none"
+							stroke="currentColor"
+							strokeWidth="1.75"
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							aria-hidden="true"
+						>
+							<path d="M4 4 L14 14 M14 4 L4 14" />
+						</svg>
+					</button>
+				</div>
 			</div>
-		</div>
 		</FocusTrap>
 	);
 };

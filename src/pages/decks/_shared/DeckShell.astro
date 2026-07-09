@@ -16,23 +16,14 @@ const pageTitle = titleParts.join(' → ');
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0"
-		/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="robots" content="noindex,nofollow" />
 		<meta name="theme-color" content="#000000" />
-		{
-			description && (
-				<meta name="description" content={description} />
-			)
-		}
+		{description && <meta name="description" content={description} />}
 		<title>{pageTitle}</title>
 		<Fragment set:html={favicons} />
 	</head>
-	<body
-		class="deck-body bg-background text-default font-sans antialiased"
-	>
+	<body class="deck-body bg-background text-default font-sans antialiased">
 		<slot />
 		<script>
 			// Window-level handlers — independent of Reveal/React. The popup
@@ -58,9 +49,7 @@ const pageTitle = titleParts.join(' → ');
 					event.preventDefault();
 					event.stopPropagation();
 					const url =
-						location.pathname +
-						location.search +
-						location.hash;
+						location.pathname + location.search + location.hash;
 					const buffer = 16;
 					const maxH = screen.availHeight - buffer;
 					const maxW = screen.availWidth - buffer;
@@ -95,9 +84,7 @@ const pageTitle = titleParts.join(' → ');
 				let snapTimer: ReturnType<typeof setTimeout>;
 				let snapping = false;
 
-				const snapTo = (
-					driver: 'width' | 'height' | 'auto',
-				) => {
+				const snapTo = (driver: 'width' | 'height' | 'auto') => {
 					const w = window.innerWidth;
 					const h = window.innerHeight;
 					let targetW: number;
@@ -127,8 +114,7 @@ const pageTitle = titleParts.join(' → ');
 						return;
 					}
 
-					const outerOffsetW =
-						window.outerWidth - window.innerWidth;
+					const outerOffsetW = window.outerWidth - window.innerWidth;
 					const outerOffsetH =
 						window.outerHeight - window.innerHeight;
 					snapping = true;
@@ -297,16 +283,8 @@ const pageTitle = titleParts.join(' → ');
 		opacity: 0.18;
 		pointer-events: none;
 		z-index: 0;
-		mask-image: linear-gradient(
-			to top,
-			black 0%,
-			transparent 100%
-		);
-		-webkit-mask-image: linear-gradient(
-			to top,
-			black 0%,
-			transparent 100%
-		);
+		mask-image: linear-gradient(to top, black 0%, transparent 100%);
+		-webkit-mask-image: linear-gradient(to top, black 0%, transparent 100%);
 	}
 
 	.reveal .slides {

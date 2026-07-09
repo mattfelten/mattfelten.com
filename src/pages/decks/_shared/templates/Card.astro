@@ -38,12 +38,7 @@ const itemSize = isSmall ? 'text-xl' : 'text-2xl';
 	<ul class="m-0 flex list-none flex-col gap-1.5 p-0">
 		{
 			items.map(item => (
-				<li
-					class:list={[
-						'text-subdued m-0! leading-[1.4]',
-						itemSize,
-					]}
-				>
+				<li class:list={['text-subdued m-0! leading-[1.4]', itemSize]}>
 					{item}
 				</li>
 			))

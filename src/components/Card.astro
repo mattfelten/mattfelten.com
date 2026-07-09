@@ -6,9 +6,7 @@ const { title, accent, class: className, compact } = Astro.props;
 const classes = cx(
 	'not-prose flex flex-col gap-2 rounded-lg border',
 	compact ? 'p-2' : 'p-4',
-	accent
-		? 'border-accent/30 bg-accent/5'
-		: 'border-default/10 bg-default/5',
+	accent ? 'border-accent/30 bg-accent/5' : 'border-default/10 bg-default/5',
 	className,
 );
 

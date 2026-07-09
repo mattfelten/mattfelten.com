@@ -2,8 +2,7 @@
 
 ## Slide 1 — Title
 
-Collaboration Loops
-Mission Cloud, 2025–2026
+Collaboration Loops Mission Cloud, 2025–2026
 
 ## Slide 2 — My role
 
@@ -31,33 +30,27 @@ Without a central place to manage collaboration, it becomes challenging to maint
 
 ## Slide 7 — Research quote
 
-> "I've had customers tell me, we need to cut our AWS usage by 30% by the end of March, and if we don't, we're gonna have to start making cuts in other places. So how and where that's tracked right now? It's not. It's us telling the TAM internally and us trying in the next quarter saying, how is it looking? How's it going? And trying to do napkin math. All of it just lives in our heads."
-> — Customer Success Manager, discovery session
+> "I've had customers tell me, we need to cut our AWS usage by 30% by the end of March, and if we don't, we're gonna have to start making cuts in other places. So how and where that's tracked right now? It's not. It's us telling the TAM internally and us trying in the next quarter saying, how is it looking? How's it going? And trying to do napkin math. All of it just lives in our heads." — Customer Success Manager, discovery session
 
 ## Slide 8 — Research quote
 
-> "A former TAM told me when he left that once I deactivated his account, it would nuke the bookmark links. Because they were owned by him. The links were to his personal drive."
-> — Technical Account Manager, discovery session
+> "A former TAM told me when he left that once I deactivated his account, it would nuke the bookmark links. Because they were owned by him. The links were to his personal drive." — Technical Account Manager, discovery session
 
 ## Slide 9 — Research quote
 
-> "Sometimes we have a meeting, but we would like to bring more value. Just by the customer telling us, okay, we want to talk about these topics. Something that can trigger an email to the customer. Hey, you're about to have this meeting in a week. What are the topics that you want to discuss? And then they can reply. And those topics will be added into the loop itself. Something to be more engaging. Not something that I'm going to create. But rather something that the customer wants to talk about."
-> — Technical Account Manager, discovery session
+> "Sometimes we have a meeting, but we would like to bring more value. Just by the customer telling us, okay, we want to talk about these topics. Something that can trigger an email to the customer. Hey, you're about to have this meeting in a week. What are the topics that you want to discuss? And then they can reply. And those topics will be added into the loop itself. Something to be more engaging. Not something that I'm going to create. But rather something that the customer wants to talk about." — Technical Account Manager, discovery session
 
 ## Slide 10 — Persona: Customer CTO
 
-Goals: Confidence in their AWS environment. Fewer surprises.
-Pain: "Every meeting starts from zero"
+Goals: Confidence in their AWS environment. Fewer surprises. Pain: "Every meeting starts from zero"
 
 ## Slide 11 — Persona: Technical Account Manager
 
-Goals: Proactive cloud health reviews. Building long term trust.
-Pain: "I rebuild the same slide deck every month."
+Goals: Proactive cloud health reviews. Building long term trust. Pain: "I rebuild the same slide deck every month."
 
 ## Slide 12 — Persona: Customer Success Manager
 
-Goals: Align on goals. Drive service adoption.
-Pain: "I can never find what we agreed to last quarter"
+Goals: Align on goals. Drive service adoption. Pain: "I can never find what we agreed to last quarter"
 
 ## Slide 13 — Design challenge framing
 
@@ -70,6 +63,7 @@ A document is static. It captures a moment, then goes stale. What we needed was 
 ## Slide 15 — Three constraints
 
 Three cards side by side:
+
 - **Stay current** — The space had to stay up to date between meetings without anyone manually updating it.
 - **Preserve history** — It had to capture what was true at the time of each conversation so nothing got rewritten in hindsight.
 - **Serve both sides** — Two audiences with fundamentally different needs, sharing the same view, without feeling like two products stitched together.
@@ -184,15 +178,13 @@ A consistent surface can hide wildly different problems underneath.
 
 ## Slide 39 — Outcomes: Stats
 
-98% prep time reduction
-86% repeat customer views
+98% prep time reduction 86% repeat customer views
 
 The beta is still small, and I'm trying not to read too much into the numbers this early. But the customer signal has been strong and we've nearly doubled the size of the beta.
 
 ## Slide 40 — Outcomes: Quote
 
-> "Before Loops, I had customers swear they never got the deck, or didn't even know we'd talked about something. Now everything we discussed lives in one place. I'd hate to give that up."
-> — Technical Account Manager
+> "Before Loops, I had customers swear they never got the deck, or didn't even know we'd talked about something. Now everything we discussed lives in one place. I'd hate to give that up." — Technical Account Manager
 
 ## Slide 41 — Closing
 

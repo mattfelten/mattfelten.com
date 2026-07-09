@@ -34,16 +34,8 @@ const toArr = <T,>(x: T | T[] | undefined): T[] =>
 const bleedArr = toArr(bleed);
 const insetArr = toArr(inset);
 
-const edgeClass = (
-	edge: Edge,
-	zero: string,
-	eighty: string,
-): string | null =>
-	bleedArr.includes(edge)
-		? zero
-		: insetArr.includes(edge)
-			? eighty
-			: null;
+const edgeClass = (edge: Edge, zero: string, eighty: string): string | null =>
+	bleedArr.includes(edge) ? zero : insetArr.includes(edge) ? eighty : null;
 
 const top = edgeClass('top', 'top-0', 'top-7');
 const right = edgeClass('right', 'right-0', 'right-7');
@@ -53,12 +45,8 @@ const left = edgeClass('left', 'left-0', 'left-7');
 const hasHorizontal = left != null || right != null;
 const hasVertical = top != null || bottom != null;
 
-const horizontalCenter = hasHorizontal
-	? null
-	: 'left-1/2 -translate-x-1/2';
-const verticalCenter = hasVertical
-	? null
-	: 'top-1/2 -translate-y-1/2';
+const horizontalCenter = hasHorizontal ? null : 'left-1/2 -translate-x-1/2';
+const verticalCenter = hasVertical ? null : 'top-1/2 -translate-y-1/2';
 ---
 
 <img

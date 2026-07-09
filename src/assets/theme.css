@@ -5,12 +5,12 @@
 @theme static {
 	--line-height-base: 1.75;
 
-	--color-accent: #3DDFC2;
+	--color-accent: #3ddfc2;
 	--color-background: #fafafa;
 	--color-default: #374151;
 	--color-strong: #111827;
-	--color-subdued: #6B7280;
-	--color-weak: #9CA3AF;
+	--color-subdued: #6b7280;
+	--color-weak: #9ca3af;
 
 	--font-sans:
 		Nudica, -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI',
@@ -46,7 +46,7 @@
 		--color-background: #000000;
 		--color-default: #f3f4f6;
 		--color-strong: #f9fafb;
-		--color-subdued: #6B7280;
+		--color-subdued: #6b7280;
 		--color-weak: #4b5563;
 	}
 }

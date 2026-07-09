@@ -14,16 +14,8 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const {
-	title,
-	company,
-	year,
-	endYear,
-	active,
-	cover,
-	coverAlt,
-	intro,
-} = entry.data;
+const { title, company, year, endYear, active, cover, coverAlt, intro } =
+	entry.data;
 const { Content } = await render(entry);
 
 const allWork = await getCollection('work');
@@ -31,11 +23,7 @@ const children = allWork
 	.filter(w => w.data.parent === entry.id)
 	.sort((a, b) => b.data.year - a.data.year);
 
-function formatYear(
-	year: number,
-	endYear?: number,
-	active?: boolean,
-) {
+function formatYear(year: number, endYear?: number, active?: boolean) {
 	if (active) return `${year} \u2013 Present`;
 	if (endYear && endYear !== year) return `${year}\u2013${endYear}`;
 	return year.toString();
@@ -57,9 +45,7 @@ function formatYear(
 			}
 		</div>
 		<div class="flex flex-col gap-0.5">
-			<span class="text-subdued text-sm font-medium"
-				>{company}</span
-			>
+			<span class="text-subdued text-sm font-medium">{company}</span>
 			<span class="text-subdued text-sm"
 				>{formatYear(year, endYear, active)}</span
 			>

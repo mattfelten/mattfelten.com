@@ -1,20 +1,8 @@
-import {
-	CartesianGrid,
-	Line,
-	LineChart,
-	ResponsiveContainer,
-} from 'recharts';
+import { CartesianGrid, Line, LineChart, ResponsiveContainer } from 'recharts';
 
-export default function UsageChart({
-	data,
-	dataKey = 'value',
-	height = 160,
-}) {
+export default function UsageChart({ data, dataKey = 'value', height = 160 }) {
 	return (
-		<div
-			className="not-prose w-full"
-			style={{ height, minHeight: height }}
-		>
+		<div className="not-prose w-full" style={{ height, minHeight: height }}>
 			<ResponsiveContainer width="100%" height="100%">
 				<LineChart
 					data={data}
