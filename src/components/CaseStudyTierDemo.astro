@@ -1,0 +1,416 @@
+---
+const { variant } = Astro.props;
+---
+
+<div class={`cst-frame cst-frame--${variant}`}>
+	<div class={`cst-surface cst-surface--${variant}`}>
+		{
+			variant === 'showcase' && (
+				<div class="cst-grid">
+					<div class="cst-tile" />
+					<div class="cst-tile" />
+					<div class="cst-tile" />
+					<div class="cst-tile" />
+					<div class="cst-tile" />
+					<div class="cst-tile" />
+				</div>
+			)
+		}
+
+		{
+			variant === 'project-feature' && (
+				<>
+					<div class="cst-feature-scroll">
+						<div class="cst-feature">
+							<div class="cst-feature-hero" />
+							<div class="cst-feature-body">
+								<div class="cst-feature-main">
+									<div class="cst-lines">
+										<span class="cst-heading" style="width: 55%" />
+										<span style="width: 92%" />
+										<span style="width: 78%" />
+									</div>
+									<div class="cst-feature-pair">
+										<div class="cst-tile" />
+										<div class="cst-tile" />
+									</div>
+									<div class="cst-lines">
+										<span style="width: 88%" />
+										<span style="width: 64%" />
+									</div>
+									<div class="cst-feature-pair">
+										<div class="cst-tile" />
+										<div class="cst-tile" />
+									</div>
+								</div>
+								<aside class="cst-feature-role">
+									<span class="cst-heading" style="width: 45%" />
+									<span style="width: 90%" />
+									<span style="width: 75%" />
+									<span style="width: 82%" />
+								</aside>
+							</div>
+						</div>
+					</div>
+					<div class="cst-scrollbar" aria-hidden="true">
+						<div class="cst-scrollbar-thumb" />
+					</div>
+				</>
+			)
+		}
+
+		{
+			variant === 'case-study' && (
+				<div class="cst-case-row">
+					{/* Slide 1 — title / chapter opener */}
+					<div class="cst-slide cst-slide--title">
+						<div class="cst-slide-title-stack">
+							<span class="cst-slide-title-bar" style="width: 68%" />
+							<span class="cst-slide-subtitle-bar" style="width: 42%" />
+						</div>
+					</div>
+					{/* Slide 2 — image-first */}
+					<div class="cst-slide cst-slide--image">
+						<div class="cst-slide-image" />
+						<span class="cst-slide-caption" style="width: 60%" />
+					</div>
+					{/* Slide 3 — bullet list */}
+					<div class="cst-slide cst-slide--bullets">
+						<span class="cst-slide-heading" style="width: 44%" />
+						<div class="cst-lines cst-lines--bullets">
+							<span style="width: 82%" />
+							<span style="width: 66%" />
+							<span style="width: 74%" />
+							<span style="width: 56%" />
+						</div>
+					</div>
+					{/* Slide 4 — bleeds off the right edge */}
+					<div class="cst-slide cst-slide--image">
+						<div class="cst-slide-image" />
+						<span class="cst-slide-caption" style="width: 60%" />
+					</div>
+				</div>
+			)
+		}
+	</div>
+</div>
+
+<style>
+	.cst-frame {
+		/* Palette */
+		--cst-bg: #f4f0e9;
+		--cst-rule: rgba(17, 24, 39, 0.08);
+		--cst-tile: rgba(17, 24, 39, 0.1);
+		--cst-tile-strong: rgba(17, 24, 39, 0.14);
+		--cst-line: rgba(17, 24, 39, 0.18);
+		--cst-line-strong: rgba(17, 24, 39, 0.42);
+		--cst-card: rgba(17, 24, 39, 0.04);
+		--cst-slide-bg: rgba(17, 24, 39, 0.03);
+		--cst-slide-border: rgba(17, 24, 39, 0.08);
+		--cst-scroll-track: rgba(17, 24, 39, 0.06);
+		--cst-scroll-thumb: rgba(17, 24, 39, 0.24);
+
+		/* Spacing scale — single source of truth for the frame */
+		--cst-gap-xs: 4px;
+		--cst-gap-sm: 8px;
+		--cst-gap-md: 14px;
+		--cst-gap-lg: 22px;
+		--cst-pad: 24px;
+
+		position: relative;
+		margin: 32px 0;
+		border: 1px solid rgba(17, 24, 39, 0.1);
+		border-radius: 8px;
+		overflow: hidden;
+		box-shadow: 0 30px 60px -30px rgba(17, 24, 39, 0.18);
+	}
+
+	/* 16:9 frames for grid & page-preview variants */
+	.cst-frame--showcase,
+	.cst-frame--project-feature {
+		aspect-ratio: 16 / 9;
+	}
+
+	/* Case-study frame: content-sized height, container for cqw sizing */
+	.cst-frame--case-study {
+		container-type: inline-size;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.cst-frame {
+			--cst-bg: #1a1a1c;
+			--cst-rule: rgba(255, 255, 255, 0.08);
+			--cst-tile: rgba(255, 255, 255, 0.08);
+			--cst-tile-strong: rgba(255, 255, 255, 0.12);
+			--cst-line: rgba(255, 255, 255, 0.22);
+			--cst-line-strong: rgba(255, 255, 255, 0.55);
+			--cst-card: rgba(255, 255, 255, 0.04);
+			--cst-slide-bg: rgba(255, 255, 255, 0.03);
+			--cst-slide-border: rgba(255, 255, 255, 0.08);
+			--cst-scroll-track: rgba(255, 255, 255, 0.06);
+			--cst-scroll-thumb: rgba(255, 255, 255, 0.28);
+			border-color: rgba(0, 0, 0, 0.6);
+		}
+	}
+
+	.cst-surface {
+		position: absolute;
+		inset: 0;
+		background: var(--cst-bg);
+	}
+
+	/* Case-study surface flows in normal document flow so the frame sizes
+	   to the slide row's height rather than being locked to 16:9. */
+	.cst-frame--case-study .cst-surface {
+		position: relative;
+		inset: auto;
+		padding: var(--cst-pad) 0 var(--cst-pad) var(--cst-pad);
+	}
+
+	.cst-surface::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+		opacity: 0.35;
+		mix-blend-mode: multiply;
+		background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.05 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+	}
+
+	@media (prefers-color-scheme: dark) {
+		.cst-surface::after {
+			opacity: 0.55;
+			mix-blend-mode: screen;
+		}
+	}
+
+	/* --- Shared primitives --- */
+	.cst-tile {
+		background: var(--cst-tile);
+		border-radius: 4px;
+		aspect-ratio: 4 / 3;
+	}
+
+	.cst-lines {
+		display: flex;
+		flex-direction: column;
+		gap: var(--cst-gap-sm);
+	}
+	.cst-lines span {
+		display: block;
+		height: 5px;
+		background: var(--cst-line);
+		opacity: 0.55;
+		border-radius: 2px;
+	}
+	.cst-heading {
+		display: block;
+		height: 7px;
+		background: var(--cst-line-strong);
+		opacity: 0.75;
+		border-radius: 2px;
+	}
+
+	/* --- Showcase --- */
+	.cst-surface--showcase {
+		padding: var(--cst-pad);
+		display: flex;
+	}
+	.cst-grid {
+		position: relative;
+		z-index: 2;
+		flex: 1;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		grid-template-rows: repeat(2, 1fr);
+		gap: var(--cst-gap-sm);
+	}
+	.cst-grid .cst-tile {
+		aspect-ratio: auto;
+		background: var(--cst-tile-strong);
+	}
+
+	/* --- Project feature (scroll-clipped page preview) --- */
+	.cst-surface--project-feature {
+		display: flex;
+		flex-direction: row;
+	}
+	.cst-feature-scroll {
+		position: relative;
+		z-index: 2;
+		flex: 1;
+		min-width: 0;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+	}
+	.cst-feature {
+		display: flex;
+		flex-direction: column;
+		flex-shrink: 0;
+		padding: var(--cst-pad) var(--cst-pad) 0 var(--cst-pad);
+		gap: var(--cst-gap-md);
+	}
+	.cst-feature-hero {
+		height: 170px;
+		background: var(--cst-tile-strong);
+		border-radius: 4px;
+		flex-shrink: 0;
+	}
+	.cst-feature-body {
+		display: grid;
+		grid-template-columns: 1fr 26%;
+		gap: var(--cst-gap-lg);
+		align-items: start;
+	}
+	.cst-feature-main {
+		display: flex;
+		flex-direction: column;
+		gap: var(--cst-gap-md);
+		min-width: 0;
+	}
+	.cst-feature-pair {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: var(--cst-gap-sm);
+	}
+	.cst-feature-pair .cst-tile {
+		aspect-ratio: 2 / 1;
+	}
+	.cst-feature-role {
+		background: var(--cst-card);
+		border-radius: 4px;
+		padding: var(--cst-gap-md);
+		display: flex;
+		flex-direction: column;
+		gap: var(--cst-gap-sm);
+	}
+	.cst-feature-role span {
+		display: block;
+		height: 4px;
+		background: var(--cst-line);
+		opacity: 0.6;
+		border-radius: 2px;
+	}
+	.cst-feature-role .cst-heading {
+		height: 6px;
+		background: var(--cst-line-strong);
+		opacity: 0.7;
+	}
+
+	/* --- Case study (horizontal deck strip) --- */
+	.cst-case-row {
+		position: relative;
+		z-index: 2;
+		display: flex;
+		gap: var(--cst-gap-md);
+		align-items: center;
+	}
+	.cst-slide {
+		flex-shrink: 0;
+		width: 27cqw;
+		aspect-ratio: 16 / 9;
+		background: var(--cst-slide-bg);
+		border: 1px solid var(--cst-slide-border);
+		border-radius: 4px;
+		padding: var(--cst-gap-sm);
+		display: flex;
+		flex-direction: column;
+		gap: var(--cst-gap-xs);
+		box-shadow: 0 4px 10px -6px rgba(17, 24, 39, 0.18);
+	}
+
+	/* Slide 1 — title / chapter opener */
+	.cst-slide--title {
+		align-items: center;
+		justify-content: center;
+	}
+	.cst-slide-title-stack {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 6px;
+		width: 100%;
+	}
+	.cst-slide-title-bar {
+		display: block;
+		height: 7px;
+		background: var(--cst-line-strong);
+		opacity: 0.8;
+		border-radius: 2px;
+	}
+	.cst-slide-subtitle-bar {
+		display: block;
+		height: 4px;
+		background: var(--cst-line);
+		opacity: 0.55;
+		border-radius: 2px;
+	}
+
+	/* Slide 2 & 4 — image-first */
+	.cst-slide-image {
+		flex: 1;
+		background: var(--cst-tile-strong);
+		border-radius: 3px;
+		min-height: 0;
+	}
+	.cst-slide-caption {
+		display: block;
+		height: 4px;
+		background: var(--cst-line);
+		opacity: 0.55;
+		border-radius: 2px;
+	}
+
+	/* Slide 3 — bullets */
+	.cst-slide--bullets {
+		gap: 6px;
+	}
+	.cst-slide-heading {
+		display: block;
+		height: 5px;
+		background: var(--cst-line-strong);
+		opacity: 0.75;
+		border-radius: 2px;
+	}
+	.cst-lines--bullets {
+		gap: 5px;
+		padding-left: 7px;
+	}
+	.cst-lines--bullets span {
+		position: relative;
+		height: 4px;
+	}
+	.cst-lines--bullets span::before {
+		content: '';
+		position: absolute;
+		left: -7px;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 2.5px;
+		height: 2.5px;
+		border-radius: 50%;
+		background: var(--cst-line-strong);
+		opacity: 0.7;
+	}
+
+	/* --- Scrollbar (used by project-feature) --- */
+	.cst-scrollbar {
+		position: relative;
+		z-index: 3;
+		flex-shrink: 0;
+		width: 4px;
+		margin: var(--cst-gap-sm) var(--cst-gap-sm) var(--cst-gap-sm) 0;
+		background: var(--cst-scroll-track);
+		border-radius: 2px;
+	}
+	.cst-scrollbar-thumb {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 22%;
+		background: var(--cst-scroll-thumb);
+		border-radius: 2px;
+	}
+</style>
