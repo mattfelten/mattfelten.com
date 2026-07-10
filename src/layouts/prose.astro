@@ -3,10 +3,10 @@ import Layout from './default.astro';
 
 const { title } = Astro.props.frontmanter || Astro.props;
 
-const { className } = Astro.props;
+const { className, noindex } = Astro.props;
 ---
 
-<Layout title={title}>
+<Layout title={title} noindex={noindex}>
 	<article class={`prose dark:prose-white mx-auto ${className}`}>
 		<slot />
 	</article>

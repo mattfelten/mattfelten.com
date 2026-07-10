@@ -1,0 +1,80 @@
+---
+import { getCollection } from 'astro:content';
+
+import Section from '@components/Section.astro';
+import Layout from '@layouts/default.astro';
+
+const docs = (await getCollection('docs')).sort(
+	(a, b) => (a.data.order ?? 999) - (b.data.order ?? 999),
+);
+
+const kinds = [
+	{
+		key: 'blueprint',
+		label: 'Blueprints',
+		description:
+			'How I work — as a leader and as an IC. The kind of doc you send someone before they meet you.',
+	},
+	{
+		key: 'template',
+		label: 'Templates',
+		description:
+			'Answers to the questions I think a good project brief, design direction, or set of goals should cover.',
+	},
+	{
+		key: 'reference',
+		label: 'References',
+		description:
+			'Frameworks, banks of questions, and other material worth keeping close by.',
+	},
+] as const;
+---
+
+<Layout title="Docs" noindex>
+	<div>
+		<h1 class="mb-2 text-3xl font-bold">Docs</h1>
+		<p class="text-subdued mb-8 max-w-prose">
+			A working reference for how I think about design and engineering
+			work. Some are my own answers, others are frameworks I lean on.
+		</p>
+		<div class="space-y-10">
+			{
+				kinds.map(({ key, label, description }) => {
+					const items = docs.filter(d => d.data.kind === key);
+					if (!items.length) return null;
+					return (
+						<Section title={label}>
+							<p class="text-subdued mt-1 mb-3 max-w-prose text-sm">
+								{description}
+							</p>
+							<ul class="space-y-3">
+								{items.map(({ data: { title, description, draft }, id }) => (
+									<li>
+										<a
+											href={`/docs/${id}`}
+											class="hover group inline-block focus:outline-0"
+										>
+											<span class="flex items-baseline gap-2 text-xl font-medium">
+												{title}
+												{draft && (
+													<span class="text-subdued rounded-sm border border-current px-1 text-xs font-normal uppercase tracking-wide">
+														Draft
+													</span>
+												)}
+											</span>
+											{description && (
+												<span class="text-subdued block text-sm">
+													{description}
+												</span>
+											)}
+										</a>
+									</li>
+								))}
+							</ul>
+						</Section>
+					);
+				})
+			}
+		</div>
+	</div>
+</Layout>
