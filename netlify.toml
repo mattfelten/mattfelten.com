@@ -22,3 +22,8 @@
   from = "/posts/:year-:month-:day-:slug"
   to = "/articles/:slug"
   status = 301
+
+[[redirects]]
+  from = "/articles/draft-the-image-overlay-i-wanted"
+  to = "/articles/the-image-overlay-i-wanted"
+  status = 301
