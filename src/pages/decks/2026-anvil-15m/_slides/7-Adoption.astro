@@ -26,10 +26,11 @@ import pinkFace from '../images/pinkface.svg?url';
 // The faces are absolutely positioned, so they don't affect that height,
 // and rotation overflow is free to spill since the columns are 512px wide.
 //
-// Content is drawn from Matt's own framing: one pilot team, a basic first
-// release that became the internal case study, then Anvil experts embedded
-// across teams following the roadmap and changelog. The third column is
-// the loosest inference of the three and is the first thing to correct.
+// The third column is the standing offer to product teams: transparency,
+// education, and absorbing work on their behalf. "Showing up" covers all
+// six items where "Roadmap" only covered the first two, and it is the
+// honest answer to adoption without a mandate. You keep earning it.
+// Alternatives if it reads too soft: Support, Enablement, Doing the work.
 
 interface ClusterPiece {
 	src: string;
@@ -71,9 +72,16 @@ const beats: Beat[] = [
 		items: ['Experts in each team', 'Embedded across teams'],
 	},
 	{
-		name: 'Roadmap',
+		name: 'Showing up',
 		icon: diamonds,
-		items: ['Shared roadmap', 'Release changelog'],
+		items: [
+			'Public Roadmap and Backlog',
+			'Release Announcements',
+			'Team Training',
+			'Office Hours',
+			'Migration Support',
+			'Design & Code Review',
+		],
 	},
 ];
 ---
