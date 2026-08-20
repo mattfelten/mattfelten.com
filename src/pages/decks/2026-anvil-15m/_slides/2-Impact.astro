@@ -4,33 +4,36 @@ import { RxArrowTopRight } from 'react-icons/rx';
 
 import screenshot from '../images/2 Context.png?url';
 
-// Figma frame 159:13653. Body block at slide (80, 372): three labeled
-// columns (Role / Timeline / Team) and a URL row. Screenshot at slide
-// (1007, 157), 913×923 — bleeds bottom-right.
+// The Project Context slide's form with the Results slide's content.
+// Layout is unchanged from 6-ProjectContext.astro in
+// 2024-anvil-case-study: three labeled columns across the left half at
+// slide (80, 372), the "Online at" row below them, and the docs
+// screenshot at 913x923 bleeding bottom-right.
+//
+// Role / Timeline / Team are gone. The numbers are pulled from the four
+// Results cards, keeping the ones that carry weight without needing a
+// sentence of setup. Dropped: 3 platforms, 10k variants, 0.16% detach
+// rate, 5k installs a week, 250k lines of code, +34 humans.
 
 const columns = [
 	{
-		label: 'Role',
-		items: ['Lead Designer', 'Lead Engineer', 'Product Manager'],
+		label: 'Adoption',
+		items: ['71% of 32 teams', '385 users', '77% CSAT'],
 	},
 	{
-		label: 'Timeline',
-		items: ['5 months to 1.0', '4 years total'],
+		label: 'Efficiency',
+		items: ['+$5.3M per year', '65% design time', '30% dev time'],
 	},
 	{
-		label: 'Team',
-		items: [
-			'2 Product Designers',
-			'2 Frontend Engineers',
-			'2 Visual Designers',
-		],
+		label: 'Scale',
+		items: ['55 components', '37 contributors', '40k inserts a month'],
 	},
 ];
 
 const url = 'https://v1.anvil.servicetitan.com';
 ---
 
-<Slide subtitle="Project Context">
+<Slide subtitle="Impact">
 	<div class="flex flex-col gap-12">
 		<div class="grid w-1/2 grid-cols-3 gap-x-4">
 			{
