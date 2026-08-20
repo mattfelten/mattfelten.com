@@ -2,8 +2,10 @@
 import Slide from '@decks/templates/Slide.astro';
 
 import pilot from '../images/5 Personas 1.svg?url';
-import champions from '../images/5 Personas 2.svg?url';
-import roadmap from '../images/5 Personas 6.svg?url';
+import greenFace from '../images/5 Personas 2.svg?url';
+import orangeFace from '../images/5 Personas 6.svg?url';
+import diamonds from '../images/diamonds.svg?url';
+import pinkFace from '../images/pinkface.svg?url';
 
 // Answers the brief's hardest question: adoption when nobody was required
 // to use it. Release and Contribution are what kept the system healthy
@@ -11,18 +13,36 @@ import roadmap from '../images/5 Personas 6.svg?url';
 //
 // Same three-column grid as 8-Accessibility.astro, but with the Personas
 // faces instead of the abstract Why Me shapes, since this beat is about
-// people rather than practices. Personas are 106px tall against the Why Me
-// set's 115px, so the illustration height is set to match the source.
+// people rather than practices.
+//
+// Champions gets three faces rather than one, scattered into a lopsided
+// triangle: two along the top at different heights and angles, one
+// dropped below and between them. Sizes, offsets and rotations are all
+// slightly different on purpose. Nothing shares an edge or a baseline,
+// so the group reads as tossed down rather than arranged.
+//
+// The cluster box stays at 106px tall, matching the single illustrations
+// in the other two columns, so all three headings sit on the same line.
+// The faces are absolutely positioned, so they don't affect that height,
+// and rotation overflow is free to spill since the columns are 512px wide.
 //
 // Content is drawn from Matt's own framing: one pilot team, a basic first
 // release that became the internal case study, then Anvil experts embedded
 // across teams following the roadmap and changelog. The third column is
 // the loosest inference of the three and is the first thing to correct.
 
+interface ClusterPiece {
+	src: string;
+	class: string;
+}
+
 interface Beat {
 	name: string;
-	icon: string;
 	items: string[];
+	/** Single illustration, 106px tall. */
+	icon?: string;
+	/** Casually scattered group, boxed to the same 106px height. */
+	cluster?: ClusterPiece[];
 }
 
 const beats: Beat[] = [
@@ -37,12 +57,22 @@ const beats: Beat[] = [
 	},
 	{
 		name: 'Champions',
-		icon: champions,
+		cluster: [
+			{ src: greenFace, class: 'top-0 left-0 h-[62px] rotate-[-9deg]' },
+			{
+				src: orangeFace,
+				class: 'top-[8px] left-[74px] h-[58px] rotate-[8deg]',
+			},
+			{
+				src: pinkFace,
+				class: 'top-[42px] left-[38px] h-[64px] rotate-[-4deg]',
+			},
+		],
 		items: ['Experts in each team', 'Embedded across teams'],
 	},
 	{
 		name: 'Roadmap',
-		icon: roadmap,
+		icon: diamonds,
 		items: ['Shared roadmap', 'Release changelog'],
 	},
 ];
@@ -53,11 +83,26 @@ const beats: Beat[] = [
 		{
 			beats.map(beat => (
 				<div class="flex flex-col items-start gap-13">
-					<img
-						src={beat.icon}
-						alt=""
-						class="m-0! block h-[106px] w-auto"
-					/>
+					{beat.cluster ? (
+						<div class="relative h-[106px] w-[150px]">
+							{beat.cluster.map(piece => (
+								<img
+									src={piece.src}
+									alt=""
+									class:list={[
+										'absolute m-0! block max-h-none! w-auto max-w-none! rounded-none!',
+										piece.class,
+									]}
+								/>
+							))}
+						</div>
+					) : (
+						<img
+							src={beat.icon}
+							alt=""
+							class="m-0! block h-[106px] w-auto"
+						/>
+					)}
 					<div class="flex flex-col gap-3">
 						<div class="text-strong text-4xl leading-[40px] font-medium">
 							{beat.name}
