@@ -5,7 +5,6 @@ import {
 	Accessibility,
 	Adoption,
 	Architecture,
-	Contribution,
 	FigmaComponents,
 	GridAndLayout,
 	Impact,
@@ -25,21 +24,21 @@ const meta = {
 // ordered as answers to those questions instead of as a case study.
 //
 //   Distributed and consumed, and why  →  3, 4, 5
-//   A pattern the system lacked, promoted to core  →  6
-//   Adoption with no mandate  →  7
-//   Accessibility  →  8
-//   Something got wrong, and what changed  →  9, told live
+//   A pattern the system lacked, promoted to core  →  spoken, over 6
+//   Adoption with no mandate  →  6
+//   Accessibility  →  7
+//   Something got wrong, and what changed  →  8, told live
 //
-// Roughly three minutes a question. Impact opens as credibility rather
-// than as an answer, since metrics weren't among the five.
+// The contribution question has no slide of its own. It is carried by
+// "Contribution Docs" and "Design & Code Review" in the Adoption slide's
+// Org Support column, and told out loud. If it needs a slide again,
+// 22-Contribution.astro in 2024-anvil-case-study is the one that was
+// here, and its image is still in ./images.
 //
 // Slides are copied from 2024-anvil-case-study rather than imported, and
 // their images copied into ./images, per the freezing principle: that
-// deck stays put, this one can drift. Release and Contribution are
-// verbatim copies; everything else is new or reworked.
-//
-// Design Process was cut. It described how the work ran generally and
-// answered none of the five.
+// deck stays put, this one can drift. Release is the only verbatim copy
+// left; everything else is new or reworked.
 //
 // Architecture is still a placeholder and is the one asset this deck
 // needs before it can be recorded.
@@ -52,7 +51,6 @@ const meta = {
 		<Architecture />
 		<FigmaComponents />
 		<Release />
-		<Contribution />
 		<Adoption />
 		<Accessibility />
 		<GridAndLayout />
