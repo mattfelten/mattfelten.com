@@ -3,7 +3,10 @@ import { Deck, DeckShell } from '@decks';
 
 import {
 	Accessibility,
+	Architecture,
+	Contribution,
 	DesignProcess,
+	FigmaComponents,
 	ProjectContext,
 	Release,
 	Results,
@@ -17,15 +20,24 @@ const meta = {
 };
 
 // A 15-minute cut of the 2024 Anvil case study for a recorded interview
-// talk. Every slide is copied from 2024-anvil-case-study rather than
-// imported, per the freezing principle: that deck stays put, this one can
-// drift. Images are copied into ./images for the same reason.
+// talk. Slides are copied from 2024-anvil-case-study rather than imported,
+// and their images copied into ./images, per the freezing principle: that
+// deck stays put, this one can drift.
 //
-// The only edit to any copied slide is the Accessibility subtitle, which
-// drops the "Exploration →" prefix since this cut has no Exploration
-// section for it to belong to.
+// The arc: who and what (1-2), how the work ran (3), two worked examples
+// of it (4-5), how it was built and shipped (6-7), how it grew (8), what
+// it achieved (9).
 //
-// No TOC interstitials. At seven slides the sections are too short to
+// Edits to copied slides, both dropping a phase prefix this cut has no
+// section for: "Exploration → Accessibility" became "Accessibility", and
+// "Refinement → Figma Components" became "Figma Components".
+//
+// Two slides are not from the 2024 deck:
+//   - Accessibility, rebuilt as three layers on the Personas grid.
+//   - Architecture, still a placeholder. Nothing in the 2024 deck covers
+//     it, so it needs a diagram before this is recorded.
+//
+// No TOC interstitials. At ten slides the sections are too short to
 // survive being announced.
 ---
 
@@ -35,7 +47,10 @@ const meta = {
 		<ProjectContext />
 		<DesignProcess />
 		<Accessibility />
+		<FigmaComponents />
+		<Architecture />
 		<Release />
+		<Contribution />
 		<Results />
 		<ThankYou />
 	</Deck>

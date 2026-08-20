@@ -1,0 +1,31 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+// PLACEHOLDER — the one real gap in this deck. Nothing in
+// 2024-anvil-case-study covers architecture, so this needs a diagram.
+//
+// To swap it in:
+// 1. Drop the file at ../images/architecture.png
+// 2. Replace the frontmatter imports with:
+//      import { BleedImage, Slide } from '@decks';
+//      import architecture from '../images/architecture.png?url';
+// 3. Replace the placeholder <div> below with (sizes from the source):
+//      <BleedImage
+//          src={architecture}
+//          alt="Anvil architecture: tokens feeding fonts, icons, and React components"
+//          bleed={['right', 'bottom']}
+//          class="h-[865px] w-[1416px] object-cover"
+//      />
+//    See 21-Release.astro (full bleed) and 20-Build.astro (bleed bottom)
+//    in 2024-anvil-case-study for the two usual shapes.
+---
+
+<Slide subtitle="Architecture">
+	<div
+		class="border-weak/[0.18] absolute top-[228px] right-7 bottom-7 left-7 flex items-center justify-center rounded-[20px] border border-dashed"
+	>
+		<span class="text-weak text-xs font-medium uppercase">
+			Architecture diagram
+		</span>
+	</div>
+</Slide>
