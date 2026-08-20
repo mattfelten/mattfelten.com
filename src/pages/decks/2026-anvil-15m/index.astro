@@ -3,10 +3,11 @@ import { Deck, DeckShell } from '@decks';
 
 import {
 	Accessibility,
+	Adoption,
 	Architecture,
 	Contribution,
-	DesignProcess,
 	FigmaComponents,
+	GridAndLayout,
 	Impact,
 	Release,
 	ThankYou,
@@ -15,44 +16,46 @@ import {
 
 const meta = {
 	title: 'Anvil Design System',
-	description: 'Anvil Design System case study, cut to 15 minutes.',
+	description:
+		'Anvil Design System, told as answers to the five things the panel asked about: distribution, contribution, adoption, accessibility, and what went wrong.',
 };
 
-// A 15-minute cut of the 2024 Anvil case study for a recorded interview
-// talk. Slides are copied from 2024-anvil-case-study rather than imported,
-// and their images copied into ./images, per the freezing principle: that
-// deck stays put, this one can drift.
+// A 15-minute recorded talk. The panel asked five specific questions and
+// said they wanted the decisions rather than the look, so the deck is
+// ordered as answers to those questions instead of as a case study.
 //
-// The arc leads with the outcome: what it achieved (2), how the work ran
-// (3), how the system is structured (4), the design craft on top of it
-// (5-6), how it shipped (7), how it grew (8).
+//   Distributed and consumed, and why  →  3, 4, 5
+//   A pattern the system lacked, promoted to core  →  6
+//   Adoption with no mandate  →  7
+//   Accessibility  →  8
+//   Something got wrong, and what changed  →  9, told live
 //
-// Edits to copied slides, both dropping a phase prefix this cut has no
-// section for: "Exploration → Accessibility" became "Accessibility", and
-// "Refinement → Figma Components" became "Figma Components".
+// Roughly three minutes a question. Impact opens as credibility rather
+// than as an answer, since metrics weren't among the five.
 //
-// Three slides are not straight copies:
-//   - Impact, the Project Context layout carrying the Results numbers.
-//     It replaces both of those slides, so there is no results beat at
-//     the end.
-//   - Accessibility, rebuilt as three layers on the Why Me grid.
-//   - Architecture, still a placeholder. Nothing in the 2024 deck covers
-//     it, so it needs a diagram before this is recorded.
+// Slides are copied from 2024-anvil-case-study rather than imported, and
+// their images copied into ./images, per the freezing principle: that
+// deck stays put, this one can drift. Release and Contribution are
+// verbatim copies; everything else is new or reworked.
 //
-// No TOC interstitials. At nine slides the sections are too short to
-// survive being announced.
+// Design Process was cut. It described how the work ran generally and
+// answered none of the five.
+//
+// Architecture is still a placeholder and is the one asset this deck
+// needs before it can be recorded.
 ---
 
 <DeckShell {...meta}>
 	<Deck title="Anvil Design System">
 		<Title />
 		<Impact />
-		<DesignProcess />
 		<Architecture />
 		<FigmaComponents />
-		<Accessibility />
 		<Release />
 		<Contribution />
+		<Adoption />
+		<Accessibility />
+		<GridAndLayout />
 		<ThankYou />
 	</Deck>
 </DeckShell>

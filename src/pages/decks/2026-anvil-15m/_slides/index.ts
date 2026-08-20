@@ -1,9 +1,10 @@
 export { default as Title } from './1-Title.astro';
 export { default as Impact } from './2-Impact.astro';
-export { default as DesignProcess } from './3-DesignProcess.astro';
-export { default as Architecture } from './4-Architecture.astro';
-export { default as FigmaComponents } from './5-FigmaComponents.astro';
-export { default as Accessibility } from './6-Accessibility.astro';
-export { default as Release } from './7-Release.astro';
-export { default as Contribution } from './8-Contribution.astro';
-export { default as ThankYou } from './9-ThankYou.astro';
+export { default as Architecture } from './3-Architecture.astro';
+export { default as FigmaComponents } from './4-FigmaComponents.astro';
+export { default as Release } from './5-Release.astro';
+export { default as Contribution } from './6-Contribution.astro';
+export { default as Adoption } from './7-Adoption.astro';
+export { default as Accessibility } from './8-Accessibility.astro';
+export { default as GridAndLayout } from './9-GridAndLayout.astro';
+export { default as ThankYou } from './10-ThankYou.astro';

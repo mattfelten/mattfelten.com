@@ -1,0 +1,54 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+// Answers the brief's first question: how it was distributed and consumed,
+// and why. Deliberately parallel with 4-FigmaComponents.astro, the other
+// consumption path. Same facts row over the same visual footprint, so the
+// two read as a pair: npm for engineers, Figma for designers.
+//
+// The facts row carries the *why*. The versioning tradeoff is the sharpest
+// decision here, so it gets a slot rather than being left to the diagram.
+//
+// PLACEHOLDER — the diagram is the one asset this deck still needs.
+// To swap it in:
+// 1. Drop the file at ../images/architecture.png
+// 2. Add: import architecture from '../images/architecture.png?url';
+// 3. Replace the placeholder <div> below with:
+//      <img
+//          src={architecture}
+//          alt="Anvil architecture: tokens feeding fonts, icons, and React components"
+//          class="m-0! block h-[679px] w-[1400px] max-h-none! max-w-none! rounded-2xl"
+//      />
+
+const facts = [
+	{ label: 'Distribution', value: 'npm packages' },
+	{ label: 'Versioning', value: 'Lockstep, one version' },
+	{ label: 'Consumption', value: '5k installs a week' },
+];
+---
+
+<Slide subtitle="Architecture">
+	<div class="flex flex-col items-center gap-6">
+		<div class="flex w-[1400px] gap-12">
+			{
+				facts.map(fact => (
+					<div class="flex flex-col gap-1">
+						<span class="text-subdued text-xs font-medium uppercase">
+							{fact.label}
+						</span>
+						<span class="text-strong text-3xl font-medium">
+							{fact.value}
+						</span>
+					</div>
+				))
+			}
+		</div>
+		<div
+			class="border-weak/[0.18] flex h-[679px] w-[1400px] items-center justify-center rounded-[20px] border border-dashed"
+		>
+			<span class="text-weak text-xs font-medium uppercase">
+				Architecture diagram
+			</span>
+		</div>
+	</div>
+</Slide>
