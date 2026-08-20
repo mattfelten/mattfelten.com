@@ -1,9 +1,9 @@
 export { default as Title } from './1-Title.astro';
 export { default as ProjectContext } from './2-ProjectContext.astro';
 export { default as DesignProcess } from './3-DesignProcess.astro';
-export { default as Accessibility } from './4-Accessibility.astro';
+export { default as Architecture } from './4-Architecture.astro';
 export { default as FigmaComponents } from './5-FigmaComponents.astro';
-export { default as Architecture } from './6-Architecture.astro';
+export { default as Accessibility } from './6-Accessibility.astro';
 export { default as Release } from './7-Release.astro';
 export { default as Contribution } from './8-Contribution.astro';
 export { default as Results } from './9-Results.astro';
