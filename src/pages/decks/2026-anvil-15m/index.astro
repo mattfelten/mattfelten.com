@@ -3,58 +3,40 @@ import { Deck, DeckShell } from '@decks';
 
 import {
 	Accessibility,
-	AdoptionChampions,
-	AdoptionPilot,
-	Architecture,
-	DesignTooling,
-	HowItStarted,
-	Packages,
-	Scale,
-	Scope,
+	DesignProcess,
+	ProjectContext,
+	Release,
+	Results,
 	ThankYou,
-	TheGap,
 	Title,
-	TwentyNinePercent,
-	Versioning,
-	WhatItWas,
 } from './_slides';
 
 const meta = {
-	title: 'Anvil',
-	description:
-		'Anvil, the design system at ServiceTitan: the decisions behind it, what each one cost, and what it bought.',
+	title: 'Anvil Design System',
+	description: 'Anvil Design System case study, cut to 15 minutes.',
 };
 
-// 15-minute recorded interview talk for a panel of designers and engineers.
-// The brief was "less about what the system looks like and more about the
-// decisions behind it", so every slide is one idea and nothing on screen
-// repeats what gets said out loud.
+// A 15-minute cut of the 2024 Anvil case study for a recorded interview
+// talk. Every slide is copied from 2024-anvil-case-study rather than
+// imported, per the freezing principle: that deck stays put, this one can
+// drift. Images are copied into ./images for the same reason.
 //
-// Deliberate departure from decks/CLAUDE.md: no TOC interstitials and no
-// About Me act. The talk is a single continuous run and the sections are too
-// short to survive being announced. Act III is just the closing slide.
+// The only edit to any copied slide is the Accessibility subtitle, which
+// drops the "Exploration →" prefix since this cut has no Exploration
+// section for it to belong to.
 //
-// Sections 5-7 of the talk happen in a live browser and on camera. There are
-// no slides marking those switches, so the deck runs straight through to the
-// closing slide.
+// No TOC interstitials. At seven slides the sections are too short to
+// survive being announced.
 ---
 
 <DeckShell {...meta}>
-	<Deck title="Anvil">
+	<Deck title="Anvil Design System">
 		<Title />
-		<WhatItWas />
-		<HowItStarted />
-		<Scale />
-		<TwentyNinePercent />
-		<Architecture />
-		<Packages />
-		<Versioning />
-		<DesignTooling />
+		<ProjectContext />
+		<DesignProcess />
 		<Accessibility />
-		<TheGap />
-		<AdoptionPilot />
-		<AdoptionChampions />
-		<Scope />
+		<Release />
+		<Results />
 		<ThankYou />
 	</Deck>
 </DeckShell>
