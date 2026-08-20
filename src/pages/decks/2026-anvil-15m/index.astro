@@ -8,7 +8,7 @@ import {
 	FigmaComponents,
 	GridAndLayout,
 	Impact,
-	Release,
+	ReleaseAnnouncements,
 	ThankYou,
 	Title,
 } from './_slides';
@@ -23,22 +23,29 @@ const meta = {
 // said they wanted the decisions rather than the look, so the deck is
 // ordered as answers to those questions instead of as a case study.
 //
-//   Distributed and consumed, and why  →  3, 4, 5
-//   A pattern the system lacked, promoted to core  →  spoken, over 6
-//   Adoption with no mandate  →  6
+//   Distributed and consumed, and why  →  3, 4
+//   A pattern the system lacked, promoted to core  →  spoken, over 5
+//   Adoption with no mandate  →  5, 6
 //   Accessibility  →  7
 //   Something got wrong, and what changed  →  8, told live
 //
+// Release Announcements follows Adoption rather than sitting with the
+// distribution slides. It is named on the Adoption slide as one of the
+// org-wide supports, so showing the artifacts straight afterwards reads
+// as evidence for that column rather than as a separate beat about
+// shipping.
+//
 // The contribution question has no slide of its own. It is carried by
 // "Contribution Docs" and "Design & Code Review" in the Adoption slide's
-// Org Support column, and told out loud. If it needs a slide again,
+// Organization column, and told out loud. If it needs a slide again,
 // 22-Contribution.astro in 2024-anvil-case-study is the one that was
 // here, and its image is still in ./images.
 //
 // Slides are copied from 2024-anvil-case-study rather than imported, and
 // their images copied into ./images, per the freezing principle: that
-// deck stays put, this one can drift. Release is the only verbatim copy
-// left; everything else is new or reworked.
+// deck stays put, this one can drift. Release Announcements is the only
+// verbatim copy left apart from its subtitle; everything else is new or
+// reworked.
 //
 // Architecture is still a placeholder and is the one asset this deck
 // needs before it can be recorded.
@@ -50,8 +57,8 @@ const meta = {
 		<Impact />
 		<Architecture />
 		<FigmaComponents />
-		<Release />
 		<Adoption />
+		<ReleaseAnnouncements />
 		<Accessibility />
 		<GridAndLayout />
 		<ThankYou />
