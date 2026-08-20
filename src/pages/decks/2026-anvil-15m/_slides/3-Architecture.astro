@@ -1,37 +1,32 @@
 ---
-import Slide from '@decks/templates/Slide.astro';
+import { BleedImage, Slide } from '@decks';
+
+import architecture from '../images/architecture.png?url';
 
 // Image-led. The diagram carries the slide and the decisions get spoken
-// over it: npm packages, lockstep versioning and what that cost, and why
-// this shape rather than a single package or a repo per component.
+// over it: why four packages rather than one, lockstep versioning and
+// what it cost, and why npm was the distribution channel.
 //
-// The metrics that used to sit here in a facts row moved to 2-Impact.astro.
-// Splitting the numbers across three slides meant none of them landed.
+// The metrics that used to sit here in a facts row moved to
+// 2-Impact.astro. Splitting the numbers across three slides meant none of
+// them landed.
 //
-// PLACEHOLDER — the diagram is the one asset this deck still needs.
-// To swap it in:
-// 1. Drop the file at ../images/architecture.png
-// 2. Replace the frontmatter imports with:
-//      import { BleedImage, Slide } from '@decks';
-//      import architecture from '../images/architecture.png?url';
-// 3. Replace the placeholder <div> below with, sized to the source:
-//      <BleedImage
-//          src={architecture}
-//          alt="Anvil architecture: tokens feeding fonts, icons, and React components"
-//          bleed="bottom"
-//          class="h-[854px] w-[1760px] object-cover"
-//      />
-//    That matches the footprint 4-FigmaComponents.astro uses, which keeps
-//    the two consumption slides reading as a pair. Use ImageSlide instead
-//    if the diagram is tall rather than wide.
+// Source is 1973x1127, so aspect 1.751, near enough 16:9 that it wants
+// most of the slide. Scaled to 1541x880 and bled off the bottom: the
+// aspect matches the source exactly so object-cover crops nothing. The
+// diagram's own content starts about 7% down and ends about 92% down, so
+// on the slide it runs roughly y=259 to y=1008, clear of the header and
+// with the image's own bottom whitespace absorbing the bleed.
+//
+// Matches the treatment on 4-FigmaComponents.astro so the two
+// consumption slides read as a pair.
 ---
 
 <Slide subtitle="Architecture">
-	<div
-		class="border-weak/[0.18] absolute top-[228px] right-7 bottom-7 left-7 flex items-center justify-center rounded-[20px] border border-dashed"
-	>
-		<span class="text-weak text-xs font-medium uppercase">
-			Architecture diagram
-		</span>
-	</div>
+	<BleedImage
+		src={architecture}
+		alt="Anvil architecture. Tokens, an icon set, and fonts feed a React and CSS component library. Each is compiled and published to npm as @servicetitan/tokens, anvil-icons, anvil-fonts, and anvil, then consumed by the desktop app. The component library also generates html-sketchapp output for Sketch, plus documentation and Storybook."
+		bleed="bottom"
+		class="h-[880px] w-[1541px] object-cover"
+	/>
 </Slide>
