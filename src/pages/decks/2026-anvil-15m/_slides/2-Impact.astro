@@ -1,61 +1,102 @@
 ---
-import CardGridSlide from '@decks/templates/CardGridSlide.astro';
+import { BleedImage, Slide } from '@decks';
+import { RxArrowTopRight } from 'react-icons/rx';
 
-// Every metric in the deck lives here. Architecture and Figma Components
-// used to carry a few each, which split the evidence across three slides
-// and made none of them land. Those are image-led now and this is the
-// one place numbers appear.
+import screenshot from '../images/2 Context.png?url';
+
+// The Project Context layout from 6-ProjectContext.astro in
+// 2024-anvil-case-study, unchanged: content across the left half, the
+// "Online at" row beneath it, and the docs screenshot at 913x923
+// bleeding bottom-right.
 //
-// 2x2 on the CardGridSlide primitive, which is what 24-Results.astro in
-// 2024-anvil-case-study used. Four cards hold all fourteen data points
-// with room to breathe, and four buckets is about the most that can be
-// walked through in the sixty to ninety seconds this slide gets.
+// Only the metrics area changed shape. Three labelled columns became a
+// 2x2 of four, which is what lets all fourteen data points sit here.
+// At half width the two columns are ~424px, wider than the three were,
+// so the longer lines have more room than before.
 //
-// ROI is deliberately the short card. Two lines next to three fuller
+// Every metric in the deck lives on this slide. Architecture and Figma
+// Components used to carry a few each in facts rows, which split the
+// evidence three ways and made none of it land. They are image-led now.
+//
+// ROI is deliberately the short group. Two lines against three fuller
 // ones is what makes the money number the thing the eye lands on.
 //
-// The time-saved figures stay with the tool they were measured in rather
-// than being pooled into ROI, since 65% was design time in Figma and 30%
-// was engineering time in code.
+// Time saved stays with the tool it was measured in rather than pooling
+// into ROI: 65% was design time in Figma, 30% engineering time in code.
 //
-// For a 3x2 instead, split Adoption into Adoption and Satisfaction, and
-// pull the time-saved lines out into their own card, then pass
-// size="small" to the Cards so six don't crowd.
+// Two spacing changes from the original, both forced by going from one
+// row of three to two rows of four. The list items lose their my-1 and
+// sit on leading-[40px] alone, and the gap down to the URL row is gap-8
+// rather than gap-12. Without those the block runs tall enough to
+// collide with the header.
+
+const groups = [
+	{
+		label: 'Adoption',
+		items: ['71% of 32 teams', '385 users', '77% CSAT', '37 contributors'],
+	},
+	{
+		label: 'ROI',
+		items: ['+$5.3M per year', '+34 humans'],
+	},
+	{
+		label: 'Figma',
+		items: [
+			'55 components, 10k variants',
+			'40k inserts a month',
+			'0.16% detach rate',
+			'65% design time saved',
+		],
+	},
+	{
+		label: 'Code',
+		items: [
+			'5k installs a week',
+			'250k lines of code',
+			'30% dev time saved',
+			'3 platforms',
+		],
+	},
+];
+
+const url = 'https://v1.anvil.servicetitan.com';
 ---
 
-<CardGridSlide
-	subtitle="Impact"
-	cards={[
-		{
-			title: 'Adoption',
-			items: [
-				'71% of 32 teams',
-				'385 users',
-				'77% CSAT',
-				'37 contributors',
-			],
-		},
-		{
-			title: 'ROI',
-			items: ['+$5.3M per year', '+34 humans'],
-		},
-		{
-			title: 'Figma',
-			items: [
-				'55 components, 10k variants',
-				'40k inserts a month',
-				'0.16% detach rate',
-				'65% design time saved',
-			],
-		},
-		{
-			title: 'Code',
-			items: [
-				'5k installs a week',
-				'250k lines of code',
-				'30% dev time saved',
-				'3 platforms: Web, iOS, Android',
-			],
-		},
-	]}
-/>
+<Slide subtitle="Impact">
+	<div class="flex flex-col gap-8">
+		<div class="grid w-1/2 grid-cols-2 gap-x-4 gap-y-6">
+			{
+				groups.map(group => (
+					<div>
+						<div class="text-strong text-2xl font-medium">
+							{group.label}
+						</div>
+						<ul class="m-0! mt-2 list-none p-0">
+							{group.items.map(item => (
+								<li class="text-subdued m-0! text-2xl leading-[40px] font-medium">
+									{item}
+								</li>
+							))}
+						</ul>
+					</div>
+				))
+			}
+		</div>
+		<div class="flex flex-col items-start gap-1">
+			<span class="text-subdued text-xs font-medium uppercase"
+				>Online at</span
+			>
+			<a href={url} class="text-default relative text-2xl"
+				>{url}<RxArrowTopRight
+					className="text-weak absolute top-0.5 -right-4 inline-block align-text-top"
+				/></a
+			>
+		</div>
+	</div>
+	<BleedImage
+		src={screenshot}
+		alt="Anvil Design System documentation site"
+		bleed={['right', 'bottom']}
+		class="h-[923px] w-[913px] object-cover"
+	/>
+</Slide>
