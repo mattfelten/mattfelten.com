@@ -11,20 +11,20 @@ import pinkFace from '../images/pinkface.svg?url';
 // to use it. Release and Contribution are what kept the system healthy
 // once teams had opted in; this is the slide about getting them to opt in.
 //
-// Three columns: where it started, then the two levels the work ran at
-// afterwards. Team Enablement is what we pushed to one team at a time and
-// is where the roadshow and the champions live. Org Support is what stood
-// open to everyone all the time, no invitation needed.
+// The columns are three scopes, ascending: one team, then each team in
+// turn, then everyone at once. Under an "Adoption" header that scale is
+// the whole argument, so the headings only have to name it. What was
+// actually done at each level is what the items are for.
 //
-// That Team / Org split is the whole reason the last two columns are
-// separate. Sorting the same list by who it was aimed at makes the shape
-// of the effort legible without a sentence of setup.
+// "Teams" is plural on purpose. The pilot was also a team, so a singular
+// "Team" next to "Pilot" invites a beat of confusion. One, then many,
+// then all.
 //
 // Same three-column grid as 8-Accessibility.astro, but with the Personas
 // faces instead of the abstract Why Me shapes, since this beat is about
 // people rather than practices.
 //
-// Team Enablement gets three faces rather than one, scattered into a lopsided
+// Teams gets three faces rather than one, scattered into a lopsided
 // triangle: two along the top at different heights and angles, one
 // dropped below and between them. Sizes, offsets and rotations are all
 // slightly different on purpose. Nothing shares an edge or a baseline,
@@ -63,7 +63,7 @@ const beats: Beat[] = [
 		],
 	},
 	{
-		name: 'Team Enablement',
+		name: 'Teams',
 		cluster: [
 			{ src: greenFace, class: 'top-0 left-0 h-[62px] rotate-[-9deg]' },
 			{
@@ -78,7 +78,7 @@ const beats: Beat[] = [
 		items: ['Pilot Roadshow', 'Champions', 'Training', 'Migration Support'],
 	},
 	{
-		name: 'Org Support',
+		name: 'Organization',
 		icon: diamonds,
 		items: [
 			'Public Roadmap & Backlog',
