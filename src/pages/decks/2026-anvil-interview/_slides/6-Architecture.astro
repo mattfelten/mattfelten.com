@@ -1,0 +1,30 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+// PLACEHOLDER — swap in the real diagram.
+//
+// 1. Drop the file at ../images/architecture.png
+// 2. Replace the frontmatter imports with:
+//      import { BleedImage, Slide } from '@decks';
+//      import architecture from '../images/architecture.png?url';
+// 3. Replace the placeholder <div> below with (sizes from the source):
+//      <BleedImage
+//          src={architecture}
+//          alt="Anvil architecture: tokens feeding fonts, icons, and React components"
+//          bleed={['left', 'right', 'bottom']}
+//          class="h-[772px] w-[1920px] object-contain"
+//      />
+//    Use bleed={['right', 'bottom']} instead if the diagram should hang off
+//    two edges rather than span the full width. See 21-Release.astro and
+//    20-Build.astro in 2024-anvil-case-study for both shapes.
+---
+
+<Slide subtitle="Architecture">
+	<div
+		class="border-weak/[0.18] absolute top-[228px] right-7 bottom-7 left-7 flex items-center justify-center rounded-[20px] border border-dashed"
+	>
+		<span class="text-weak text-xs font-medium uppercase">
+			Architecture diagram
+		</span>
+	</div>
+</Slide>

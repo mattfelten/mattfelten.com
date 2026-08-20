@@ -1,0 +1,28 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+// Three words. The numerals do the structuring so nothing has to be
+// explained on the slide.
+const layers = [
+	{ index: '01', label: 'Baked in' },
+	{ index: '02', label: 'Documented' },
+	{ index: '03', label: 'Verified' },
+];
+---
+
+<Slide subtitle="Accessibility">
+	<div class="grid grid-cols-3 gap-7">
+		{
+			layers.map(layer => (
+				<div class="flex flex-col gap-3">
+					<span class="text-weak text-xs font-medium uppercase">
+						{layer.index}
+					</span>
+					<div class="text-strong text-7xl leading-none font-medium tracking-[-0.015em]">
+						{layer.label}
+					</div>
+				</div>
+			))
+		}
+	</div>
+</Slide>

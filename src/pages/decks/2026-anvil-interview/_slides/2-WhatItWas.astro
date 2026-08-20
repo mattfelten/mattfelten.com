@@ -1,0 +1,30 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+// Three noun phrases, not sentences. The third line is the one that gets
+// spoken to, so it takes the strong color while the setup stays subdued.
+const lines = [
+	{ text: 'Enterprise field service software', strong: false },
+	{ text: 'Grown by acquisition', strong: false },
+	{ text: 'Three UI frameworks', strong: true },
+];
+---
+
+<Slide subtitle="What it was">
+	<ul class="m-0! flex! list-none flex-col gap-6 p-0">
+		{
+			lines.map(line => (
+				<li
+					class:list={[
+						'font-regular m-0! text-7xl leading-none tracking-[-0.015em]',
+						line.strong
+							? 'text-strong font-medium'
+							: 'text-subdued',
+					]}
+				>
+					{line.text}
+				</li>
+			))
+		}
+	</ul>
+</Slide>

@@ -1,0 +1,19 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+import { RxArrowTopRight } from 'react-icons/rx';
+
+// Handoff. Deck stops, browser starts. Matched to 16-HandoffDocs.astro so
+// the two read as the same move.
+---
+
+<Slide hideHeader align="center">
+	<div class="flex flex-col items-center gap-3">
+		<span class="text-subdued text-xs font-medium uppercase">Live</span>
+		<div
+			class="text-strong flex items-center gap-4 text-7xl leading-none font-medium tracking-[-0.015em]"
+		>
+			Changelog
+			<RxArrowTopRight className="text-weak shrink-0" size={56} />
+		</div>
+	</div>
+</Slide>

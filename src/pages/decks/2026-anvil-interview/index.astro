@@ -1,0 +1,61 @@
+---
+import { Deck, DeckShell } from '@decks';
+
+import {
+	Accessibility,
+	AdoptionChampions,
+	AdoptionPilot,
+	Architecture,
+	DesignTooling,
+	HandoffChangelog,
+	HandoffDocs,
+	HowItStarted,
+	Packages,
+	Scale,
+	Scope,
+	TheGap,
+	Title,
+	TwentyNinePercent,
+	Versioning,
+	WhatItWas,
+} from './_slides';
+
+const meta = {
+	title: 'Anvil',
+	description:
+		'Anvil, the design system at ServiceTitan: the decisions behind it, what each one cost, and what it bought.',
+};
+
+// 15-minute recorded interview talk for a panel of designers and engineers.
+// The brief was "less about what the system looks like and more about the
+// decisions behind it", so every slide is one idea and nothing on screen
+// repeats what gets said out loud.
+//
+// Deliberate departures from decks/CLAUDE.md, both driven by that brief:
+//   - No TOC interstitials and no About Me / Closing acts. The talk is a
+//     single continuous run and the sections are too short to survive being
+//     announced.
+//   - Two handoff slides (10 and 16) instead of a Thank You. Sections 5-7
+//     of the talk happen in a live browser and on camera.
+---
+
+<DeckShell {...meta}>
+	<Deck title="Anvil">
+		<Title />
+		<WhatItWas />
+		<HowItStarted />
+		<Scale />
+		<TwentyNinePercent />
+		<Architecture />
+		<Packages />
+		<Versioning />
+		<DesignTooling />
+		<HandoffChangelog />
+		<Accessibility />
+		<TheGap />
+		<AdoptionPilot />
+		<AdoptionChampions />
+		<Scope />
+		<HandoffDocs />
+	</Deck>
+</DeckShell>

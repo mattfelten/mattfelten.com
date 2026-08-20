@@ -1,0 +1,16 @@
+export { default as Title } from './1-Title.astro';
+export { default as WhatItWas } from './2-WhatItWas.astro';
+export { default as HowItStarted } from './3-HowItStarted.astro';
+export { default as Scale } from './4-Scale.astro';
+export { default as TwentyNinePercent } from './5-TwentyNinePercent.astro';
+export { default as Architecture } from './6-Architecture.astro';
+export { default as Packages } from './7-Packages.astro';
+export { default as Versioning } from './8-Versioning.astro';
+export { default as DesignTooling } from './9-DesignTooling.astro';
+export { default as HandoffChangelog } from './10-HandoffChangelog.astro';
+export { default as Accessibility } from './11-Accessibility.astro';
+export { default as TheGap } from './12-TheGap.astro';
+export { default as AdoptionPilot } from './13-AdoptionPilot.astro';
+export { default as AdoptionChampions } from './14-AdoptionChampions.astro';
+export { default as Scope } from './15-Scope.astro';
+export { default as HandoffDocs } from './16-HandoffDocs.astro';
