@@ -1,46 +1,26 @@
 ---
-import Slide from '@decks/templates/Slide.astro';
+import { BleedImage, Slide } from '@decks';
 
 import screenshot from '../images/16 Figma Components.png?url';
 
-// The designer half of "distributed and consumed", paired with
-// 3-Architecture.astro. Same facts row, same 1400px visual footprint.
+// Image-led, paired with 3-Architecture.astro. Together they answer how
+// the system was distributed and consumed: npm for engineers, Figma
+// libraries for designers. The decisions get spoken over the artwork.
 //
-// The numbers moved here off the Impact slide on purpose. Next to the
-// components they stop being trivia and become evidence that people
-// actually consumed the library as intended. The detach rate is the
-// strongest of the three.
+// The inserts and detach-rate numbers that used to sit here in a facts
+// row moved to 2-Impact.astro, where all the metrics now live.
 //
-// Source image is 1819x883, scaled to 1400x679 to leave room for the
-// facts row above it.
-
-const facts = [
-	{ label: 'Distribution', value: 'Shared libraries' },
-	{ label: 'Consumption', value: '40k inserts a month' },
-	{ label: 'Fidelity', value: '0.16% detach rate' },
-];
+// Source is 1819x883. Scaled to 1760x854, which keeps the aspect exactly
+// so object-cover crops nothing, fills the slide width inside the 80px
+// gutters, and bleeds off the bottom edge. Top of the image lands at
+// y=226, clear of the header.
 ---
 
 <Slide subtitle="Figma Components">
-	<div class="flex flex-col items-center gap-6">
-		<div class="flex w-[1400px] gap-12">
-			{
-				facts.map(fact => (
-					<div class="flex flex-col gap-1">
-						<span class="text-subdued text-xs font-medium uppercase">
-							{fact.label}
-						</span>
-						<span class="text-strong text-3xl font-medium">
-							{fact.value}
-						</span>
-					</div>
-				))
-			}
-		</div>
-		<img
-			src={screenshot}
-			alt="Button component variants in Figma across Secondary, Primary, and Destructive colors with fills, states, and loading"
-			class="m-0! block h-[679px] max-h-none! w-[1400px] max-w-none! rounded-2xl"
-		/>
-	</div>
+	<BleedImage
+		src={screenshot}
+		alt="Button component variants in Figma across Secondary, Primary, and Destructive colors with fills, states, and loading"
+		bleed="bottom"
+		class="h-[854px] w-[1760px] object-cover"
+	/>
 </Slide>

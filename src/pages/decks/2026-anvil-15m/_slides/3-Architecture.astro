@@ -1,54 +1,37 @@
 ---
 import Slide from '@decks/templates/Slide.astro';
 
-// Answers the brief's first question: how it was distributed and consumed,
-// and why. Deliberately parallel with 4-FigmaComponents.astro, the other
-// consumption path. Same facts row over the same visual footprint, so the
-// two read as a pair: npm for engineers, Figma for designers.
+// Image-led. The diagram carries the slide and the decisions get spoken
+// over it: npm packages, lockstep versioning and what that cost, and why
+// this shape rather than a single package or a repo per component.
 //
-// The facts row carries the *why*. The versioning tradeoff is the sharpest
-// decision here, so it gets a slot rather than being left to the diagram.
+// The metrics that used to sit here in a facts row moved to 2-Impact.astro.
+// Splitting the numbers across three slides meant none of them landed.
 //
 // PLACEHOLDER — the diagram is the one asset this deck still needs.
 // To swap it in:
 // 1. Drop the file at ../images/architecture.png
-// 2. Add: import architecture from '../images/architecture.png?url';
-// 3. Replace the placeholder <div> below with:
-//      <img
+// 2. Replace the frontmatter imports with:
+//      import { BleedImage, Slide } from '@decks';
+//      import architecture from '../images/architecture.png?url';
+// 3. Replace the placeholder <div> below with, sized to the source:
+//      <BleedImage
 //          src={architecture}
 //          alt="Anvil architecture: tokens feeding fonts, icons, and React components"
-//          class="m-0! block h-[679px] w-[1400px] max-h-none! max-w-none! rounded-2xl"
+//          bleed="bottom"
+//          class="h-[854px] w-[1760px] object-cover"
 //      />
-
-const facts = [
-	{ label: 'Distribution', value: 'npm packages' },
-	{ label: 'Versioning', value: 'Lockstep, one version' },
-	{ label: 'Consumption', value: '5k installs a week' },
-];
+//    That matches the footprint 4-FigmaComponents.astro uses, which keeps
+//    the two consumption slides reading as a pair. Use ImageSlide instead
+//    if the diagram is tall rather than wide.
 ---
 
 <Slide subtitle="Architecture">
-	<div class="flex flex-col items-center gap-6">
-		<div class="flex w-[1400px] gap-12">
-			{
-				facts.map(fact => (
-					<div class="flex flex-col gap-1">
-						<span class="text-subdued text-xs font-medium uppercase">
-							{fact.label}
-						</span>
-						<span class="text-strong text-3xl font-medium">
-							{fact.value}
-						</span>
-					</div>
-				))
-			}
-		</div>
-		<div
-			class="border-weak/[0.18] flex h-[679px] w-[1400px] items-center justify-center rounded-[20px] border border-dashed"
-		>
-			<span class="text-weak text-xs font-medium uppercase">
-				Architecture diagram
-			</span>
-		</div>
+	<div
+		class="border-weak/[0.18] absolute top-[228px] right-7 bottom-7 left-7 flex items-center justify-center rounded-[20px] border border-dashed"
+	>
+		<span class="text-weak text-xs font-medium uppercase">
+			Architecture diagram
+		</span>
 	</div>
 </Slide>
