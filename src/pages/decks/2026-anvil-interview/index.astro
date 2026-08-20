@@ -7,12 +7,11 @@ import {
 	AdoptionPilot,
 	Architecture,
 	DesignTooling,
-	HandoffChangelog,
-	HandoffDocs,
 	HowItStarted,
 	Packages,
 	Scale,
 	Scope,
+	ThankYou,
 	TheGap,
 	Title,
 	TwentyNinePercent,
@@ -31,12 +30,13 @@ const meta = {
 // decisions behind it", so every slide is one idea and nothing on screen
 // repeats what gets said out loud.
 //
-// Deliberate departures from decks/CLAUDE.md, both driven by that brief:
-//   - No TOC interstitials and no About Me / Closing acts. The talk is a
-//     single continuous run and the sections are too short to survive being
-//     announced.
-//   - Two handoff slides (10 and 16) instead of a Thank You. Sections 5-7
-//     of the talk happen in a live browser and on camera.
+// Deliberate departure from decks/CLAUDE.md: no TOC interstitials and no
+// About Me act. The talk is a single continuous run and the sections are too
+// short to survive being announced. Act III is just the closing slide.
+//
+// Sections 5-7 of the talk happen in a live browser and on camera. There are
+// no slides marking those switches, so the deck runs straight through to the
+// closing slide.
 ---
 
 <DeckShell {...meta}>
@@ -50,12 +50,11 @@ const meta = {
 		<Packages />
 		<Versioning />
 		<DesignTooling />
-		<HandoffChangelog />
 		<Accessibility />
 		<TheGap />
 		<AdoptionPilot />
 		<AdoptionChampions />
 		<Scope />
-		<HandoffDocs />
+		<ThankYou />
 	</Deck>
 </DeckShell>
