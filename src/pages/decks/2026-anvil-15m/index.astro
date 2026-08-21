@@ -4,8 +4,8 @@ import { Deck, DeckShell } from '@decks';
 import {
 	Accessibility,
 	Adoption,
-	Architecture,
-	FigmaComponents,
+	CodeArchitecture,
+	FigmaLibraries,
 	GridAndLayout,
 	Impact,
 	ReleaseAnnouncements,
@@ -29,6 +29,11 @@ const meta = {
 //   Accessibility  →  7
 //   Something got wrong, and what changed  →  8, told live
 //
+// Code Architecture and Figma Libraries are a deliberate pair: the same
+// question answered for the two audiences, engineers consuming npm
+// packages and designers consuming shared libraries. Matching titles and
+// matching image treatment carry that without a slide saying so.
+//
 // Release Announcements follows Adoption rather than sitting with the
 // distribution slides. It is named on the Adoption slide as one of the
 // org-wide supports, so showing the artifacts straight afterwards reads
@@ -39,24 +44,24 @@ const meta = {
 // "Contribution Docs" and "Design & Code Review" in the Adoption slide's
 // Organization column, and told out loud. If it needs a slide again,
 // 22-Contribution.astro in 2024-anvil-case-study is the one that was
-// here, and its image is still in ./images.
+// here, along with its image.
 //
-// Slides are copied from 2024-anvil-case-study rather than imported, and
-// their images copied into ./images, per the freezing principle: that
-// deck stays put, this one can drift. Release Announcements is the only
-// verbatim copy left apart from its subtitle; everything else is new or
-// reworked.
+// Presented in dark mode. The architecture diagrams use light type on
+// transparent backgrounds, so they rely on the dark theme. The deck
+// itself still follows prefers-color-scheme rather than locking, per
+// decks/CLAUDE.md.
 //
-// Architecture is still a placeholder and is the one asset this deck
-// needs before it can be recorded.
+// Release Announcements is the only slide copied verbatim from
+// 2024-anvil-case-study apart from its subtitle. Everything else is new
+// or reworked. Images live in ./images per the freezing principle.
 ---
 
 <DeckShell {...meta}>
 	<Deck title="Anvil Design System">
 		<Title />
 		<Impact />
-		<Architecture />
-		<FigmaComponents />
+		<CodeArchitecture />
+		<FigmaLibraries />
 		<Adoption />
 		<ReleaseAnnouncements />
 		<Accessibility />

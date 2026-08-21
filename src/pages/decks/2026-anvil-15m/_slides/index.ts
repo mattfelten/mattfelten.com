@@ -1,7 +1,7 @@
 export { default as Title } from './1-Title.astro';
 export { default as Impact } from './2-Impact.astro';
-export { default as Architecture } from './3-Architecture.astro';
-export { default as FigmaComponents } from './4-FigmaComponents.astro';
+export { default as CodeArchitecture } from './3-CodeArchitecture.astro';
+export { default as FigmaLibraries } from './4-FigmaLibraries.astro';
 export { default as Adoption } from './5-Adoption.astro';
 export { default as ReleaseAnnouncements } from './6-ReleaseAnnouncements.astro';
 export { default as Accessibility } from './7-Accessibility.astro';
