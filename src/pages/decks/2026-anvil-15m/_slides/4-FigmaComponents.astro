@@ -1,26 +1,32 @@
 ---
 import { BleedImage, Slide } from '@decks';
 
-import screenshot from '../images/16 Figma Components.png?url';
+import figmaArchitecture from '../images/figma-architecture.png?url';
 
-// Image-led, paired with 3-Architecture.astro. Together they answer how
-// the system was distributed and consumed: npm for engineers, Figma
-// libraries for designers. The decisions get spoken over the artwork.
+// The design half of "distributed and consumed", paired with
+// 3-Architecture.astro. That one is how the code shipped; this one is how
+// the design side was structured. Decisions spoken over the artwork.
 //
-// The inserts and detach-rate numbers that used to sit here in a facts
-// row moved to 2-Impact.astro, where all the metrics now live.
+// Replaced the button-variants screenshot, which showed what the system
+// looked like rather than how it was built, and the panel asked for less
+// of that. The token pipeline is the actual decision: one base set
+// forking into light and dark semantics, recombining into component
+// tokens, then out to three platforms.
 //
-// Source is 1819x883. Scaled to 1760x854, which keeps the aspect exactly
-// so object-cover crops nothing, fills the slide width inside the 80px
-// gutters, and bleeds off the bottom edge. Top of the image lands at
-// y=226, clear of the header.
+// Source is 1291x1009, aspect 1.2795, much squarer than the screenshot it
+// replaced. Scaled to 1126x880 so the aspect matches exactly and
+// object-cover crops nothing, bled off the bottom like slide 3 so the two
+// architecture slides sit identically. The diagram's own bottom margin
+// absorbs the bleed, so its content ends around y=1011.
+//
+// The three platforms here are the same three counted on 2-Impact.astro.
 ---
 
-<Slide subtitle="Figma Components">
+<Slide subtitle="Figma Architecture">
 	<BleedImage
-		src={screenshot}
-		alt="Button component variants in Figma across Secondary, Primary, and Destructive colors with fills, states, and loading"
+		src={figmaArchitecture}
+		alt="Figma token architecture. Base tokens feed separate light and dark theme semantic tokens, which both feed component tokens, which in turn feed the Web, iOS, and Android component sets."
 		bleed="bottom"
-		class="h-[854px] w-[1760px] object-cover"
+		class="h-[880px] w-[1126px] object-cover"
 	/>
 </Slide>
