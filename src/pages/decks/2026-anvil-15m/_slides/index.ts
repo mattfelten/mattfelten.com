@@ -1,5 +1,5 @@
 export { default as Title } from './1-Title.astro';
-export { default as ByTheNumbers } from './2-ByTheNumbers.astro';
+export { default as Overview } from './2-Overview.astro';
 export { default as CodeArchitecture } from './3-CodeArchitecture.astro';
 export { default as FigmaLibraries } from './4-FigmaLibraries.astro';
 export { default as Adoption } from './5-Adoption.astro';
