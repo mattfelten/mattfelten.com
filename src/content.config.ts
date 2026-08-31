@@ -96,4 +96,17 @@ export const collections = {
 			cover: z.string().optional(), // local cover image path (e.g. /books/foo.jpg)
 		}),
 	}),
+	docs: defineCollection({
+		loader: glob({
+			pattern: '**/*.{md,mdx}',
+			base: './src/content/docs',
+		}),
+		schema: z.object({
+			title: z.string(),
+			description: z.string().optional(),
+			kind: z.enum(['reference', 'blueprint', 'template']),
+			order: z.number().optional(),
+			draft: z.boolean().optional(),
+		}),
+	}),
 };

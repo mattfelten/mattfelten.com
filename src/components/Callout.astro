@@ -1,0 +1,15 @@
+---
+const { tone = 'note' } = Astro.props;
+
+const styles = {
+	note: 'border-hairline bg-subtle',
+	scaffold:
+		'border-dashed border-amber-400/60 bg-amber-50/50 dark:border-amber-400/40 dark:bg-amber-950/20',
+};
+
+const cls = styles[tone] ?? styles.note;
+---
+
+<aside class={`not-prose my-6 rounded-md border p-4 text-sm ${cls}`}>
+	<slot />
+</aside>
