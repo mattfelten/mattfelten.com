@@ -1,0 +1,32 @@
+---
+import { BleedImage, Slide } from '@decks';
+
+import figmaArchitecture from '../images/figma-architecture.png?url';
+
+// The design half of "distributed and consumed", paired with
+// 3-Architecture.astro. That one is how the code shipped; this one is how
+// the design side was structured. Decisions spoken over the artwork.
+//
+// Replaced the button-variants screenshot, which showed what the system
+// looked like rather than how it was built, and the panel asked for less
+// of that. The token pipeline is the actual decision: one base set
+// forking into light and dark semantics, recombining into component
+// tokens, then out to three platforms.
+//
+// Source is 1291x1009, aspect 1.2795, much squarer than the screenshot it
+// replaced. Scaled to 1126x880 so the aspect matches exactly and
+// object-cover crops nothing, bled off the bottom like slide 3 so the two
+// architecture slides sit identically. The diagram's own bottom margin
+// absorbs the bleed, so its content ends around y=1011.
+//
+// The three platforms here are the same three counted on 2-Impact.astro.
+---
+
+<Slide subtitle="Figma Libraries">
+	<BleedImage
+		src={figmaArchitecture}
+		alt="Figma token architecture. Base tokens feed separate light and dark theme semantic tokens, which both feed component tokens, which in turn feed the Web, iOS, and Android component sets."
+		bleed="bottom"
+		class="h-[880px] w-[1126px] object-cover"
+	/>
+</Slide>

@@ -1,0 +1,71 @@
+---
+import { Deck, DeckShell } from '@decks';
+
+import {
+	Accessibility,
+	Adoption,
+	CodeArchitecture,
+	FigmaLibraries,
+	GridAndLayout,
+	Overview,
+	ReleaseAnnouncements,
+	ThankYou,
+	Title,
+} from './_slides';
+
+const meta = {
+	title: 'Anvil Design System',
+	description:
+		'Anvil Design System, told as answers to the five things the panel asked about: distribution, contribution, adoption, accessibility, and what went wrong.',
+};
+
+// A 15-minute recorded talk. The panel asked five specific questions and
+// said they wanted the decisions rather than the look, so the deck is
+// ordered as answers to those questions instead of as a case study.
+//
+//   Distributed and consumed, and why  →  3, 4
+//   A pattern the system lacked, promoted to core  →  spoken, over 5
+//   Adoption with no mandate  →  5, 6
+//   Accessibility  →  7
+//   Something got wrong, and what changed  →  8, told live
+//
+// Code Architecture and Figma Libraries are a deliberate pair: the same
+// question answered for the two audiences, engineers consuming npm
+// packages and designers consuming shared libraries. Matching titles and
+// matching image treatment carry that without a slide saying so.
+//
+// Release Announcements follows Adoption rather than sitting with the
+// distribution slides. It is named on the Adoption slide as one of the
+// org-wide supports, so showing the artifacts straight afterwards reads
+// as evidence for that column rather than as a separate beat about
+// shipping.
+//
+// The contribution question has no slide of its own. It is carried by
+// "Contribution Docs" and "Design & Code Review" in the Adoption slide's
+// Organization column, and told out loud. If it needs a slide again,
+// 22-Contribution.astro in 2024-anvil-case-study is the one that was
+// here, along with its image.
+//
+// Presented in dark mode. The architecture diagrams use light type on
+// transparent backgrounds, so they rely on the dark theme. The deck
+// itself still follows prefers-color-scheme rather than locking, per
+// decks/CLAUDE.md.
+//
+// Release Announcements is the only slide copied verbatim from
+// 2024-anvil-case-study apart from its subtitle. Everything else is new
+// or reworked. Images live in ./images per the freezing principle.
+---
+
+<DeckShell {...meta}>
+	<Deck title="Anvil Design System">
+		<Title />
+		<Overview />
+		<CodeArchitecture />
+		<FigmaLibraries />
+		<Adoption />
+		<ReleaseAnnouncements />
+		<Accessibility />
+		<GridAndLayout />
+		<ThankYou />
+	</Deck>
+</DeckShell>

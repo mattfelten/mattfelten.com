@@ -1,0 +1,133 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+import pilot from '../images/5 Personas 1.svg?url';
+import greenFace from '../images/5 Personas 2.svg?url';
+import orangeFace from '../images/5 Personas 6.svg?url';
+import diamonds from '../images/diamonds.svg?url';
+import pinkFace from '../images/pinkface.svg?url';
+
+// Answers the brief's hardest question: adoption when nobody was required
+// to use it. Release and Contribution are what kept the system healthy
+// once teams had opted in; this is the slide about getting them to opt in.
+//
+// The columns are three scopes, ascending: one team, then each team in
+// turn, then everyone at once. Under an "Adoption" header that scale is
+// the whole argument, so the headings only have to name it. What was
+// actually done at each level is what the items are for.
+//
+// "Teams" is plural on purpose. The pilot was also a team, so a singular
+// "Team" next to "Pilot" invites a beat of confusion. One, then many,
+// then all.
+//
+// Same three-column grid as 8-Accessibility.astro, but with the Personas
+// faces instead of the abstract Why Me shapes, since this beat is about
+// people rather than practices.
+//
+// Teams gets three faces rather than one, scattered into a lopsided
+// triangle: two along the top at different heights and angles, one
+// dropped below and between them. Sizes, offsets and rotations are all
+// slightly different on purpose. Nothing shares an edge or a baseline,
+// so the group reads as tossed down rather than arranged.
+//
+// The cluster box stays at 106px tall, matching the single illustrations
+// in the other two columns, so all three headings sit on the same line.
+// The faces are absolutely positioned, so they don't affect that height,
+// and rotation overflow is free to spill since the columns are 512px wide.
+//
+// None of the last two columns is one-time work, which is the honest
+// answer to adoption without a mandate. You keep earning it.
+
+interface ClusterPiece {
+	src: string;
+	class: string;
+}
+
+interface Beat {
+	name: string;
+	items: string[];
+	/** Single illustration, 106px tall. */
+	icon?: string;
+	/** Casually scattered group, boxed to the same 106px height. */
+	cluster?: ClusterPiece[];
+}
+
+const beats: Beat[] = [
+	{
+		name: 'Pilot',
+		icon: pilot,
+		items: [
+			'One team, greenfield project',
+			'Committed to use Anvil v1',
+			'Provided feedback along the way',
+		],
+	},
+	{
+		name: 'Teams',
+		cluster: [
+			{ src: greenFace, class: 'top-0 left-0 h-[62px] rotate-[-9deg]' },
+			{
+				src: orangeFace,
+				class: 'top-[8px] left-[74px] h-[58px] rotate-[8deg]',
+			},
+			{
+				src: pinkFace,
+				class: 'top-[42px] left-[38px] h-[64px] rotate-[-4deg]',
+			},
+		],
+		items: ['Pilot Roadshow', 'Champions', 'Training', 'Migration Support'],
+	},
+	{
+		name: 'Organization',
+		icon: diamonds,
+		items: [
+			'Public Roadmap & Backlog',
+			'Release Announcements',
+			'Office Hours',
+			'Design & Code Review',
+			'Contribution Docs',
+		],
+	},
+];
+---
+
+<Slide subtitle="Adoption">
+	<div class="grid grid-cols-3 gap-14">
+		{
+			beats.map(beat => (
+				<div class="flex flex-col items-start gap-13">
+					{beat.cluster ? (
+						<div class="relative h-[106px] w-[150px]">
+							{beat.cluster.map(piece => (
+								<img
+									src={piece.src}
+									alt=""
+									class:list={[
+										'absolute m-0! block max-h-none! w-auto max-w-none! rounded-none!',
+										piece.class,
+									]}
+								/>
+							))}
+						</div>
+					) : (
+						<img
+							src={beat.icon}
+							alt=""
+							class="m-0! block h-[106px] w-auto"
+						/>
+					)}
+					<div class="flex flex-col gap-3">
+						<div class="text-strong text-4xl leading-[40px] font-medium">
+							{beat.name}
+						</div>
+						<ul class="text-subdued m-0! list-none p-0 text-2xl">
+							{beat.items.map(item => (
+								<li class="leading-[1.4]">{item}</li>
+							))}
+						</ul>
+					</div>
+				</div>
+			))
+		}
+	</div>
+</Slide>

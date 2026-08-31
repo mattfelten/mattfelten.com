@@ -1,0 +1,85 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+import dots from '../images/dots.svg?url';
+import squiggle from '../images/squiggle.svg?url';
+import star from '../images/star.svg?url';
+
+// Layout lifted from 25-WhyMe.astro in 2024-anvil-case-study: same 3-col
+// grid, same gap-14, same illustration at h-[115px] over a gap-13 stack,
+// same gap-3 between the heading and the text under it.
+//
+// Layer name, then the considerations. Nothing else. What each layer
+// means gets said out loud, so it isn't on the slide.
+//
+// Illustrations are decorative, so alt is empty. Pairings are aesthetic
+// and free to swap.
+//
+// The layer names and framing are Matt's. The split of considerations
+// across them is inferred from the 2024 deck's own Accessibility and
+// Documentation slides.
+
+interface Layer {
+	name: string;
+	icon: string;
+	considerations: string[];
+}
+
+const layers: Layer[] = [
+	{
+		name: 'Baked in',
+		icon: star,
+		considerations: [
+			'Color Contrast',
+			'UX Affordances',
+			'Responsiveness',
+			'Various Input Devices',
+		],
+	},
+	{
+		name: 'Documented',
+		icon: squiggle,
+		considerations: [
+			'Accessibility Checklists',
+			'Accessible Code Examples',
+			'Content Guidelines',
+			'Localization',
+		],
+	},
+	{
+		name: 'Verified',
+		icon: dots,
+		considerations: [
+			'Screen Readers',
+			'Color Vision Simulation',
+			'Manual Review',
+		],
+	},
+];
+---
+
+<Slide subtitle="Accessibility">
+	<div class="grid grid-cols-3 gap-14">
+		{
+			layers.map(layer => (
+				<div class="flex flex-col items-start gap-13">
+					<img
+						src={layer.icon}
+						alt=""
+						class="m-0! block h-[115px] w-auto"
+					/>
+					<div class="flex flex-col gap-3">
+						<div class="text-strong text-4xl leading-[40px] font-medium">
+							{layer.name}
+						</div>
+						<ul class="text-subdued m-0! list-none p-0 text-2xl">
+							{layer.considerations.map(item => (
+								<li class="leading-[1.4]">{item}</li>
+							))}
+						</ul>
+					</div>
+				</div>
+			))
+		}
+	</div>
+</Slide>

@@ -1,0 +1,32 @@
+---
+import { BleedImage, Slide } from '@decks';
+
+import architecture from '../images/architecture.png?url';
+
+// Image-led. The diagram carries the slide and the decisions get spoken
+// over it: why four packages rather than one, lockstep versioning and
+// what it cost, and why npm was the distribution channel.
+//
+// The metrics that used to sit here in a facts row moved to
+// 2-Impact.astro. Splitting the numbers across three slides meant none of
+// them landed.
+//
+// Source is 1973x1127, so aspect 1.751, near enough 16:9 that it wants
+// most of the slide. Scaled to 1541x880 and bled off the bottom: the
+// aspect matches the source exactly so object-cover crops nothing. The
+// diagram's own content starts about 7% down and ends about 92% down, so
+// on the slide it runs roughly y=259 to y=1008, clear of the header and
+// with the image's own bottom whitespace absorbing the bleed.
+//
+// Matches the treatment on 4-FigmaComponents.astro so the two
+// consumption slides read as a pair.
+---
+
+<Slide subtitle="Code Architecture">
+	<BleedImage
+		src={architecture}
+		alt="Anvil architecture. Tokens, an icon set, and fonts feed a React and CSS component library. Each is compiled and published to npm as @servicetitan/tokens, anvil-icons, anvil-fonts, and anvil, then consumed by the desktop app. The component library also produces documentation, html-sketchapp output that flows through Abstract into Sketch, and Storybook, which feeds Chromatic."
+		bleed="bottom"
+		class="h-[880px] w-[1541px] object-cover"
+	/>
+</Slide>
