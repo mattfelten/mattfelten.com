@@ -572,9 +572,18 @@
   .drop-line.tier1 { left: 32px; }
   .drop-line.blocked { background: var(--negative); }
   .drop-line.blocked::before { background: var(--negative); }
+  /* Dropping inside. The whole row lights up and the insertion line is
+     hidden, so the two gestures never show at once and there is never a
+     moment where the list is offering both a slot and a container. */
   .row.is-parent-target {
-    background: rgba(30, 64, 175, .07);
-    box-shadow: inset 0 0 0 1px rgba(30, 64, 175, .35);
+    background: rgba(30, 64, 175, .09);
+    box-shadow: inset 0 0 0 1.5px rgba(30, 64, 175, .5);
+    border-radius: 7px;
+  }
+  .row.is-blocked-target {
+    background: rgba(220, 38, 38, .07);
+    box-shadow: inset 0 0 0 1.5px rgba(220, 38, 38, .45);
+    border-radius: 7px;
   }
 
   /* ---------- Announced-structure inspector ---------- */
@@ -632,16 +641,19 @@
     </div>
 
     <div class="group">
-      <p class="eyebrow">How you change a row's level</p>
-      <div class="seg" id="seg-tier" role="group" aria-label="Changing tier">
-        <button data-v="sideways" aria-pressed="true"><span class="k">Q</span>Drag it sideways</button>
-        <button data-v="onparent" aria-pressed="false"><span class="k">W</span>Drop it onto a parent</button>
-        <button data-v="menuonly" aria-pressed="false"><span class="k">E</span>Not by dragging at all</button>
+      <p class="eyebrow">How dragging places a row</p>
+      <div class="seg" id="seg-drag" role="group" aria-label="Drag model">
+        <button data-v="context" aria-pressed="true"><span class="k">Q</span>Line between, drop onto a row to nest</button>
+        <button data-v="line" aria-pressed="false"><span class="k">W</span>Line only, never changes level</button>
+        <button data-v="sideways" aria-pressed="false"><span class="k">E</span>How far right you drag decides</button>
       </div>
       <p class="group-note">
-        Dragging now has to carry two things at once: where the row goes and what
-        level it lands at. <em>Not by dragging at all</em> is the version that a
-        keyboard, a screen reader and a touchscreen can all reach.
+        The first one is two gestures rather than one setting. Between rows you get an
+        insertion line, and its indent is read off <em>the gap</em>: after a child means
+        sibling of that child, under a parent means inside it. Over the body of a row
+        there is no line at all, the row lights up, and letting go drops the item inside,
+        the way a file goes into a folder. Nothing depends on a sideways nudge, which is
+        a fine-motor gesture worth not requiring.
       </p>
     </div>
 
@@ -650,11 +662,12 @@
       <div class="seg" id="seg-indicator" role="group" aria-label="Drop indicator">
         <button data-v="line" aria-pressed="false"><span class="k">A</span>A plain line, same as before</button>
         <button data-v="inset" aria-pressed="true"><span class="k">S</span>The line moves in to show the level</button>
-        <button data-v="parent" aria-pressed="false"><span class="k">D</span>Inset, and light up the parent</button>
       </div>
       <p class="group-note">
-        The flat list settled on a plain line. It cannot survive nesting on its own,
-        because the same line means two different landings.
+        The flat list settled on a plain line, and it cannot survive nesting on its own:
+        the same line at the same place would mean two different landings. The other half
+        of the answer is that the line disappears completely when you are dropping
+        <em>into</em> a row, so the list never offers a slot and a container at once.
       </p>
     </div>
 
@@ -779,7 +792,7 @@
 
   const S = {
     nest: "independent",
-    tier: "sideways",
+    drag: "context",
     indicator: "inset",
     collapsed: "count",
     index: "fractional",
@@ -1042,14 +1055,38 @@
   const short = s => s.length > 46 ? s.slice(0, 44) + "..." : s;
 
   // ---------------------------------------------------------------
-  // Pointer drag. Two dimensions now: where in the sequence, and
-  // which level. That is the whole reason this round exists.
+  // Pointer drag. Two gestures, not one dimension.
+  //
+  // Between rows you get an insertion line, and the line's indent is
+  // read off the gap rather than off how far sideways you dragged:
+  //
+  //   above everything            -> top level
+  //   after a child               -> sibling of that child
+  //   between a parent and its
+  //     own first child           -> child of that parent
+  //   between two top-level rows  -> top level
+  //
+  // Over the body of a row it is a different gesture: no line, the
+  // whole row lights up, and letting go drops the item inside, the
+  // way a file goes into a folder.
+  //
+  // Nothing here depends on a horizontal drag, which matters: a
+  // sideways nudge is a fine-motor gesture and this model needs none.
   // ---------------------------------------------------------------
   let drag = null;
   const dropline = () => document.getElementById("dropline");
+  const INTO_BAND = 0.34;   // middle third of a row is "drop inside"
+
+  // Which level does this gap mean? Read from the row above it.
+  function gapTier(prev, next) {
+    if (!prev) return { tier: 0, parent: null };
+    if (prev.parent !== null) return { tier: 1, parent: prev.parent };
+    if (next && next.parent === prev.id) return { tier: 1, parent: prev.id };
+    return { tier: 0, parent: null };
+  }
 
   listEl.addEventListener("pointerdown", (e) => {
-    const row = e.target.closest(".row");
+    const row = e.target.closest && e.target.closest(".row");
     if (!row) return;
     const onHandle = e.target.closest('[data-act="grab"]');
     const onOther = e.target.closest("[data-interactive]");
@@ -1058,7 +1095,8 @@
 
     e.preventDefault();
     const id = row.dataset.id;
-    drag = { id, startX: e.clientX, startY: e.clientY, moved: false, tier: +row.dataset.tier, parent: byId(id).parent, index: 0 };
+    drag = { id, startX: e.clientX, startY: e.clientY, moved: false, index: 0,
+             mode: "between", dropTier: 0, dropParent: null, blocked: false };
     // Capture keeps the drag alive if the pointer leaves the row. It
     // throws for a pointer id the browser does not know about, which
     // is not worth killing the drag over.
@@ -1073,97 +1111,139 @@
     const rows = [...listEl.querySelectorAll(".row")];
     const src = rows.find(r => r.dataset.id === drag.id);
     if (src) src.classList.add("is-source");
-
-    // Which gap are we in?
     const others = rows.filter(r => r.dataset.id !== drag.id);
-    let idx = others.length, refRow = null, after = true;
-    for (let i = 0; i < others.length; i++) {
-      const b = others[i].getBoundingClientRect();
-      if (e.clientY < b.top + b.height / 2) { idx = i; refRow = others[i]; after = false; break; }
-    }
-    if (!refRow && others.length) { refRow = others[others.length - 1]; }
 
-    // Which level? This is the new part.
-    const dx = e.clientX - drag.startX;
-    let tier = 0, parentId = null;
-    const prev = idx > 0 ? byId(others[idx - 1].dataset.id) : null;
+    let mode = "between", intoId = null, tier = 0, parentId = null, idx = others.length;
+    let blocked = false;
 
-    if (S.tier === "sideways") {
-      // Indent when dragged right past a threshold, and only when the
-      // row above can actually take a child.
-      const canParent = prev && prev.parent === null;
-      const prevIsChild = prev && prev.parent !== null;
-      if (dx > 24 && canParent) { tier = 1; parentId = prev.id; }
-      else if (prevIsChild) { tier = dx < -24 ? 0 : 1; parentId = tier === 1 ? prev.parent : null; }
-    } else if (S.tier === "onparent") {
-      const hovered = document.elementFromPoint(e.clientX, e.clientY);
-      const hoveredRow = hovered && hovered.closest(".row");
-      const hoverItem = hoveredRow && hoveredRow.dataset.id !== drag.id ? byId(hoveredRow.dataset.id) : null;
-      const b = hoveredRow && hoveredRow.getBoundingClientRect();
-      const inBand = b && e.clientY > b.top + b.height * 0.25 && e.clientY < b.bottom - b.height * 0.25;
-      if (hoverItem && hoverItem.parent === null && inBand) { tier = 1; parentId = hoverItem.id; }
-      else if (prev && prev.parent !== null) { tier = 1; parentId = prev.parent; }
-    } else {
-      // menuonly: dragging never changes level. The row keeps its own,
-      // unless the gap it lands in cannot hold it.
-      if (prev && prev.parent !== null) { tier = 1; parentId = prev.parent; }
-      else if (prev && prev.parent === null && drag.tier === 1 && prev.id === drag.parent) { tier = 1; parentId = prev.id; }
+    // Drop inside. Only a top-level row can receive, and only when the
+    // row being dragged has no children of its own.
+    if (S.drag === "context") {
+      const hover = others.find(r => {
+        const b = r.getBoundingClientRect();
+        const band = b.height * INTO_BAND;
+        return e.clientY > b.top + band && e.clientY < b.bottom - band;
+      });
+      if (hover) {
+        const it = byId(hover.dataset.id);
+        if (it.parent === null && it.id !== byId(drag.id).parent) {
+          mode = "into";
+          intoId = it.id;
+          if (hasKids(drag.id)) blocked = true;
+        }
+      }
     }
 
-    const blocked = tier === 1 && hasKids(drag.id);
+    if (mode === "between") {
+      for (let i = 0; i < others.length; i++) {
+        const b = others[i].getBoundingClientRect();
+        if (e.clientY < b.top + b.height / 2) { idx = i; break; }
+      }
+      const prev = idx > 0 ? byId(others[idx - 1].dataset.id) : null;
+      const next = idx < others.length ? byId(others[idx].dataset.id) : null;
+
+      if (S.drag === "sideways") {
+        // The rejected alternative: level comes from how far right you
+        // dragged, not from the gap.
+        const dx = e.clientX - drag.startX;
+        const canParent = prev && prev.parent === null;
+        if (dx > 24 && canParent) { tier = 1; parentId = prev.id; }
+        else if (prev && prev.parent !== null && dx > -24) { tier = 1; parentId = prev.parent; }
+      } else if (S.drag === "line") {
+        // Insertion line only, and it never changes level: the row keeps
+        // the level it already had, so nesting is keyboard-only.
+        const it = byId(drag.id);
+        if (it.parent !== null) { tier = 1; parentId = it.parent; }
+      } else {
+        const g = gapTier(prev, next);
+        tier = g.tier; parentId = g.parent;
+      }
+      if (tier === 1 && hasKids(drag.id)) blocked = true;
+    }
 
     // Paint
-    rows.forEach(r => r.classList.remove("is-parent-target"));
-    if (S.indicator === "parent" && tier === 1 && parentId && !blocked) {
-      const pr = rows.find(r => r.dataset.id === parentId);
-      if (pr) pr.classList.add("is-parent-target");
+    rows.forEach(r => r.classList.remove("is-parent-target", "is-blocked-target"));
+    const dl = dropline();
+
+    if (mode === "into") {
+      const t = rows.find(r => r.dataset.id === intoId);
+      if (t) t.classList.add(blocked ? "is-blocked-target" : "is-parent-target");
+      dl.classList.remove("on");
+    } else {
+      const listBox = listEl.getBoundingClientRect();
+      let y;
+      if (idx < others.length) {
+        y = others[idx].getBoundingClientRect().top - listBox.top - 3;
+      } else if (others.length) {
+        y = others[others.length - 1].getBoundingClientRect().bottom - listBox.top + 1;
+      } else y = 0;
+      dl.style.top = y + "px";
+      dl.classList.add("on");
+      dl.classList.toggle("tier1", S.indicator !== "line" && tier === 1);
+      dl.classList.toggle("blocked", blocked);
     }
 
-    const dl = dropline();
-    const listBox = listEl.getBoundingClientRect();
-    let y;
-    if (idx < others.length) {
-      const b = others[idx].getBoundingClientRect();
-      y = b.top - listBox.top - 3;
-    } else if (others.length) {
-      const b = others[others.length - 1].getBoundingClientRect();
-      y = b.bottom - listBox.top + 1;
-    } else y = 0;
-
-    dl.style.top = y + "px";
-    dl.classList.add("on");
-    dl.classList.toggle("tier1", S.indicator !== "line" && tier === 1);
-    dl.classList.toggle("blocked", blocked);
-
+    drag.mode = mode;
+    drag.intoId = intoId;
     drag.index = idx;
-    drag.dropTier = blocked ? (byId(drag.id).parent === null ? 0 : 1) : tier;
-    drag.dropParent = blocked ? byId(drag.id).parent : parentId;
+    drag.dropTier = tier;
+    drag.dropParent = parentId;
     drag.blocked = blocked;
   });
 
-  function endDrag() {
-    if (!drag) return;
+  // Cancelling is not dropping. A pointercancel means the gesture was
+  // taken away (Esc, the browser stepping in, a touch turning into a
+  // scroll), so the row goes back where it was and nothing is written.
+  function clearDrag() {
     const d = drag; drag = null;
-    document.querySelectorAll(".row").forEach(r => r.classList.remove("is-source", "is-parent-target"));
+    document.querySelectorAll(".row").forEach(r =>
+      r.classList.remove("is-source", "is-parent-target", "is-blocked-target"));
     const dl = dropline();
     if (dl) dl.classList.remove("on", "tier1", "blocked");
-    if (!d.moved) return;
-    if (d.blocked) { announce("That row has sub-items, so it cannot become one."); render(); return; }
+    return d;
+  }
 
-    // Recompute the index within the destination sequence.
-    const dest = d.dropTier === 1 ? kidsOf(d.dropParent) : tops();
-    const list = visible().map(v => v.it.id);
-    let destIndex = dest.filter(s => s.id !== d.id).length;
-    const flatAt = list.filter(id => id !== d.id)[d.index];
-    if (flatAt) {
-      const target = byId(flatAt);
-      const inDest = dest.filter(s => s.id !== d.id).findIndex(s => s.id === target.id);
-      if (inDest >= 0) destIndex = inDest;
+  function cancelDrag() {
+    if (!drag) return;
+    const d = clearDrag();
+    if (d.moved) announce("Move cancelled.");
+  }
+
+  function endDrag() {
+    if (!drag) return;
+    const d = clearDrag();
+    if (!d.moved) return;
+
+    if (d.blocked) {
+      announce("That row has sub-items, so it cannot become one.");
+      render();
+      return;
+    }
+
+    if (d.mode === "into") {
+      // Into a folder: land at the end of that parent's children.
+      move(d.id, kidsOf(d.intoId).filter(s => s.id !== d.id).length, 1, d.intoId);
+      return;
+    }
+
+    // Between: translate the flat gap into an index within whichever
+    // sequence the row is joining.
+    const dest = (d.dropTier === 1 ? kidsOf(d.dropParent) : tops()).filter(s => s.id !== d.id);
+    const flat = visible().map(v => v.it.id).filter(id => id !== d.id);
+    let destIndex = dest.length;
+    const at = flat[d.index];
+    if (at) {
+      const found = dest.findIndex(s => s.id === at);
+      if (found >= 0) destIndex = found;
     }
     move(d.id, destIndex, d.dropTier, d.dropParent);
   }
   listEl.addEventListener("pointerup", endDrag);
-  listEl.addEventListener("pointercancel", endDrag);
+  listEl.addEventListener("pointercancel", cancelDrag);
+  // Esc abandons a drag in progress, same as anywhere else.
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && drag) cancelDrag();
+  });
 
   // ---------------------------------------------------------------
   // Row interactions
@@ -1266,7 +1346,7 @@
     });
   }
   wireSeg("seg-nest", "nest");
-  wireSeg("seg-tier", "tier", updateHint);
+  wireSeg("seg-drag", "drag", updateHint);
   wireSeg("seg-indicator", "indicator");
   wireSeg("seg-collapsed", "collapsed");
   wireSeg("seg-index", "index");
@@ -1277,17 +1357,17 @@
 
   function updateHint() {
     hintEl.textContent =
-      S.tier === "sideways" ? "Drag a row right to make it a sub-item" :
-      S.tier === "onparent" ? "Drop a row onto another to make it a sub-item" :
-                              "Dragging only reorders. Use the arrow keys to change level";
+      S.drag === "context" ? "Drag between rows to place it, or onto a row to drop it inside" :
+      S.drag === "line"    ? "Dragging only reorders. Arrow keys change the level" :
+                             "Drag a row right to make it a sub-item";
   }
   updateHint();
 
   const KEYS = {
     "1": ["seg-nest", "independent"], "2": ["seg-nest", "cascade"],
     "3": ["seg-nest", "rollup"], "4": ["seg-nest", "both"],
-    "q": ["seg-tier", "sideways"], "w": ["seg-tier", "onparent"], "e": ["seg-tier", "menuonly"],
-    "a": ["seg-indicator", "line"], "s": ["seg-indicator", "inset"], "d": ["seg-indicator", "parent"],
+    "q": ["seg-drag", "context"], "w": ["seg-drag", "line"], "e": ["seg-drag", "sideways"],
+    "a": ["seg-indicator", "line"], "s": ["seg-indicator", "inset"],
     "z": ["seg-collapsed", "count"], "x": ["seg-collapsed", "progress"], "c": ["seg-collapsed", "bare"]
   };
   window.addEventListener("keydown", (e) => {
@@ -1307,8 +1387,8 @@
     const q = new URLSearchParams(location.search);
     const allowed = {
       nest:      ["independent", "cascade", "rollup", "both"],
-      tier:      ["sideways", "onparent", "menuonly"],
-      indicator: ["line", "inset", "parent"],
+      drag:      ["context", "line", "sideways"],
+      indicator: ["line", "inset"],
       collapsed: ["count", "progress", "bare"],
       index:     ["fractional", "integer"],
       sr:        ["list", "tree"]

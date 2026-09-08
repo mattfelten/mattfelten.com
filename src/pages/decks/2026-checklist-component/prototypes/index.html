@@ -328,22 +328,21 @@
           why: "<strong>Open, and it needs a taste call.</strong> These are four different components, not four settings. My lean is <em>its children tick too</em> and nothing in the other direction: rolling up makes a parent's checkbox flip without anyone touching it, and a control that changes on its own is hard to trust. <em>Both directions</em> is the only one where a parent's tick is never a lie, and also the only one where unticking a single child silently unticks the parent."
         },
         {
-          q: "How do you change a row's level?",
+          q: "How does dragging decide where a row lands?",
           opts: [
-            { t: "By dragging sideways, and by keyboard", u: N + "?tier=sideways", status: "chosen" },
-            { t: "By dropping onto a parent", u: N + "?tier=onparent" },
-            { t: "Dragging never changes level", u: N + "?tier=menuonly" }
+            { t: "A line between rows, or drop onto a row to nest", u: N + "?drag=context", status: "chosen" },
+            { t: "A line only. Dragging never changes level", u: N + "?drag=line" },
+            { t: "How far right you drag decides", u: N + "?drag=sideways", status: "rejected" }
           ],
-          why: "The question turned out to be a false choice, the same way grabbing a row did. Dragging sideways is a good accelerator, and it cannot be the only way in, because dragging is unavailable to a keyboard, a screen reader and a touchscreen. The arrow keys work in all three settings here on purpose: <kbd>&#8594;</kbd> makes a row a sub-item, <kbd>&#8592;</kbd> lifts it back out, and each move is announced."
+          why: "Two gestures rather than one setting, the way Reminders does it. <strong>Between rows you get an insertion line, and its indent is read off the gap</strong>, not off how far sideways you dragged: after a child means sibling of that child, in the gap under a parent means inside it, between two top-level rows means top level. <strong>Over the body of a row there is no line at all.</strong> The row lights up and letting go drops the item inside, like a file into a folder. Nothing depends on a sideways nudge, which is a fine-motor gesture worth not requiring, and the arrow keys do the same job for anyone not using a pointer."
         },
         {
           q: "What does the drop indicator say now that level matters?",
           opts: [
             { t: "The line moves in to show the level", u: N + "?indicator=inset", status: "chosen" },
-            { t: "Inset, and light up the parent", u: N + "?indicator=parent" },
             { t: "A plain line, same as the flat list", u: N + "?indicator=line", status: "rejected" }
           ],
-          why: "The plain line was the right answer for a flat list and it does not survive nesting: one line at one position now means two different landings. Insetting it is enough on its own. Lighting up the parent as well says the same thing twice."
+          why: "The plain line was right for a flat list and does not survive nesting: one line at one position now means two different landings. Insetting it is what makes the gap readable before you let go. The other half of the answer is that the line <em>disappears</em> when you are dropping into a row, so the list never offers a slot and a container at the same time."
         },
         {
           q: "Does one level of nesting need tree semantics?",
@@ -356,9 +355,9 @@
         {
           q: "Can a row that has sub-items become one?",
           opts: [
-            { t: "No, and it says why", u: N + "?tier=sideways", status: "chosen" }
+            { t: "No, and it says why", u: N + "?drag=context", status: "chosen" }
           ],
-          why: "The one-level ceiling has to be enforced somewhere, and silently refusing a drag is the worst version. Try dragging the first row sideways, or focusing it and pressing right: the drop indicator turns red and it says 'this row has sub-items, so it cannot become one'."
+          why: "The one-level ceiling has to be enforced somewhere, and silently refusing a drag is the worst version. Try dragging the first row onto another one, or focusing it and pressing right: the target turns red rather than blue and it says 'this row has sub-items, so it cannot become one'."
         }
       ]
     },
