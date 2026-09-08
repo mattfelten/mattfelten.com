@@ -1,0 +1,287 @@
+<meta charset="utf-8">
+<title>Checklist: benches</title>
+
+<style>
+  /* ============================================================
+     One URL that reaches everything. Same achromatic, theme-aware
+     chrome as the benches so the whole set reads as one family.
+     ============================================================ */
+  :root {
+    --bench-bg: #EDEEF1;
+    --bench-panel: #F6F7F9;
+    --bench-ink: #242830;
+    --bench-ink-2: #5C6371;
+    --bench-ink-3: #878E9C;
+    --bench-line: #D8DBE2;
+    --bench-line-2: #C4C9D3;
+    --bench-raise: #FFFFFF;
+    --bench-sunk: #E4E6EB;
+    --bench-focus: #1E40AF;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bench-bg: #15171C;
+      --bench-panel: #1C1F26;
+      --bench-ink: #DDE0E6;
+      --bench-ink-2: #99A0AD;
+      --bench-ink-3: #6E7481;
+      --bench-line: #282C35;
+      --bench-line-2: #363B46;
+      --bench-raise: #23262E;
+      --bench-sunk: #121419;
+      --bench-focus: #7C97E8;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bench-bg: #15171C;
+    --bench-panel: #1C1F26;
+    --bench-ink: #DDE0E6;
+    --bench-ink-2: #99A0AD;
+    --bench-ink-3: #6E7481;
+    --bench-line: #282C35;
+    --bench-line-2: #363B46;
+    --bench-raise: #23262E;
+    --bench-sunk: #121419;
+    --bench-focus: #7C97E8;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--bench-bg);
+    color: var(--bench-ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page { max-width: 1080px; margin: 0 auto; padding: 56px 32px 96px; }
+
+  .head { margin-bottom: 12px; max-width: 660px; }
+  h1 { font-size: 24px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 10px; }
+  .lede { color: var(--bench-ink-2); margin: 0; font-size: 14px; line-height: 1.6; }
+
+  .eyebrow {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.11em;
+    text-transform: uppercase; color: var(--bench-ink-3);
+    margin: 44px 0 14px;
+  }
+
+  .cards { display: grid; gap: 12px; }
+
+  .card {
+    background: var(--bench-raise);
+    border: 1px solid var(--bench-line);
+    border-radius: 10px;
+    padding: 18px 20px;
+  }
+
+  .card-head {
+    display: flex; align-items: baseline; gap: 10px;
+    flex-wrap: wrap; margin-bottom: 6px;
+  }
+
+  .card-name {
+    font-size: 16px; font-weight: 600; letter-spacing: -0.01em;
+    margin: 0; text-decoration: none; color: var(--bench-ink);
+    border-bottom: 1px solid var(--bench-line-2);
+  }
+  .card-name:hover { border-bottom-color: var(--bench-focus); color: var(--bench-focus); }
+  .card-name:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 3px; }
+
+  .count {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase;
+    color: var(--bench-ink-3); background: var(--bench-sunk);
+    border-radius: 4px; padding: 2px 6px;
+  }
+
+  .card-what { color: var(--bench-ink-2); font-size: 13px; line-height: 1.6; margin: 0 0 14px; }
+
+  .presets { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .preset {
+    display: inline-block;
+    font-size: 12px; text-decoration: none;
+    color: var(--bench-ink-2);
+    background: var(--bench-panel);
+    border: 1px solid var(--bench-line);
+    border-radius: 6px; padding: 4px 9px;
+    transition: background .12s ease, color .12s ease, border-color .12s ease;
+  }
+  .preset:hover { background: var(--bench-sunk); color: var(--bench-ink); border-color: var(--bench-line-2); }
+  .preset:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 2px; }
+  .preset.key { border-color: var(--bench-focus); color: var(--bench-focus); }
+
+  .params {
+    margin-top: 12px; padding-top: 12px;
+    border-top: 1px solid var(--bench-line);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11.5px; line-height: 1.7;
+    color: var(--bench-ink-3);
+  }
+  .params b { color: var(--bench-ink-2); font-weight: 500; }
+
+  .note {
+    margin-top: 14px; padding: 16px 18px;
+    background: var(--bench-panel);
+    border: 1px solid var(--bench-line);
+    border-radius: 10px;
+    color: var(--bench-ink-2);
+    font-size: 13px; line-height: 1.6;
+  }
+  .note strong { color: var(--bench-ink); }
+  .note code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px; background: var(--bench-sunk);
+    border-radius: 3px; padding: 1px 4px;
+  }
+</style>
+
+<div class="page">
+  <div class="head">
+    <h1>Checklist benches</h1>
+    <p class="lede">
+      Every prototype behind the Checklist component, and the configurations worth jumping
+      straight to. Each bench is an instrument: dimensions toggle independently so combinations
+      can be felt rather than judged as fixed variants.
+    </p>
+  </div>
+
+  <p class="eyebrow">Benches</p>
+  <div class="cards">
+
+    <div class="card">
+      <div class="card-head">
+        <a class="card-name" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench">Editing mechanics</a>
+        <span class="count">9 dimensions</span>
+      </div>
+      <p class="card-what">
+        What editing feels like to the person doing it. The invisible field, where formatting
+        lives with no toolbar to put it in, and how a save announces itself when there is no
+        Save button. Also holds the two comparisons the deck leans on hardest.
+      </p>
+      <div class="presets">
+        <a class="preset key" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?naive=1">The 14px shove</a>
+        <a class="preset key" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?conflict=1">The contested region</a>
+        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?chrome=field">Hairline field</a>
+        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?enter=pencil">Pencil on hover</a>
+        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?enter=menu">Edit in the menu</a>
+        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?feedback=whisper">Saved, then fade</a>
+        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?activity=coalesce">Coalesced activity</a>
+        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?perm=author">Staff or author only</a>
+      </div>
+      <div class="params">
+        <b>chrome</b> none tint rule field &nbsp; <b>fmt</b> none md bar &nbsp; <b>feedback</b> silent dot whisper<br>
+        <b>enter</b> text dbl pencil menu &nbsp; <b>perm</b> anyone author &nbsp; <b>activity</b> every coalesce<br>
+        <b>naive</b> 1 &nbsp; <b>conflict</b> 1 &nbsp; <b>lock</b> 1
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <a class="card-name" href="/decks/2026-checklist-component/prototypes/edit-presence-bench">Presence</a>
+        <span class="count">7 dimensions</span>
+      </div>
+      <p class="card-what">
+        Two screens on one list, because a save only means something to an audience. What a
+        viewer sees while you type, what the save moment looks like from their side, and how to
+        say that somebody is inside a row without saying it three times over.
+      </p>
+      <div class="presets">
+        <a class="preset key" href="/decks/2026-checklist-component/prototypes/edit-presence-bench?others=1">Other people active</a>
+        <a class="preset key" href="/decks/2026-checklist-component/prototypes/edit-presence-bench?mark=floatdim&amp;others=1">The dim (rejected, 2.6:1)</a>
+        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-presence-bench?mark=wash&amp;others=1">The R3 wash</a>
+        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-presence-bench?mark=none&amp;others=1">No marking at all</a>
+        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-presence-bench?lock=locked&amp;others=1">Hard hold</a>
+        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-presence-bench?lock=timeout&amp;others=1">Hold, 8s timeout</a>
+        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-presence-bench?lock=open&amp;others=1">No lock</a>
+        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-presence-bench?latency=1&amp;others=1">Realistic latency</a>
+        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-presence-bench?me=guest">As someone who cannot edit</a>
+      </div>
+      <div class="params">
+        <b>mark</b> none float floatline floathi floatdim wash &nbsp; <b>lock</b> open locked timeout<br>
+        <b>me</b> dana marco guest &nbsp; <b>perm</b> anyone author &nbsp; <b>activity</b> every coalesce<br>
+        <b>others</b> 1 &nbsp; <b>latency</b> 1
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <a class="card-name" href="/decks/2026-checklist-component/prototypes/reorder-bench">Reorder</a>
+        <span class="count">8 dimensions</span>
+      </div>
+      <p class="card-what">
+        Manual order: what you grab, what the list tells you while you drag, and where ticked-off
+        items go. The mutation log underneath prints the write each move implies, which is where
+        the ordering-model argument actually lives.
+      </p>
+      <div class="presets">
+        <a class="preset key" href="/decks/2026-checklist-component/prototypes/reorder-bench?zones=1">Paint the grab zones</a>
+        <a class="preset key" href="/decks/2026-checklist-component/prototypes/reorder-bench?index=integer">Integer write amplification</a>
+        <a class="preset" href="/decks/2026-checklist-component/prototypes/reorder-bench?drop=shift">Shift out of the way</a>
+        <a class="preset" href="/decks/2026-checklist-component/prototypes/reorder-bench?drop=shift&amp;uniform=1">Shift, uniform heights</a>
+        <a class="preset" href="/decks/2026-checklist-component/prototypes/reorder-bench?proxy=full">Full-row proxy</a>
+        <a class="preset" href="/decks/2026-checklist-component/prototypes/reorder-bench?mode=tasks&amp;zones=1">Tasks, and why not</a>
+        <a class="preset" href="/decks/2026-checklist-component/prototypes/reorder-bench?checked=collapsed">Done collapsed at top</a>
+        <a class="preset" href="/decks/2026-checklist-component/prototypes/reorder-bench?checked=bottom">Done grouped at bottom</a>
+      </div>
+      <div class="params">
+        <b>checked</b> inplace top collapsed bottom &nbsp; <b>grab</b> handle blank both &nbsp; <b>drop</b> line shift<br>
+        <b>proxy</b> compact full &nbsp; <b>mode</b> checklist tasks &nbsp; <b>index</b> fractional integer<br>
+        <b>zones</b> 1 &nbsp; <b>uniform</b> 1
+      </div>
+    </div>
+
+  </div>
+
+  <p class="eyebrow">Also here</p>
+  <div class="cards">
+
+    <div class="card">
+      <div class="card-head">
+        <a class="card-name" href="/decks/2026-checklist-component/prototypes/rejections">Rejected options</a>
+      </div>
+      <p class="card-what">
+        Everything considered and not taken, each shown live beside what won instead. Grows as
+        rounds land rather than being written at the end.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <a class="card-name" href="/decks/2026-checklist-component/">The deck</a>
+      </div>
+      <p class="card-what">
+        The presentation these benches feed. Arrow keys move it, except while focus is inside an
+        embedded bench, in which case Escape hands navigation back.
+      </p>
+    </div>
+
+  </div>
+
+  <div class="note">
+    <strong>Two params every bench understands.</strong>
+    <code>embed=1</code> strips the instrument down to the specimen, which is what the slides
+    load. <code>scale=1.6</code> renders that specimen larger inside its frame, because the deck
+    is 1920 wide and gets scaled down to whatever is projecting, so a specimen at 1:1 lands
+    around 10px on screen. Named values only: anything unrecognised is ignored rather than
+    guessed at.
+  </div>
+</div>
+
+<script>
+  // Escape hands the deck back. Keydown never crosses out of an iframe,
+  // so without this a presenter with focus in here has no keyboard route
+  // back to the slides.
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape" || window.parent === window) return;
+    const el = document.activeElement;
+    if (el && el !== document.body) el.blur();
+    window.parent.focus();
+  });
+</script>

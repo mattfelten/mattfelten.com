@@ -105,10 +105,14 @@
      design decision, so the iframe gets sized to the specimen rather
      than the specimen stretched to the iframe. */
   body.is-embed .bench-inner { gap: 0; zoom: var(--embed-scale, 1); }
+  /* Top-aligned, never vertically centred. Centring splits any height
+     change in both directions, which halves the apparent movement and
+     wrecks the one demo that exists to show a 14px shove. Size the
+     iframe to the specimen instead. */
   body.is-embed .bench {
     padding: 28px;
-    min-height: 100vh;
-    justify-content: center;
+    min-height: 0;
+    justify-content: flex-start;
   }
 
   /* ---------- Page frame ---------- */
@@ -295,7 +299,7 @@
     transition: background .12s ease, box-shadow .12s ease;
   }
 
-  .row[data-done="true"] .prose { text-decoration: line-through; opacity: .5; }
+  .row[data-done="true"] .prose { text-decoration: line-through; opacity: .6; }
 
   /* The cursor is the entire resting affordance. No outline, no tint, no
      hint - hovering an editable item is indistinguishable from hovering a
@@ -369,7 +373,10 @@
     background: var(--surface-3); color: var(--text-subdued);
     border: 1px solid var(--border-default);
   }
-  .row[data-done="true"] .who { opacity: .5; }
+  /* The author tag is NOT dimmed on completed rows. It uses --text-subdued,
+     which is only 4.83:1 at full strength, so any dim at all fails 1.4.3:
+     .6 measures 2.33:1. Dim is a treatment for full-strength colour only. */
+  .row[data-done="true"] .who { opacity: 1; }
 
   .kebab, .pencil {
     flex: none; width: 22px; height: 22px; border-radius: 4px;

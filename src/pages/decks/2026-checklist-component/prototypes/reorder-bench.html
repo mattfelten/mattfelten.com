@@ -122,10 +122,14 @@
   body.is-embed .bench-inner { gap: 0; zoom: var(--embed-scale, 1); }
   /* Centre in whatever height the slide gives the frame, so one embed
      rule survives every iframe size instead of needing a per-slide fit. */
+  /* Top-aligned, never vertically centred. Centring splits any height
+     change in both directions, which halves the apparent movement and
+     wrecks the one demo that exists to show a 14px shove. Size the
+     iframe to the specimen instead. */
   body.is-embed .bench {
     padding: 28px;
-    min-height: 100vh;
-    justify-content: center;
+    min-height: 0;
+    justify-content: flex-start;
   }
 
   /* ---------- Page frame ---------- */
@@ -324,8 +328,11 @@
      ragged grabbable tail after the last line */
   .content .prose { display: inline; cursor: text; }
 
-  .row[data-done="true"] .content { text-decoration: line-through; opacity: .5; }
-  .row[data-done="true"] .person { opacity: .5; }
+  .row[data-done="true"] .content { text-decoration: line-through; opacity: .6; }
+  /* The author tag is NOT dimmed on completed rows. It uses --text-subdued,
+     which is only 4.83:1 at full strength, so any dim at all fails 1.4.3:
+     .6 measures 2.33:1. Dim is a treatment for full-strength colour only. */
+  .row[data-done="true"] .person { opacity: 1; }
 
   .person {
     flex: none; display: inline-flex; align-items: center; gap: 5px;

@@ -3,10 +3,13 @@
 
 <style>
   /* ============================================================
-     Same achromatic, theme-aware chrome as the three benches, so
-     the gallery reads as part of the same instrument family.
-     No specimen here: every card links out to the bench that can
-     actually show the rejected state.
+     Same achromatic, theme-aware chrome as the benches, so the
+     whole set reads as one family.
+
+     Cards are generated from the REJECTIONS array at the bottom.
+     This page is meant to grow every time a round rejects
+     something, and appending one object is a lower bar than
+     hand-writing a card.
      ============================================================ */
   :root {
     --bench-bg: #EDEEF1;
@@ -19,7 +22,7 @@
     --bench-raise: #FFFFFF;
     --bench-sunk: #E4E6EB;
     --bench-focus: #1E40AF;
-    --shadow-mount: 0 1px 3px rgba(16, 20, 28, .08), 0 18px 50px rgba(16, 20, 28, .10);
+    --bench-warn: #B4453A;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -34,7 +37,7 @@
       --bench-raise: #23262E;
       --bench-sunk: #121419;
       --bench-focus: #7C97E8;
-      --shadow-mount: 0 1px 3px rgba(0, 0, 0, .5), 0 24px 60px rgba(0, 0, 0, .55);
+      --bench-warn: #E08276;
     }
   }
 
@@ -49,7 +52,7 @@
     --bench-raise: #23262E;
     --bench-sunk: #121419;
     --bench-focus: #7C97E8;
-    --shadow-mount: 0 1px 3px rgba(0, 0, 0, .5), 0 24px 60px rgba(0, 0, 0, .55);
+    --bench-warn: #E08276;
   }
 
   * { box-sizing: border-box; }
@@ -65,64 +68,93 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  .page { max-width: 1000px; margin: 0 auto; padding: 56px 32px 96px; }
+  .page { max-width: 1080px; margin: 0 auto; padding: 56px 32px 96px; }
 
-  .head { margin-bottom: 40px; max-width: 640px; }
+  .head { margin-bottom: 8px; max-width: 680px; }
   h1 { font-size: 24px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 10px; }
-  .lede { color: var(--bench-ink-2); margin: 0; font-size: 14px; line-height: 1.6; }
+  .lede { color: var(--bench-ink-2); margin: 0 0 10px; font-size: 14px; line-height: 1.6; }
+
+  .back {
+    display: inline-block; font-size: 12px; text-decoration: none;
+    color: var(--bench-ink-3); border-bottom: 1px solid var(--bench-line-2);
+    margin-bottom: 4px;
+  }
+  .back:hover { color: var(--bench-focus); border-bottom-color: var(--bench-focus); }
 
   .eyebrow {
     font-size: 10px; font-weight: 600; letter-spacing: 0.11em;
     text-transform: uppercase; color: var(--bench-ink-3);
-    margin: 40px 0 14px;
+    margin: 44px 0 6px;
+  }
+  .eyebrow-note {
+    color: var(--bench-ink-3); font-size: 12.5px; line-height: 1.6;
+    margin: 0 0 16px; max-width: 640px;
   }
 
-  .cards { display: grid; gap: 12px; }
+  .cards { display: grid; gap: 14px; }
 
   .card {
     background: var(--bench-raise);
     border: 1px solid var(--bench-line);
     border-radius: 10px;
-    padding: 16px 18px;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 4px 24px;
-    align-items: start;
+    padding: 18px 20px 20px;
   }
 
-  @media (max-width: 720px) { .card { grid-template-columns: minmax(0, 1fr); } }
+  .swap { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 4px 24px; }
+  @media (max-width: 720px) { .swap { grid-template-columns: minmax(0,1fr); } }
 
   .col-label {
     font-size: 10px; font-weight: 600; letter-spacing: 0.09em;
     text-transform: uppercase; color: var(--bench-ink-3);
     margin: 0 0 3px;
   }
-  .rejected .col-label { color: #B4453A; }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .rejected .col-label { color: #E08276; }
-  }
-  :root[data-theme="dark"] .rejected .col-label { color: #E08276; }
-
+  .col-label.no { color: var(--bench-warn); }
   .opt { font-size: 14px; font-weight: 550; margin: 0; }
+
   .why {
-    grid-column: 1 / -1;
     color: var(--bench-ink-2);
-    font-size: 13px; line-height: 1.55;
-    margin: 10px 0 0;
-    padding-top: 10px;
+    font-size: 13px; line-height: 1.6;
+    margin: 12px 0 0; padding-top: 12px;
     border-top: 1px solid var(--bench-line);
   }
+  .why strong { color: var(--bench-ink); }
+  .why code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px; background: var(--bench-sunk);
+    border-radius: 3px; padding: 1px 4px;
+  }
 
-  .see {
+  /* ---------- the live specimen inside a card ---------- */
+  .demo { margin-top: 14px; }
+
+  .demo-do {
+    display: flex; align-items: baseline; gap: 8px;
+    font-size: 12px; color: var(--bench-ink-3);
+    margin: 0 0 8px;
+  }
+  .demo-do b {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
+    color: var(--bench-bg); background: var(--bench-ink);
+    border-radius: 4px; padding: 2px 6px; flex: none;
+  }
+
+  .stage {
+    border: 1px solid var(--bench-line);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--bench-panel);
+  }
+  .stage iframe { display: block; border: 0; width: 100%; }
+
+  .compare {
     display: inline-block; margin-top: 9px;
     font-size: 12px; color: var(--bench-focus);
-    text-decoration: none;
-    border-bottom: 1px solid currentColor;
+    text-decoration: none; border-bottom: 1px solid currentColor;
   }
-  .see:hover { opacity: .75; }
-  .see:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 3px; }
+  .compare:hover { opacity: .75; }
+  .compare:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 3px; }
 
-  .live {
+  .tag {
     display: inline-block; margin-left: 8px;
     font-size: 10px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase;
     color: var(--bench-bg); background: var(--bench-ink);
@@ -138,337 +170,217 @@
     font-size: 13px; line-height: 1.6;
   }
   .note strong { color: var(--bench-ink); }
+  .note code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px; background: var(--bench-sunk);
+    border-radius: 3px; padding: 1px 4px;
+  }
 </style>
 
 <div class="page">
   <div class="head">
+    <a class="back" href="/decks/2026-checklist-component/prototypes/">All benches</a>
     <h1>Rejected options</h1>
     <p class="lede">
-      Everything considered and not taken, with what won instead and why. Each entry links to
-      the bench configured to show the rejected state, so an option can be seen rather than
-      described. This grows as rounds land; it is not a postscript written at the end.
+      Everything considered and not taken, with what won instead and why. Where an option can be
+      seen, it is running right here rather than described: click into the specimen and do the
+      thing the label asks for. This grows as rounds land.
     </p>
   </div>
 
-  <p class="eyebrow">Editing</p>
-  <div class="cards">
+  <p class="eyebrow">Seen</p>
+  <p class="eyebrow-note">
+    These differ in the interface, so each one is live below. They are real benches, not
+    pictures. Every one of them needs an action before the difference shows up, which is
+    itself the point: none of these were decidable by looking at a still.
+  </p>
+  <div class="cards" id="seen"></div>
 
-    <div class="card">
-      <div class="rejected">
-        <p class="col-label">Rejected</p>
-        <p class="opt">An editor opens as an object</p>
-      </div>
-      <div>
-        <p class="col-label">Chosen</p>
-        <p class="opt">contenteditable on the text already there</p>
-      </div>
-      <p class="why">
-        A bordered field, a persistent toolbar and Save / Cancel announce that you have entered
-        a mode. Editing a list item is not a mode, it is typing. Nothing should be swapped in
-        and nothing should reflow.
-      </p>
-    </div>
-
-    <div class="card">
-      <div class="rejected">
-        <p class="col-label">Rejected</p>
-        <p class="opt">A hairline around the field</p>
-      </div>
-      <div>
-        <p class="col-label">Chosen</p>
-        <p class="opt">No chrome at all. A caret and nothing else</p>
-      </div>
-      <p class="why">
-        Any resting outline makes every row look operable whether or not you may edit it, and it
-        pulls the eye down a list of otherwise quiet rows. Cut as distracting.
-        <a class="see" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?chrome=field">See the hairline version</a>
-      </p>
-    </div>
-
-    <div class="card">
-      <div class="rejected">
-        <p class="col-label">Rejected</p>
-        <p class="opt">border + padding to paint edit state</p>
-      </div>
-      <div>
-        <p class="col-label">Chosen</p>
-        <p class="opt">background + box-shadow, outside layout</p>
-      </div>
-      <p class="why">
-        The obvious implementation moves the glyphs <strong>9px right and 7px down</strong> on
-        entry and shoves every row below it by <strong>14px</strong>. Painting with background
-        and box-shadow measures <strong>0px</strong>. This is the one worth showing live rather
-        than asserting.
-        <a class="see" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?naive=1">See the shove</a>
-      </p>
-    </div>
-
-    <div class="card">
-      <div class="rejected">
-        <p class="col-label">Rejected</p>
-        <p class="opt">A Save button</p>
-      </div>
-      <div>
-        <p class="col-label">Chosen</p>
-        <p class="opt">Autosave throughout, Esc to revert</p>
-      </div>
-      <p class="why">
-        A button promises nothing is written until it is pressed. Inline editing promises the
-        text <em>is</em> the document and that leaving commits. Both cannot be true at once, so
-        one of them had to go.
-      </p>
-    </div>
-
-    <div class="card">
-      <div class="rejected">
-        <p class="col-label">Rejected</p>
-        <p class="opt">Save on blur</p>
-      </div>
-      <div>
-        <p class="col-label">Chosen</p>
-        <p class="opt">Debounced autosave, 4s idle with a 15s ceiling</p>
-      </div>
-      <p class="why">
-        Not a taste call. Interim keystrokes travel as client events that bypass the server, so
-        anyone arriving mid-edit hydrates from the database and reads stale text for the whole
-        session. Save-on-blur leaves that hole open for as long as someone keeps typing.
-      </p>
-    </div>
-
-    <div class="card">
-      <div class="rejected">
-        <p class="col-label">Rejected</p>
-        <p class="opt">A pure idle debounce, no ceiling</p>
-      </div>
-      <div>
-        <p class="col-label">Chosen</p>
-        <p class="opt">Idle debounce with a hard 15s maxWait</p>
-      </div>
-      <p class="why">
-        A trailing debounce never fires while someone keeps typing, so drift is unbounded. The
-        ceiling is a correctness requirement, not a refinement. The bench fires it on its own if
-        you type for fifteen seconds without pausing.
-      </p>
-    </div>
-
-    <div class="card">
-      <div class="rejected">
-        <p class="col-label">Rejected</p>
-        <p class="opt">A flash confirming each save</p>
-      </div>
-      <div>
-        <p class="col-label">Chosen</p>
-        <p class="opt">Say nothing</p>
-      </div>
-      <p class="why">
-        With a row treatment that already lifts when the words settle, a second confirmation is
-        noise. Worth revisiting only because silence currently leaves a failed write with no
-        surface at all, which C5 has to answer.
-        <a class="see" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?feedback=whisper">See the confirming version</a>
-      </p>
-    </div>
-
-  </div>
-
-  <p class="eyebrow">Ordering</p>
-  <div class="cards">
-
-    <div class="card">
-      <div class="rejected">
-        <p class="col-label">Rejected</p>
-        <p class="opt">Integer positions</p>
-      </div>
-      <div>
-        <p class="col-label">Chosen</p>
-        <p class="opt">Fractional index as a sortable string</p>
-      </div>
-      <p class="why">
-        One move rewrites every row between the old and new slot, so two simultaneous drags
-        overwrite each other wholesale instead of merging. A fractional index writes one row and
-        both intents survive.
-        <a class="see" href="/decks/2026-checklist-component/prototypes/reorder-bench?index=integer">See the write amplification</a>
-      </p>
-    </div>
-
-    <div class="card">
-      <div class="rejected">
-        <p class="col-label">Rejected</p>
-        <p class="opt">Float positions</p>
-      </div>
-      <div>
-        <p class="col-label">Chosen</p>
-        <p class="opt">Fractional index as a sortable string</p>
-      </div>
-      <p class="why">
-        Halving the gap between the same two neighbours exhausts the double mantissa after about
-        fifty inserts. After that the positions compare equal and ordering breaks
-        <strong>silently</strong>, which is worse than breaking loudly.
-      </p>
-    </div>
-
-    <div class="card">
-      <div class="rejected">
-        <p class="col-label">Rejected</p>
-        <p class="opt">Client computes the new key</p>
-      </div>
-      <div>
-        <p class="col-label">Chosen</p>
-        <p class="opt">Send neighbour IDs, server resolves in-transaction</p>
-      </div>
-      <p class="why">
-        Two clients looking at the same stale list compute the same midpoint, which puts the race
-        straight back. Only the server sees the real neighbours at write time.
-      </p>
-    </div>
-
-    <div class="card">
-      <div class="rejected">
-        <p class="col-label">Rejected</p>
-        <p class="opt">Replace the whole list behind a version guard</p>
-      </div>
-      <div>
-        <p class="col-label">Chosen</p>
-        <p class="opt">One row per move</p>
-      </div>
-      <p class="why">
-        Correct, and simpler. It also rejects any concurrent edit outright and makes the loser
-        perform the drag a second time, which is a bad trade for a list several people touch in
-        the same meeting.
-      </p>
-    </div>
-
-    <div class="card">
-      <div class="rejected">
-        <p class="col-label">Rejected</p>
-        <p class="opt">Rows shift out of the way under the cursor</p>
-      </div>
-      <div>
-        <p class="col-label">Chosen</p>
-        <p class="opt">A static insertion line</p>
-      </div>
-      <p class="why">
-        Live shift only reads well with uniform-height rows. These are variable-height markdown,
-        so a tall item displacing short ones makes the list jump and slides the drop target out
-        from under the cursor.
-        <a class="see" href="/decks/2026-checklist-component/prototypes/reorder-bench?drop=shift">See it jump</a>
-      </p>
-    </div>
-
-    <div class="card">
-      <div class="rejected">
-        <p class="col-label">Rejected</p>
-        <p class="opt">The full row follows the cursor</p>
-      </div>
-      <div>
-        <p class="col-label">Chosen</p>
-        <p class="opt">A collapsed single-line proxy</p>
-      </div>
-      <p class="why">
-        A tall block under the cursor covers the list you are aiming at. The proxy only has to
-        say which row is in your hand.
-        <a class="see" href="/decks/2026-checklist-component/prototypes/reorder-bench?proxy=full">See the full-row proxy</a>
-      </p>
-    </div>
-
-  </div>
-
-  <p class="eyebrow">Presence</p>
-  <div class="cards">
-
-    <div class="card">
-      <div class="rejected">
-        <p class="col-label">Rejected</p>
-        <p class="opt">A wash, a byline and a blinking caret</p>
-      </div>
-      <div>
-        <p class="col-label">Chosen</p>
-        <p class="opt">One small avatar in the gutter</p>
-      </div>
-      <p class="why">
-        Three pieces of apparatus to say one fact: somebody is in this row. The avatar says it
-        alone, and the row treatment says what they are doing to it.
-        <a class="see" href="/decks/2026-checklist-component/prototypes/edit-presence-bench?mark=wash">See the wash</a>
-      </p>
-    </div>
-
-    <div class="card">
-      <div class="rejected">
-        <p class="col-label">Rejected</p>
-        <p class="opt">A presence strip with a count</p>
-      </div>
-      <div>
-        <p class="col-label">Chosen</p>
-        <p class="opt">Presence on the row it belongs to</p>
-      </div>
-      <p class="why">
-        A header strip, a badge row and a "nobody is typing" line spend permanent space on a
-        fact that is usually nothing. If presence needs saying, it gets said where it happened.
-      </p>
-    </div>
-
-    <div class="card">
-      <div class="rejected">
-        <p class="col-label">Rejected</p>
-        <p class="opt">The avatar beside the author tag</p>
-      </div>
-      <div>
-        <p class="col-label">Chosen</p>
-        <p class="opt">Floating in the left gutter</p>
-      </div>
-      <p class="why">
-        The row already carries one avatar on the right. A second one next to it reads as
-        co-authorship rather than presence. Off the corner it reads as somebody leaning over the
-        row, and it costs the text no space.
-      </p>
-    </div>
-
-    <div class="card">
-      <div class="rejected">
-        <p class="col-label">Rejected</p>
-        <p class="opt">A 3s delay before the row settles</p>
-      </div>
-      <div>
-        <p class="col-label">Chosen</p>
-        <p class="opt">1.5s, cancelled by any further typing</p>
-      </div>
-      <p class="why">
-        Autosave at 4s idle lands almost exactly on the pause somebody takes to think of a word,
-        so tying the settle to the save event strobes the row. 3s stopped the strobing but read
-        as too slow. At 1.5s, bursts separated by 3s pauses and by 5s pauses both produced zero
-        transitions.
-      </p>
-    </div>
-
-    <div class="card">
-      <div class="rejected">
-        <p class="col-label">Rejected <span class="live">New</span></p>
-        <p class="opt">Dimming the row while the words move</p>
-      </div>
-      <div>
-        <p class="col-label">Chosen</p>
-        <p class="opt">Open. Replacement is C3's job</p>
-      </div>
-      <p class="why">
-        Rejected on measurement, not taste. The dim is <code>#1C1917</code> at
-        <code>opacity: .42</code> over white, which resolves to about <code>#A09E9E</code> and
-        measures <strong>~2.6:1</strong> against the 4.5:1 that WCAG 1.4.3 asks for. It also
-        fought the point of sending keystrokes at all, by greying text exactly while it changes.
-        Two arguments had already been made against it; the number is what settled it.
-        <a class="see" href="/decks/2026-checklist-component/prototypes/edit-presence-bench?mark=floatdim&amp;others=1">See the dim</a>
-      </p>
-    </div>
-
-  </div>
+  <p class="eyebrow">Argued</p>
+  <p class="eyebrow-note">
+    These were settled on the data model or on correctness, so there is nothing to look at. Two
+    of them (integer positions, the missing autosave ceiling) show up in the mutation log rather
+    than the interface, and link to the bench that prints it.
+  </p>
+  <div class="cards" id="argued"></div>
 
   <div class="note">
-    <strong>Still shipped, still failing.</strong> Completed items render at
-    <code>opacity: .5</code>, which measures about <strong>3.2:1</strong>. That is the current
-    treatment rather than a proposal, so it is a live finding rather than a rejected option, and
-    it wants confirming against the real widget before anyone repeats it.
+    <strong>Completed items now ship at <code>opacity: .6</code>.</strong> They were at
+    <code>.5</code>, which measures 3.35:1 and fails 1.4.3. <code>.6</code> measures
+    <strong>4.58:1</strong> and passes, and it is the lowest value that does: <code>.55</code>
+    is still short at 3.89:1. The author tag on a completed row is no longer dimmed at all,
+    because it uses <code>--text-subdued</code>, which is only 4.83:1 at full strength, so any
+    dim at all fails. <strong>Dim is a treatment for full-strength colour only.</strong>
   </div>
 </div>
 
 <script>
+  // ---------------------------------------------------------------
+  // Every rejection. Append here when a round throws something out.
+  //
+  //   demo   the bench and params that show the rejected state
+  //   do     what the reader has to actually do to see it
+  //   vs     the same bench in the chosen state, for comparison
+  // ---------------------------------------------------------------
+  const M = "/decks/2026-checklist-component/prototypes/edit-mechanics-bench";
+  const P = "/decks/2026-checklist-component/prototypes/edit-presence-bench";
+  const R = "/decks/2026-checklist-component/prototypes/reorder-bench";
+
+  const SEEN = [
+    {
+      no: "border + padding to paint edit state",
+      yes: "background + box-shadow, outside layout",
+      demo: M + "?embed=1&scale=1.15&naive=1", h: 470,
+      act: "Click into the first item",
+      why: "The obvious implementation moves the glyphs <strong>9px right and 7px down</strong> on entry and shoves every row below it by <strong>14px</strong>. Painting with background and box-shadow measures <strong>0px</strong>. Click into an item here, then do the same in the chosen version, and the difference is the whole argument.",
+      vs: M + "?embed=1&scale=1.15", vsLabel: "Compare with 0px"
+    },
+    {
+      no: "A hairline around the field",
+      yes: "No chrome at all. A caret and nothing else",
+      demo: M + "?embed=1&scale=1.15&chrome=field", h: 470,
+      act: "Click into any item",
+      why: "Any resting outline makes every row look operable whether or not you may edit it, and it pulls the eye down a list of otherwise quiet rows. Note that at rest these two look identical. The field only differs once you are inside it, which is exactly why the resting affordance was the thing worth cutting.",
+      vs: M + "?embed=1&scale=1.15&chrome=none", vsLabel: "Compare with nothing but a caret"
+    },
+    {
+      no: "A flash confirming each save",
+      yes: "Say nothing",
+      demo: M + "?embed=1&scale=1.15&feedback=whisper", h: 470,
+      act: "Click in, type, then wait 4 seconds",
+      why: "With a row treatment that already moves when the words settle, a second confirmation is noise. Worth revisiting only because silence currently leaves a <em>failed</em> write with no surface at all, which C5 has to answer.",
+      vs: M + "?embed=1&scale=1.15&feedback=silent", vsLabel: "Compare with silence"
+    },
+    {
+      no: "Rows shift out of the way under the cursor",
+      yes: "A static insertion line",
+      demo: R + "?embed=1&scale=1.15&drop=shift&grab=both", h: 540,
+      act: "Drag a row up or down",
+      why: "Live shift only reads well with uniform-height rows. These are variable-height markdown, so a tall item displacing short ones makes the list jump and slides the drop target out from under the cursor. <a class='compare' href='" + R + "?embed=1&scale=1.15&drop=shift&uniform=1&grab=both'>Same thing with uniform heights</a> is the control: it feels fine there, which is how we know the height variance is the cause.",
+      vs: R + "?embed=1&scale=1.15&drop=line&grab=both", vsLabel: "Compare with the insertion line"
+    },
+    {
+      no: "The full row follows the cursor",
+      yes: "A collapsed single-line proxy",
+      demo: R + "?embed=1&scale=1.15&proxy=full&grab=both", h: 540,
+      act: "Drag the tallest row",
+      why: "A tall block under the cursor covers the list you are aiming at. The proxy only has to say which row is in your hand.",
+      vs: R + "?embed=1&scale=1.15&proxy=compact&grab=both", vsLabel: "Compare with the collapsed proxy"
+    },
+    {
+      no: "A wash, a byline and a blinking caret",
+      yes: "One small avatar in the gutter",
+      demo: P + "?embed=1&scale=0.9&mark=wash&others=1", h: 400,
+      act: "Wait. Other people are typing",
+      why: "Three pieces of apparatus to say one fact: somebody is in this row. The avatar says it alone, and the row treatment says what they are doing to it.",
+      vs: P + "?embed=1&scale=0.9&mark=float&others=1", vsLabel: "Compare with the avatar alone"
+    },
+    {
+      no: "Dimming the row while the words move",
+      yes: "Open. Replacement is C3's job",
+      tag: "New",
+      demo: P + "?embed=1&scale=0.9&mark=floatdim&others=1", h: 400,
+      act: "Wait for a row to start changing",
+      why: "Rejected on measurement, not taste. The dim is <code>#1C1917</code> at <code>opacity: .42</code> over white, which resolves to about <code>#A09E9E</code> and measures <strong>2.67:1</strong> against the 4.5:1 WCAG 1.4.3 asks for. It also fought the point of sending keystrokes at all, by greying text exactly while it changes. Two arguments had already been made against it; the number is what settled it.",
+      vs: P + "?embed=1&scale=0.9&mark=float&others=1", vsLabel: "Compare with the avatar alone"
+    }
+  ];
+
+  const ARGUED = [
+    {
+      no: "An editor opens as an object",
+      yes: "contenteditable on the text already there",
+      why: "A bordered field, a persistent toolbar and Save / Cancel announce that you have entered a mode. Editing a list item is not a mode, it is typing. Nothing should be swapped in and nothing should reflow. This was the first round and it was replaced rather than kept, so there is no bench left showing it."
+    },
+    {
+      no: "A Save button",
+      yes: "Autosave throughout, Esc to revert",
+      why: "A button promises nothing is written until it is pressed. Inline editing promises the text <em>is</em> the document and that leaving commits. Both cannot be true at once, so one of them had to go."
+    },
+    {
+      no: "Save on blur",
+      yes: "Debounced autosave, 4s idle with a 15s ceiling",
+      why: "Not a taste call. Interim keystrokes travel as client events that bypass the server, so anyone arriving mid-edit hydrates from the database and reads stale text for the whole session. Save-on-blur leaves that hole open for as long as someone keeps typing."
+    },
+    {
+      no: "A pure idle debounce, no ceiling",
+      yes: "Idle debounce with a hard 15s maxWait",
+      why: "A trailing debounce never fires while someone keeps typing, so drift is unbounded. The ceiling is a correctness requirement, not a refinement.",
+      link: M, linkLabel: "Type for 15s without pausing and watch the ceiling fire"
+    },
+    {
+      no: "Integer positions",
+      yes: "Fractional index as a sortable string",
+      why: "One move rewrites every row between the old and new slot, so two simultaneous drags overwrite each other wholesale instead of merging. A fractional index writes one row and both intents survive. This one is visible, just not in the interface: it is in the log.",
+      link: R + "?index=integer", linkLabel: "Drag a row and read the write amplification"
+    },
+    {
+      no: "Float positions",
+      yes: "Fractional index as a sortable string",
+      why: "Halving the gap between the same two neighbours exhausts the double mantissa after about fifty inserts. After that the positions compare equal and ordering breaks <strong>silently</strong>, which is worse than breaking loudly."
+    },
+    {
+      no: "Client computes the new key",
+      yes: "Send neighbour IDs, server resolves in-transaction",
+      why: "Two clients looking at the same stale list compute the same midpoint, which puts the race straight back. Only the server sees the real neighbours at write time."
+    },
+    {
+      no: "Replace the whole list behind a version guard",
+      yes: "One row per move",
+      why: "Correct, and simpler. It also rejects any concurrent edit outright and makes the loser perform the drag a second time, which is a bad trade for a list several people touch in the same meeting."
+    },
+    {
+      no: "A presence strip with a count",
+      yes: "Presence on the row it belongs to",
+      why: "A header strip, a badge row and a \"nobody is typing\" line spend permanent space on a fact that is usually nothing. If presence needs saying, it gets said where it happened. Removed rather than kept behind a switch, so there is nothing left to show."
+    },
+    {
+      no: "The avatar beside the author tag",
+      yes: "Floating in the left gutter",
+      why: "The row already carries one avatar on the right. A second one next to it reads as co-authorship rather than presence. Off the corner it reads as somebody leaning over the row, and it costs the text no space."
+    },
+    {
+      no: "A 3s delay before the row settles",
+      yes: "1.5s, cancelled by any further typing",
+      why: "Autosave at 4s idle lands almost exactly on the pause somebody takes to think of a word, so tying the settle to the save event strobes the row. 3s stopped the strobing but read as too slow. At 1.5s, bursts separated by 3s pauses and by 5s pauses both produced zero transitions."
+    }
+  ];
+
+  function card(r) {
+    const el = document.createElement("div");
+    el.className = "card";
+
+    const swap = document.createElement("div");
+    swap.className = "swap";
+    swap.innerHTML =
+      '<div><p class="col-label no">Rejected' + (r.tag ? ' <span class="tag">' + r.tag + '</span>' : '') + '</p>' +
+      '<p class="opt">' + r.no + '</p></div>' +
+      '<div><p class="col-label">Chosen</p><p class="opt">' + r.yes + '</p></div>';
+    el.appendChild(swap);
+
+    if (r.demo) {
+      const demo = document.createElement("div");
+      demo.className = "demo";
+      demo.innerHTML =
+        '<p class="demo-do"><b>Try it</b><span>' + r.act + '</span></p>' +
+        '<div class="stage"><iframe loading="lazy" title="' + r.no + '" ' +
+        'src="' + r.demo + '" style="height:' + r.h + 'px"></iframe></div>';
+      el.appendChild(demo);
+    }
+
+    const why = document.createElement("p");
+    why.className = "why";
+    why.innerHTML = r.why +
+      (r.vs ? ' <a class="compare" href="' + r.vs + '">' + r.vsLabel + '</a>' : '') +
+      (r.link ? ' <a class="compare" href="' + r.link + '">' + r.linkLabel + '</a>' : '');
+    el.appendChild(why);
+
+    return el;
+  }
+
+  SEEN.forEach(r => document.getElementById("seen").appendChild(card(r)));
+  ARGUED.forEach(r => document.getElementById("argued").appendChild(card(r)));
+
   // Escape hands the deck back. Keydown never crosses out of an iframe,
   // so without this a presenter with focus in here has no keyboard route
   // back to the slides.
