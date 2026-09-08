@@ -1,0 +1,1057 @@
+<meta charset="utf-8">
+<title>Checklist: editing mechanics bench</title>
+
+<style>
+  /* ============================================================
+     BENCH CHROME - achromatic, theme-aware instrument panel.
+     Shared with the reorder bench so the two read as one
+     instrument family. Saturated colour belongs to the specimen.
+     ============================================================ */
+  :root {
+    --bench-bg: #EDEEF1;
+    --bench-panel: #F6F7F9;
+    --bench-ink: #242830;
+    --bench-ink-2: #5C6371;
+    --bench-ink-3: #878E9C;
+    --bench-line: #D8DBE2;
+    --bench-line-2: #C4C9D3;
+    --bench-raise: #FFFFFF;
+    --bench-sunk: #E4E6EB;
+    --bench-focus: #1E40AF;
+    --shadow-lift: 0 1px 2px rgba(16, 20, 28, .06), 0 8px 24px rgba(16, 20, 28, .10);
+    --shadow-mount: 0 1px 3px rgba(16, 20, 28, .08), 0 18px 50px rgba(16, 20, 28, .10);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bench-bg: #15171C;
+      --bench-panel: #1C1F26;
+      --bench-ink: #DDE0E6;
+      --bench-ink-2: #99A0AD;
+      --bench-ink-3: #6E7481;
+      --bench-line: #282C35;
+      --bench-line-2: #363B46;
+      --bench-raise: #23262E;
+      --bench-sunk: #121419;
+      --bench-focus: #7C97E8;
+      --shadow-lift: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .45);
+      --shadow-mount: 0 1px 3px rgba(0, 0, 0, .5), 0 24px 60px rgba(0, 0, 0, .55);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bench-bg: #15171C;
+    --bench-panel: #1C1F26;
+    --bench-ink: #DDE0E6;
+    --bench-ink-2: #99A0AD;
+    --bench-ink-3: #6E7481;
+    --bench-line: #282C35;
+    --bench-line-2: #363B46;
+    --bench-raise: #23262E;
+    --bench-sunk: #121419;
+    --bench-focus: #7C97E8;
+    --shadow-lift: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .45);
+    --shadow-mount: 0 1px 3px rgba(0, 0, 0, .5), 0 24px 60px rgba(0, 0, 0, .55);
+  }
+
+  /* ============================================================
+     SPECIMEN TOKENS - locked to @m/tokens light mode.
+     Mission Control has no dark mode, so the specimen never
+     inverts. It stays a light sample mounted on the bench.
+     ============================================================ */
+  .specimen, .sheet {
+    --surface-1: #FFFFFF;
+    --surface-2: #FAFAFA;
+    --surface-3: #F4F4F5;
+    --border-soft: #EFEFF1;
+    --border-default: #E4E4E7;
+    --border-strong: #D4D4D8;
+    --text-default: #1C1917;
+    --text-subdued: #6B7280;
+    --action: #1E40AF;
+    --positive: #10B981;
+    --negative: #DC2626;
+    --amber: #F59E0B;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--bench-bg);
+    color: var(--bench-ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------------------------------------------------------------
+     EMBED MODE - ?embed=1
+     Strips the instrument down to the specimen so a slide can carry
+     one idea at a size readable from across a room. The rail's 10px
+     labels are unreadable at presentation distance anyway, and a
+     dense panel competes with the speaker; the configuration it
+     would set arrives through deep-link params instead.
+     The full bench is always one click away for questions.
+     --------------------------------------------------------------- */
+  body.is-embed .rail,
+  body.is-embed .mount-label,
+  body.is-embed .log,
+  body.is-embed .note { display: none; }
+  body.is-embed .frame { display: block; min-height: 0; }
+  /* Keep the bench's own max-width. The specimen's line length is a
+     design decision, so the iframe gets sized to the specimen rather
+     than the specimen stretched to the iframe. */
+  body.is-embed .bench-inner { gap: 0; }
+  body.is-embed .bench {
+    padding: 28px;
+    min-height: 100vh;
+    justify-content: center;
+  }
+
+  /* ---------- Page frame ---------- */
+  .frame {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    min-height: 100vh;
+    align-items: start;
+  }
+
+  @media (max-width: 1040px) {
+    .frame { grid-template-columns: minmax(0, 1fr); }
+    .rail { position: static !important; height: auto !important; border-right: 0 !important; border-bottom: 1px solid var(--bench-line); }
+  }
+
+  /* ---------- Control rail ---------- */
+  .rail {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--bench-panel);
+    border-right: 1px solid var(--bench-line);
+    padding: 28px 24px 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+  }
+
+  .rail-head { display: flex; flex-direction: column; gap: 6px; }
+  .rail-title { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+  .rail-sub { font-size: 12px; line-height: 1.55; color: var(--bench-ink-2); margin: 0; }
+
+  .eyebrow {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.11em;
+    text-transform: uppercase; color: var(--bench-ink-3); margin: 0;
+  }
+  .eyebrow.primary { color: var(--bench-focus); }
+
+  .group { display: flex; flex-direction: column; gap: 10px; }
+  .group-note { font-size: 11.5px; line-height: 1.5; color: var(--bench-ink-3); margin: 0; }
+  .group-note em { font-style: italic; }
+
+  .group.featured {
+    background: var(--bench-raise);
+    border: 1px solid var(--bench-line-2);
+    border-radius: 10px;
+    padding: 14px;
+    margin: 0 -2px;
+  }
+
+  /* ---------- Segmented switch ---------- */
+  .seg {
+    display: flex; flex-direction: column; gap: 1px;
+    background: var(--bench-line);
+    border: 1px solid var(--bench-line);
+    border-radius: 8px; overflow: hidden;
+  }
+
+  .seg button {
+    appearance: none; border: 0; text-align: left;
+    background: var(--bench-raise); color: var(--bench-ink-2);
+    padding: 9px 11px; font: inherit; font-size: 12.5px;
+    cursor: pointer; display: flex; align-items: baseline; gap: 8px;
+    transition: background .12s ease, color .12s ease;
+  }
+
+  .seg button:hover { background: var(--bench-sunk); color: var(--bench-ink); }
+  .seg button[aria-pressed="true"] { background: var(--bench-ink); color: var(--bench-bg); font-weight: 550; }
+  .seg button:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: -2px; }
+  .seg .k {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10px; opacity: .55; flex: none; width: 12px;
+  }
+
+  /* ---------- Checkbox switches ---------- */
+  .switch {
+    display: flex; align-items: flex-start; gap: 9px;
+    font-size: 12.5px; color: var(--bench-ink-2); cursor: pointer; padding: 3px 0;
+  }
+
+  .switch input {
+    appearance: none; width: 15px; height: 15px; margin: 2px 0 0; flex: none;
+    border: 1px solid var(--bench-line-2); border-radius: 4px;
+    background: var(--bench-raise); cursor: pointer;
+    display: grid; place-content: center;
+    transition: background .12s ease, border-color .12s ease;
+  }
+  .switch input:checked { background: var(--bench-ink); border-color: var(--bench-ink); }
+  .switch input:checked::after {
+    content: ""; width: 8px; height: 5px; margin-top: -2px;
+    border-left: 1.8px solid var(--bench-bg); border-bottom: 1.8px solid var(--bench-bg);
+    transform: rotate(-45deg);
+  }
+  .switch input:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 2px; }
+  .switch .sub { color: var(--bench-ink-3); font-size: 11px; }
+
+  kbd {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10.5px; background: var(--bench-raise);
+    border: 1px solid var(--bench-line-2); border-bottom-width: 2px;
+    border-radius: 4px; padding: 1px 4px; color: var(--bench-ink-2);
+  }
+
+  /* ---------- Main bench area ---------- */
+  .bench {
+    padding: 40px 40px 72px;
+    display: flex; flex-direction: column; gap: 24px;
+    align-items: center; min-width: 0;
+  }
+
+  @media (max-width: 640px) { .bench { padding: 26px 16px 56px; } }
+
+  .bench-inner {
+    width: 100%; max-width: 620px;
+    display: flex; flex-direction: column; gap: 24px; min-width: 0;
+  }
+
+  .mount-label {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+  }
+  .mount-label p { margin: 0; font-size: 12px; color: var(--bench-ink-3); }
+
+  /* ============================================================
+     SPECIMEN - Mission Control widget, real tokens
+     ============================================================ */
+  .specimen {
+    background: var(--surface-1);
+    border: 1px solid var(--border-default);
+    border-radius: 12px;
+    box-shadow: var(--shadow-mount);
+    font-family: "Noto Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--text-default);
+    font-size: 14px; line-height: 20px;
+    padding: 16px 24px 20px;
+    position: relative;
+  }
+
+  .spec-head {
+    display: flex; align-items: center; gap: 8px;
+    padding-bottom: 12px; margin-bottom: 4px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .spec-head h2 { font-size: 14px; font-weight: 600; margin: 0; flex: 1; }
+  .spec-head .count { font-size: 12px; color: var(--text-subdued); font-variant-numeric: tabular-nums; }
+  .spec-icon { width: 20px; height: 20px; display: grid; place-content: center; color: var(--text-subdued); }
+
+  .list { display: flex; flex-direction: column; gap: 12px; padding-top: 12px; }
+
+  /* ---------- Row ---------- */
+  .row {
+    position: relative;
+    display: flex; align-items: flex-start; gap: 12px;
+    margin: -2px; padding: 2px;
+    border-radius: 8px; background: transparent;
+  }
+  .row:hover { background: var(--surface-2); }
+  .row.is-locked { opacity: .78; }
+
+  .cb {
+    flex: none; width: 20px; height: 20px; margin-top: 1px;
+    display: grid; place-content: center; cursor: pointer;
+    background: none; border: 0; padding: 0; color: var(--text-subdued);
+  }
+  .cb:hover { color: var(--text-default); }
+  .cb[data-done="true"] { color: var(--positive); }
+  .cb:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; border-radius: 4px; }
+
+  .content { flex: 1 1 auto; min-width: 0; position: relative; }
+
+  /* ============================================================
+     THE INLINE FIELD
+     The same element carries the text in both states. Nothing is
+     swapped in, so there is nothing to reflow. Every chrome option
+     below paints with box-shadow, background or an absolutely
+     positioned rule - never border or padding, which take space.
+     ============================================================ */
+  .prose {
+    display: block;
+    outline: none;
+    border-radius: 4px;
+    white-space: pre-wrap; word-break: break-word;
+    transition: background .12s ease, box-shadow .12s ease;
+  }
+
+  .row[data-done="true"] .prose { text-decoration: line-through; opacity: .5; }
+
+  /* The cursor is the entire resting affordance. No outline, no tint, no
+     hint - hovering an editable item is indistinguishable from hovering a
+     read-only one except that the pointer becomes a caret. */
+  body[data-enter="text"] .row:not(.is-readonly) .prose:hover,
+  body[data-enter="dbl"]  .row:not(.is-readonly) .prose:hover { cursor: text; }
+
+  /* --- chrome while editing --- */
+  .prose[contenteditable="true"] { cursor: text; }
+
+  body[data-chrome="tint"]  .prose[contenteditable="true"] { background: var(--surface-3); }
+  body[data-chrome="field"] .prose[contenteditable="true"] { box-shadow: 0 0 0 1px var(--border-strong); background: var(--surface-1); }
+  body[data-chrome="rule"]  .prose[contenteditable="true"] { background: var(--surface-2); }
+  body[data-chrome="rule"]  .prose[contenteditable="true"]::before {
+    content: ""; position: absolute; left: -10px; top: 0; bottom: 0;
+    width: 2px; border-radius: 1px; background: var(--action);
+  }
+
+  /* the naive implementation, for contrast: real border + padding,
+     which pushes every glyph down and to the right on entry */
+  body[data-naive="on"] .prose[contenteditable="true"] {
+    border: 1px solid var(--border-strong);
+    padding: 6px 8px;
+    background: var(--surface-1);
+    box-shadow: none;
+  }
+
+  /* --- gutter dot save feedback --- */
+  .dot-gutter {
+    position: absolute; left: -14px; top: 8px;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: transparent; transition: background .18s ease;
+  }
+  .dot-gutter[data-s="dirty"] { background: var(--amber); }
+  .dot-gutter[data-s="saved"] { background: var(--positive); }
+
+  /* --- whisper save feedback --- */
+  .whisper {
+    position: absolute; right: 0; top: -16px;
+    font-size: 11px; color: var(--text-subdued);
+    opacity: 0; pointer-events: none;
+  }
+  .whisper.show { opacity: 1; }
+  @media (prefers-reduced-motion: no-preference) {
+    .whisper { transition: opacity .5s ease; }
+  }
+
+  /* --- floating format bar --- */
+  .floatbar {
+    position: absolute; z-index: 40;
+    display: flex; gap: 1px; padding: 3px;
+    background: var(--text-default); border-radius: 7px;
+    box-shadow: var(--shadow-lift);
+  }
+  .floatbar button {
+    appearance: none; border: 0; background: none; cursor: pointer;
+    color: #fff; width: 24px; height: 24px; border-radius: 5px;
+    font: inherit; font-size: 11.5px; font-weight: 700;
+    display: grid; place-content: center;
+  }
+  .floatbar button:hover { background: rgba(255, 255, 255, .16); }
+  .floatbar .i { font-style: italic; font-weight: 600; }
+
+  .who {
+    flex: none; display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; color: var(--text-subdued); white-space: nowrap; margin-top: 1px;
+  }
+  .who .av {
+    width: 18px; height: 18px; border-radius: 50%; flex: none;
+    display: grid; place-content: center; font-size: 9px; font-weight: 600;
+    background: var(--surface-3); color: var(--text-subdued);
+    border: 1px solid var(--border-default);
+  }
+  .row[data-done="true"] .who { opacity: .5; }
+
+  .kebab, .pencil {
+    flex: none; width: 22px; height: 22px; border-radius: 4px;
+    display: grid; place-content: center; cursor: pointer;
+    background: none; border: 0; padding: 0; color: var(--text-subdued);
+    opacity: 0; transition: opacity .1s ease, background .1s ease;
+  }
+  .kebab:hover, .pencil:hover { background: var(--surface-3); color: var(--text-default); }
+  .row:hover .kebab, .row:focus-within .kebab,
+  .row:hover .pencil, .row:focus-within .pencil { opacity: 1; }
+  .kebab[aria-expanded="true"] { opacity: 1; background: var(--surface-3); }
+  .kebab:focus-visible, .pencil:focus-visible { opacity: 1; outline: 2px solid var(--action); outline-offset: 1px; }
+  body:not([data-enter="pencil"]) .pencil { display: none; }
+
+  /* ---------- Dropdown ---------- */
+  .menu {
+    position: absolute; right: 0; top: 26px; z-index: 30; min-width: 168px;
+    background: var(--surface-1); border: 1px solid var(--border-default);
+    border-radius: 8px; box-shadow: var(--shadow-lift); padding: 4px;
+    display: flex; flex-direction: column;
+  }
+  .menu button {
+    appearance: none; border: 0; background: none; font: inherit; font-size: 13px;
+    text-align: left; padding: 7px 9px; border-radius: 5px; cursor: pointer;
+    color: var(--text-default); display: flex; align-items: center; gap: 9px;
+  }
+  .menu button:hover { background: var(--surface-2); }
+  .menu button:focus-visible { outline: 2px solid var(--action); outline-offset: -2px; }
+  .menu button.neg { color: var(--negative); }
+  .menu button[disabled] { opacity: .4; cursor: not-allowed; }
+  .menu .sep { height: 1px; background: var(--border-soft); margin: 4px 2px; }
+  .menu .ic { width: 15px; display: grid; place-content: center; flex: none; color: currentColor; }
+
+  /* ---------- Lock ---------- */
+  .lockbar {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 12px; color: var(--text-subdued);
+    background: var(--surface-3); border: 1px solid var(--border-default);
+    border-radius: 6px; padding: 5px 9px; margin-bottom: 6px;
+  }
+  .lockbar .pulse { width: 6px; height: 6px; border-radius: 50%; background: var(--action); flex: none; }
+  @media (prefers-reduced-motion: no-preference) {
+    .lockbar .pulse { animation: pulse 1.6s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .25; } }
+  }
+
+  /* ---------- Reorder-conflict inspection ---------- */
+  body[data-conflict="on"] .prose:not([contenteditable="true"]) {
+    background: repeating-linear-gradient(45deg, rgba(220, 38, 38, .10) 0 6px, rgba(220, 38, 38, .02) 6px 12px);
+    box-shadow: inset 0 0 0 1px rgba(220, 38, 38, .35);
+  }
+
+  /* ---------- Log ---------- */
+  .log {
+    background: var(--bench-panel); border: 1px solid var(--bench-line);
+    border-radius: 10px; overflow: hidden;
+  }
+  .log-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 11px 14px; border-bottom: 1px solid var(--bench-line);
+  }
+  .log-body {
+    max-height: 250px; overflow-y: auto; padding: 10px 14px 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11.5px; line-height: 1.65;
+  }
+  .log-empty { color: var(--bench-ink-3); margin: 0; font-family: inherit; }
+  .log-line { margin: 0 0 3px; color: var(--bench-ink-2); display: flex; gap: 8px; }
+  .log-line .n { color: var(--bench-ink-3); flex: none; width: 20px; text-align: right; font-variant-numeric: tabular-nums; }
+  .log-line .w { word-break: break-word; }
+  .log-line.write .w { color: var(--bench-ink); }
+  .log-line.noise .w { color: var(--amber); }
+  .log-line.quiet .w { color: var(--bench-ink-3); }
+
+  .mini-seg { display: flex; gap: 1px; background: var(--bench-line); border: 1px solid var(--bench-line); border-radius: 6px; overflow: hidden; }
+  .mini-seg button {
+    appearance: none; border: 0; background: var(--bench-raise); color: var(--bench-ink-2);
+    font: inherit; font-size: 11px; padding: 4px 9px; cursor: pointer;
+  }
+  .mini-seg button[aria-pressed="true"] { background: var(--bench-ink); color: var(--bench-bg); }
+
+  /* ---------- Notes ---------- */
+  .note {
+    border-left: 2px solid var(--bench-line-2); padding-left: 14px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .note p { margin: 0; font-size: 12.5px; line-height: 1.6; color: var(--bench-ink-2); }
+  .note strong { color: var(--bench-ink); font-weight: 600; }
+  .note em { font-style: italic; }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+</style>
+
+<div class="frame">
+
+  <!-- ===================== CONTROL RAIL ===================== -->
+  <aside class="rail">
+    <div class="rail-head">
+      <h1 class="rail-title">Inline edit bench</h1>
+      <p class="rail-sub">
+        Round 2. The text itself becomes typeable where it sits. No editor
+        opens, nothing is swapped in, and the words never move. Currently set
+        to the chosen combination: invisible field, format bar on selection,
+        silent saves, click the text.
+      </p>
+    </div>
+
+    <div class="group featured">
+      <p class="eyebrow primary">How much chrome edit mode gets</p>
+      <div class="seg" id="seg-chrome" role="group" aria-label="Edit chrome">
+        <button data-v="none" aria-pressed="true"><span class="k">1</span>Nothing but a caret</button>
+        <button data-v="tint" aria-pressed="false"><span class="k">2</span>Tint the text block</button>
+        <button data-v="rule" aria-pressed="false"><span class="k">3</span>Tint plus a left rule</button>
+        <button data-v="field" aria-pressed="false"><span class="k">4</span>Hairline around it</button>
+      </div>
+      <p class="group-note">
+        All four are painted with background and box-shadow, never border or
+        padding, so the glyphs stay on the exact pixel they occupied at rest.
+        Switch on <em>Naive box model</em> below to see what the obvious
+        implementation does instead.
+      </p>
+      <p class="group-note">
+        <em>Nothing but a caret</em> is the current direction and it is literal:
+        no outline at rest, none on hover, none while editing. Hovering an item
+        you can edit looks exactly like hovering one you cannot. The pointer
+        turning into a caret is the whole affordance.
+      </p>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Formatting, with no toolbar to put it in</p>
+      <div class="seg" id="seg-fmt" role="group" aria-label="Formatting affordance">
+        <button data-v="none" aria-pressed="false"><span class="k">Q</span>None at all</button>
+        <button data-v="md" aria-pressed="false"><span class="k">W</span>Markdown shortcuts</button>
+        <button data-v="bar" aria-pressed="true"><span class="k">E</span>Bar on selection</button>
+      </div>
+      <p class="group-note">
+        The composer already uses <em>MarkdownEditor</em>, and RND-4171 built a
+        hovering format bar. Select a few words with <em>Bar on selection</em> on.
+      </p>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Telling you it saved</p>
+      <div class="seg" id="seg-feedback" role="group" aria-label="Save feedback">
+        <button data-v="silent" aria-pressed="true"><span class="k">A</span>Say nothing</button>
+        <button data-v="dot" aria-pressed="false"><span class="k">S</span>Dot in the gutter</button>
+        <button data-v="whisper" aria-pressed="false"><span class="k">D</span>Saved, then fade</button>
+      </div>
+      <p class="group-note">
+        Round 1 parked this in the toolbar. With the toolbar gone it has nowhere
+        obvious to live, and autosave means nobody ever pressed a button to
+        confirm they meant it.
+      </p>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">How you get in</p>
+      <div class="seg" id="seg-enter" role="group" aria-label="Entry gesture">
+        <button data-v="text" aria-pressed="true"><span class="k">Z</span>Click the text</button>
+        <button data-v="dbl" aria-pressed="false"><span class="k">X</span>Double-click the text</button>
+        <button data-v="pencil" aria-pressed="false"><span class="k">C</span>Pencil on hover</button>
+        <button data-v="menu" aria-pressed="false"><span class="k">V</span>Edit in the kebab menu</button>
+      </div>
+      <p class="group-note">
+        Inline editing pulls hard toward clicking the text, which is exactly the
+        area drag-to-reorder claimed. Turn on <em>Reorder tension</em>.
+      </p>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Who may edit</p>
+      <div class="seg" id="seg-perm" role="group" aria-label="Permission model">
+        <button data-v="anyone" aria-pressed="true"><span class="k">F</span>Anyone with access</button>
+        <button data-v="author" aria-pressed="false"><span class="k">G</span>Staff or the author</button>
+      </div>
+      <p class="group-note">
+        You are <strong>Dana Whitfield</strong>. Under the second option Marco's
+        and Priya's rows stop responding to the gesture entirely, which is a
+        harder thing to explain when the gesture is just clicking text.
+      </p>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Inspect</p>
+      <label class="switch">
+        <input type="checkbox" id="chk-naive">
+        <span>Naive box model<br><span class="sub">Border and padding, so the text jumps</span></span>
+      </label>
+      <label class="switch">
+        <input type="checkbox" id="chk-conflict">
+        <span>Reorder tension<br><span class="sub">Hatch the area drag already claims</span></span>
+      </label>
+      <label class="switch">
+        <input type="checkbox" id="chk-lock">
+        <span>Someone else is editing<br><span class="sub">Priya holds the second row</span></span>
+      </label>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Keyboard</p>
+      <p class="group-note">
+        <kbd>Esc</kbd> reverts and leaves. <kbd>Enter</kbd> is a newline, because
+        these are markdown. Clicking anywhere else commits, which is the only
+        way out that does not need a button.
+      </p>
+    </div>
+  </aside>
+
+  <!-- ===================== BENCH ===================== -->
+  <main class="bench">
+    <div class="bench-inner">
+
+      <div class="mount-label">
+        <p class="eyebrow">Mounted specimen / @m/tokens, light only</p>
+        <p id="hint">Click any item's text</p>
+      </div>
+
+      <section class="specimen" aria-label="Checklist specimen">
+        <div class="spec-head">
+          <div class="spec-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h7"/>
+            </svg>
+          </div>
+          <h2>Checklist</h2>
+          <span class="count" id="spec-count"></span>
+        </div>
+        <div class="list" id="list"></div>
+      </section>
+
+      <section class="log" aria-label="Mutation log">
+        <div class="log-head">
+          <p class="eyebrow">What each action writes</p>
+          <div class="mini-seg" id="seg-activity" role="group" aria-label="Activity stream behaviour">
+            <button data-v="every" aria-pressed="true">Log every write</button>
+            <button data-v="coalesce" aria-pressed="false">Coalesce</button>
+          </div>
+        </div>
+        <div class="log-body" id="log">
+          <p class="log-empty">Click into an item and type. Autosave runs at 4s idle with a 15s ceiling.</p>
+        </div>
+      </section>
+
+      <div class="note">
+        <p><strong>Why there is no Save button in this round.</strong> A button is
+        a promise that nothing is written until you press it. Inline editing makes
+        the opposite promise: the text is the document, and leaving is the commit.
+        Keeping both would be lying about one of them, so this round is autosave
+        throughout and the only real question is how loudly it reports.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>Watch the first line of the top item.</strong> Turn on
+        <em>Naive box model</em>, click into it, and the whole paragraph shifts
+        down and right by the padding. That jump is the reason inline editing
+        usually feels cheap, and it is entirely avoidable: paint the state with
+        background and box-shadow, both of which sit outside layout.</p>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<div class="sr-only" role="status" aria-live="polite" id="live"></div>
+
+<script>
+(() => {
+  "use strict";
+
+  const ME = "Dana Whitfield";
+
+  const ITEMS = [
+    { id: "di_4a91", text: "Reserved Instance coverage dropped to 61% this month after the m5 fleet was retired. We should decide whether to re-cover with Savings Plans or let it ride until the r7g migration lands.", who: "Dana Whitfield", done: false },
+    { id: "di_7c02", text: "Budget alert thresholds are still pointing at the old prod account.", who: "Marco Reyes", done: false },
+    { id: "di_9b3d", text: "Open question on the CloudFront invalidation spike. Finance flagged it as an anomaly but it tracks a deploy, so I think it is expected.", who: "Priya Raman", done: false },
+    { id: "di_1f5e", text: "Walk through the S3 lifecycle policy proposal.", who: "Dana Whitfield", done: true },
+    { id: "di_6d17", text: "Quick status on the GuardDuty findings backlog.", who: "Priya Raman", done: false }
+  ];
+
+  const LOCKED_ID = "di_7c02";
+
+  const S = {
+    chrome: "none",
+    fmt: "bar",
+    feedback: "silent",
+    enter: "text",
+    perm: "anyone",
+    activity: "every",
+    naive: false, conflict: false, lock: false,
+    editingId: null, baseline: "", saveState: "idle", menuId: null
+  };
+
+  const listEl  = document.getElementById("list");
+  const logEl   = document.getElementById("log");
+  const hintEl  = document.getElementById("hint");
+  const countEl = document.getElementById("spec-count");
+  const specEl  = document.querySelector(".specimen");
+
+  const byId = (id) => ITEMS.find(i => i.id === id);
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const ICON = {
+    circle: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/></svg>',
+    check:  '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/><path d="M5.3 8.2l1.9 1.9 3.5-3.9"/></svg>',
+    dots:   '<svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><circle cx="7" cy="3" r="1.2"/><circle cx="7" cy="7" r="1.2"/><circle cx="7" cy="11" r="1.2"/></svg>',
+    pencil: '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.2 2.4l2.4 2.4M2.5 11.1l8.1-8.1 2.4 2.4-8.1 8.1-3 .6z"/></svg>',
+    done:   '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/><path d="M5.3 8.2l1.9 1.9 3.5-3.9"/></svg>',
+    open:   '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/></svg>',
+    del:    '<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><rect x="2.2" y="2.2" width="11.6" height="11.6" rx="2.4"/><path d="M6 6l4 4M10 6l-4 4"/></svg>'
+  };
+
+  const initials = (n) => n.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
+  const esc = (s) => s.replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+
+  // ---------------------------------------------------------------
+  // Log
+  // ---------------------------------------------------------------
+  let logN = 0;
+  function log(text, kind) {
+    const empty = logEl.querySelector(".log-empty");
+    if (empty) empty.remove();
+    const p = document.createElement("p");
+    p.className = "log-line " + (kind || "");
+    p.innerHTML = '<span class="n">' + (++logN) + '</span><span class="w">' + esc(text) + "</span>";
+    logEl.appendChild(p);
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  const canEdit = (item) => {
+    if (S.lock && item.id === LOCKED_ID) return false;
+    return S.perm === "anyone" ? true : item.who === ME;
+  };
+
+  // ---------------------------------------------------------------
+  // Autosave. No buttons in this round, so the timers are the model.
+  // ---------------------------------------------------------------
+  const IDLE_MS = 4000, MAX_MS = 15000;
+  let idleT = null, maxT = null;
+
+  function clearTimers() { clearTimeout(idleT); clearTimeout(maxT); idleT = maxT = null; }
+
+  function armAutosave() {
+    clearTimeout(idleT);
+    idleT = setTimeout(() => commit("idle"), IDLE_MS);
+    if (!maxT) maxT = setTimeout(() => commit("ceiling"), MAX_MS);
+  }
+
+  function proseEl(id) {
+    const row = listEl.querySelector('[data-id="' + id + '"]');
+    return row ? row.querySelector(".prose") : null;
+  }
+
+  function setFeedback(state) {
+    S.saveState = state;
+    if (!S.editingId) return;
+    const row = listEl.querySelector('[data-id="' + S.editingId + '"]');
+    if (!row) return;
+    const dot = row.querySelector(".dot-gutter");
+    const wh  = row.querySelector(".whisper");
+    if (dot) dot.dataset.s = S.feedback === "dot" ? state : "idle";
+    if (wh) {
+      if (S.feedback === "whisper" && state === "saved") {
+        wh.textContent = "Saved";
+        wh.classList.add("show");
+        setTimeout(() => wh.classList.remove("show"), reduceMotion ? 900 : 1200);
+      } else if (state !== "saved") {
+        wh.classList.remove("show");
+      }
+    }
+  }
+
+  function commit(reason) {
+    if (!S.editingId) return;
+    const item = byId(S.editingId);
+    const el = proseEl(S.editingId);
+    if (!el) return;
+    const now = el.innerText;
+    if (now === S.baseline) { clearTimers(); return; }
+    item.text = now;
+    S.baseline = now;
+    log('updateChecklistItem({ id: "' + item.id + '", content: <' + now.length + " chars> })", "write");
+    if (S.activity === "every") log('  activity stream: "Dana Whitfield updated a checklist item"', "noise");
+    if (reason) log("  triggered by: " + reason, "quiet");
+    clearTimers();
+    setFeedback("saved");
+    setTimeout(() => { if (S.saveState === "saved") setFeedback("idle"); }, 1300);
+  }
+
+  // ---------------------------------------------------------------
+  // Enter and leave. Nothing is swapped in: the same element that
+  // was showing the text becomes the field.
+  // ---------------------------------------------------------------
+  function beginEdit(id, placeCaretAtEnd) {
+    const item = byId(id);
+    if (!item || !canEdit(item)) return;
+    if (S.editingId && S.editingId !== id) leaveEdit(true);
+    const el = proseEl(id);
+    if (!el) return;
+    S.editingId = id;
+    S.baseline = item.text;
+    S.menuId = null;
+    el.setAttribute("contenteditable", "true");
+    el.setAttribute("role", "textbox");
+    el.setAttribute("aria-multiline", "true");
+    log("caret into " + id + " (no write yet)", "quiet");
+    if (placeCaretAtEnd) {
+      el.focus();
+      const r = document.createRange(); r.selectNodeContents(el); r.collapse(false);
+      const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+    }
+    paintHint();
+  }
+
+  function leaveEdit(save) {
+    if (!S.editingId) return;
+    const id = S.editingId;
+    const el = proseEl(id);
+    const item = byId(id);
+    if (el) {
+      if (save) commit("left the field");
+      else {
+        if (el.innerText !== item.text) log("reverted " + id + " (nothing written)", "quiet");
+        el.innerText = item.text;
+      }
+      el.removeAttribute("contenteditable");
+      el.removeAttribute("role");
+      el.removeAttribute("aria-multiline");
+    }
+    if (S.activity === "coalesce" && save) {
+      log('  activity stream: "Dana Whitfield updated a checklist item" (once)', "noise");
+    }
+    clearTimers();
+    hideBar();
+    S.editingId = null;
+    setFeedback("idle");
+    S.saveState = "idle";
+  }
+
+  // ---------------------------------------------------------------
+  // Formatting affordances
+  // ---------------------------------------------------------------
+  let barEl = null;
+  function hideBar() { if (barEl) { barEl.remove(); barEl = null; } }
+
+  function showBarForSelection() {
+    if (S.fmt !== "bar" || !S.editingId) return hideBar();
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed || sel.rangeCount === 0) return hideBar();
+    const el = proseEl(S.editingId);
+    if (!el || !el.contains(sel.anchorNode)) return hideBar();
+    const r = sel.getRangeAt(0).getBoundingClientRect();
+    const host = specEl.getBoundingClientRect();
+    if (!barEl) {
+      barEl = document.createElement("div");
+      barEl.className = "floatbar";
+      barEl.innerHTML = '<button type="button" aria-label="Bold">B</button>' +
+                        '<button type="button" class="i" aria-label="Italic">I</button>' +
+                        '<button type="button" aria-label="Link">&#128279;</button>';
+      specEl.appendChild(barEl);
+    }
+    barEl.style.left = Math.max(8, r.left - host.left + r.width / 2 - 40) + "px";
+    barEl.style.top  = (r.top - host.top - 36) + "px";
+  }
+
+
+  // ---------------------------------------------------------------
+  // Render. Never called while a field is live.
+  // ---------------------------------------------------------------
+  function menuHTML(item) {
+    const editable = canEdit(item);
+    const mayDelete = item.who === ME;
+    let h = '<div class="menu" role="menu">';
+    if (S.enter === "menu") {
+      h += '<button role="menuitem" data-act="edit"' + (editable ? "" : " disabled") + '><span class="ic">' + ICON.pencil + "</span>Edit</button>";
+      h += '<div class="sep"></div>';
+    }
+    h += '<button role="menuitem" data-act="toggle"><span class="ic">' + (item.done ? ICON.open : ICON.done) + "</span>" + (item.done ? "Open" : "Done") + "</button>";
+    if (mayDelete) {
+      h += '<div class="sep"></div>';
+      h += '<button role="menuitem" class="neg" data-act="delete"><span class="ic">' + ICON.del + "</span>Delete</button>";
+    }
+    return h + "</div>";
+  }
+
+  function paintHint() {
+    if (S.editingId) {
+      hintEl.textContent = S.fmt === "md"
+        ? "**bold**  _italic_  - list     Esc reverts"
+        : "Click anywhere else to commit, Esc to revert";
+      return;
+    }
+    hintEl.textContent = { text: "Click any item's text", dbl: "Double-click any item's text",
+          pencil: "Hover a row to reveal its pencil", menu: "Open the kebab menu on any row" }[S.enter];
+  }
+
+  function render() {
+    document.body.dataset.chrome   = S.chrome;
+    document.body.dataset.enter    = S.enter;
+    document.body.dataset.naive    = S.naive ? "on" : "off";
+    document.body.dataset.conflict = S.conflict ? "on" : "off";
+
+    listEl.innerHTML = ITEMS.map(item => {
+      const locked   = S.lock && item.id === LOCKED_ID;
+      const readOnly = !canEdit(item);
+      return (
+        '<div class="row' + (locked ? " is-locked" : "") + (readOnly ? " is-readonly" : "") + '"' +
+             ' data-id="' + item.id + '" data-done="' + item.done + '">' +
+          '<i class="dot-gutter" data-s="idle" aria-hidden="true"></i>' +
+          '<button class="cb" data-act="check" data-done="' + item.done + '" aria-label="' + (item.done ? "Mark open" : "Mark done") + '">' +
+            (item.done ? ICON.check : ICON.circle) + "</button>" +
+          '<div class="content">' +
+            (locked ? '<div class="lockbar"><i class="pulse"></i>Priya Raman is editing this</div>' : "") +
+            '<i class="dot-gutter" data-s="idle" aria-hidden="true"></i>' +
+            '<span class="whisper" aria-hidden="true"></span>' +
+            '<div class="prose">' + esc(item.text) + "</div>" +
+          "</div>" +
+          '<span class="who"><span class="av">' + initials(item.who) + "</span>" + esc(item.who.split(" ")[0]) + "</span>" +
+          (S.enter === "pencil" && !readOnly
+            ? '<button class="pencil" data-act="edit" aria-label="Edit">' + ICON.pencil + "</button>" : "") +
+          '<button class="kebab" data-act="menu" aria-haspopup="menu" aria-expanded="' + (S.menuId === item.id) + '" aria-label="More">' + ICON.dots + "</button>" +
+          (S.menuId === item.id ? menuHTML(item) : "") +
+        "</div>"
+      );
+    }).join("");
+
+    countEl.textContent = ITEMS.filter(i => !i.done).length + " open / " + ITEMS.length;
+    paintHint();
+  }
+
+  // ---------------------------------------------------------------
+  // Events
+  // ---------------------------------------------------------------
+  // mousedown so the browser places the caret where the click landed
+  listEl.addEventListener("mousedown", (e) => {
+    if (S.enter !== "text") return;
+    const p = e.target.closest(".prose");
+    if (!p) return;
+    const row = p.closest(".row");
+    if (!row || row.classList.contains("is-readonly")) return;
+    if (S.editingId === row.dataset.id) return;
+    beginEdit(row.dataset.id, false);
+  });
+
+  document.addEventListener("dblclick", (e) => {
+    if (S.enter !== "dbl") return;
+    const p = e.target.closest(".prose");
+    if (p) beginEdit(p.closest(".row").dataset.id, false);
+  });
+
+  document.addEventListener("click", (e) => {
+    const actEl = e.target.closest("[data-act]");
+    const row = e.target.closest(".row");
+    const id = row && row.dataset.id;
+
+    if (actEl) {
+      const act = actEl.dataset.act;
+      if (act === "menu")   { const t = S.menuId === id ? null : id; leaveEdit(true); S.menuId = t; render(); return; }
+      if (act === "edit")   { const t = id; leaveEdit(true); render(); beginEdit(t, true); return; }
+      if (act === "check" || act === "toggle") {
+        const item = byId(id); item.done = !item.done; S.menuId = null;
+        leaveEdit(true);
+        log('updateChecklistItem({ id: "' + id + '", status: ' + (item.done ? "COMPLETED" : "OPEN") + " })", "write");
+        log("  content untouched", "quiet");
+        render(); return;
+      }
+      if (act === "delete") {
+        leaveEdit(false);
+        const i = ITEMS.findIndex(x => x.id === id);
+        if (i > -1) ITEMS.splice(i, 1);
+        S.menuId = null;
+        log('deleteChecklistItem({ id: "' + id + '" })', "write");
+        render(); return;
+      }
+    }
+
+    if (barEl && barEl.contains(e.target)) return;
+
+    // leaving the field is the commit
+    if (S.editingId && !e.target.closest('.prose[contenteditable="true"]')) leaveEdit(true);
+    if (S.menuId && !e.target.closest(".menu")) { S.menuId = null; render(); }
+  });
+
+  document.addEventListener("input", (e) => {
+    if (!S.editingId) return;
+    const el = proseEl(S.editingId);
+    if (e.target !== el) return;
+    setFeedback(el.innerText === S.baseline ? "idle" : "dirty");
+    if (el.innerText !== S.baseline) armAutosave();
+  });
+
+  document.addEventListener("selectionchange", () => { if (S.fmt === "bar") showBarForSelection(); });
+
+  document.addEventListener("keydown", (e) => {
+    if (!S.editingId) return;
+    if (e.key === "Escape") { e.preventDefault(); leaveEdit(false); }
+  });
+
+  function seg(elId, key, after) {
+    const root = document.getElementById(elId);
+    root.addEventListener("click", (e) => {
+      const b = e.target.closest("button[data-v]");
+      if (!b) return;
+      leaveEdit(true);
+      S[key] = b.dataset.v;
+      [...root.querySelectorAll("button")].forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+      if (after) after();
+      render();
+    });
+  }
+
+  seg("seg-chrome", "chrome");
+  seg("seg-fmt", "fmt");
+  seg("seg-feedback", "feedback");
+  seg("seg-enter", "enter");
+  seg("seg-perm", "perm");
+  seg("seg-activity", "activity");
+
+  document.getElementById("chk-naive").addEventListener("change", e => { leaveEdit(true); S.naive = e.target.checked; render(); });
+  document.getElementById("chk-conflict").addEventListener("change", e => { leaveEdit(true); S.conflict = e.target.checked; render(); });
+  document.getElementById("chk-lock").addEventListener("change", e => {
+    leaveEdit(true); S.lock = e.target.checked; render();
+  });
+
+  // ---------------------------------------------------------------
+  // Deep links. Every dimension the rail can set is addressable, so a
+  // slide can embed this file at one exact configuration rather than
+  // asking a viewer to work the switches. Named values only; unknown
+  // values are ignored rather than guessed at.
+  //
+  //   ?chrome=off&naive=1   is the 0px-versus-14px comparison
+  //   ?chrome=off&conflict=1 hatches the contested region
+  // ---------------------------------------------------------------
+  function applyDeepLink() {
+    const q = new URLSearchParams(location.search);
+    const allowed = {
+      chrome:   ["none", "tint", "rule", "field"],
+      fmt:      ["none", "md", "bar"],
+      feedback: ["silent", "dot", "whisper"],
+      enter:    ["text", "dbl", "pencil", "menu"],
+      perm:     ["anyone", "author"],
+      activity: ["every", "coalesce"]
+    };
+    // Drive the real buttons rather than writing S directly, so each
+    // dimension's own side effects (leaveEdit, re-render) still run.
+    Object.keys(allowed).forEach(k => {
+      const v = q.get(k);
+      if (!v || !allowed[k].includes(v)) return;
+      const btn = document.querySelector('#seg-' + k + ' button[data-v="' + v + '"]');
+      if (btn) btn.click();
+    });
+
+    [["naive", "chk-naive"], ["conflict", "chk-conflict"], ["lock", "chk-lock"]].forEach(([key, id]) => {
+      if (q.get(key) !== "1") return;
+      const chk = document.getElementById(id);
+      if (!chk) return;
+      chk.checked = true;
+      chk.dispatchEvent(new Event("change"));
+    });
+
+    // The embed switch is "embed", not "chrome". This bench already
+    // uses "chrome" for the edit-chrome dimension, and one name
+    // meaning two things is a trap for whoever writes the slides.
+    if (q.get("embed") === "1") document.body.classList.add("is-embed");
+  }
+  applyDeepLink();
+
+  // ---------------------------------------------------------------
+  // Escape hands the deck back. Keydown never crosses out of an
+  // iframe, so once focus is in here a presenter has no keyboard
+  // route back to the slides. Blurring to the parent restores it.
+  // ---------------------------------------------------------------
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape" || window.parent === window) return;
+    const el = document.activeElement;
+    if (el && el !== document.body) el.blur();
+    window.parent.focus();
+  });
+
+  render();
+})();
+</script>

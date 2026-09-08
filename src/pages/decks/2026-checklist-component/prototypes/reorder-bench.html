@@ -1,4 +1,5 @@
-<title>Reorder Bench: Loop discussion items</title>
+<meta charset="utf-8">
+<title>Checklist: reorder bench</title>
 
 <style>
   /* ============================================================
@@ -99,6 +100,32 @@
     font-size: 14px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------------------------------------------------------------
+     EMBED MODE - ?embed=1
+     Strips the instrument down to the specimen so a slide can carry
+     one idea at a size readable from across a room. The rail's 10px
+     labels are unreadable at presentation distance anyway, and a
+     dense panel competes with the speaker; the configuration it
+     would set arrives through deep-link params instead.
+     The full bench is always one click away for questions.
+     --------------------------------------------------------------- */
+  body.is-embed .rail,
+  body.is-embed .mount-label,
+  body.is-embed .log,
+  body.is-embed .note { display: none; }
+  body.is-embed .frame { display: block; min-height: 0; }
+  /* Keep the bench's own max-width. The specimen's line length is a
+     design decision, so the iframe gets sized to the specimen rather
+     than the specimen stretched to the iframe. */
+  body.is-embed .bench-inner { gap: 0; }
+  /* Centre in whatever height the slide gives the frame, so one embed
+     rule survives every iframe size instead of needing a per-slide fit. */
+  body.is-embed .bench {
+    padding: 28px;
+    min-height: 100vh;
+    justify-content: center;
   }
 
   /* ---------- Page frame ---------- */
@@ -504,7 +531,7 @@
     <div class="rail-head">
       <h1 class="rail-title">Reorder bench</h1>
       <p class="rail-sub">
-        Loop discussion items. Order the list, then tick things off out of
+        Checklist items. Order the list, then tick things off out of
         sequence and watch what the list does.
       </p>
     </div>
@@ -558,7 +585,7 @@
     <div class="group">
       <p class="eyebrow">Comparison</p>
       <div class="seg" id="seg-mode" role="group" aria-label="Which list">
-        <button data-v="discussion" aria-pressed="true"><span class="k">D</span>Discussion items</button>
+        <button data-v="checklist" aria-pressed="true"><span class="k">D</span>Checklist</button>
         <button data-v="tasks" aria-pressed="false"><span class="k">T</span>Tasks</button>
       </div>
       <p class="group-note" id="mode-note">
@@ -598,14 +625,14 @@
         <p id="hint">Hover a row to reveal its handle</p>
       </div>
 
-      <section class="specimen" aria-label="Loop widget specimen">
+      <section class="specimen" aria-label="Checklist specimen">
         <div class="spec-head">
           <div class="spec-icon" aria-hidden="true">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
               <path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h7"/>
             </svg>
           </div>
-          <h2 id="spec-title">Discussion</h2>
+          <h2 id="spec-title">Checklist</h2>
           <span class="count" id="spec-count"></span>
         </div>
 
@@ -615,7 +642,7 @@
           <span class="cb" aria-hidden="true">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.4"/></svg>
           </span>
-          <input id="composer-input" placeholder="Add to discussion" aria-label="Add to discussion">
+          <input id="composer-input" placeholder="Add an item" aria-label="Add an item">
         </div>
       </section>
 
@@ -655,7 +682,7 @@
   // ---------------------------------------------------------------
   // Data
   // ---------------------------------------------------------------
-  const DISCUSSION = [
+  const CHECKLIST = [
     { id: "di_4a91", text: "Reserved Instance coverage dropped to 61% this month after the m5 fleet was retired. We should decide whether to re-cover with Savings Plans or let it ride until the r7g migration lands.", who: "Dana Whitfield", done: false },
     { id: "di_7c02", text: "Budget alert thresholds are still pointing at the old prod account.", who: "Marco Reyes", done: false },
     { id: "di_1f5e", text: "Walk through the S3 lifecycle policy proposal.", who: "Dana Whitfield", done: true },
@@ -684,12 +711,12 @@
     it.pos = +((i + 1) / (arr.length + 1)).toFixed(6);
     it.doneAt = it.done ? ++doneSeq : null;
   });
-  seed(DISCUSSION); seed(TASKS);
+  seed(CHECKLIST); seed(TASKS);
 
-  const DATA = { discussion: DISCUSSION, tasks: TASKS };
+  const DATA = { checklist: CHECKLIST, tasks: TASKS };
 
   const S = {
-    mode: "discussion",
+    mode: "checklist",
     checked: "inplace",
     grab: "handle",
     drop: "line",
@@ -725,11 +752,11 @@
   const esc = (s) => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
 
   function statusIcon(it) {
-    if (S.mode === "discussion") return it.done ? ICON.check : ICON.circle;
+    if (S.mode === "checklist") return it.done ? ICON.check : ICON.circle;
     return { TO_DO: ICON.circle, IN_PROGRESS: ICON.half, DONE: ICON.check, CANCELLED: ICON.cross }[it.status];
   }
   function statusState(it) {
-    if (S.mode === "discussion") return it.done ? "done" : "open";
+    if (S.mode === "checklist") return it.done ? "done" : "open";
     return { TO_DO: "open", IN_PROGRESS: "progress", DONE: "done", CANCELLED: "cancelled" }[it.status];
   }
 
@@ -766,9 +793,9 @@
     const isTask = S.mode === "tasks";
     const all = manual();
 
-    titleEl.textContent = isTask ? "Tasks" : "Discussion";
+    titleEl.textContent = isTask ? "Tasks" : "Checklist";
     countEl.textContent = all.filter(i => !i.done).length + (isTask ? " active" : " open");
-    inputEl.placeholder = isTask ? "Add a task" : "Add to discussion";
+    inputEl.placeholder = isTask ? "Add a task" : "Add an item";
 
     const grouped = S.checked !== "inplace";
 
@@ -829,7 +856,7 @@
   }
 
   function logStatus(item) {
-    const op = S.mode === "tasks" ? "updateLoopTask" : "updateLoopDiscussionItem";
+    const op = S.mode === "tasks" ? "updateTask" : "updateChecklistItem";
     const val = S.mode === "tasks" ? item.status : (item.done ? "COMPLETED" : "OPEN");
     push(
       `<span class="op">${op}</span>  <span class="dim">${item.id}</span>\n` +
@@ -839,7 +866,7 @@
   }
 
   function logReorder(item, insertAt, list, span) {
-    const op = S.mode === "tasks" ? "reorderLoopTask" : "reorderLoopDiscussionItem";
+    const op = S.mode === "tasks" ? "reorderTask" : "reorderChecklistItem";
     let detail, writes;
 
     if (S.index === "fractional") {
@@ -1220,7 +1247,7 @@
   const KEYS = {
     "1": ["seg-checked", "inplace"], "2": ["seg-checked", "top"],
     "3": ["seg-checked", "collapsed"], "4": ["seg-checked", "bottom"],
-    "d": ["seg-mode", "discussion"], "t": ["seg-mode", "tasks"],
+    "d": ["seg-mode", "checklist"], "t": ["seg-mode", "tasks"],
     "q": ["seg-grab", "handle"], "w": ["seg-grab", "blank"], "e": ["seg-grab", "both"],
     "a": ["seg-drop", "line"], "s": ["seg-drop", "shift"],
     "z": ["seg-proxy", "compact"], "x": ["seg-proxy", "full"]
@@ -1233,6 +1260,57 @@
     if (!hit) return;
     const btn = document.querySelector(`#${hit[0]} button[data-v="${hit[1]}"]`);
     if (btn) btn.click();
+  });
+
+  // ---------------------------------------------------------------
+  // Deep links. Every dimension the rail can set is addressable, so a
+  // slide can embed this file at one exact configuration rather than
+  // asking a viewer to work the switches. Same contract as the
+  // presence bench: named values only, unknown values ignored.
+  //
+  //   ?chrome=off&grab=both&drop=line&proxy=compact&checked=inplace
+  // ---------------------------------------------------------------
+  function applyDeepLink() {
+    const q = new URLSearchParams(location.search);
+    const allowed = {
+      checked: ["inplace", "top", "collapsed", "bottom"],
+      grab:    ["handle", "blank", "both"],
+      drop:    ["line", "shift"],
+      proxy:   ["compact", "full"],
+      mode:    ["checklist", "tasks"],
+      index:   ["fractional", "integer"]
+    };
+    // Drive the real buttons rather than writing S directly, so each
+    // dimension's own side effects (re-render, hint text) still run.
+    Object.keys(allowed).forEach(k => {
+      const v = q.get(k);
+      if (!v || !allowed[k].includes(v)) return;
+      const btn = document.querySelector('#seg-' + k + ' button[data-v="' + v + '"]');
+      if (btn) btn.click();
+    });
+
+    [["zones", "chk-zones"], ["uniform", "chk-uniform"]].forEach(([key, id]) => {
+      if (q.get(key) !== "1") return;
+      const chk = document.getElementById(id);
+      if (!chk) return;
+      chk.checked = true;
+      chk.dispatchEvent(new Event("change"));
+    });
+
+    if (q.get("embed") === "1") document.body.classList.add("is-embed");
+  }
+  applyDeepLink();
+
+  // ---------------------------------------------------------------
+  // Escape hands the deck back. Keydown never crosses out of an
+  // iframe, so once focus is in here a presenter has no keyboard
+  // route back to the slides. Blurring to the parent restores it.
+  // ---------------------------------------------------------------
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape" || window.parent === window) return;
+    const el = document.activeElement;
+    if (el && el !== document.body) el.blur();
+    window.parent.focus();
   });
 
   inputEl.addEventListener("keydown", (e) => {

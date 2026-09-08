@@ -1,4 +1,5 @@
-<title>Presence Edit Bench</title>
+<meta charset="utf-8">
+<title>Checklist: presence bench</title>
 
 <style>
   /* ============================================================
@@ -84,6 +85,32 @@
     font-size: 14px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------------------------------------------------------------
+     EMBED MODE - ?embed=1
+     Strips the instrument down to the specimen so a slide can carry
+     one idea at a size readable from across a room. The rail's 10px
+     labels are unreadable at presentation distance anyway, and a
+     dense panel competes with the speaker; the configuration it
+     would set arrives through deep-link params instead.
+     The full bench is always one click away for questions.
+     --------------------------------------------------------------- */
+  body.is-embed .rail,
+  body.is-embed .mount-label,
+  body.is-embed .log,
+  body.is-embed .note { display: none; }
+  body.is-embed .frame { display: block; min-height: 0; }
+  /* Keep the bench's own max-width. The specimen's line length is a
+     design decision, so the iframe gets sized to the specimen rather
+     than the specimen stretched to the iframe. */
+  body.is-embed .bench-inner { gap: 0; }
+  /* Centre in whatever height the slide gives the frame, so one embed
+     rule survives every iframe size instead of needing a per-slide fit. */
+  body.is-embed .bench {
+    padding: 28px;
+    min-height: 100vh;
+    justify-content: center;
   }
 
   /* ---------- Page frame ---------- */
@@ -511,7 +538,7 @@
     <div class="group">
       <p class="eyebrow">Who may edit</p>
       <div class="seg" id="seg-perm" role="group" aria-label="Permission rule">
-        <button data-v="anyone" aria-pressed="true"><span class="k">F</span>Anyone in the Loop</button>
+        <button data-v="anyone" aria-pressed="true"><span class="k">F</span>Anyone with access</button>
         <button data-v="author" aria-pressed="false"><span class="k">G</span>Staff or the author</button>
       </div>
     </div>
@@ -541,7 +568,7 @@
     <div class="bench-inner">
 
       <div class="mount-label">
-        <p class="eyebrow">Two screens, one Loop / @m/tokens, light only</p>
+        <p class="eyebrow">Two screens, one list / @m/tokens, light only</p>
         <p id="hint">Click any item's text on the left</p>
       </div>
 
@@ -556,7 +583,7 @@
               <div class="spec-icon" aria-hidden="true">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h7"/></svg>
               </div>
-              <h2>Discussion</h2>
+              <h2>Checklist</h2>
             </div>
             <div class="list" id="list-you"></div>
           </section>
@@ -572,7 +599,7 @@
               <div class="spec-icon" aria-hidden="true">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h7"/></svg>
               </div>
-              <h2>Discussion</h2>
+              <h2>Checklist</h2>
             </div>
             <div class="list" id="list-them"></div>
           </section>
@@ -858,8 +885,8 @@
   }
 
   function writeItem(item, author, reason) {
-    log('updateLoopDiscussionItem({ id: "' + item.id + '", content: <' + item.text.length + " chars> })", "write");
-    if (S.activity === "every") log('  activity stream: "' + author + ' updated a discussion item"', "noise");
+    log('updateChecklistItem({ id: "' + item.id + '", content: <' + item.text.length + " chars> })", "write");
+    if (S.activity === "every") log('  activity stream: "' + author + ' updated a checklist item"', "noise");
     if (reason) log("  triggered by: " + reason, "quiet");
     wire(() => paintRow(themEl, item, "viewer"));
   }
@@ -954,7 +981,7 @@
     item.liveText = el.innerText;
     item.beat = now();
     if (el.innerText !== item.text) markDirty(item); else scheduleUndim(item);
-    log("client-event discussion.typing (ephemeral, no write)", "quiet");
+    log("client-event checklist.typing (ephemeral, no write)", "quiet");
     wire(() => paintRow(themEl, item, "viewer"));
     if (el.innerText !== S.baseline) armAutosave();
   });
@@ -967,7 +994,7 @@
       const item = byId(id);
       leaveEdit(true);
       item.done = !item.done;
-      log('updateLoopDiscussionItem({ id: "' + id + '", status: ' + (item.done ? "COMPLETED" : "OPEN") + " })", "write");
+      log('updateChecklistItem({ id: "' + id + '", status: ' + (item.done ? "COMPLETED" : "OPEN") + " })", "write");
       wire(() => paintRow(themEl, item, "viewer"));
       renderAll();
       return;
@@ -1002,7 +1029,7 @@
     " This one is blocked on the payer account move."
   ];
   const ADDITIONS = [
-    "Can we get the Q4 renewal dates on one page before the next Loop.",
+    "Can we get the Q4 renewal dates on one page before the next review.",
     "Reminder to close out the tagging standard ticket."
   ];
 
@@ -1026,7 +1053,7 @@
       item.liveText = item.text + addition.slice(0, i);
       item.beat = now();
       markDirty(item);
-      log("client-event discussion.typing from " + who + " (ephemeral)", "quiet");
+      log("client-event checklist.typing from " + who + " (ephemeral)", "quiet");
       paintRow(youEl, item, "you"); paintRow(themEl, item, "viewer");
       if (i < addition.length) return void setTimeout(tick, 95);
       // they stop typing and their changes save, but they are still in the
@@ -1062,7 +1089,7 @@
     if (!pool.length) return schedule();
     const item = pool[Math.floor(Math.random() * pool.length)];
     item.done = !item.done;
-    log('updateLoopDiscussionItem({ id: "' + item.id + '", status: ' + (item.done ? "COMPLETED" : "OPEN") + " }) from " + WATCHER, "write");
+    log('updateChecklistItem({ id: "' + item.id + '", status: ' + (item.done ? "COMPLETED" : "OPEN") + " }) from " + WATCHER, "write");
     paintRow(youEl, item, "you"); paintRow(themEl, item, "viewer");
     schedule();
   }
@@ -1070,7 +1097,7 @@
   function remoteAdd() {
     const id = "di_" + (9000 + seq).toString(16);
     ITEMS.push({ id, text: ADDITIONS[seq++ % ADDITIONS.length], who: "Marco Reyes", done: false, liveBy: null, liveText: null, beat: 0, dirty: false });
-    log("createLoopDiscussionItem({ content: <new> }) from Marco Reyes", "write");
+    log("createChecklistItem({ content: <new> }) from Marco Reyes", "write");
     renderAll();
     schedule();
   }
@@ -1127,10 +1154,14 @@
   function applyDeepLink() {
     const q = new URLSearchParams(location.search);
     const allowed = {
-      mark: ["none", "float", "floatline", "floathi", "floatdim", "wash"],
-      lock: ["open", "locked", "timeout"],
-      me:   ["dana", "marco", "guest"],
-      perm: ["anyone", "author"]
+      mark:     ["none", "float", "floatline", "floathi", "floatdim", "wash"],
+      lock:     ["open", "locked", "timeout"],
+      me:       ["dana", "marco", "guest"],
+      perm:     ["anyone", "author"],
+      // activity was wired to the segmented control but never listed here,
+      // so ?activity= was silently ignored. It is the autosave-versus-
+      // activity-feed argument, so a slide needs to be able to preset it.
+      activity: ["every", "coalesce"]
     };
     Object.keys(allowed).forEach(k => {
       const v = q.get(k);
@@ -1157,7 +1188,23 @@
       const chk = document.getElementById("chk-latency");
       if (chk) chk.checked = true;
     }
+
+    // Embed mode. Slides load the bench with ?embed=1 so only the
+    // specimen shows; the rail's job is done by the params above.
+    if (q.get("embed") === "1") document.body.classList.add("is-embed");
   }
+
+  // ---------------------------------------------------------------
+  // Escape hands the deck back. Keydown never crosses out of an
+  // iframe, so once focus is in here a presenter has no keyboard
+  // route back to the slides. Blurring to the parent restores it.
+  // ---------------------------------------------------------------
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape" || window.parent === window) return;
+    const el = document.activeElement;
+    if (el && el !== document.body) el.blur();
+    window.parent.focus();
+  });
 
   applyDeepLink();
   renderAll();
