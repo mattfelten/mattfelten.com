@@ -1,10 +1,16 @@
 <meta charset="utf-8">
-<title>Checklist: benches</title>
+<title>Checklist: what we explored</title>
 
 <style>
   /* ============================================================
-     One URL that reaches everything. Same achromatic, theme-aware
-     chrome as the benches so the whole set reads as one family.
+     The navigation page, built for someone with half a brain
+     free in the middle of an interview.
+
+     Organised as the explorations that happened, in order, not as
+     the benches they live in. Each exploration is a plain question
+     with every variation tried underneath it. The chosen one is
+     marked "Chosen" in words, not just colour, because colour
+     alone does not survive nerves.
      ============================================================ */
   :root {
     --bench-bg: #EDEEF1;
@@ -17,6 +23,8 @@
     --bench-raise: #FFFFFF;
     --bench-sunk: #E4E6EB;
     --bench-focus: #1E40AF;
+    --bench-warn: #B4453A;
+    --bench-open: #8A6D1F;
   }
 
   @media (prefers-color-scheme: dark) {
@@ -31,6 +39,8 @@
       --bench-raise: #23262E;
       --bench-sunk: #121419;
       --bench-focus: #7C97E8;
+      --bench-warn: #E08276;
+      --bench-open: #D9B44A;
     }
   }
 
@@ -45,6 +55,8 @@
     --bench-raise: #23262E;
     --bench-sunk: #121419;
     --bench-focus: #7C97E8;
+    --bench-warn: #E08276;
+    --bench-open: #D9B44A;
   }
 
   * { box-sizing: border-box; }
@@ -60,221 +72,376 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  .page { max-width: 1080px; margin: 0 auto; padding: 56px 32px 96px; }
+  .page { max-width: 940px; margin: 0 auto; padding: 56px 32px 96px; }
 
-  .head { margin-bottom: 12px; max-width: 660px; }
-  h1 { font-size: 24px; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 10px; }
-  .lede { color: var(--bench-ink-2); margin: 0; font-size: 14px; line-height: 1.6; }
+  .head { margin-bottom: 8px; max-width: 660px; }
+  h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.015em; margin: 0 0 10px; }
+  .lede { color: var(--bench-ink-2); margin: 0; font-size: 14px; line-height: 1.65; }
 
-  .eyebrow {
-    font-size: 10px; font-weight: 600; letter-spacing: 0.11em;
-    text-transform: uppercase; color: var(--bench-ink-3);
-    margin: 44px 0 14px;
-  }
-
-  .cards { display: grid; gap: 12px; }
-
-  .card {
-    background: var(--bench-raise);
-    border: 1px solid var(--bench-line);
-    border-radius: 10px;
-    padding: 18px 20px;
-  }
-
-  .card-head {
-    display: flex; align-items: baseline; gap: 10px;
-    flex-wrap: wrap; margin-bottom: 6px;
-  }
-
-  .card-name {
-    font-size: 16px; font-weight: 600; letter-spacing: -0.01em;
-    margin: 0; text-decoration: none; color: var(--bench-ink);
+  /* ---------- phase heading ---------- */
+  .phase {
+    display: flex; align-items: baseline; gap: 12px;
+    margin: 48px 0 4px; padding-bottom: 10px;
     border-bottom: 1px solid var(--bench-line-2);
   }
-  .card-name:hover { border-bottom-color: var(--bench-focus); color: var(--bench-focus); }
-  .card-name:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 3px; }
+  .phase h2 { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+  .phase .when { font-size: 12px; color: var(--bench-ink-3); margin-left: auto; }
 
-  .count {
-    font-size: 10px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase;
-    color: var(--bench-ink-3); background: var(--bench-sunk);
-    border-radius: 4px; padding: 2px 6px;
+  /* ---------- one exploration ---------- */
+  .ex { padding: 20px 0; border-bottom: 1px solid var(--bench-line); }
+  .ex:last-child { border-bottom: 0; }
+
+  .q {
+    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+    margin: 0 0 12px;
   }
+  .q h3 { font-size: 15.5px; font-weight: 600; margin: 0; letter-spacing: -0.005em; }
 
-  .card-what { color: var(--bench-ink-2); font-size: 13px; line-height: 1.6; margin: 0 0 14px; }
+  .badge {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    border-radius: 4px; padding: 2px 7px; flex: none;
+  }
+  .badge.open { color: var(--bench-open); border: 1px solid currentColor; }
 
-  .presets { display: flex; flex-wrap: wrap; gap: 6px; }
+  .opts { display: flex; flex-wrap: wrap; gap: 7px; }
 
-  .preset {
-    display: inline-block;
-    font-size: 12px; text-decoration: none;
+  .opt {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-size: 12.5px; text-decoration: none;
     color: var(--bench-ink-2);
-    background: var(--bench-panel);
+    background: var(--bench-raise);
     border: 1px solid var(--bench-line);
-    border-radius: 6px; padding: 4px 9px;
+    border-radius: 7px; padding: 6px 11px;
     transition: background .12s ease, color .12s ease, border-color .12s ease;
   }
-  .preset:hover { background: var(--bench-sunk); color: var(--bench-ink); border-color: var(--bench-line-2); }
-  .preset:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 2px; }
-  .preset.key { border-color: var(--bench-focus); color: var(--bench-focus); }
+  .opt:hover { background: var(--bench-sunk); color: var(--bench-ink); border-color: var(--bench-line-2); }
+  .opt:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 2px; }
 
-  .params {
-    margin-top: 12px; padding-top: 12px;
-    border-top: 1px solid var(--bench-line);
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 11.5px; line-height: 1.7;
-    color: var(--bench-ink-3);
+  /* The chosen option says so in words. Colour is the second signal,
+     never the only one. */
+  .opt.chosen {
+    background: var(--bench-ink);
+    border-color: var(--bench-ink);
+    color: var(--bench-bg);
+    font-weight: 550;
   }
-  .params b { color: var(--bench-ink-2); font-weight: 500; }
+  .opt.chosen:hover { opacity: .88; background: var(--bench-ink); color: var(--bench-bg); }
+  .opt .mark {
+    font-size: 9.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    border-radius: 3px; padding: 1px 5px; flex: none;
+  }
+  .opt.chosen .mark { background: var(--bench-bg); color: var(--bench-ink); }
 
-  .note {
-    margin-top: 14px; padding: 16px 18px;
-    background: var(--bench-panel);
-    border: 1px solid var(--bench-line);
-    border-radius: 10px;
+  .opt.rejected { border-color: var(--bench-warn); }
+  .opt.rejected .mark { color: var(--bench-warn); border: 1px solid currentColor; }
+
+  .settled {
     color: var(--bench-ink-2);
-    font-size: 13px; line-height: 1.6;
+    font-size: 13px; line-height: 1.65;
+    margin: 12px 0 0; max-width: 760px;
   }
-  .note strong { color: var(--bench-ink); }
-  .note code {
+  .settled strong { color: var(--bench-ink); }
+  .settled code {
     font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
     font-size: 12px; background: var(--bench-sunk);
     border-radius: 3px; padding: 1px 4px;
   }
+  .settled a { color: var(--bench-focus); text-decoration: none; border-bottom: 1px solid currentColor; }
+  .settled a:hover { opacity: .75; }
+
+  /* ---------- footer blocks ---------- */
+  .tools { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 10px; margin-top: 8px; }
+
+  .tool {
+    display: block; text-decoration: none;
+    background: var(--bench-raise);
+    border: 1px solid var(--bench-line);
+    border-radius: 9px; padding: 14px 16px;
+    transition: border-color .12s ease;
+  }
+  .tool:hover { border-color: var(--bench-focus); }
+  .tool:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 2px; }
+  .tool b { display: block; color: var(--bench-ink); font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+  .tool span { color: var(--bench-ink-2); font-size: 12.5px; line-height: 1.55; }
 </style>
 
 <div class="page">
   <div class="head">
-    <h1>Checklist benches</h1>
+    <h1>What we explored</h1>
     <p class="lede">
-      Every prototype behind the Checklist component, and the configurations worth jumping
-      straight to. Each bench is an instrument: dimensions toggle independently so combinations
-      can be felt rather than judged as fixed variants.
+      Every question the Checklist component had to answer, in the order it came up, with every
+      variation that was actually built. The one marked <strong>Chosen</strong> is what won.
+      Click any of them to open that exact state.
     </p>
   </div>
 
-  <p class="eyebrow">Benches</p>
-  <div class="cards">
+  <div id="out"></div>
 
-    <div class="card">
-      <div class="card-head">
-        <a class="card-name" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench">Editing mechanics</a>
-        <span class="count">9 dimensions</span>
-      </div>
-      <p class="card-what">
-        What editing feels like to the person doing it. The invisible field, where formatting
-        lives with no toolbar to put it in, and how a save announces itself when there is no
-        Save button. Also holds the two comparisons the deck leans on hardest.
-      </p>
-      <div class="presets">
-        <a class="preset key" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?naive=1">The 14px shove</a>
-        <a class="preset key" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?conflict=1">The contested region</a>
-        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?chrome=field">Hairline field</a>
-        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?enter=pencil">Pencil on hover</a>
-        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?enter=menu">Edit in the menu</a>
-        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?feedback=whisper">Saved, then fade</a>
-        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?activity=coalesce">Coalesced activity</a>
-        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?perm=author">Staff or author only</a>
-      </div>
-      <div class="params">
-        <b>chrome</b> none tint rule field &nbsp; <b>fmt</b> none md bar &nbsp; <b>feedback</b> silent dot whisper<br>
-        <b>enter</b> text dbl pencil menu &nbsp; <b>perm</b> anyone author &nbsp; <b>activity</b> every coalesce<br>
-        <b>naive</b> 1 &nbsp; <b>conflict</b> 1 &nbsp; <b>lock</b> 1
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-head">
-        <a class="card-name" href="/decks/2026-checklist-component/prototypes/edit-presence-bench">Presence</a>
-        <span class="count">7 dimensions</span>
-      </div>
-      <p class="card-what">
-        Two screens on one list, because a save only means something to an audience. What a
-        viewer sees while you type, what the save moment looks like from their side, and how to
-        say that somebody is inside a row without saying it three times over.
-      </p>
-      <div class="presets">
-        <a class="preset key" href="/decks/2026-checklist-component/prototypes/edit-presence-bench?others=1">Other people active</a>
-        <a class="preset key" href="/decks/2026-checklist-component/prototypes/edit-presence-bench?mark=floatdim&amp;others=1">The dim (rejected, 2.6:1)</a>
-        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-presence-bench?mark=wash&amp;others=1">The R3 wash</a>
-        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-presence-bench?mark=none&amp;others=1">No marking at all</a>
-        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-presence-bench?lock=locked&amp;others=1">Hard hold</a>
-        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-presence-bench?lock=timeout&amp;others=1">Hold, 8s timeout</a>
-        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-presence-bench?lock=open&amp;others=1">No lock</a>
-        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-presence-bench?latency=1&amp;others=1">Realistic latency</a>
-        <a class="preset" href="/decks/2026-checklist-component/prototypes/edit-presence-bench?me=guest">As someone who cannot edit</a>
-      </div>
-      <div class="params">
-        <b>mark</b> none float floatline floathi floatdim wash &nbsp; <b>lock</b> open locked timeout<br>
-        <b>me</b> dana marco guest &nbsp; <b>perm</b> anyone author &nbsp; <b>activity</b> every coalesce<br>
-        <b>others</b> 1 &nbsp; <b>latency</b> 1
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-head">
-        <a class="card-name" href="/decks/2026-checklist-component/prototypes/reorder-bench">Reorder</a>
-        <span class="count">8 dimensions</span>
-      </div>
-      <p class="card-what">
-        Manual order: what you grab, what the list tells you while you drag, and where ticked-off
-        items go. The mutation log underneath prints the write each move implies, which is where
-        the ordering-model argument actually lives.
-      </p>
-      <div class="presets">
-        <a class="preset key" href="/decks/2026-checklist-component/prototypes/reorder-bench?zones=1">Paint the grab zones</a>
-        <a class="preset key" href="/decks/2026-checklist-component/prototypes/reorder-bench?index=integer">Integer write amplification</a>
-        <a class="preset" href="/decks/2026-checklist-component/prototypes/reorder-bench?drop=shift">Shift out of the way</a>
-        <a class="preset" href="/decks/2026-checklist-component/prototypes/reorder-bench?drop=shift&amp;uniform=1">Shift, uniform heights</a>
-        <a class="preset" href="/decks/2026-checklist-component/prototypes/reorder-bench?proxy=full">Full-row proxy</a>
-        <a class="preset" href="/decks/2026-checklist-component/prototypes/reorder-bench?mode=tasks&amp;zones=1">Tasks, and why not</a>
-        <a class="preset" href="/decks/2026-checklist-component/prototypes/reorder-bench?checked=collapsed">Done collapsed at top</a>
-        <a class="preset" href="/decks/2026-checklist-component/prototypes/reorder-bench?checked=bottom">Done grouped at bottom</a>
-      </div>
-      <div class="params">
-        <b>checked</b> inplace top collapsed bottom &nbsp; <b>grab</b> handle blank both &nbsp; <b>drop</b> line shift<br>
-        <b>proxy</b> compact full &nbsp; <b>mode</b> checklist tasks &nbsp; <b>index</b> fractional integer<br>
-        <b>zones</b> 1 &nbsp; <b>uniform</b> 1
-      </div>
-    </div>
-
-  </div>
-
-  <p class="eyebrow">Also here</p>
-  <div class="cards">
-
-    <div class="card">
-      <div class="card-head">
-        <a class="card-name" href="/decks/2026-checklist-component/prototypes/rejections">Rejected options</a>
-      </div>
-      <p class="card-what">
-        Everything considered and not taken, each shown live beside what won instead. Grows as
-        rounds land rather than being written at the end.
-      </p>
-    </div>
-
-    <div class="card">
-      <div class="card-head">
-        <a class="card-name" href="/decks/2026-checklist-component/">The deck</a>
-      </div>
-      <p class="card-what">
-        The presentation these benches feed. Arrow keys move it, except while focus is inside an
-        embedded bench, in which case Escape hands navigation back.
-      </p>
-    </div>
-
-  </div>
-
-  <div class="note">
-    <strong>Two params every bench understands.</strong>
-    <code>embed=1</code> strips the instrument down to the specimen, which is what the slides
-    load. <code>scale=1.6</code> renders that specimen larger inside its frame, because the deck
-    is 1920 wide and gets scaled down to whatever is projecting, so a specimen at 1:1 lands
-    around 10px on screen. Named values only: anything unrecognised is ignored rather than
-    guessed at.
+  <div class="phase"><h2>The instruments</h2></div>
+  <div class="tools">
+    <a class="tool" href="/decks/2026-checklist-component/prototypes/reorder-bench">
+      <b>Reorder bench</b>
+      <span>All eight ordering dimensions at once, plus the log that prints the write each move implies.</span>
+    </a>
+    <a class="tool" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench">
+      <b>Editing bench</b>
+      <span>All nine editing dimensions at once, plus the log showing what each keystroke writes.</span>
+    </a>
+    <a class="tool" href="/decks/2026-checklist-component/prototypes/edit-presence-bench">
+      <b>Presence bench</b>
+      <span>Two screens on one list. All seven multiplayer dimensions, plus the wire log.</span>
+    </a>
+    <a class="tool" href="/decks/2026-checklist-component/prototypes/rejections">
+      <b>Why each one lost</b>
+      <span>The rejected options running live, with the argument against each. Longer read than this page.</span>
+    </a>
+    <a class="tool" href="/decks/2026-checklist-component/prototypes/reorder-bench?zones=1">
+      <b>Paint the grab zones</b>
+      <span>Blue is draggable, red is not. Diagnostic overlay, not a design option.</span>
+    </a>
+    <a class="tool" href="/decks/2026-checklist-component/">
+      <b>The deck</b>
+      <span>The presentation these feed. Escape hands navigation back if focus is inside an embed.</span>
+    </a>
   </div>
 </div>
 
 <script>
+  const M = "/decks/2026-checklist-component/prototypes/edit-mechanics-bench";
+  const P = "/decks/2026-checklist-component/prototypes/edit-presence-bench";
+  const R = "/decks/2026-checklist-component/prototypes/reorder-bench";
+  const REJ = "/decks/2026-checklist-component/prototypes/rejections";
+
+  // Ordered as the work happened. Each entry is one question, with every
+  // variation that got built. status: "chosen" | "rejected" | undefined.
+  const PHASES = [
+    {
+      name: "Ordering a list",
+      when: "31 August",
+      items: [
+        {
+          q: "How do you pick a row up?",
+          opts: [
+            { t: "Handle only", u: R + "?grab=handle&zones=1" },
+            { t: "Blank space only", u: R + "?grab=blank&zones=1" },
+            { t: "Handle and blank space", u: R + "?grab=both&zones=1", status: "chosen" }
+          ],
+          why: "Both. The handle is what makes it discoverable, blank space is what makes it quick. These links have the grab-zone paint switched on, so you can see how much of a row each one actually gives you."
+        },
+        {
+          q: "What tells you where the row will land?",
+          opts: [
+            { t: "A line where it will drop", u: R + "?drop=line&grab=both", status: "chosen" },
+            { t: "The other rows move aside", u: R + "?drop=shift&grab=both" }
+          ],
+          why: "A line. These rows are variable-height text, so moving them aside makes the list jump and slides the target out from under the cursor. It is not a bad idea in general: <a href='" + R + "?drop=shift&uniform=1&grab=both'>force every row to one line</a> and moving aside suddenly feels fine. The height variance is the whole problem."
+        },
+        {
+          q: "What follows the cursor while you drag?",
+          opts: [
+            { t: "One collapsed line", u: R + "?proxy=compact&grab=both", status: "chosen" },
+            { t: "The whole row", u: R + "?proxy=full&grab=both" }
+          ],
+          why: "The collapsed line. A tall block under the cursor covers the list you are aiming at. It only has to say which row is in your hand."
+        },
+        {
+          q: "Where do ticked-off items go?",
+          open: true,
+          opts: [
+            { t: "Stay where they are", u: R + "?checked=inplace" },
+            { t: "Jump to the top", u: R + "?checked=top" },
+            { t: "Collapse into a group at the top", u: R + "?checked=collapsed" },
+            { t: "Drop to the bottom", u: R + "?checked=bottom" }
+          ],
+          why: "<strong>Still open.</strong> Staying in place is what ships first, because it needs no new data. Grouping needs a completed-at column, and it also stops done rows being draggable, since completion time becomes their order."
+        },
+        {
+          q: "Should tasks get a manual order too?",
+          opts: [
+            { t: "No, checklists only", u: R + "?mode=checklist", status: "chosen" },
+            { t: "Show me it on tasks", u: R + "?mode=tasks&zones=1" }
+          ],
+          why: "No. Manual order earns its place when a list is short, written by hand in one sitting, and has no natural sort. Tasks have status, due date, owner and priority all competing, so a hand-set order rots within a week. Switch to tasks with the zones painted and you can also see how little blank space is left to grab."
+        },
+        {
+          q: "How is the position actually stored?",
+          opts: [
+            { t: "A fractional index", u: R + "?index=fractional&grab=both", status: "chosen" },
+            { t: "Plain integers", u: R + "?index=integer&grab=both" }
+          ],
+          why: "A fractional string. Drag a row with integers switched on and read the log: one move rewrites every row in between, so two people dragging at once overwrite each other instead of merging. Floats were considered and never built, because they run out of precision after about fifty inserts and then break ordering <strong>silently</strong>."
+        }
+      ]
+    },
+    {
+      name: "Editing in place",
+      when: "1 September",
+      items: [
+        {
+          q: "How do you start editing?",
+          opts: [
+            { t: "Click the text", u: M + "?enter=text", status: "chosen" },
+            { t: "Double-click the text", u: M + "?enter=dbl" },
+            { t: "A pencil on hover", u: M + "?enter=pencil" },
+            { t: "Edit in the row menu", u: M + "?enter=menu" }
+          ],
+          why: "Click the text. It is the only one that adds no control to the row. It is also the one that collides with dragging, which is still unresolved further down this page."
+        },
+        {
+          q: "How much does edit mode show?",
+          opts: [
+            { t: "Nothing but a caret", u: M + "?chrome=none", status: "chosen" },
+            { t: "A tint behind the text", u: M + "?chrome=tint" },
+            { t: "A tint and a left rule", u: M + "?chrome=rule" },
+            { t: "A hairline around it", u: M + "?chrome=field" }
+          ],
+          why: "Nothing. Any outline at rest makes every row look operable whether or not you are allowed to edit it. The pointer turning into a caret is the entire affordance."
+        },
+        {
+          q: "Do the words move when you start editing?",
+          opts: [
+            { t: "No, they stay put", u: M + "?chrome=none", status: "chosen" },
+            { t: "The obvious implementation", u: M + "?naive=1" }
+          ],
+          why: "Click into the top item in each. Painting the state with background and shadow leaves the words at <strong>0px</strong>. Doing it with border and padding moves them <strong>9px right and 7px down</strong> and shoves every row below by <strong>14px</strong>. Both measured."
+        },
+        {
+          q: "Where does formatting live when there is no toolbar?",
+          opts: [
+            { t: "A bar when you select text", u: M + "?fmt=bar", status: "chosen" },
+            { t: "Markdown shortcuts", u: M + "?fmt=md" },
+            { t: "Nothing at all", u: M + "?fmt=none" }
+          ],
+          why: "A bar on selection. It turns up where you are already working and costs nothing at rest."
+        },
+        {
+          q: "How does it tell you it saved?",
+          opts: [
+            { t: "It does not", u: M + "?feedback=silent", status: "chosen" },
+            { t: "A dot in the gutter", u: M + "?feedback=dot" },
+            { t: "Says 'saved', then fades", u: M + "?feedback=whisper" }
+          ],
+          why: "Nothing. There is no Save button: autosave runs at 4s idle with a 15s ceiling, and the promise is that the text simply is the document. Worth revisiting, because a <em>failed</em> save currently has nowhere to appear at all."
+        },
+        {
+          q: "Does autosave flood the activity feed?",
+          opts: [
+            { t: "Collapse it to one entry", u: M + "?activity=coalesce", status: "chosen" },
+            { t: "Log every single write", u: M + "?activity=every" }
+          ],
+          why: "Collapse it. Type in each and watch the amber lines in the log. The write itself is fine; it is the <em>record</em> of the write that needs collapsing, or one edit session fills the feed."
+        },
+        {
+          q: "Who is allowed to edit?",
+          open: true,
+          opts: [
+            { t: "Anyone with access", u: M + "?perm=anyone" },
+            { t: "Staff, or whoever wrote it", u: M + "?perm=author" }
+          ],
+          why: "<strong>Still open.</strong> Deleting is already staff-or-author, but the original spec said anyone may edit. Editing someone else's words is a bigger act than ticking their item off, so this needs a deliberate answer rather than an inherited one."
+        },
+        {
+          q: "Do editing and dragging want the same pixels?",
+          open: true,
+          opts: [
+            { t: "Show me the overlap", u: M + "?conflict=1" }
+          ],
+          why: "<strong>Yes, and it is unresolved.</strong> The hatching marks the area dragging already claims. Clicking to edit wants that same area, and so does selecting text, which the format bar depends on. Three gestures, one region, and only one of them can own a plain click."
+        }
+      ]
+    },
+    {
+      name: "When other people are in it",
+      when: "1 September",
+      items: [
+        {
+          q: "How do you show somebody is inside a row?",
+          opts: [
+            { t: "A small avatar in the gutter", u: P + "?mark=float&others=1", status: "chosen" },
+            { t: "Avatar, plus a hairline", u: P + "?mark=floatline&others=1" },
+            { t: "Avatar, plus a highlight", u: P + "?mark=floathi&others=1" },
+            { t: "Avatar, plus the row dimmed", u: P + "?mark=floatdim&others=1", status: "rejected" },
+            { t: "A wash, a name and a caret", u: P + "?mark=wash&others=1", status: "rejected" },
+            { t: "Nothing at all", u: P + "?mark=none&others=1" }
+          ],
+          why: "The avatar. It hangs in the left gutter so it never sits beside the author tag, where a second face reads as co-authorship rather than presence. <strong>Which treatment the row itself gets is still open:</strong> dimming was the leaning until it measured 2.67:1 and failed contrast."
+        },
+        {
+          q: "Does being in a row lock everyone else out?",
+          open: true,
+          opts: [
+            { t: "No lock at all", u: P + "?lock=open&others=1" },
+            { t: "A hard hold", u: P + "?lock=locked&others=1" },
+            { t: "A hold that frees after 8 seconds", u: P + "?lock=timeout&others=1" }
+          ],
+          why: "<strong>Still open.</strong> Slack marks a held row and does not lock it. Two people editing one sentence is rare; one person leaving a tab open on a row is not. The simulation includes somebody walking away mid-edit, so under a hard hold that row goes permanently dead and you can feel the difference."
+        },
+        {
+          q: "What does it look like if you are not allowed to edit?",
+          opts: [
+            { t: "As someone who can", u: P + "?me=dana&others=1" },
+            { t: "As someone who cannot", u: P + "?me=guest&others=1" }
+          ],
+          why: "With an invisible field, 'no' is said only by the pointer <em>not</em> turning into a caret, which is about the quietest refusal available. Unresolved, and worse on a touchscreen where there is no pointer to withhold."
+        }
+      ]
+    },
+    {
+      name: "Making it a component",
+      when: "7 September",
+      items: [
+        {
+          q: "Are completed items still readable?",
+          opts: [
+            { t: "opacity .6, measures 4.58:1", u: R + "?checked=inplace", status: "chosen" },
+            { t: "opacity .5, measures 3.35:1", u: REJ, status: "rejected" }
+          ],
+          why: "<code>.6</code> is the lowest value that clears the 4.5:1 that WCAG asks for. <code>.5</code> was what shipped and it failed at 3.35:1. The author tag on a completed row is no longer dimmed at all, because it starts at 4.83:1 and any dim at all drops it below. <strong>Dim only works on a full-strength colour.</strong>"
+        }
+      ]
+    }
+  ];
+
+  function optEl(o) {
+    const a = document.createElement("a");
+    a.className = "opt" + (o.status ? " " + o.status : "");
+    a.href = o.u;
+    const mark = o.status === "chosen" ? "Chosen" : o.status === "rejected" ? "Rejected" : null;
+    a.innerHTML = (mark ? '<span class="mark">' + mark + "</span>" : "") + "<span>" + o.t + "</span>";
+    return a;
+  }
+
+  const out = document.getElementById("out");
+  PHASES.forEach(ph => {
+    const h = document.createElement("div");
+    h.className = "phase";
+    h.innerHTML = "<h2>" + ph.name + '</h2><span class="when">' + ph.when + "</span>";
+    out.appendChild(h);
+
+    ph.items.forEach(it => {
+      const ex = document.createElement("div");
+      ex.className = "ex";
+
+      const q = document.createElement("div");
+      q.className = "q";
+      q.innerHTML = "<h3>" + it.q + "</h3>" +
+        (it.open ? '<span class="badge open">Still open</span>' : "");
+      ex.appendChild(q);
+
+      const opts = document.createElement("div");
+      opts.className = "opts";
+      it.opts.forEach(o => opts.appendChild(optEl(o)));
+      ex.appendChild(opts);
+
+      const why = document.createElement("p");
+      why.className = "settled";
+      why.innerHTML = it.why;
+      ex.appendChild(why);
+
+      out.appendChild(ex);
+    });
+  });
+
   // Escape hands the deck back. Keydown never crosses out of an iframe,
   // so without this a presenter with focus in here has no keyboard route
   // back to the slides.
