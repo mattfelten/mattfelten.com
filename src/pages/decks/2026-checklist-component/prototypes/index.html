@@ -214,6 +214,10 @@
       <b>Editing bench</b>
       <span>All nine editing dimensions at once, plus the log showing what each keystroke writes.</span>
     </a>
+    <a class="tool" href="/decks/2026-checklist-component/prototypes/c1-nesting-bench">
+      <b>Nesting bench</b>
+      <span>Sub-items one level deep, with a panel showing what a screen reader would actually hear.</span>
+    </a>
     <a class="tool" href="/decks/2026-checklist-component/prototypes/edit-presence-bench">
       <b>Presence bench</b>
       <span>Two screens on one list. All seven multiplayer dimensions, plus the wire log.</span>
@@ -238,6 +242,7 @@
   const P = "/decks/2026-checklist-component/prototypes/edit-presence-bench";
   const R = "/decks/2026-checklist-component/prototypes/reorder-bench";
   const REJ = "/decks/2026-checklist-component/prototypes/rejections";
+  const N = "/decks/2026-checklist-component/prototypes/c1-nesting-bench";
 
   // Grouped by the part of the component they belong to, not by which
   // bench a switch happens to live in and not by when the work happened.
@@ -298,6 +303,62 @@
             { t: "Plain integers", u: R + "?index=integer&grab=both" }
           ],
           why: "A fractional string. Drag a row with integers switched on and read the log: one move rewrites every row in between, so two people dragging at once overwrite each other instead of merging. Floats were considered and never built, because they run out of precision after about fifty inserts and then break ordering <strong>silently</strong>."
+        }
+      ]
+    },
+    {
+      name: "Sub-items",
+      items: [
+        {
+          q: "How deep can sub-items go?",
+          opts: [
+            { t: "One level. Parent and child, nothing further", u: N, status: "chosen" }
+          ],
+          why: "One level keeps every problem worth having: the index stops being flat, dragging has to carry two things at once, and a parent's checkbox has to mean something. Going deeper adds recursion and a far heavier keyboard contract without adding a new question. A checklist that needs grandchildren is a document, and should be one."
+        },
+        {
+          q: "What happens when you tick a parent?",
+          open: true,
+          opts: [
+            { t: "Nothing. They are independent", u: N + "?nest=independent" },
+            { t: "Its children tick too", u: N + "?nest=cascade" },
+            { t: "Ticking every child ticks the parent", u: N + "?nest=rollup" },
+            { t: "Both directions", u: N + "?nest=both" }
+          ],
+          why: "<strong>Open, and it needs a taste call.</strong> These are four different components, not four settings. My lean is <em>its children tick too</em> and nothing in the other direction: rolling up makes a parent's checkbox flip without anyone touching it, and a control that changes on its own is hard to trust. <em>Both directions</em> is the only one where a parent's tick is never a lie, and also the only one where unticking a single child silently unticks the parent."
+        },
+        {
+          q: "How do you change a row's level?",
+          opts: [
+            { t: "By dragging sideways, and by keyboard", u: N + "?tier=sideways", status: "chosen" },
+            { t: "By dropping onto a parent", u: N + "?tier=onparent" },
+            { t: "Dragging never changes level", u: N + "?tier=menuonly" }
+          ],
+          why: "The question turned out to be a false choice, the same way grabbing a row did. Dragging sideways is a good accelerator, and it cannot be the only way in, because dragging is unavailable to a keyboard, a screen reader and a touchscreen. The arrow keys work in all three settings here on purpose: <kbd>&#8594;</kbd> makes a row a sub-item, <kbd>&#8592;</kbd> lifts it back out, and each move is announced."
+        },
+        {
+          q: "What does the drop indicator say now that level matters?",
+          opts: [
+            { t: "The line moves in to show the level", u: N + "?indicator=inset", status: "chosen" },
+            { t: "Inset, and light up the parent", u: N + "?indicator=parent" },
+            { t: "A plain line, same as the flat list", u: N + "?indicator=line", status: "rejected" }
+          ],
+          why: "The plain line was the right answer for a flat list and it does not survive nesting: one line at one position now means two different landings. Insetting it is enough on its own. Lighting up the parent as well says the same thing twice."
+        },
+        {
+          q: "Does one level of nesting need tree semantics?",
+          opts: [
+            { t: "No. An ordinary nested list", u: N + "?sr=list", status: "chosen" },
+            { t: "role=tree", u: N + "?sr=tree", status: "rejected" }
+          ],
+          why: "A nested list is understood everywhere, keeps every checkbox a checkbox, and costs nothing. A tree announces expanded and collapsed properly, but it takes over the arrow keys for its own navigation contract, which is exactly the keys reordering needs, and <code>treeitem</code> carries no checked state so the tick has to be re-announced by hand. One level does not earn that. Switch between the two in the panel under the list and compare what gets said."
+        },
+        {
+          q: "Can a row that has sub-items become one?",
+          opts: [
+            { t: "No, and it says why", u: N + "?tier=sideways", status: "chosen" }
+          ],
+          why: "The one-level ceiling has to be enforced somewhere, and silently refusing a drag is the worst version. Try dragging the first row sideways, or focusing it and pressing right: the drop indicator turns red and it says 'this row has sub-items, so it cannot become one'."
         }
       ]
     },

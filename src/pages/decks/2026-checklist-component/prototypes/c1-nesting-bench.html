@@ -1,0 +1,1346 @@
+<meta charset="utf-8">
+<title>Checklist: nesting bench</title>
+
+<style>
+  /* ============================================================
+     BENCH CHROME - achromatic, theme-aware instrument panel.
+     Shared with the reorder bench so the two read as one
+     instrument. Saturated colour belongs to the specimen.
+     ============================================================ */
+  :root {
+    --bench-bg: #EDEEF1;
+    --bench-panel: #F6F7F9;
+    --bench-ink: #242830;
+    --bench-ink-2: #5C6371;
+    --bench-ink-3: #878E9C;
+    --bench-line: #D8DBE2;
+    --bench-line-2: #C4C9D3;
+    --bench-raise: #FFFFFF;
+    --bench-sunk: #E4E6EB;
+    --bench-focus: #1E40AF;
+    --shadow-lift: 0 1px 2px rgba(16, 20, 28, .06), 0 8px 24px rgba(16, 20, 28, .10);
+    --shadow-mount: 0 1px 3px rgba(16, 20, 28, .08), 0 18px 50px rgba(16, 20, 28, .10);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bench-bg: #15171C;
+      --bench-panel: #1C1F26;
+      --bench-ink: #DDE0E6;
+      --bench-ink-2: #99A0AD;
+      --bench-ink-3: #6E7481;
+      --bench-line: #282C35;
+      --bench-line-2: #363B46;
+      --bench-raise: #23262E;
+      --bench-sunk: #121419;
+      --bench-focus: #7C97E8;
+      --shadow-lift: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .45);
+      --shadow-mount: 0 1px 3px rgba(0, 0, 0, .5), 0 24px 60px rgba(0, 0, 0, .55);
+    }
+  }
+
+  :root[data-theme="light"] {
+    --bench-bg: #EDEEF1;
+    --bench-panel: #F6F7F9;
+    --bench-ink: #242830;
+    --bench-ink-2: #5C6371;
+    --bench-ink-3: #878E9C;
+    --bench-line: #D8DBE2;
+    --bench-line-2: #C4C9D3;
+    --bench-raise: #FFFFFF;
+    --bench-sunk: #E4E6EB;
+    --bench-focus: #1E40AF;
+    --shadow-lift: 0 1px 2px rgba(16, 20, 28, .06), 0 8px 24px rgba(16, 20, 28, .10);
+    --shadow-mount: 0 1px 3px rgba(16, 20, 28, .08), 0 18px 50px rgba(16, 20, 28, .10);
+  }
+
+  :root[data-theme="dark"] {
+    --bench-bg: #15171C;
+    --bench-panel: #1C1F26;
+    --bench-ink: #DDE0E6;
+    --bench-ink-2: #99A0AD;
+    --bench-ink-3: #6E7481;
+    --bench-line: #282C35;
+    --bench-line-2: #363B46;
+    --bench-raise: #23262E;
+    --bench-sunk: #121419;
+    --bench-focus: #7C97E8;
+    --shadow-lift: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .45);
+    --shadow-mount: 0 1px 3px rgba(0, 0, 0, .5), 0 24px 60px rgba(0, 0, 0, .55);
+  }
+
+  /* ============================================================
+     SPECIMEN TOKENS - locked to @m/tokens light mode.
+     Mission Control has no dark mode, so the specimen never
+     inverts. It stays a light sample mounted on the bench.
+     ============================================================ */
+  .specimen, .proxy {
+    --surface-1: #FFFFFF;
+    --surface-2: #FAFAFA;
+    --surface-3: #F4F4F5;
+    --border-soft: #EFEFF1;
+    --border-default: #E4E4E7;
+    --border-strong: #D4D4D8;
+    --text-default: #1C1917;
+    --text-subdued: #6B7280;
+    --action: #1E40AF;
+    --positive: #10B981;
+    --negative: #DC2626;
+    --amber: #F59E0B;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--bench-bg);
+    color: var(--bench-ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------------------------------------------------------------
+     EMBED MODE - ?embed=1
+     Strips the instrument down to the specimen so a slide can carry
+     one idea at a size readable from across a room. The rail's 10px
+     labels are unreadable at presentation distance anyway, and a
+     dense panel competes with the speaker; the configuration it
+     would set arrives through deep-link params instead.
+     The full bench is always one click away for questions.
+     --------------------------------------------------------------- */
+  body.is-embed .rail,
+  body.is-embed .mount-label,
+  body.is-embed .log,
+  body.is-embed .note { display: none; }
+  body.is-embed .frame { display: block; min-height: 0; }
+  /* Keep the bench's own max-width. The specimen's line length is a
+     design decision, so the iframe gets sized to the specimen rather
+     than the specimen stretched to the iframe. */
+  body.is-embed .bench-inner { gap: 0; zoom: var(--embed-scale, 1); }
+  /* Top-aligned, never vertically centred. Centring splits any height
+     change in both directions, which halves the apparent movement and
+     wrecks the one demo that exists to show a 14px shove. Size the
+     iframe to the specimen instead. */
+  body.is-embed .bench {
+    padding: 28px;
+    min-height: 0;
+    justify-content: flex-start;
+  }
+
+  /* ---------- Page frame ---------- */
+  .frame {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    min-height: 100vh;
+    align-items: start;
+  }
+
+  @media (max-width: 1040px) {
+    .frame { grid-template-columns: minmax(0, 1fr); }
+    .rail { position: static !important; height: auto !important; border-right: 0 !important; border-bottom: 1px solid var(--bench-line); }
+  }
+
+  /* ---------- Control rail ---------- */
+  .rail {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--bench-panel);
+    border-right: 1px solid var(--bench-line);
+    padding: 28px 24px 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+  }
+
+  .rail-head { display: flex; flex-direction: column; gap: 6px; }
+  .rail-title { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+  .rail-sub { font-size: 12px; line-height: 1.55; color: var(--bench-ink-2); margin: 0; }
+
+  .eyebrow {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.11em;
+    text-transform: uppercase; color: var(--bench-ink-3); margin: 0;
+  }
+
+  .eyebrow.primary { color: var(--bench-focus); }
+
+  .group { display: flex; flex-direction: column; gap: 10px; }
+  .group-note { font-size: 11.5px; line-height: 1.5; color: var(--bench-ink-3); margin: 0; }
+  .group-note em { font-style: italic; }
+
+  .group.featured {
+    background: var(--bench-raise);
+    border: 1px solid var(--bench-line-2);
+    border-radius: 10px;
+    padding: 14px;
+    margin: 0 -2px;
+  }
+
+  /* ---------- Segmented switch ---------- */
+  .seg {
+    display: flex; flex-direction: column; gap: 1px;
+    background: var(--bench-line);
+    border: 1px solid var(--bench-line);
+    border-radius: 8px; overflow: hidden;
+  }
+
+  .seg button {
+    appearance: none; border: 0; text-align: left;
+    background: var(--bench-raise); color: var(--bench-ink-2);
+    padding: 9px 11px; font: inherit; font-size: 12.5px;
+    cursor: pointer; display: flex; align-items: baseline; gap: 8px;
+    transition: background .12s ease, color .12s ease;
+  }
+
+  .seg button:hover { background: var(--bench-sunk); color: var(--bench-ink); }
+  .seg button[aria-pressed="true"] { background: var(--bench-ink); color: var(--bench-bg); font-weight: 550; }
+  .seg button:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: -2px; }
+  .seg .k {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10px; opacity: .55; flex: none; width: 12px;
+  }
+
+  /* ---------- Checkbox switches ---------- */
+  .switch {
+    display: flex; align-items: flex-start; gap: 9px;
+    font-size: 12.5px; color: var(--bench-ink-2); cursor: pointer; padding: 3px 0;
+  }
+
+  .switch input {
+    appearance: none; width: 15px; height: 15px; margin: 2px 0 0; flex: none;
+    border: 1px solid var(--bench-line-2); border-radius: 4px;
+    background: var(--bench-raise); cursor: pointer;
+    display: grid; place-content: center;
+    transition: background .12s ease, border-color .12s ease;
+  }
+
+  .switch input::after {
+    content: ""; width: 7px; height: 4px;
+    border-left: 1.75px solid var(--bench-bg);
+    border-bottom: 1.75px solid var(--bench-bg);
+    transform: rotate(-45deg) translate(0.5px, -1px);
+    opacity: 0;
+  }
+
+  .switch input:checked { background: var(--bench-ink); border-color: var(--bench-ink); }
+  .switch input:checked::after { opacity: 1; }
+  .switch input:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 2px; }
+  .switch:hover { color: var(--bench-ink); }
+  .switch .sub { color: var(--bench-ink-3); }
+
+  /* ---------- Main bench area ---------- */
+  .bench {
+    padding: 40px 40px 72px;
+    display: flex; flex-direction: column; gap: 24px;
+    align-items: center; min-width: 0;
+  }
+
+  @media (max-width: 640px) { .bench { padding: 26px 16px 56px; } }
+
+  .bench-inner {
+    width: 100%; max-width: 620px;
+    display: flex; flex-direction: column; gap: 24px; min-width: 0;
+  }
+
+  .mount-label {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+  }
+  .mount-label p { margin: 0; font-size: 12px; color: var(--bench-ink-3); }
+
+  /* ============================================================
+     SPECIMEN - Mission Control widget, real tokens
+     ============================================================ */
+  .specimen {
+    background: var(--surface-1);
+    border: 1px solid var(--border-default);
+    border-radius: 12px;
+    box-shadow: var(--shadow-mount);
+    font-family: "Noto Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--text-default);
+    font-size: 14px; line-height: 20px;
+    padding: 16px 24px 20px;
+    overflow: hidden;
+  }
+
+  .spec-head {
+    display: flex; align-items: center; gap: 8px;
+    padding-bottom: 12px; margin-bottom: 4px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .spec-head h2 { font-size: 14px; font-weight: 600; margin: 0; flex: 1; }
+  .spec-head .count { font-size: 12px; color: var(--text-subdued); font-variant-numeric: tabular-nums; }
+  .spec-icon { width: 20px; height: 20px; display: grid; place-content: center; color: var(--text-subdued); }
+
+  .list {
+    display: flex; flex-direction: column; gap: 12px;
+    padding-top: 12px; position: relative;
+  }
+
+  /* ---------- Row ---------- */
+  .row {
+    position: relative;
+    display: flex; align-items: flex-start; gap: 12px;
+    margin: -2px; padding: 2px;
+    border-radius: 8px; background: transparent;
+  }
+
+  .row:hover { background: var(--surface-2); }
+  .row:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; }
+  .row.is-source { opacity: .28; }
+  .row.is-source-hidden { visibility: hidden; }
+  .row.is-lifted { background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--action); }
+
+  .handle {
+    position: absolute; left: -22px; top: 3px;
+    width: 18px; height: 18px;
+    display: grid; place-content: center;
+    border-radius: 4px; color: var(--text-subdued);
+    opacity: 0; cursor: grab;
+    transition: opacity .1s ease, background .1s ease;
+    touch-action: none; background: transparent; border: 0; padding: 0;
+  }
+
+  .handle:hover { background: var(--surface-3); color: var(--text-default); }
+  .handle:active { cursor: grabbing; }
+  .row:hover .handle, .row:focus .handle, .row:focus-within .handle { opacity: 1; }
+  body[data-grab="blank"] .handle { display: none; }
+
+  .cb {
+    flex: none; width: 20px; height: 20px;
+    display: grid; place-content: center; cursor: pointer;
+    background: none; border: 0; padding: 0; color: var(--text-subdued);
+  }
+  .cb:hover { color: var(--text-default); }
+  .cb[data-state="done"] { color: var(--positive); }
+  .cb[data-state="progress"] { color: var(--amber); }
+  .cb[data-state="cancelled"] { color: var(--text-subdued); }
+  .cb:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; border-radius: 4px; }
+
+  .content { flex: 1 1 auto; min-width: 0; }
+  /* inline so the hit area follows the text lines, leaving a
+     ragged grabbable tail after the last line */
+  .content .prose { display: inline; cursor: text; }
+
+  .row[data-done="true"] .content { text-decoration: line-through; opacity: .6; }
+  /* The author tag is NOT dimmed on completed rows. It uses --text-subdued,
+     which is only 4.83:1 at full strength, so any dim at all fails 1.4.3:
+     .6 measures 2.33:1. Dim is a treatment for full-strength colour only. */
+  .row[data-done="true"] .person { opacity: 1; }
+
+  .person {
+    flex: none; display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; color: var(--text-subdued);
+    background: var(--surface-3); border-radius: 999px;
+    padding: 2px 8px 2px 2px; cursor: pointer; max-width: 150px;
+  }
+
+  .avatar {
+    width: 16px; height: 16px; border-radius: 999px;
+    background: var(--action); color: #fff;
+    font-size: 9px; font-weight: 600;
+    display: grid; place-content: center; flex: none;
+  }
+
+  .person span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .menu {
+    flex: none; width: 20px; height: 20px;
+    display: grid; place-content: center; border-radius: 4px;
+    color: var(--text-subdued); background: none; border: 0; padding: 0;
+    opacity: 0; cursor: pointer;
+  }
+  .row:hover .menu, .row:focus-within .menu { opacity: 1; }
+  .menu:hover { background: var(--surface-3); color: var(--text-default); }
+  .menu:focus-visible { opacity: 1; outline: 2px solid var(--action); outline-offset: 1px; }
+
+  .chip {
+    flex: none; font-size: 11px; line-height: 14px;
+    padding: 2px 7px; border-radius: 999px;
+    border: 1px solid var(--border-default);
+    color: var(--text-subdued); background: var(--surface-1);
+    cursor: pointer; white-space: nowrap; max-width: 130px;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  .chip:hover { border-color: var(--border-strong); color: var(--text-default); }
+  .chip.status { font-size: 10px; letter-spacing: .04em; text-transform: uppercase; font-weight: 600; }
+  .chip.due { font-variant-numeric: tabular-nums; }
+  .chip.overdue { color: var(--negative); border-color: #FCA5A5; }
+
+  /* ---------- Collapsed completed group ---------- */
+  .done-group {
+    display: flex; align-items: center; gap: 8px;
+    margin: -2px; padding: 4px 2px;
+    border-radius: 8px; background: none; border: 0;
+    font: inherit; font-size: 12.5px;
+    color: var(--text-subdued); cursor: pointer; width: 100%;
+    text-align: left;
+  }
+  .done-group:hover { background: var(--surface-2); color: var(--text-default); }
+  .done-group:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; }
+  .done-group .chev { transition: transform .15s ease; display: grid; place-content: center; }
+  .done-group[aria-expanded="true"] .chev { transform: rotate(90deg); }
+  .done-group .rule { flex: 1; height: 1px; background: var(--border-soft); }
+
+  /* ---------- Composer ---------- */
+  .composer {
+    display: flex; align-items: center; gap: 12px;
+    padding: 2px; margin: -2px; margin-top: 4px;
+  }
+  .composer .cb { opacity: .4; cursor: default; }
+  .composer input {
+    flex: 1; border: 0; background: none; font: inherit;
+    color: var(--text-default); padding: 0;
+  }
+  .composer input::placeholder { color: #94A3B8; }
+  .composer input:focus { outline: none; }
+
+  /* ---------- Drop indicator ---------- */
+  .drop-line {
+    position: absolute; left: 0; right: 0; height: 2px;
+    background: var(--action); border-radius: 2px;
+    pointer-events: none; opacity: 0; z-index: 5;
+  }
+  .drop-line::before {
+    content: ""; position: absolute; left: -1px; top: -3px;
+    width: 8px; height: 8px; border-radius: 999px; background: var(--action);
+  }
+  .drop-line.on { opacity: 1; }
+
+  /* ---------- Drag proxy ---------- */
+  .proxy {
+    position: fixed; z-index: 9999; pointer-events: none;
+    background: var(--surface-1); border: 1px solid var(--border-default);
+    border-radius: 8px; box-shadow: var(--shadow-lift);
+    padding: 6px 10px;
+    font-family: "Noto Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size: 14px; line-height: 20px; color: var(--text-default);
+    display: flex; align-items: center; gap: 10px;
+    left: 0; top: 0; will-change: transform;
+  }
+  .proxy.compact { max-width: 380px; white-space: nowrap; overflow: hidden; }
+  .proxy.compact .ptext { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .proxy.full { align-items: flex-start; padding: 8px 12px; }
+  .proxy.full .ptext { white-space: normal; }
+
+  /* ---------- Grab-zone inspection ---------- */
+  body[data-zones="on"] .row {
+    background-image: repeating-linear-gradient(
+      45deg, rgba(30, 64, 175, .12) 0px, rgba(30, 64, 175, .12) 4px,
+      transparent 4px, transparent 8px);
+    outline: 1px dashed rgba(30, 64, 175, .45);
+    outline-offset: -1px; border-radius: 6px;
+  }
+  body[data-zones="on"] [data-interactive] {
+    background-color: var(--surface-1); background-image: none;
+    box-shadow: 0 0 0 1px rgba(220, 38, 38, .35); border-radius: 3px;
+  }
+  body[data-zones="on"] .content .prose {
+    background-color: rgba(220, 38, 38, .10);
+    box-shadow: 0 0 0 1px rgba(220, 38, 38, .30);
+  }
+  body[data-zones="on"][data-grab="handle"] .row {
+    background-image: none; outline-color: rgba(120, 126, 138, .35);
+  }
+  body[data-zones="on"][data-grab="handle"] .handle {
+    opacity: 1; background: rgba(30, 64, 175, .18);
+    box-shadow: 0 0 0 1px rgba(30, 64, 175, .5);
+  }
+  body[data-zones="on"][data-grab="handle"] [data-interactive],
+  body[data-zones="on"][data-grab="handle"] .content .prose {
+    background-color: transparent; box-shadow: none;
+  }
+
+  /* ---------- Uniform-height mode ---------- */
+  body[data-uniform="on"] .content .prose {
+    display: -webkit-box; -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical; overflow: hidden;
+  }
+  body[data-uniform="on"] .content { display: block; }
+
+  /* ============================================================
+     MUTATION LOG
+     ============================================================ */
+  .log {
+    background: var(--bench-panel);
+    border: 1px solid var(--bench-line);
+    border-radius: 10px; overflow: hidden;
+  }
+  .log-head {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 14px; border-bottom: 1px solid var(--bench-line); flex-wrap: wrap;
+  }
+  .log-head .eyebrow { flex: 1; }
+
+  .mini-seg { display: flex; border: 1px solid var(--bench-line-2); border-radius: 6px; overflow: hidden; }
+  .mini-seg button {
+    appearance: none; border: 0; background: var(--bench-raise); color: var(--bench-ink-2);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10.5px; letter-spacing: .04em; text-transform: uppercase;
+    padding: 4px 9px; cursor: pointer;
+  }
+  .mini-seg button + button { border-left: 1px solid var(--bench-line-2); }
+  .mini-seg button[aria-pressed="true"] { background: var(--bench-ink); color: var(--bench-bg); }
+  .mini-seg button:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: -2px; }
+
+  .log-body {
+    max-height: 250px; overflow-y: auto; overflow-x: auto;
+    padding: 12px 14px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11.5px; line-height: 1.65; color: var(--bench-ink-2);
+  }
+  .log-empty { color: var(--bench-ink-3); font-style: italic; }
+  .entry { padding: 7px 0; border-top: 1px dashed var(--bench-line); white-space: pre; }
+  .entry:first-child { border-top: 0; padding-top: 0; }
+  .entry .op { color: var(--bench-ink); font-weight: 600; }
+  .entry .dim { color: var(--bench-ink-3); }
+  .entry .hot { color: var(--bench-focus); font-weight: 600; }
+
+  /* ---------- Notes ---------- */
+  .note {
+    background: var(--bench-panel);
+    border: 1px solid var(--bench-line);
+    border-left: 2px solid var(--bench-line-2);
+    border-radius: 8px; padding: 14px 16px;
+    font-size: 12.5px; line-height: 1.6; color: var(--bench-ink-2);
+  }
+  .note strong { color: var(--bench-ink); font-weight: 600; }
+  .note p { margin: 0; }
+  .note p + p { margin-top: 8px; }
+
+  kbd {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10.5px; border: 1px solid var(--bench-line-2);
+    border-bottom-width: 2px; border-radius: 4px; padding: 1px 5px;
+    background: var(--bench-raise); color: var(--bench-ink); white-space: nowrap;
+  }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+  }
+
+  /* ============================================================
+     C1 - NESTING, ONE LEVEL ONLY
+     Everything below is new for this round. One level means a row
+     is either top-level or a child, never a grandchild, and the
+     ceiling is deliberate: it keeps the interesting problems and
+     drops the ones that only add cost.
+     ============================================================ */
+
+  /* A child is inset by exactly the checkbox column plus its gap, so
+     a child's text sits under its parent's text rather than under
+     the parent's checkbox. The nesting is legible from the text
+     column alone, with no guide lines needed. */
+  .row[data-tier="1"] { margin-left: 32px; }
+
+  /* Twisty. Only parents get one, and it sits in the same gutter as
+     the drag handle rather than taking a column, so a list with no
+     children is not paying for one. */
+  .twist {
+    position: absolute; left: -22px; top: 2px;
+    width: 18px; height: 18px;
+    display: grid; place-content: center;
+    background: none; border: 0; padding: 0; cursor: pointer;
+    color: var(--text-subdued); border-radius: 4px;
+  }
+  .twist:hover { background: var(--surface-3); color: var(--text-default); }
+  .twist:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; }
+  .twist svg { transition: transform .12s ease; }
+  .twist[aria-expanded="true"] svg { transform: rotate(90deg); }
+  /* A parent shows its twisty always, not on hover. Hiding the only
+     signal that a row has hidden children behind hover would mean a
+     collapsed parent looks exactly like a leaf. */
+  .row.has-kids .handle { left: -42px; }
+
+  .kids {
+    flex: none; font-size: 11px; color: var(--text-subdued);
+    background: var(--surface-3); border-radius: 999px;
+    padding: 1px 7px; align-self: center;
+  }
+
+  /* Drop indicator, tier-aware. The plain line from the flat list
+     cannot say which tier you are about to land in, so it insets. */
+  .drop-line.tier1 { left: 32px; }
+  .drop-line.blocked { background: var(--negative); }
+  .drop-line.blocked::before { background: var(--negative); }
+  .row.is-parent-target {
+    background: rgba(30, 64, 175, .07);
+    box-shadow: inset 0 0 0 1px rgba(30, 64, 175, .35);
+  }
+
+  /* ---------- Announced-structure inspector ---------- */
+  .sr-panel {
+    background: var(--bench-panel);
+    border: 1px solid var(--bench-line);
+    border-radius: 10px; overflow: hidden;
+  }
+  .sr-head {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    padding: 11px 14px; border-bottom: 1px solid var(--bench-line);
+  }
+  .sr-head .eyebrow { flex: 1; }
+  .sr-body {
+    padding: 12px 14px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11.5px; line-height: 1.7; color: var(--bench-ink-2);
+    white-space: pre; overflow-x: auto;
+  }
+  .sr-body .lvl { color: var(--bench-ink-3); }
+  .sr-body .role { color: var(--bench-focus); font-weight: 600; }
+  .sr-body .txt { color: var(--bench-ink); }
+  .sr-verdict {
+    padding: 11px 14px; border-top: 1px solid var(--bench-line);
+    font-size: 12.5px; line-height: 1.6; color: var(--bench-ink-2);
+  }
+  .sr-verdict strong { color: var(--bench-ink); }
+</style>
+
+<div class="frame">
+
+  <aside class="rail">
+    <div class="rail-head">
+      <h1 class="rail-title">Nesting bench</h1>
+      <p class="rail-sub">
+        Sub-items, one level deep. A row is either top-level or a child,
+        never a grandchild. Drag rows around, tick parents, and collapse
+        them to see what each rule costs.
+      </p>
+    </div>
+
+    <div class="group featured">
+      <p class="eyebrow primary">Ticking a parent, and ticking its children</p>
+      <div class="seg" id="seg-nest" role="group" aria-label="Parent and child completion">
+        <button data-v="independent" aria-pressed="true"><span class="k">1</span>They do not affect each other</button>
+        <button data-v="cascade" aria-pressed="false"><span class="k">2</span>Ticking a parent ticks its children</button>
+        <button data-v="rollup" aria-pressed="false"><span class="k">3</span>Ticking every child ticks the parent</button>
+        <button data-v="both" aria-pressed="false"><span class="k">4</span>Both directions</button>
+      </div>
+      <p class="group-note">
+        These are four different components, not four settings. <em>Both directions</em>
+        is the only one where a parent's checkbox is never wrong, and it is also the
+        only one where unticking one child silently unticks the parent.
+      </p>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">How you change a row's level</p>
+      <div class="seg" id="seg-tier" role="group" aria-label="Changing tier">
+        <button data-v="sideways" aria-pressed="true"><span class="k">Q</span>Drag it sideways</button>
+        <button data-v="onparent" aria-pressed="false"><span class="k">W</span>Drop it onto a parent</button>
+        <button data-v="menuonly" aria-pressed="false"><span class="k">E</span>Not by dragging at all</button>
+      </div>
+      <p class="group-note">
+        Dragging now has to carry two things at once: where the row goes and what
+        level it lands at. <em>Not by dragging at all</em> is the version that a
+        keyboard, a screen reader and a touchscreen can all reach.
+      </p>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">What the drop indicator says</p>
+      <div class="seg" id="seg-indicator" role="group" aria-label="Drop indicator">
+        <button data-v="line" aria-pressed="false"><span class="k">A</span>A plain line, same as before</button>
+        <button data-v="inset" aria-pressed="true"><span class="k">S</span>The line moves in to show the level</button>
+        <button data-v="parent" aria-pressed="false"><span class="k">D</span>Inset, and light up the parent</button>
+      </div>
+      <p class="group-note">
+        The flat list settled on a plain line. It cannot survive nesting on its own,
+        because the same line means two different landings.
+      </p>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">A collapsed parent shows</p>
+      <div class="seg" id="seg-collapsed" role="group" aria-label="Collapsed parent">
+        <button data-v="count" aria-pressed="true"><span class="k">Z</span>How many are hidden</button>
+        <button data-v="progress" aria-pressed="false"><span class="k">X</span>How many are done</button>
+        <button data-v="bare" aria-pressed="false"><span class="k">C</span>Nothing but the twisty</button>
+      </div>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Inspect</p>
+      <label class="switch">
+        <input type="checkbox" id="chk-sr" checked>
+        <span>What a screen reader hears<br><span class="sub">the announced structure, under the list</span></span>
+      </label>
+      <label class="switch">
+        <input type="checkbox" id="chk-zones">
+        <span>Paint the grab zones<br><span class="sub">blue is draggable, red is not</span></span>
+      </label>
+      <p class="group-note">
+        Keyboard: <kbd>Tab</kbd> to a row, <kbd>Space</kbd> to lift, <kbd>&#8593;</kbd><kbd>&#8595;</kbd>
+        to move, <kbd>&#8594;</kbd> to make it a child, <kbd>&#8592;</kbd> to lift it back out.
+        Works whatever the dragging rule is set to.
+      </p>
+    </div>
+  </aside>
+
+  <main class="bench">
+    <div class="bench-inner">
+
+      <div class="mount-label">
+        <p class="eyebrow">Mounted specimen / @m/tokens, light only</p>
+        <p id="hint">Drag the handle, or any empty part of a row</p>
+      </div>
+
+      <section class="specimen" aria-label="Checklist specimen">
+        <div class="spec-head">
+          <div class="spec-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h7"/></svg>
+          </div>
+          <h2 id="spec-title">Checklist</h2>
+          <span class="count" id="count"></span>
+        </div>
+        <div class="list" id="list"></div>
+      </section>
+
+      <section class="sr-panel" id="sr-panel" aria-label="Announced structure">
+        <div class="sr-head">
+          <p class="eyebrow">What a screen reader hears</p>
+          <div class="mini-seg" id="seg-sr" role="group" aria-label="Semantics">
+            <button data-v="list" aria-pressed="true">Nested list</button>
+            <button data-v="tree" aria-pressed="false">role=tree</button>
+          </div>
+        </div>
+        <div class="sr-body" id="sr-body"></div>
+        <div class="sr-verdict" id="sr-verdict"></div>
+      </section>
+
+      <section class="log" aria-label="Mutation log">
+        <div class="log-head">
+          <p class="eyebrow">What each move writes</p>
+          <div class="mini-seg" id="seg-index" role="group" aria-label="Position strategy">
+            <button data-v="fractional" aria-pressed="true">Fractional</button>
+            <button data-v="integer" aria-pressed="false">Integer</button>
+          </div>
+        </div>
+        <div class="log-body" id="log">
+          <p class="log-empty">Move a row, or change its level, and the write shows up here.</p>
+        </div>
+      </section>
+
+      <div class="note">
+        <p><strong>Why one level and not many.</strong> One level keeps every problem
+        worth having: the index stops being flat, dragging has to carry two things at
+        once, and a parent's checkbox has to mean something. Going deeper adds
+        recursion and a much heavier keyboard contract without adding a new question.
+        A checklist that needs grandchildren is a document, and should be one.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>The index is now scoped to a parent.</strong> A position only means
+        anything next to its siblings, so moving between levels is not the same
+        operation as moving within one: the row leaves one sequence and joins another.
+        Watch the log with <em>Integer</em> switched on to see how much worse that gets
+        when positions are not fractional.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="sr-only" role="status" aria-live="polite" id="announce"></div>
+
+<script>
+  // ---------------------------------------------------------------
+  // Data. parent === null means top level. One level only, so a row
+  // with a parent can never itself be a parent.
+  // ---------------------------------------------------------------
+  const ITEMS = [
+    { id: "r1", parent: null, text: "Reserved Instance coverage dropped to 61% this month after the m5 fleet was retired.", who: "Dana", done: false },
+    { id: "r1a", parent: "r1", text: "Pull the current utilisation report", who: "Dana", done: false },
+    { id: "r1b", parent: "r1", text: "Decide between Savings Plans and re-covering", who: "Marco", done: false },
+    { id: "r2", parent: null, text: "Budget alert thresholds are still pointing at the old prod account.", who: "Marco", done: false },
+    { id: "r3", parent: null, text: "Walk through the S3 lifecycle policy proposal.", who: "Dana", done: true },
+    { id: "r4", parent: null, text: "Open question on the CloudFront invalidation spike. Finance flagged it as an anomaly but it tracks a deploy.", who: "Priya", done: false },
+    { id: "r4a", parent: "r4", text: "Confirm with Finance that it tracks the deploy", who: "Priya", done: true },
+    { id: "r5", parent: null, text: "Quick status on the GuardDuty findings backlog.", who: "Priya", done: false }
+  ];
+
+  // Fractional position keys, scoped per parent. Seeded a..z-ish so
+  // there is always room to insert on either side.
+  function seed() {
+    const byParent = {};
+    ITEMS.forEach(it => { (byParent[it.parent] = byParent[it.parent] || []).push(it); });
+    Object.values(byParent).forEach(list => {
+      list.forEach((it, i) => { it.pos = String.fromCharCode(102 + i * 2); }); // f, h, j...
+    });
+  }
+  seed();
+
+  const S = {
+    nest: "independent",
+    tier: "sideways",
+    indicator: "inset",
+    collapsed: "count",
+    index: "fractional",
+    sr: "list",
+    showSr: true,
+    zones: false,
+    open: {}   // id -> true when a parent is expanded
+  };
+  ITEMS.filter(i => i.parent === null).forEach(p => { S.open[p.id] = true; });
+
+  const listEl = document.getElementById("list");
+  const countEl = document.getElementById("count");
+  const logEl = document.getElementById("log");
+  const hintEl = document.getElementById("hint");
+  const srBody = document.getElementById("sr-body");
+  const srVerdict = document.getElementById("sr-verdict");
+  const srPanel = document.getElementById("sr-panel");
+  const announceEl = document.getElementById("announce");
+
+  const byId = id => ITEMS.find(i => i.id === id);
+  const kidsOf = id => ITEMS.filter(i => i.parent === id).sort(cmp);
+  const tops = () => ITEMS.filter(i => i.parent === null).sort(cmp);
+  const cmp = (a, b) => (a.pos < b.pos ? -1 : a.pos > b.pos ? 1 : a.id < b.id ? -1 : 1);
+  const hasKids = id => ITEMS.some(i => i.parent === id);
+
+  // ---------------------------------------------------------------
+  // Fractional key between two neighbours. Deliberately simple: it
+  // only has to survive a demo, but it does have to show that one
+  // move writes one row.
+  // ---------------------------------------------------------------
+  function between(a, b) {
+    if (!a && !b) return "m";
+    if (!a) return String.fromCharCode(Math.max(98, b.charCodeAt(0) - 2));
+    if (!b) return String.fromCharCode(Math.min(121, a.charCodeAt(0) + 2));
+    if (a === b) return a + "m";
+    const la = a.charCodeAt(0), lb = b.charCodeAt(0);
+    if (lb - la > 1) return String.fromCharCode(Math.floor((la + lb) / 2));
+    return a + "m";  // no room at this length, so go one deeper
+  }
+
+  // ---------------------------------------------------------------
+  // Flatten to what is on screen, carrying tier with each row.
+  // ---------------------------------------------------------------
+  function visible() {
+    const out = [];
+    tops().forEach(p => {
+      out.push({ it: p, tier: 0 });
+      if (S.open[p.id] !== false) kidsOf(p.id).forEach(c => out.push({ it: c, tier: 1 }));
+    });
+    return out;
+  }
+
+  // ---------------------------------------------------------------
+  // Completion. The four models differ only here.
+  // ---------------------------------------------------------------
+  function setDone(id, next) {
+    const it = byId(id);
+    it.done = next;
+    const writes = [{ id, done: next }];
+
+    const cascade = S.nest === "cascade" || S.nest === "both";
+    const rollup  = S.nest === "rollup" || S.nest === "both";
+
+    if (cascade && it.parent === null) {
+      kidsOf(id).forEach(c => {
+        if (c.done !== next) { c.done = next; writes.push({ id: c.id, done: next, why: "cascaded" }); }
+      });
+    }
+
+    if (rollup && it.parent !== null) {
+      const p = byId(it.parent);
+      const sibs = kidsOf(p.id);
+      const all = sibs.every(c => c.done);
+      if (p.done !== all) { p.done = all; writes.push({ id: p.id, done: all, why: "rolled up" }); }
+    }
+
+    logWrites(writes);
+    render();
+  }
+
+  // ---------------------------------------------------------------
+  // Logging
+  // ---------------------------------------------------------------
+  let n = 0;
+  function entry(html) {
+    const empty = logEl.querySelector(".log-empty");
+    if (empty) empty.remove();
+    const p = document.createElement("p");
+    p.className = "entry";
+    p.innerHTML = html;
+    logEl.prepend(p);
+    n++;
+  }
+  const esc = s => String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+
+  function logWrites(writes) {
+    const lines = writes.map(w =>
+      '<span class="op">setChecklistItemStatus</span>({ id: "' + w.id + '", done: ' + w.done + ' })' +
+      (w.why ? ' <span class="dim">// ' + w.why + "</span>" : ""));
+    entry(lines.join("\n"));
+  }
+
+  function logMove(it, prevTier, newTier, prevSibs, newSibs, key) {
+    const changedTier = prevTier !== newTier;
+    let html = '<span class="op">moveChecklistItem</span>({ id: "' + it.id + '", parent: ' +
+      (it.parent ? '"' + it.parent + '"' : "null") + ', after: ' +
+      (newSibs.before ? '"' + newSibs.before + '"' : "null") + " })";
+
+    if (S.index === "fractional") {
+      html += "\n  <span class=\"dim\">writes 1 row</span>  position = \"" + key + '"';
+      if (changedTier) {
+        html += "\n  <span class=\"hot\">level changed</span> <span class=\"dim\">" +
+          (newTier === 1 ? "left the top-level sequence, joined " + it.parent + "'s"
+                         : "left " + prevSibs.parent + "'s sequence, joined the top level") + "</span>";
+      }
+    } else {
+      const cost = newSibs.count + (changedTier ? prevSibs.count : 0);
+      html += "\n  <span class=\"hot\">writes " + cost + " rows</span> <span class=\"dim\">every sibling after it is renumbered" +
+        (changedTier ? ", in both sequences, because the row left one and joined another" : "") + "</span>";
+    }
+    entry(html);
+  }
+
+  // ---------------------------------------------------------------
+  // Move. Returns false when the move is not allowed.
+  // ---------------------------------------------------------------
+  function move(id, targetIndex, targetTier, parentId) {
+    const it = byId(id);
+
+    // One level only. A row with children cannot become a child.
+    if (targetTier === 1 && hasKids(id)) {
+      announce("That row has sub-items, so it cannot become one.");
+      return false;
+    }
+
+    const prevTier = it.parent === null ? 0 : 1;
+    const prevParent = it.parent;
+    const prevCount = (prevTier === 0 ? tops() : kidsOf(prevParent)).length;
+
+    it.parent = targetTier === 1 ? parentId : null;
+
+    const sibs = (targetTier === 1 ? kidsOf(parentId) : tops()).filter(s => s.id !== id);
+    const before = sibs[targetIndex - 1] || null;
+    const after = sibs[targetIndex] || null;
+    const key = between(before && before.pos, after && after.pos);
+    it.pos = key;
+
+    logMove(it, prevTier, targetTier, { parent: prevParent, count: prevCount },
+            { before: before && before.id, count: sibs.length + 1 }, key);
+    render();
+    return true;
+  }
+
+  function announce(msg) { announceEl.textContent = msg; }
+
+  // ---------------------------------------------------------------
+  // Render
+  // ---------------------------------------------------------------
+  const ICON = {
+    circle: '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/></svg>',
+    check: '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/><path d="M5.8 9.2l2.2 2.2 4.2-4.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    grip: '<svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="4" cy="2.5" r="1.1"/><circle cx="8" cy="2.5" r="1.1"/><circle cx="4" cy="6" r="1.1"/><circle cx="8" cy="6" r="1.1"/><circle cx="4" cy="9.5" r="1.1"/><circle cx="8" cy="9.5" r="1.1"/></svg>',
+    twist: '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg>'
+  };
+
+  function render() {
+    const rows = visible();
+    countEl.textContent = ITEMS.filter(i => !i.done).length + " open";
+
+    listEl.innerHTML = rows.map(({ it, tier }) => {
+      const kids = kidsOf(it.id);
+      const isParent = kids.length > 0;
+      const open = S.open[it.id] !== false;
+      const doneKids = kids.filter(k => k.done).length;
+
+      let badge = "";
+      if (isParent && !open) {
+        if (S.collapsed === "count") badge = '<span class="kids">' + kids.length + "</span>";
+        if (S.collapsed === "progress") badge = '<span class="kids">' + doneKids + " / " + kids.length + "</span>";
+      }
+
+      return '<div class="row' + (isParent ? " has-kids" : "") + '" data-id="' + it.id +
+        '" data-tier="' + tier + '" data-done="' + it.done + '" tabindex="0" role="listitem">' +
+        (isParent
+          ? '<button class="twist" data-act="twist" data-interactive aria-expanded="' + open +
+            '" aria-label="' + (open ? "Collapse" : "Expand") + ' sub-items of ' + esc(it.text.slice(0, 40)) + '">' + ICON.twist + "</button>"
+          : "") +
+        '<button class="handle" data-act="grab" data-interactive aria-label="Reorder"' +
+        (isParent ? ' style="left:-42px"' : "") + ">" + ICON.grip + "</button>" +
+        '<button class="cb" data-act="check" data-interactive data-state="' + (it.done ? "done" : "open") +
+        '" aria-label="' + (it.done ? "Mark not done" : "Mark done") + '">' + (it.done ? ICON.check : ICON.circle) + "</button>" +
+        '<span class="content"><span class="prose">' + esc(it.text) + "</span></span>" +
+        badge +
+        '<span class="who" data-interactive>' + it.who + "</span>" +
+        "</div>";
+    }).join("") + '<div class="drop-line" id="dropline"></div>';
+
+    document.body.dataset.zones = S.zones ? "on" : "off";
+    srPanel.style.display = S.showSr ? "" : "none";
+    if (S.showSr) renderSr();
+  }
+
+  // ---------------------------------------------------------------
+  // Announced structure. This is the round's accessibility question:
+  // does one level hold with ordinary nested lists, or does it need
+  // the full tree contract?
+  // ---------------------------------------------------------------
+  function renderSr() {
+    const t = tops();
+    let out = "";
+
+    if (S.sr === "list") {
+      out += '<span class="role">list</span>, ' + t.length + " items\n";
+      t.forEach(p => {
+        const kids = kidsOf(p.id);
+        out += '  <span class="lvl">|-</span> <span class="role">checkbox</span> ' +
+          (p.done ? "checked" : "not checked") + ', <span class="txt">"' + esc(short(p.text)) + '"</span>\n';
+        if (kids.length && S.open[p.id] !== false) {
+          out += '  <span class="lvl">|</span>    <span class="role">list</span>, ' + kids.length + " items\n";
+          kids.forEach(c => {
+            out += '  <span class="lvl">|</span>      <span class="lvl">|-</span> <span class="role">checkbox</span> ' +
+              (c.done ? "checked" : "not checked") + ', <span class="txt">"' + esc(short(c.text)) + '"</span>\n';
+          });
+        } else if (kids.length) {
+          out += '  <span class="lvl">|</span>    <span class="dim">(' + kids.length + " hidden, and nothing says so)</span>\n";
+        }
+      });
+      srVerdict.innerHTML =
+        "<strong>Holds, with one gap.</strong> A nested list is understood everywhere and costs nothing: " +
+        "the nesting is carried by the markup, and every checkbox is still just a checkbox. " +
+        "What it cannot say is that a parent is <em>collapsed</em>, because a plain list has no " +
+        "expanded state. The twisty is a button with its own label, so that gets announced, " +
+        "but the relationship between the button and the hidden items is left implied.";
+    } else {
+      out += '<span class="role">tree</span>\n';
+      t.forEach(p => {
+        const kids = kidsOf(p.id);
+        const open = S.open[p.id] !== false;
+        out += '  <span class="lvl">|-</span> <span class="role">treeitem</span>, level 1' +
+          (kids.length ? ", " + (open ? "expanded" : "collapsed") : "") +
+          ', <span class="txt">"' + esc(short(p.text)) + '"</span>\n';
+        if (kids.length && open) {
+          kids.forEach(c => {
+            out += '  <span class="lvl">|</span>    <span class="lvl">|-</span> <span class="role">treeitem</span>, level 2' +
+              ', <span class="txt">"' + esc(short(c.text)) + '"</span>\n';
+          });
+        }
+      });
+      srVerdict.innerHTML =
+        "<strong>Says more, and costs more than it is worth here.</strong> A tree announces " +
+        "expanded and collapsed properly, and gives levels. But it takes over the arrow keys " +
+        "for its own navigation contract, which is exactly the keys reordering wants, and " +
+        "<code>treeitem</code> does not carry a checked state the way a checkbox does, so the " +
+        "tick has to be re-announced by hand. <strong>One level does not earn that.</strong> " +
+        "The nested list plus a labelled twisty is the answer; a deeper tree would change it.";
+    }
+
+    srBody.innerHTML = out;
+  }
+  const short = s => s.length > 46 ? s.slice(0, 44) + "..." : s;
+
+  // ---------------------------------------------------------------
+  // Pointer drag. Two dimensions now: where in the sequence, and
+  // which level. That is the whole reason this round exists.
+  // ---------------------------------------------------------------
+  let drag = null;
+  const dropline = () => document.getElementById("dropline");
+
+  listEl.addEventListener("pointerdown", (e) => {
+    const row = e.target.closest(".row");
+    if (!row) return;
+    const onHandle = e.target.closest('[data-act="grab"]');
+    const onOther = e.target.closest("[data-interactive]");
+    if (!onHandle && onOther) return;
+    if (!onHandle && e.target.closest(".prose")) return;
+
+    e.preventDefault();
+    const id = row.dataset.id;
+    drag = { id, startX: e.clientX, startY: e.clientY, moved: false, tier: +row.dataset.tier, parent: byId(id).parent, index: 0 };
+    // Capture keeps the drag alive if the pointer leaves the row. It
+    // throws for a pointer id the browser does not know about, which
+    // is not worth killing the drag over.
+    try { row.setPointerCapture(e.pointerId); } catch (_) {}
+  });
+
+  listEl.addEventListener("pointermove", (e) => {
+    if (!drag) return;
+    if (!drag.moved && Math.abs(e.clientY - drag.startY) < 3 && Math.abs(e.clientX - drag.startX) < 3) return;
+    drag.moved = true;
+
+    const rows = [...listEl.querySelectorAll(".row")];
+    const src = rows.find(r => r.dataset.id === drag.id);
+    if (src) src.classList.add("is-source");
+
+    // Which gap are we in?
+    const others = rows.filter(r => r.dataset.id !== drag.id);
+    let idx = others.length, refRow = null, after = true;
+    for (let i = 0; i < others.length; i++) {
+      const b = others[i].getBoundingClientRect();
+      if (e.clientY < b.top + b.height / 2) { idx = i; refRow = others[i]; after = false; break; }
+    }
+    if (!refRow && others.length) { refRow = others[others.length - 1]; }
+
+    // Which level? This is the new part.
+    const dx = e.clientX - drag.startX;
+    let tier = 0, parentId = null;
+    const prev = idx > 0 ? byId(others[idx - 1].dataset.id) : null;
+
+    if (S.tier === "sideways") {
+      // Indent when dragged right past a threshold, and only when the
+      // row above can actually take a child.
+      const canParent = prev && prev.parent === null;
+      const prevIsChild = prev && prev.parent !== null;
+      if (dx > 24 && canParent) { tier = 1; parentId = prev.id; }
+      else if (prevIsChild) { tier = dx < -24 ? 0 : 1; parentId = tier === 1 ? prev.parent : null; }
+    } else if (S.tier === "onparent") {
+      const hovered = document.elementFromPoint(e.clientX, e.clientY);
+      const hoveredRow = hovered && hovered.closest(".row");
+      const hoverItem = hoveredRow && hoveredRow.dataset.id !== drag.id ? byId(hoveredRow.dataset.id) : null;
+      const b = hoveredRow && hoveredRow.getBoundingClientRect();
+      const inBand = b && e.clientY > b.top + b.height * 0.25 && e.clientY < b.bottom - b.height * 0.25;
+      if (hoverItem && hoverItem.parent === null && inBand) { tier = 1; parentId = hoverItem.id; }
+      else if (prev && prev.parent !== null) { tier = 1; parentId = prev.parent; }
+    } else {
+      // menuonly: dragging never changes level. The row keeps its own,
+      // unless the gap it lands in cannot hold it.
+      if (prev && prev.parent !== null) { tier = 1; parentId = prev.parent; }
+      else if (prev && prev.parent === null && drag.tier === 1 && prev.id === drag.parent) { tier = 1; parentId = prev.id; }
+    }
+
+    const blocked = tier === 1 && hasKids(drag.id);
+
+    // Paint
+    rows.forEach(r => r.classList.remove("is-parent-target"));
+    if (S.indicator === "parent" && tier === 1 && parentId && !blocked) {
+      const pr = rows.find(r => r.dataset.id === parentId);
+      if (pr) pr.classList.add("is-parent-target");
+    }
+
+    const dl = dropline();
+    const listBox = listEl.getBoundingClientRect();
+    let y;
+    if (idx < others.length) {
+      const b = others[idx].getBoundingClientRect();
+      y = b.top - listBox.top - 3;
+    } else if (others.length) {
+      const b = others[others.length - 1].getBoundingClientRect();
+      y = b.bottom - listBox.top + 1;
+    } else y = 0;
+
+    dl.style.top = y + "px";
+    dl.classList.add("on");
+    dl.classList.toggle("tier1", S.indicator !== "line" && tier === 1);
+    dl.classList.toggle("blocked", blocked);
+
+    drag.index = idx;
+    drag.dropTier = blocked ? (byId(drag.id).parent === null ? 0 : 1) : tier;
+    drag.dropParent = blocked ? byId(drag.id).parent : parentId;
+    drag.blocked = blocked;
+  });
+
+  function endDrag() {
+    if (!drag) return;
+    const d = drag; drag = null;
+    document.querySelectorAll(".row").forEach(r => r.classList.remove("is-source", "is-parent-target"));
+    const dl = dropline();
+    if (dl) dl.classList.remove("on", "tier1", "blocked");
+    if (!d.moved) return;
+    if (d.blocked) { announce("That row has sub-items, so it cannot become one."); render(); return; }
+
+    // Recompute the index within the destination sequence.
+    const dest = d.dropTier === 1 ? kidsOf(d.dropParent) : tops();
+    const list = visible().map(v => v.it.id);
+    let destIndex = dest.filter(s => s.id !== d.id).length;
+    const flatAt = list.filter(id => id !== d.id)[d.index];
+    if (flatAt) {
+      const target = byId(flatAt);
+      const inDest = dest.filter(s => s.id !== d.id).findIndex(s => s.id === target.id);
+      if (inDest >= 0) destIndex = inDest;
+    }
+    move(d.id, destIndex, d.dropTier, d.dropParent);
+  }
+  listEl.addEventListener("pointerup", endDrag);
+  listEl.addEventListener("pointercancel", endDrag);
+
+  // ---------------------------------------------------------------
+  // Row interactions
+  // ---------------------------------------------------------------
+  listEl.addEventListener("click", (e) => {
+    const act = e.target.closest("[data-act]");
+    if (!act) return;
+    const row = e.target.closest(".row");
+    const id = row.dataset.id;
+    if (act.dataset.act === "check") setDone(id, !byId(id).done);
+    if (act.dataset.act === "twist") {
+      S.open[id] = S.open[id] === false;
+      announce(S.open[id] ? "Expanded." : "Collapsed, " + kidsOf(id).length + " sub-items hidden.");
+      render();
+    }
+  });
+
+  // ---------------------------------------------------------------
+  // Keyboard. Up and down move within the sequence; right and left
+  // change level. This path exists whatever the dragging rule is,
+  // which is the point: it is the only one everybody can reach.
+  // ---------------------------------------------------------------
+  let lifted = null;
+  document.addEventListener("keydown", (e) => {
+    const row = document.activeElement && document.activeElement.closest && document.activeElement.closest(".row");
+    if (!row) return;
+    const id = row.dataset.id;
+
+    if (e.key === " " || e.key === "Enter") {
+      // e.target is not always an Element (it is the document for a
+      // synthetic event), and document.closest does not exist, so this
+      // has to be guarded or the whole handler throws silently.
+      if (e.target instanceof Element && e.target.closest("[data-act]")) return;
+      e.preventDefault();
+      lifted = lifted === id ? null : id;
+      document.querySelectorAll(".row").forEach(r => r.classList.toggle("is-lifted", r.dataset.id === lifted));
+      announce(lifted ? "Lifted. Arrow keys to move, space to drop." : "Dropped.");
+      return;
+    }
+    if (!lifted || lifted !== id) return;
+
+    const it = byId(id);
+    const tier = it.parent === null ? 0 : 1;
+    const sibs = (tier === 0 ? tops() : kidsOf(it.parent));
+    const at = sibs.findIndex(s => s.id === id);
+
+    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+      e.preventDefault();
+      const to = at + (e.key === "ArrowUp" ? -1 : 1);
+      if (to < 0 || to >= sibs.length) { announce("Already at the " + (to < 0 ? "top" : "bottom") + " of its level."); return; }
+      const others = sibs.filter(s => s.id !== id);
+      move(id, to, tier, it.parent);
+      announce("Moved to " + (to + 1) + " of " + sibs.length + (tier === 1 ? ", inside its parent." : ", at the top level."));
+      refocus(id);
+    }
+
+    if (e.key === "ArrowRight") {
+      e.preventDefault();
+      if (tier === 1) { announce("Already a sub-item. Only one level is allowed."); return; }
+      if (hasKids(id)) { announce("This row has sub-items, so it cannot become one."); return; }
+      const above = tops().filter(s => s.id !== id)[at - 1];
+      if (!above) { announce("Nothing above it to sit under."); return; }
+      move(id, kidsOf(above.id).length, 1, above.id);
+      announce("Now a sub-item of " + short(above.text));
+      refocus(id);
+    }
+
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      if (tier === 0) { announce("Already at the top level."); return; }
+      const p = byId(it.parent);
+      const pIndex = tops().findIndex(s => s.id === p.id);
+      move(id, pIndex + 1, 0, null);
+      announce("Moved out to the top level, below " + short(p.text));
+      refocus(id);
+    }
+  });
+
+  function refocus(id) {
+    requestAnimationFrame(() => {
+      const r = listEl.querySelector('.row[data-id="' + id + '"]');
+      if (r) { r.focus(); r.classList.add("is-lifted"); }
+    });
+  }
+
+  // ---------------------------------------------------------------
+  // Controls
+  // ---------------------------------------------------------------
+  function wireSeg(elId, key, after) {
+    const root = document.getElementById(elId);
+    if (!root) return;
+    root.addEventListener("click", (e) => {
+      const b = e.target.closest("button[data-v]");
+      if (!b) return;
+      S[key] = b.dataset.v;
+      [...root.querySelectorAll("button[data-v]")].forEach(x =>
+        x.setAttribute("aria-pressed", String(x === b)));
+      if (after) after();
+      render();
+    });
+  }
+  wireSeg("seg-nest", "nest");
+  wireSeg("seg-tier", "tier", updateHint);
+  wireSeg("seg-indicator", "indicator");
+  wireSeg("seg-collapsed", "collapsed");
+  wireSeg("seg-index", "index");
+  wireSeg("seg-sr", "sr");
+
+  document.getElementById("chk-sr").addEventListener("change", e => { S.showSr = e.target.checked; render(); });
+  document.getElementById("chk-zones").addEventListener("change", e => { S.zones = e.target.checked; render(); });
+
+  function updateHint() {
+    hintEl.textContent =
+      S.tier === "sideways" ? "Drag a row right to make it a sub-item" :
+      S.tier === "onparent" ? "Drop a row onto another to make it a sub-item" :
+                              "Dragging only reorders. Use the arrow keys to change level";
+  }
+  updateHint();
+
+  const KEYS = {
+    "1": ["seg-nest", "independent"], "2": ["seg-nest", "cascade"],
+    "3": ["seg-nest", "rollup"], "4": ["seg-nest", "both"],
+    "q": ["seg-tier", "sideways"], "w": ["seg-tier", "onparent"], "e": ["seg-tier", "menuonly"],
+    "a": ["seg-indicator", "line"], "s": ["seg-indicator", "inset"], "d": ["seg-indicator", "parent"],
+    "z": ["seg-collapsed", "count"], "x": ["seg-collapsed", "progress"], "c": ["seg-collapsed", "bare"]
+  };
+  window.addEventListener("keydown", (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (document.activeElement && document.activeElement.closest(".row")) return;
+    if (/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)) return;
+    const hit = KEYS[e.key.toLowerCase()];
+    if (!hit) return;
+    const btn = document.querySelector("#" + hit[0] + ' button[data-v="' + hit[1] + '"]');
+    if (btn) btn.click();
+  });
+
+  // ---------------------------------------------------------------
+  // Deep links, same contract as the other benches.
+  // ---------------------------------------------------------------
+  function applyDeepLink() {
+    const q = new URLSearchParams(location.search);
+    const allowed = {
+      nest:      ["independent", "cascade", "rollup", "both"],
+      tier:      ["sideways", "onparent", "menuonly"],
+      indicator: ["line", "inset", "parent"],
+      collapsed: ["count", "progress", "bare"],
+      index:     ["fractional", "integer"],
+      sr:        ["list", "tree"]
+    };
+    Object.keys(allowed).forEach(k => {
+      const v = q.get(k);
+      if (!v || !allowed[k].includes(v)) return;
+      const btn = document.querySelector("#seg-" + k + ' button[data-v="' + v + '"]');
+      if (btn) btn.click();
+    });
+    if (q.get("zones") === "1") {
+      const c = document.getElementById("chk-zones");
+      c.checked = true; c.dispatchEvent(new Event("change"));
+    }
+    if (q.get("nosr") === "1") {
+      const c = document.getElementById("chk-sr");
+      c.checked = false; c.dispatchEvent(new Event("change"));
+    }
+    if (q.get("embed") === "1") document.body.classList.add("is-embed");
+
+    const sc = parseFloat(q.get("scale"));
+    if (sc > 0 && sc <= 4) document.documentElement.style.setProperty("--embed-scale", String(sc));
+  }
+
+  render();
+  applyDeepLink();
+
+  // Escape hands the deck back.
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape" || window.parent === window) return;
+    const el = document.activeElement;
+    if (el && el !== document.body) el.blur();
+    window.parent.focus();
+  });
+</script>
