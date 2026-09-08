@@ -326,14 +326,13 @@
         },
         {
           q: "What happens when you tick a parent?",
-          open: true,
           opts: [
-            { t: "Nothing. They are independent", u: N + "?nest=independent" },
-            { t: "Its children tick too", u: N + "?nest=cascade" },
-            { t: "Ticking every child ticks the parent", u: N + "?nest=rollup" },
-            { t: "Both directions", u: N + "?nest=both" }
+            { t: "Nothing. A tick only ever changes the row you ticked", u: N + "?nest=independent", status: "chosen" },
+            { t: "Its children tick too", u: N + "?nest=cascade", status: "rejected" },
+            { t: "Ticking every child ticks the parent", u: N + "?nest=rollup", status: "rejected" },
+            { t: "Both directions", u: N + "?nest=both", status: "rejected" }
           ],
-          why: "<strong>Open, and it needs a taste call.</strong> These are four different components, not four settings. My lean is <em>its children tick too</em> and nothing in the other direction: rolling up makes a parent's checkbox flip without anyone touching it, and a control that changes on its own is hard to trust. <em>Both directions</em> is the only one where a parent's tick is never a lie, and also the only one where unticking a single child silently unticks the parent."
+          why: "Nothing. These were four different components, not four settings, and the multiplayer case decides it: <strong>this list has other people's rows in it.</strong> Cascading means one tick silently writes to items somebody else wrote and is watching, and rolling up means a checkbox flips with nobody touching it. Neither is a change you would want to explain to the person whose row it was. A tick changes the row you ticked, and that is the whole rule."
         },
         {
           q: "How does dragging decide where a row lands?",

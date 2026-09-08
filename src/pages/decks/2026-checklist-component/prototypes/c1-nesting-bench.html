@@ -651,9 +651,14 @@
         <button data-v="both" aria-pressed="false"><span class="k">4</span>Both directions</button>
       </div>
       <p class="group-note">
-        These are four different components, not four settings. <em>Both directions</em>
-        is the only one where a parent's checkbox is never wrong, and it is also the
-        only one where unticking one child silently unticks the parent.
+        Settled: <em>they do not affect each other</em>. These are four different
+        components, not four settings, and the multiplayer case decides it. This list has
+        other people's rows in it, so cascading means one tick silently writes to an item
+        somebody else wrote and is watching, and rolling up means a checkbox flips with
+        nobody touching it. A tick changes the row you ticked. The other three are kept
+        here so the trade can be felt: <em>both directions</em> is the only one where a
+        parent's tick is never a lie, and the only one where unticking one child silently
+        unticks the parent.
       </p>
     </div>
 
