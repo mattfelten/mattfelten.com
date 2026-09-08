@@ -1,0 +1,1262 @@
+<title>Reorder Bench: Loop discussion items</title>
+
+<style>
+  /* ============================================================
+     BENCH CHROME - achromatic, theme-aware instrument panel.
+     The only saturated colour on the page belongs to the
+     specimen (the blue drop indicator). Everything else is grey.
+     ============================================================ */
+  :root {
+    --bench-bg: #EDEEF1;
+    --bench-panel: #F6F7F9;
+    --bench-ink: #242830;
+    --bench-ink-2: #5C6371;
+    --bench-ink-3: #878E9C;
+    --bench-line: #D8DBE2;
+    --bench-line-2: #C4C9D3;
+    --bench-raise: #FFFFFF;
+    --bench-sunk: #E4E6EB;
+    --bench-focus: #1E40AF;
+    --shadow-lift: 0 1px 2px rgba(16, 20, 28, .06), 0 8px 24px rgba(16, 20, 28, .10);
+    --shadow-mount: 0 1px 3px rgba(16, 20, 28, .08), 0 18px 50px rgba(16, 20, 28, .10);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bench-bg: #15171C;
+      --bench-panel: #1C1F26;
+      --bench-ink: #DDE0E6;
+      --bench-ink-2: #99A0AD;
+      --bench-ink-3: #6E7481;
+      --bench-line: #282C35;
+      --bench-line-2: #363B46;
+      --bench-raise: #23262E;
+      --bench-sunk: #121419;
+      --bench-focus: #7C97E8;
+      --shadow-lift: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .45);
+      --shadow-mount: 0 1px 3px rgba(0, 0, 0, .5), 0 24px 60px rgba(0, 0, 0, .55);
+    }
+  }
+
+  :root[data-theme="light"] {
+    --bench-bg: #EDEEF1;
+    --bench-panel: #F6F7F9;
+    --bench-ink: #242830;
+    --bench-ink-2: #5C6371;
+    --bench-ink-3: #878E9C;
+    --bench-line: #D8DBE2;
+    --bench-line-2: #C4C9D3;
+    --bench-raise: #FFFFFF;
+    --bench-sunk: #E4E6EB;
+    --bench-focus: #1E40AF;
+    --shadow-lift: 0 1px 2px rgba(16, 20, 28, .06), 0 8px 24px rgba(16, 20, 28, .10);
+    --shadow-mount: 0 1px 3px rgba(16, 20, 28, .08), 0 18px 50px rgba(16, 20, 28, .10);
+  }
+
+  :root[data-theme="dark"] {
+    --bench-bg: #15171C;
+    --bench-panel: #1C1F26;
+    --bench-ink: #DDE0E6;
+    --bench-ink-2: #99A0AD;
+    --bench-ink-3: #6E7481;
+    --bench-line: #282C35;
+    --bench-line-2: #363B46;
+    --bench-raise: #23262E;
+    --bench-sunk: #121419;
+    --bench-focus: #7C97E8;
+    --shadow-lift: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .45);
+    --shadow-mount: 0 1px 3px rgba(0, 0, 0, .5), 0 24px 60px rgba(0, 0, 0, .55);
+  }
+
+  /* ============================================================
+     SPECIMEN TOKENS - locked to @m/tokens light mode.
+     Mission Control has no dark mode, so the specimen never
+     inverts. It stays a light sample mounted on the bench.
+     ============================================================ */
+  .specimen, .proxy {
+    --surface-1: #FFFFFF;
+    --surface-2: #FAFAFA;
+    --surface-3: #F4F4F5;
+    --border-soft: #EFEFF1;
+    --border-default: #E4E4E7;
+    --border-strong: #D4D4D8;
+    --text-default: #1C1917;
+    --text-subdued: #6B7280;
+    --action: #1E40AF;
+    --positive: #10B981;
+    --negative: #DC2626;
+    --amber: #F59E0B;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--bench-bg);
+    color: var(--bench-ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Page frame ---------- */
+  .frame {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    min-height: 100vh;
+    align-items: start;
+  }
+
+  @media (max-width: 1040px) {
+    .frame { grid-template-columns: minmax(0, 1fr); }
+    .rail { position: static !important; height: auto !important; border-right: 0 !important; border-bottom: 1px solid var(--bench-line); }
+  }
+
+  /* ---------- Control rail ---------- */
+  .rail {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--bench-panel);
+    border-right: 1px solid var(--bench-line);
+    padding: 28px 24px 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+  }
+
+  .rail-head { display: flex; flex-direction: column; gap: 6px; }
+  .rail-title { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+  .rail-sub { font-size: 12px; line-height: 1.55; color: var(--bench-ink-2); margin: 0; }
+
+  .eyebrow {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.11em;
+    text-transform: uppercase; color: var(--bench-ink-3); margin: 0;
+  }
+
+  .eyebrow.primary { color: var(--bench-focus); }
+
+  .group { display: flex; flex-direction: column; gap: 10px; }
+  .group-note { font-size: 11.5px; line-height: 1.5; color: var(--bench-ink-3); margin: 0; }
+  .group-note em { font-style: italic; }
+
+  .group.featured {
+    background: var(--bench-raise);
+    border: 1px solid var(--bench-line-2);
+    border-radius: 10px;
+    padding: 14px;
+    margin: 0 -2px;
+  }
+
+  /* ---------- Segmented switch ---------- */
+  .seg {
+    display: flex; flex-direction: column; gap: 1px;
+    background: var(--bench-line);
+    border: 1px solid var(--bench-line);
+    border-radius: 8px; overflow: hidden;
+  }
+
+  .seg button {
+    appearance: none; border: 0; text-align: left;
+    background: var(--bench-raise); color: var(--bench-ink-2);
+    padding: 9px 11px; font: inherit; font-size: 12.5px;
+    cursor: pointer; display: flex; align-items: baseline; gap: 8px;
+    transition: background .12s ease, color .12s ease;
+  }
+
+  .seg button:hover { background: var(--bench-sunk); color: var(--bench-ink); }
+  .seg button[aria-pressed="true"] { background: var(--bench-ink); color: var(--bench-bg); font-weight: 550; }
+  .seg button:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: -2px; }
+  .seg .k {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10px; opacity: .55; flex: none; width: 12px;
+  }
+
+  /* ---------- Checkbox switches ---------- */
+  .switch {
+    display: flex; align-items: flex-start; gap: 9px;
+    font-size: 12.5px; color: var(--bench-ink-2); cursor: pointer; padding: 3px 0;
+  }
+
+  .switch input {
+    appearance: none; width: 15px; height: 15px; margin: 2px 0 0; flex: none;
+    border: 1px solid var(--bench-line-2); border-radius: 4px;
+    background: var(--bench-raise); cursor: pointer;
+    display: grid; place-content: center;
+    transition: background .12s ease, border-color .12s ease;
+  }
+
+  .switch input::after {
+    content: ""; width: 7px; height: 4px;
+    border-left: 1.75px solid var(--bench-bg);
+    border-bottom: 1.75px solid var(--bench-bg);
+    transform: rotate(-45deg) translate(0.5px, -1px);
+    opacity: 0;
+  }
+
+  .switch input:checked { background: var(--bench-ink); border-color: var(--bench-ink); }
+  .switch input:checked::after { opacity: 1; }
+  .switch input:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 2px; }
+  .switch:hover { color: var(--bench-ink); }
+  .switch .sub { color: var(--bench-ink-3); }
+
+  /* ---------- Main bench area ---------- */
+  .bench {
+    padding: 40px 40px 72px;
+    display: flex; flex-direction: column; gap: 24px;
+    align-items: center; min-width: 0;
+  }
+
+  @media (max-width: 640px) { .bench { padding: 26px 16px 56px; } }
+
+  .bench-inner {
+    width: 100%; max-width: 620px;
+    display: flex; flex-direction: column; gap: 24px; min-width: 0;
+  }
+
+  .mount-label {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+  }
+  .mount-label p { margin: 0; font-size: 12px; color: var(--bench-ink-3); }
+
+  /* ============================================================
+     SPECIMEN - Mission Control widget, real tokens
+     ============================================================ */
+  .specimen {
+    background: var(--surface-1);
+    border: 1px solid var(--border-default);
+    border-radius: 12px;
+    box-shadow: var(--shadow-mount);
+    font-family: "Noto Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--text-default);
+    font-size: 14px; line-height: 20px;
+    padding: 16px 24px 20px;
+    overflow: hidden;
+  }
+
+  .spec-head {
+    display: flex; align-items: center; gap: 8px;
+    padding-bottom: 12px; margin-bottom: 4px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .spec-head h2 { font-size: 14px; font-weight: 600; margin: 0; flex: 1; }
+  .spec-head .count { font-size: 12px; color: var(--text-subdued); font-variant-numeric: tabular-nums; }
+  .spec-icon { width: 20px; height: 20px; display: grid; place-content: center; color: var(--text-subdued); }
+
+  .list {
+    display: flex; flex-direction: column; gap: 12px;
+    padding-top: 12px; position: relative;
+  }
+
+  /* ---------- Row ---------- */
+  .row {
+    position: relative;
+    display: flex; align-items: flex-start; gap: 12px;
+    margin: -2px; padding: 2px;
+    border-radius: 8px; background: transparent;
+  }
+
+  .row:hover { background: var(--surface-2); }
+  .row:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; }
+  .row.is-source { opacity: .28; }
+  .row.is-source-hidden { visibility: hidden; }
+  .row.is-lifted { background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--action); }
+
+  .handle {
+    position: absolute; left: -22px; top: 3px;
+    width: 18px; height: 18px;
+    display: grid; place-content: center;
+    border-radius: 4px; color: var(--text-subdued);
+    opacity: 0; cursor: grab;
+    transition: opacity .1s ease, background .1s ease;
+    touch-action: none; background: transparent; border: 0; padding: 0;
+  }
+
+  .handle:hover { background: var(--surface-3); color: var(--text-default); }
+  .handle:active { cursor: grabbing; }
+  .row:hover .handle, .row:focus .handle, .row:focus-within .handle { opacity: 1; }
+  body[data-grab="blank"] .handle { display: none; }
+
+  .cb {
+    flex: none; width: 20px; height: 20px;
+    display: grid; place-content: center; cursor: pointer;
+    background: none; border: 0; padding: 0; color: var(--text-subdued);
+  }
+  .cb:hover { color: var(--text-default); }
+  .cb[data-state="done"] { color: var(--positive); }
+  .cb[data-state="progress"] { color: var(--amber); }
+  .cb[data-state="cancelled"] { color: var(--text-subdued); }
+  .cb:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; border-radius: 4px; }
+
+  .content { flex: 1 1 auto; min-width: 0; }
+  /* inline so the hit area follows the text lines, leaving a
+     ragged grabbable tail after the last line */
+  .content .prose { display: inline; cursor: text; }
+
+  .row[data-done="true"] .content { text-decoration: line-through; opacity: .5; }
+  .row[data-done="true"] .person { opacity: .5; }
+
+  .person {
+    flex: none; display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; color: var(--text-subdued);
+    background: var(--surface-3); border-radius: 999px;
+    padding: 2px 8px 2px 2px; cursor: pointer; max-width: 150px;
+  }
+
+  .avatar {
+    width: 16px; height: 16px; border-radius: 999px;
+    background: var(--action); color: #fff;
+    font-size: 9px; font-weight: 600;
+    display: grid; place-content: center; flex: none;
+  }
+
+  .person span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .menu {
+    flex: none; width: 20px; height: 20px;
+    display: grid; place-content: center; border-radius: 4px;
+    color: var(--text-subdued); background: none; border: 0; padding: 0;
+    opacity: 0; cursor: pointer;
+  }
+  .row:hover .menu, .row:focus-within .menu { opacity: 1; }
+  .menu:hover { background: var(--surface-3); color: var(--text-default); }
+  .menu:focus-visible { opacity: 1; outline: 2px solid var(--action); outline-offset: 1px; }
+
+  .chip {
+    flex: none; font-size: 11px; line-height: 14px;
+    padding: 2px 7px; border-radius: 999px;
+    border: 1px solid var(--border-default);
+    color: var(--text-subdued); background: var(--surface-1);
+    cursor: pointer; white-space: nowrap; max-width: 130px;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  .chip:hover { border-color: var(--border-strong); color: var(--text-default); }
+  .chip.status { font-size: 10px; letter-spacing: .04em; text-transform: uppercase; font-weight: 600; }
+  .chip.due { font-variant-numeric: tabular-nums; }
+  .chip.overdue { color: var(--negative); border-color: #FCA5A5; }
+
+  /* ---------- Collapsed completed group ---------- */
+  .done-group {
+    display: flex; align-items: center; gap: 8px;
+    margin: -2px; padding: 4px 2px;
+    border-radius: 8px; background: none; border: 0;
+    font: inherit; font-size: 12.5px;
+    color: var(--text-subdued); cursor: pointer; width: 100%;
+    text-align: left;
+  }
+  .done-group:hover { background: var(--surface-2); color: var(--text-default); }
+  .done-group:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; }
+  .done-group .chev { transition: transform .15s ease; display: grid; place-content: center; }
+  .done-group[aria-expanded="true"] .chev { transform: rotate(90deg); }
+  .done-group .rule { flex: 1; height: 1px; background: var(--border-soft); }
+
+  /* ---------- Composer ---------- */
+  .composer {
+    display: flex; align-items: center; gap: 12px;
+    padding: 2px; margin: -2px; margin-top: 4px;
+  }
+  .composer .cb { opacity: .4; cursor: default; }
+  .composer input {
+    flex: 1; border: 0; background: none; font: inherit;
+    color: var(--text-default); padding: 0;
+  }
+  .composer input::placeholder { color: #94A3B8; }
+  .composer input:focus { outline: none; }
+
+  /* ---------- Drop indicator ---------- */
+  .drop-line {
+    position: absolute; left: 0; right: 0; height: 2px;
+    background: var(--action); border-radius: 2px;
+    pointer-events: none; opacity: 0; z-index: 5;
+  }
+  .drop-line::before {
+    content: ""; position: absolute; left: -1px; top: -3px;
+    width: 8px; height: 8px; border-radius: 999px; background: var(--action);
+  }
+  .drop-line.on { opacity: 1; }
+
+  /* ---------- Drag proxy ---------- */
+  .proxy {
+    position: fixed; z-index: 9999; pointer-events: none;
+    background: var(--surface-1); border: 1px solid var(--border-default);
+    border-radius: 8px; box-shadow: var(--shadow-lift);
+    padding: 6px 10px;
+    font-family: "Noto Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size: 14px; line-height: 20px; color: var(--text-default);
+    display: flex; align-items: center; gap: 10px;
+    left: 0; top: 0; will-change: transform;
+  }
+  .proxy.compact { max-width: 380px; white-space: nowrap; overflow: hidden; }
+  .proxy.compact .ptext { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .proxy.full { align-items: flex-start; padding: 8px 12px; }
+  .proxy.full .ptext { white-space: normal; }
+
+  /* ---------- Grab-zone inspection ---------- */
+  body[data-zones="on"] .row {
+    background-image: repeating-linear-gradient(
+      45deg, rgba(30, 64, 175, .12) 0px, rgba(30, 64, 175, .12) 4px,
+      transparent 4px, transparent 8px);
+    outline: 1px dashed rgba(30, 64, 175, .45);
+    outline-offset: -1px; border-radius: 6px;
+  }
+  body[data-zones="on"] [data-interactive] {
+    background-color: var(--surface-1); background-image: none;
+    box-shadow: 0 0 0 1px rgba(220, 38, 38, .35); border-radius: 3px;
+  }
+  body[data-zones="on"] .content .prose {
+    background-color: rgba(220, 38, 38, .10);
+    box-shadow: 0 0 0 1px rgba(220, 38, 38, .30);
+  }
+  body[data-zones="on"][data-grab="handle"] .row {
+    background-image: none; outline-color: rgba(120, 126, 138, .35);
+  }
+  body[data-zones="on"][data-grab="handle"] .handle {
+    opacity: 1; background: rgba(30, 64, 175, .18);
+    box-shadow: 0 0 0 1px rgba(30, 64, 175, .5);
+  }
+  body[data-zones="on"][data-grab="handle"] [data-interactive],
+  body[data-zones="on"][data-grab="handle"] .content .prose {
+    background-color: transparent; box-shadow: none;
+  }
+
+  /* ---------- Uniform-height mode ---------- */
+  body[data-uniform="on"] .content .prose {
+    display: -webkit-box; -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical; overflow: hidden;
+  }
+  body[data-uniform="on"] .content { display: block; }
+
+  /* ============================================================
+     MUTATION LOG
+     ============================================================ */
+  .log {
+    background: var(--bench-panel);
+    border: 1px solid var(--bench-line);
+    border-radius: 10px; overflow: hidden;
+  }
+  .log-head {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 14px; border-bottom: 1px solid var(--bench-line); flex-wrap: wrap;
+  }
+  .log-head .eyebrow { flex: 1; }
+
+  .mini-seg { display: flex; border: 1px solid var(--bench-line-2); border-radius: 6px; overflow: hidden; }
+  .mini-seg button {
+    appearance: none; border: 0; background: var(--bench-raise); color: var(--bench-ink-2);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10.5px; letter-spacing: .04em; text-transform: uppercase;
+    padding: 4px 9px; cursor: pointer;
+  }
+  .mini-seg button + button { border-left: 1px solid var(--bench-line-2); }
+  .mini-seg button[aria-pressed="true"] { background: var(--bench-ink); color: var(--bench-bg); }
+  .mini-seg button:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: -2px; }
+
+  .log-body {
+    max-height: 250px; overflow-y: auto; overflow-x: auto;
+    padding: 12px 14px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11.5px; line-height: 1.65; color: var(--bench-ink-2);
+  }
+  .log-empty { color: var(--bench-ink-3); font-style: italic; }
+  .entry { padding: 7px 0; border-top: 1px dashed var(--bench-line); white-space: pre; }
+  .entry:first-child { border-top: 0; padding-top: 0; }
+  .entry .op { color: var(--bench-ink); font-weight: 600; }
+  .entry .dim { color: var(--bench-ink-3); }
+  .entry .hot { color: var(--bench-focus); font-weight: 600; }
+
+  /* ---------- Notes ---------- */
+  .note {
+    background: var(--bench-panel);
+    border: 1px solid var(--bench-line);
+    border-left: 2px solid var(--bench-line-2);
+    border-radius: 8px; padding: 14px 16px;
+    font-size: 12.5px; line-height: 1.6; color: var(--bench-ink-2);
+  }
+  .note strong { color: var(--bench-ink); font-weight: 600; }
+  .note p { margin: 0; }
+  .note p + p { margin-top: 8px; }
+
+  kbd {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10.5px; border: 1px solid var(--bench-line-2);
+    border-bottom-width: 2px; border-radius: 4px; padding: 1px 5px;
+    background: var(--bench-raise); color: var(--bench-ink); white-space: nowrap;
+  }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+  }
+</style>
+
+<div class="frame">
+
+  <!-- ===================== CONTROL RAIL ===================== -->
+  <aside class="rail">
+    <div class="rail-head">
+      <h1 class="rail-title">Reorder bench</h1>
+      <p class="rail-sub">
+        Loop discussion items. Order the list, then tick things off out of
+        sequence and watch what the list does.
+      </p>
+    </div>
+
+    <div class="group featured">
+      <p class="eyebrow primary">When an item is ticked off</p>
+      <div class="seg" id="seg-checked" role="group" aria-label="Completed behaviour">
+        <button data-v="inplace" aria-pressed="true"><span class="k">1</span>Stay exactly in place</button>
+        <button data-v="top" aria-pressed="false"><span class="k">2</span>Group done at top</button>
+        <button data-v="collapsed" aria-pressed="false"><span class="k">3</span>Collapse done at top</button>
+        <button data-v="bottom" aria-pressed="false"><span class="k">4</span>Group done at bottom</button>
+      </div>
+      <p class="group-note">
+        In the grouped modes the Done group runs in the order things were ticked,
+        newest at the bottom, so it reads as a record of the meeting. That makes it
+        an intrinsic order, so Done rows lose their drag handle.
+      </p>
+      <p class="group-note">
+        Manual position is still stored independently of status, so un-ticking
+        always returns an item to the slot you dragged it to. Try it.
+      </p>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Grab affordance</p>
+      <div class="seg" id="seg-grab" role="group" aria-label="Grab affordance">
+        <button data-v="handle" aria-pressed="true"><span class="k">Q</span>Handle only</button>
+        <button data-v="blank" aria-pressed="false"><span class="k">W</span>Blank space only</button>
+        <button data-v="both" aria-pressed="false"><span class="k">E</span>Handle + blank space</button>
+      </div>
+      <p class="group-note">Blank space means anything not already interactive. Text stays selectable.</p>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Drop feedback</p>
+      <div class="seg" id="seg-drop" role="group" aria-label="Drop feedback">
+        <button data-v="line" aria-pressed="true"><span class="k">A</span>Insertion line</button>
+        <button data-v="shift" aria-pressed="false"><span class="k">S</span>Shift out of the way</button>
+      </div>
+      <p class="group-note">Drag the long CloudFront item through the short ones to feel the difference.</p>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">What follows the cursor</p>
+      <div class="seg" id="seg-proxy" role="group" aria-label="Drag proxy">
+        <button data-v="compact" aria-pressed="true"><span class="k">Z</span>Collapsed proxy</button>
+        <button data-v="full" aria-pressed="false"><span class="k">X</span>Full row</button>
+      </div>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Comparison</p>
+      <div class="seg" id="seg-mode" role="group" aria-label="Which list">
+        <button data-v="discussion" aria-pressed="true"><span class="k">D</span>Discussion items</button>
+        <button data-v="tasks" aria-pressed="false"><span class="k">T</span>Tasks</button>
+      </div>
+      <p class="group-note" id="mode-note">
+        Switch to Tasks to see why the same answer does not transfer: four
+        statuses, a due date and an owner, all competing as sort keys.
+      </p>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Inspect</p>
+      <label class="switch">
+        <input type="checkbox" id="chk-zones">
+        <span>Show grab zones<br><span class="sub">Blue hatch draggable, red not</span></span>
+      </label>
+      <label class="switch">
+        <input type="checkbox" id="chk-uniform">
+        <span>Uniform heights<br><span class="sub">Clamp every row to one line</span></span>
+      </label>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Keyboard</p>
+      <p class="group-note">
+        <kbd>Tab</kbd> to a row, <kbd>Space</kbd> to lift, <kbd>&#8593;</kbd><kbd>&#8595;</kbd> to move,
+        <kbd>Space</kbd> to drop, <kbd>Esc</kbd> to cancel.
+        <kbd>Alt</kbd>+<kbd>&#8593;</kbd><kbd>&#8595;</kbd> moves in one shot.
+      </p>
+    </div>
+  </aside>
+
+  <!-- ===================== BENCH ===================== -->
+  <main class="bench">
+    <div class="bench-inner">
+
+      <div class="mount-label">
+        <p class="eyebrow">Mounted specimen / @m/tokens, light only</p>
+        <p id="hint">Hover a row to reveal its handle</p>
+      </div>
+
+      <section class="specimen" aria-label="Loop widget specimen">
+        <div class="spec-head">
+          <div class="spec-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h7"/>
+            </svg>
+          </div>
+          <h2 id="spec-title">Discussion</h2>
+          <span class="count" id="spec-count"></span>
+        </div>
+
+        <div class="list" id="list"></div>
+
+        <div class="composer">
+          <span class="cb" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.4"/></svg>
+          </span>
+          <input id="composer-input" placeholder="Add to discussion" aria-label="Add to discussion">
+        </div>
+      </section>
+
+      <section class="log" aria-label="Mutation log">
+        <div class="log-head">
+          <p class="eyebrow">Write each action would issue</p>
+          <div class="mini-seg" id="seg-index" role="group" aria-label="Position strategy">
+            <button data-v="fractional" aria-pressed="true">Fractional</button>
+            <button data-v="integer" aria-pressed="false">Integer</button>
+          </div>
+        </div>
+        <div class="log-body" id="log">
+          <p class="log-empty">Drag a row, or tick one off. Every action prints the write it implies.</p>
+        </div>
+      </section>
+
+      <div class="note">
+        <p><strong>Two things the log is making visible.</strong>
+        Ticking an item writes <em>status only</em>. Position is never touched, which
+        is what lets grouping be a render-time decision you can change your mind
+        about later without a migration.</p>
+        <p>Switch the log to <em>Integer</em> and drag from the bottom to the top: the
+        write amplifies to every row in between, and two people reordering during
+        a live meeting overwrite each other. Fractional writes one row.</p>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<div class="sr-only" role="status" aria-live="polite" id="live"></div>
+
+<script>
+(() => {
+  "use strict";
+
+  // ---------------------------------------------------------------
+  // Data
+  // ---------------------------------------------------------------
+  const DISCUSSION = [
+    { id: "di_4a91", text: "Reserved Instance coverage dropped to 61% this month after the m5 fleet was retired. We should decide whether to re-cover with Savings Plans or let it ride until the r7g migration lands.", who: "Dana Whitfield", done: false },
+    { id: "di_7c02", text: "Budget alert thresholds are still pointing at the old prod account.", who: "Marco Reyes", done: false },
+    { id: "di_1f5e", text: "Walk through the S3 lifecycle policy proposal.", who: "Dana Whitfield", done: true },
+    { id: "di_9b3d", text: "Open question on the CloudFront invalidation spike. Finance flagged it as an anomaly but it tracks a deploy, so I think it is expected. Want to confirm before we write it up in the monthly review.", who: "Priya Raman", done: false },
+    { id: "di_2e88", text: "Confirm the new tagging standard is enforced in Terraform.", who: "Marco Reyes", done: true },
+    { id: "di_6d17", text: "Quick status on the GuardDuty findings backlog.", who: "Priya Raman", done: false }
+  ];
+
+  // Real TaskStatus enum: TO_DO | IN_PROGRESS | DONE | CANCELLED
+  const TASKS = [
+    { id: "tk_7f2a", text: "Right-size the RDS fleet in us-east-1", who: "Marco Reyes", status: "IN_PROGRESS", due: "Aug 14", overdue: false },
+    { id: "tk_3c56", text: "Draft the Savings Plan commitment proposal for Q4 and circulate to finance before the renewal window closes", who: "Dana Whitfield", status: "TO_DO", due: "Aug 08", overdue: true },
+    { id: "tk_b104", text: "Repoint budget alerts at the consolidated payer account", who: "Priya Raman", status: "TO_DO", due: "Aug 21", overdue: false },
+    { id: "tk_e93f", text: "Enable S3 Intelligent-Tiering on the analytics buckets", who: "Marco Reyes", status: "DONE", due: "Aug 01", overdue: false },
+    { id: "tk_5a70", text: "Audit untagged resources across all linked accounts", who: "Dana Whitfield", status: "CANCELLED", due: "Sep 02", overdue: false },
+    { id: "tk_c821", text: "Close out the GuardDuty findings backlog", who: "Priya Raman", status: "IN_PROGRESS", due: "Aug 29", overdue: false }
+  ];
+
+  TASKS.forEach(t => { t.done = t.status === "DONE" || t.status === "CANCELLED"; });
+
+  // doneAt is a monotonic tick stamped when an item becomes done. The Done
+  // group renders in this order, so the newest tick lands at the bottom.
+  let doneSeq = 0;
+
+  const seed = (arr) => arr.forEach((it, i) => {
+    it.pos = +((i + 1) / (arr.length + 1)).toFixed(6);
+    it.doneAt = it.done ? ++doneSeq : null;
+  });
+  seed(DISCUSSION); seed(TASKS);
+
+  const DATA = { discussion: DISCUSSION, tasks: TASKS };
+
+  const S = {
+    mode: "discussion",
+    checked: "inplace",
+    grab: "handle",
+    drop: "line",
+    proxy: "compact",
+    index: "fractional",
+    zones: false,
+    uniform: false,
+    expanded: false
+  };
+
+  const listEl  = document.getElementById("list");
+  const logEl   = document.getElementById("log");
+  const liveEl  = document.getElementById("live");
+  const hintEl  = document.getElementById("hint");
+  const titleEl = document.getElementById("spec-title");
+  const countEl = document.getElementById("spec-count");
+  const inputEl = document.getElementById("composer-input");
+
+  const manual = () => DATA[S.mode];
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const ICON = {
+    grip: '<svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><circle cx="4" cy="2.5" r="1.05"/><circle cx="8" cy="2.5" r="1.05"/><circle cx="4" cy="6" r="1.05"/><circle cx="8" cy="6" r="1.05"/><circle cx="4" cy="9.5" r="1.05"/><circle cx="8" cy="9.5" r="1.05"/></svg>',
+    circle: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/></svg>',
+    check: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/><path d="M5.3 8.2l1.9 1.9 3.5-3.9"/></svg>',
+    half: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/><path d="M8 1.6a6.4 6.4 0 0 1 0 12.8z" fill="currentColor" stroke="none"/></svg>',
+    cross: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/><path d="M5.9 5.9l4.2 4.2M10.1 5.9l-4.2 4.2"/></svg>',
+    dots: '<svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><circle cx="7" cy="3" r="1.2"/><circle cx="7" cy="7" r="1.2"/><circle cx="7" cy="11" r="1.2"/></svg>',
+    chev: '<svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 1.5L7 5l-3.5 3.5"/></svg>'
+  };
+
+  const initials = (n) => n.split(" ").map(w => w[0]).slice(0, 2).join("");
+  const esc = (s) => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  function statusIcon(it) {
+    if (S.mode === "discussion") return it.done ? ICON.check : ICON.circle;
+    return { TO_DO: ICON.circle, IN_PROGRESS: ICON.half, DONE: ICON.check, CANCELLED: ICON.cross }[it.status];
+  }
+  function statusState(it) {
+    if (S.mode === "discussion") return it.done ? "done" : "open";
+    return { TO_DO: "open", IN_PROGRESS: "progress", DONE: "done", CANCELLED: "cancelled" }[it.status];
+  }
+
+  // ---------------------------------------------------------------
+  // Visible order = manual order + render-time status grouping
+  // ---------------------------------------------------------------
+  function visible() {
+    const all = manual();
+    const b = S.checked;
+    if (b === "inplace") return all.map(it => ({ kind: "row", it }));
+
+    // Open items keep manual order. Done items run in tick order.
+    const done = all.filter(i => i.done).sort((a, b) => a.doneAt - b.doneAt);
+    const open = all.filter(i => !i.done);
+
+    if (b === "bottom") return [...open, ...done].map(it => ({ kind: "row", it }));
+    if (b === "top")    return [...done, ...open].map(it => ({ kind: "row", it }));
+
+    const out = [];
+    if (done.length) {
+      out.push({ kind: "group", count: done.length });
+      if (S.expanded) done.forEach(it => out.push({ kind: "row", it }));
+    }
+    open.forEach(it => out.push({ kind: "row", it }));
+    return out;
+  }
+
+  const rowItems = () => visible().filter(v => v.kind === "row").map(v => v.it);
+
+  // ---------------------------------------------------------------
+  // Render
+  // ---------------------------------------------------------------
+  function render() {
+    const isTask = S.mode === "tasks";
+    const all = manual();
+
+    titleEl.textContent = isTask ? "Tasks" : "Discussion";
+    countEl.textContent = all.filter(i => !i.done).length + (isTask ? " active" : " open");
+    inputEl.placeholder = isTask ? "Add a task" : "Add to discussion";
+
+    const grouped = S.checked !== "inplace";
+
+    let rowIdx = 0;
+    const html = visible().map(node => {
+      if (node.kind === "group") {
+        return `
+        <button class="done-group" id="done-group" aria-expanded="${S.expanded}">
+          <span class="chev">${ICON.chev}</span>
+          <span>${node.count} done</span>
+          <span class="rule"></span>
+        </button>`;
+      }
+
+      const it = node.it;
+      const i = rowIdx++;
+      // Done rows have an intrinsic order (when they were ticked), so they
+      // are not manually reorderable while grouping is on.
+      const fixed = grouped && it.done;
+      const status = isTask
+        ? `<span class="chip status" data-interactive tabindex="0">${it.status.replace("_", " ")}</span>` : "";
+      const due = isTask && it.due
+        ? `<span class="chip due ${it.overdue ? "overdue" : ""}" data-interactive tabindex="0">${esc(it.due)}</span>` : "";
+
+      return `
+      <div class="row" data-id="${it.id}" data-idx="${i}" data-done="${it.done}"
+           data-fixed="${fixed}" tabindex="0" role="listitem"
+           aria-label="${esc(it.text)}. Position ${i + 1}${fixed ? ", done, not reorderable" : ""}">
+        ${fixed ? "" : `<span class="handle" data-handle aria-hidden="true" title="Drag to reorder">${ICON.grip}</span>`}
+        <button class="cb" data-interactive data-state="${statusState(it)}"
+                aria-label="${it.done ? "Reopen" : "Mark done"}">${statusIcon(it)}</button>
+        <div class="content"><span class="prose" data-interactive>${esc(it.text)}</span></div>
+        ${status}${due}
+        <span class="person" data-interactive tabindex="0">
+          <span class="avatar">${esc(initials(it.who))}</span><span>${esc(it.who.split(" ")[0])}</span>
+        </span>
+        <button class="menu" data-interactive aria-label="More actions">${ICON.dots}</button>
+      </div>`;
+    }).join("");
+
+    listEl.innerHTML = html + '<div class="drop-line" id="dropline" aria-hidden="true"></div>';
+    listEl.setAttribute("role", "list");
+  }
+
+  // ---------------------------------------------------------------
+  // Logging
+  // ---------------------------------------------------------------
+  let logged = false;
+  function ensureLog() { if (!logged) { logEl.innerHTML = ""; logged = true; } }
+
+  function push(html) {
+    ensureLog();
+    const el = document.createElement("div");
+    el.className = "entry";
+    el.innerHTML = html;
+    logEl.prepend(el);
+    while (logEl.children.length > 12) logEl.lastChild.remove();
+  }
+
+  function logStatus(item) {
+    const op = S.mode === "tasks" ? "updateLoopTask" : "updateLoopDiscussionItem";
+    const val = S.mode === "tasks" ? item.status : (item.done ? "COMPLETED" : "OPEN");
+    push(
+      `<span class="op">${op}</span>  <span class="dim">${item.id}</span>\n` +
+      `  sets      status = ${val}\n` +
+      `  <span class="dim">position untouched (${(+item.pos).toFixed(6)})</span>`
+    );
+  }
+
+  function logReorder(item, insertAt, list, span) {
+    const op = S.mode === "tasks" ? "reorderLoopTask" : "reorderLoopDiscussionItem";
+    let detail, writes;
+
+    if (S.index === "fractional") {
+      const lo = insertAt > 0 ? list[insertAt - 1].pos : 0;
+      const hi = insertAt < list.length - 1 ? list[insertAt + 1].pos : 1;
+      const mid = +((lo + hi) / 2).toFixed(6);
+      item.pos = mid;
+      detail =
+        `  between   ${(+lo).toFixed(6)}  ..  ${(+hi).toFixed(6)}\n` +
+        `  sets      position = ${mid.toFixed(6)}`;
+      writes = 1;
+    } else {
+      list.forEach((it, i) => { it.pos = i; });
+      writes = Math.max(1, span);
+      detail =
+        `  sets      position = ${insertAt}\n` +
+        `  shifts    ${span} rows renumbered`;
+    }
+
+    const amp = writes > 1
+      ? `<span class="hot">${writes} rows written</span>`
+      : `<span class="dim">1 row written</span>`;
+
+    push(
+      `<span class="op">${op}</span>  <span class="dim">${item.id}</span>\n` +
+      detail + `\n  ${amp}`
+    );
+  }
+
+  // ---------------------------------------------------------------
+  // Commit: move within the MANUAL array using visible neighbours
+  // ---------------------------------------------------------------
+  function commit(fromRow, toRow) {
+    const rows = rowItems();
+    const moved = rows[fromRow];
+    if (!moved) return;
+
+    const without = rows.filter((_, i) => i !== fromRow);
+
+    // When done items are grouped, the visible order no longer tracks the
+    // manual order across the group boundary. Position relative to peers in
+    // the item's own group, so a drag reorders within that group only.
+    const grouped = S.checked !== "inplace";
+    const sameGroup = (it) => !grouped || it.done === moved.done;
+    const peers = without.filter(sameGroup);
+    const aboveCount = without.slice(0, toRow).filter(sameGroup).length;
+
+    const prev = aboveCount > 0 ? peers[aboveCount - 1] : null;
+    const next = aboveCount < peers.length ? peers[aboveCount] : null;
+
+    const list = manual();
+    const oldIdx = list.indexOf(moved);
+    const snapshot = list.slice();
+
+    list.splice(oldIdx, 1);
+    let insertAt;
+    if (prev) insertAt = list.indexOf(prev) + 1;
+    else if (next) insertAt = list.indexOf(next);
+    else insertAt = list.length;
+    list.splice(insertAt, 0, moved);
+
+    if (snapshot.every((it, i) => it === list[i])) return;   // genuine no-op
+
+    const firstTops = new Map();
+    if (!reduceMotion) {
+      listEl.querySelectorAll(".row").forEach(r => firstTops.set(r.dataset.id, r.getBoundingClientRect().top));
+    }
+
+    render();
+    logReorder(moved, insertAt, list, Math.abs(insertAt - oldIdx) + 1);
+    announce(`${moved.text.slice(0, 40)} moved to position ${insertAt + 1} of ${list.length}`);
+    flip(firstTops);
+
+    const el = listEl.querySelector(`[data-id="${moved.id}"]`);
+    if (el) el.focus({ preventScroll: true });
+  }
+
+  function flip(firstTops) {
+    if (reduceMotion || !firstTops) return;
+    listEl.querySelectorAll(".row").forEach(r => {
+      const prev = firstTops.get(r.dataset.id);
+      if (prev == null) return;
+      const delta = prev - r.getBoundingClientRect().top;
+      if (!delta) return;
+      r.style.transform = `translateY(${delta}px)`;
+      r.style.transition = "none";
+      requestAnimationFrame(() => {
+        r.style.transition = "transform .24s cubic-bezier(.2,.7,.3,1)";
+        r.style.transform = "";
+      });
+    });
+  }
+
+  function announce(msg) { liveEl.textContent = msg; }
+
+  // ---------------------------------------------------------------
+  // Pointer drag
+  // ---------------------------------------------------------------
+  const THRESHOLD = 5;
+  let drag = null;
+
+  function canStartFrom(target) {
+    const onHandle = !!target.closest("[data-handle]");
+    if (S.grab === "handle") return onHandle;
+    if (onHandle) return S.grab !== "blank";
+    if (target.closest("[data-interactive]")) return false;
+    return true;
+  }
+
+  listEl.addEventListener("pointerdown", (e) => {
+    if (e.button !== 0) return;
+    const row = e.target.closest(".row");
+    if (!row || row.dataset.fixed === "true" || !canStartFrom(e.target)) return;
+
+    const sel = window.getSelection();
+    if (sel && !sel.isCollapsed && sel.toString().length) return;
+
+    drag = {
+      row, id: row.dataset.id, from: +row.dataset.idx, to: +row.dataset.idx,
+      startX: e.clientX, startY: e.clientY, active: false,
+      pointerId: e.pointerId, rects: null, proxy: null, offsetY: 0
+    };
+    listEl.setPointerCapture(e.pointerId);
+  });
+
+  listEl.addEventListener("pointermove", (e) => {
+    if (!drag || e.pointerId !== drag.pointerId) return;
+    if (!drag.active) {
+      if (Math.hypot(e.clientX - drag.startX, e.clientY - drag.startY) < THRESHOLD) return;
+      activate(e);
+    }
+    e.preventDefault();
+    moveProxy(e.clientX, e.clientY);
+    updateTarget(e.clientY);
+  });
+
+  function activate(e) {
+    drag.active = true;
+    document.body.style.userSelect = "none";
+    document.body.style.cursor = "grabbing";
+
+    drag.rects = [...listEl.querySelectorAll(".row")].map(r => {
+      const b = r.getBoundingClientRect();
+      return { el: r, top: b.top, height: b.height, mid: b.top + b.height / 2 };
+    });
+
+    const srcRect = drag.rects[drag.from];
+    const item = rowItems()[drag.from];
+
+    const p = document.createElement("div");
+    p.className = "proxy " + (S.proxy === "compact" ? "compact" : "full");
+    p.innerHTML =
+      `<span class="cb" data-state="${statusState(item)}" style="pointer-events:none">${statusIcon(item)}</span>` +
+      `<span class="ptext">${esc(item.text)}</span>`;
+    if (S.proxy === "full") {
+      p.style.width = srcRect.el.getBoundingClientRect().width + "px";
+      drag.offsetY = Math.min(e.clientY - srcRect.top, 40);
+    } else {
+      drag.offsetY = 16;
+    }
+    document.body.appendChild(p);
+    drag.proxy = p;
+
+    drag.row.classList.add(S.drop === "shift" ? "is-source-hidden" : "is-source");
+    announce("Lifted. Move to reposition.");
+  }
+
+  function moveProxy(x, y) {
+    if (drag.proxy) drag.proxy.style.transform = `translate3d(${x + 12}px, ${y - drag.offsetY}px, 0)`;
+  }
+
+  function updateTarget(clientY) {
+    // computed against ORIGINAL geometry so the target never slides
+    // out from under the cursor while neighbours animate
+    const rects = drag.rects;
+    let above = 0;
+    for (let i = 0; i < rects.length; i++) {
+      if (i === drag.from) continue;
+      if (clientY > rects[i].mid) above++;
+    }
+    drag.to = above;
+    if (S.drop === "line") showLine(above); else showShift(above);
+  }
+
+  function showLine(to) {
+    const line = document.getElementById("dropline");
+    if (!line) return;
+    const rects = drag.rects;
+    const listTop = listEl.getBoundingClientRect().top;
+    const order = rects.map((r, i) => i).filter(i => i !== drag.from);
+
+    let y;
+    if (!order.length) y = 0;
+    else if (to >= order.length) {
+      const last = rects[order[order.length - 1]];
+      y = last.top + last.height - listTop + 6;
+    } else {
+      y = rects[order[to]].top - listTop - 6;
+    }
+    line.style.top = y + "px";
+    line.classList.add("on");
+  }
+
+  function showShift(to) {
+    const line = document.getElementById("dropline");
+    if (line) line.classList.remove("on");
+    const h = drag.rects[drag.from].height + 12;
+    const from = drag.from;
+
+    drag.rects.forEach((r, i) => {
+      if (i === from) return;
+      let shift = 0;
+      if (to > from && i > from && i <= to) shift = -h;
+      else if (to < from && i >= to && i < from) shift = h;
+      r.el.style.transition = reduceMotion ? "none" : "transform .19s cubic-bezier(.2,.7,.3,1)";
+      r.el.style.transform = shift ? `translateY(${shift}px)` : "";
+    });
+  }
+
+  function endDrag(cancelled) {
+    if (!drag) return;
+    const d = drag; drag = null;
+
+    document.body.style.userSelect = "";
+    document.body.style.cursor = "";
+    if (d.proxy) d.proxy.remove();
+    const line = document.getElementById("dropline");
+    if (line) line.classList.remove("on");
+    if (d.rects) d.rects.forEach(r => { r.el.style.transition = ""; r.el.style.transform = ""; });
+    d.row.classList.remove("is-source", "is-source-hidden");
+
+    if (d.active && !cancelled) commit(d.from, d.to);
+    else if (cancelled) announce("Cancelled.");
+  }
+
+  listEl.addEventListener("pointerup", (e) => {
+    if (drag && e.pointerId === drag.pointerId) endDrag(false);
+  });
+  listEl.addEventListener("pointercancel", () => endDrag(true));
+
+  // ---------------------------------------------------------------
+  // Keyboard
+  // ---------------------------------------------------------------
+  let lifted = null;
+
+  listEl.addEventListener("keydown", (e) => {
+    const row = e.target.closest(".row");
+    if (!row) return;
+    const idx = +row.dataset.idx;
+    const count = listEl.querySelectorAll(".row").length;
+
+    if (e.key === " " || e.key === "Spacebar") {
+      e.preventDefault();
+      if (row.dataset.fixed === "true") {
+        announce("Done items run in the order they were ticked and cannot be reordered.");
+        return;
+      }
+      if (lifted === null) {
+        lifted = idx; row.classList.add("is-lifted");
+        announce(`Lifted item ${idx + 1} of ${count}. Arrow keys to move.`);
+      } else {
+        row.classList.remove("is-lifted"); lifted = null;
+        announce(`Dropped at position ${idx + 1}.`);
+      }
+      return;
+    }
+
+    if (e.key === "Escape" && lifted !== null) {
+      e.preventDefault();
+      row.classList.remove("is-lifted"); lifted = null;
+      announce("Cancelled.");
+      return;
+    }
+
+    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+      const dir = e.key === "ArrowDown" ? 1 : -1;
+      const next = idx + dir;
+      if (next < 0 || next >= count) return;
+      e.preventDefault();
+
+      if ((lifted !== null || e.altKey) && row.dataset.fixed !== "true") {
+        commit(idx, next);
+        const moved = listEl.querySelector(`.row[data-idx="${next}"]`);
+        if (moved && lifted !== null) { moved.classList.add("is-lifted"); lifted = next; }
+      } else {
+        const target = listEl.querySelector(`.row[data-idx="${next}"]`);
+        if (target) target.focus();
+      }
+    }
+  });
+
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && drag && drag.active) endDrag(true);
+  });
+
+  // ---------------------------------------------------------------
+  // Row interactions
+  // ---------------------------------------------------------------
+  const TASK_CYCLE = { TO_DO: "IN_PROGRESS", IN_PROGRESS: "DONE", DONE: "CANCELLED", CANCELLED: "TO_DO" };
+
+  listEl.addEventListener("click", (e) => {
+    const group = e.target.closest("#done-group");
+    if (group) {
+      S.expanded = !S.expanded;
+      render();
+      announce(S.expanded ? "Done items expanded." : "Done items collapsed.");
+      return;
+    }
+
+    const cb = e.target.closest(".cb");
+    if (cb) {
+      const row = cb.closest(".row");
+      const it = rowItems()[+row.dataset.idx];
+      const firstTops = new Map();
+      if (!reduceMotion) {
+        listEl.querySelectorAll(".row").forEach(r => firstTops.set(r.dataset.id, r.getBoundingClientRect().top));
+      }
+      const wasDone = it.done;
+      if (S.mode === "tasks") {
+        it.status = TASK_CYCLE[it.status];
+        it.done = it.status === "DONE" || it.status === "CANCELLED";
+      } else {
+        it.done = !it.done;
+      }
+      // Stamp only on the transition into done, so a done item that changes
+      // status again (DONE -> CANCELLED) keeps its place in the group.
+      if (it.done && !wasDone) it.doneAt = ++doneSeq;
+      else if (!it.done) it.doneAt = null;
+
+      render();
+      logStatus(it);
+      announce(it.done ? "Marked done, moved to the end of the Done group." : "Reopened.");
+      flip(firstTops);
+      return;
+    }
+
+    if (e.target.closest(".menu")) announce("Row menu: move up / move down would live here.");
+  });
+
+  // ---------------------------------------------------------------
+  // Controls
+  // ---------------------------------------------------------------
+  function wireSeg(id, key, after) {
+    const el = document.getElementById(id);
+    el.addEventListener("click", (e) => {
+      const b = e.target.closest("button");
+      if (!b) return;
+      S[key] = b.dataset.v;
+      [...el.querySelectorAll("button")].forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+      syncBody();
+      if (after) after();
+    });
+  }
+
+  wireSeg("seg-checked", "checked", () => { S.expanded = false; render(); });
+  wireSeg("seg-mode", "mode", () => { S.expanded = false; render(); updateHint(); });
+  wireSeg("seg-grab", "grab", updateHint);
+  wireSeg("seg-drop", "drop");
+  wireSeg("seg-proxy", "proxy");
+  wireSeg("seg-index", "index");
+
+  document.getElementById("chk-zones").addEventListener("change", (e) => { S.zones = e.target.checked; syncBody(); });
+  document.getElementById("chk-uniform").addEventListener("change", (e) => { S.uniform = e.target.checked; syncBody(); });
+
+  function syncBody() {
+    document.body.dataset.grab = S.grab;
+    document.body.dataset.zones = S.zones ? "on" : "off";
+    document.body.dataset.uniform = S.uniform ? "on" : "off";
+  }
+
+  function updateHint() {
+    hintEl.textContent =
+      S.grab === "handle" ? "Hover a row to reveal its handle" :
+      S.grab === "blank"  ? "Drag from any empty part of a row" :
+                            "Drag the handle, or any empty part of a row";
+  }
+
+  const KEYS = {
+    "1": ["seg-checked", "inplace"], "2": ["seg-checked", "top"],
+    "3": ["seg-checked", "collapsed"], "4": ["seg-checked", "bottom"],
+    "d": ["seg-mode", "discussion"], "t": ["seg-mode", "tasks"],
+    "q": ["seg-grab", "handle"], "w": ["seg-grab", "blank"], "e": ["seg-grab", "both"],
+    "a": ["seg-drop", "line"], "s": ["seg-drop", "shift"],
+    "z": ["seg-proxy", "compact"], "x": ["seg-proxy", "full"]
+  };
+
+  window.addEventListener("keydown", (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName)) return;
+    const hit = KEYS[e.key.toLowerCase()];
+    if (!hit) return;
+    const btn = document.querySelector(`#${hit[0]} button[data-v="${hit[1]}"]`);
+    if (btn) btn.click();
+  });
+
+  inputEl.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter" || !inputEl.value.trim()) return;
+    const list = manual();
+    const last = list[list.length - 1];
+    list.push({
+      id: (S.mode === "tasks" ? "tk_" : "di_") + (list.length * 7919 % 65536).toString(16),
+      text: inputEl.value.trim(),
+      who: "Matt Felten",
+      done: false,
+      doneAt: null,
+      status: "TO_DO",
+      due: null,
+      overdue: false,
+      pos: last ? +((last.pos + 1) / 2).toFixed(6) : 0.5
+    });
+    inputEl.value = "";
+    render();
+    announce("Added to the end.");
+  });
+
+  syncBody();
+  updateHint();
+  render();
+})();
+</script>

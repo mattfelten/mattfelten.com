@@ -1,0 +1,1165 @@
+<title>Presence Edit Bench</title>
+
+<style>
+  /* ============================================================
+     BENCH CHROME - achromatic, theme-aware instrument panel.
+     Shared with the reorder bench so the two read as one
+     instrument family. Saturated colour belongs to the specimen.
+     ============================================================ */
+  :root {
+    --bench-bg: #EDEEF1;
+    --bench-panel: #F6F7F9;
+    --bench-ink: #242830;
+    --bench-ink-2: #5C6371;
+    --bench-ink-3: #878E9C;
+    --bench-line: #D8DBE2;
+    --bench-line-2: #C4C9D3;
+    --bench-raise: #FFFFFF;
+    --bench-sunk: #E4E6EB;
+    --bench-focus: #1E40AF;
+    --shadow-lift: 0 1px 2px rgba(16, 20, 28, .06), 0 8px 24px rgba(16, 20, 28, .10);
+    --shadow-mount: 0 1px 3px rgba(16, 20, 28, .08), 0 18px 50px rgba(16, 20, 28, .10);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bench-bg: #15171C;
+      --bench-panel: #1C1F26;
+      --bench-ink: #DDE0E6;
+      --bench-ink-2: #99A0AD;
+      --bench-ink-3: #6E7481;
+      --bench-line: #282C35;
+      --bench-line-2: #363B46;
+      --bench-raise: #23262E;
+      --bench-sunk: #121419;
+      --bench-focus: #7C97E8;
+      --shadow-lift: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .45);
+      --shadow-mount: 0 1px 3px rgba(0, 0, 0, .5), 0 24px 60px rgba(0, 0, 0, .55);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bench-bg: #15171C;
+    --bench-panel: #1C1F26;
+    --bench-ink: #DDE0E6;
+    --bench-ink-2: #99A0AD;
+    --bench-ink-3: #6E7481;
+    --bench-line: #282C35;
+    --bench-line-2: #363B46;
+    --bench-raise: #23262E;
+    --bench-sunk: #121419;
+    --bench-focus: #7C97E8;
+    --shadow-lift: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .45);
+    --shadow-mount: 0 1px 3px rgba(0, 0, 0, .5), 0 24px 60px rgba(0, 0, 0, .55);
+  }
+
+  /* ============================================================
+     SPECIMEN TOKENS - locked to @m/tokens light mode.
+     Mission Control has no dark mode, so the specimen never
+     inverts. It stays a light sample mounted on the bench.
+     ============================================================ */
+  .specimen, .sheet {
+    --surface-1: #FFFFFF;
+    --surface-2: #FAFAFA;
+    --surface-3: #F4F4F5;
+    --border-soft: #EFEFF1;
+    --border-default: #E4E4E7;
+    --border-strong: #D4D4D8;
+    --text-default: #1C1917;
+    --text-subdued: #6B7280;
+    --action: #1E40AF;
+    --positive: #10B981;
+    --negative: #DC2626;
+    --amber: #F59E0B;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--bench-bg);
+    color: var(--bench-ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- Page frame ---------- */
+  .frame {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    min-height: 100vh;
+    align-items: start;
+  }
+
+  @media (max-width: 1040px) {
+    .frame { grid-template-columns: minmax(0, 1fr); }
+    .rail { position: static !important; height: auto !important; border-right: 0 !important; border-bottom: 1px solid var(--bench-line); }
+  }
+
+  /* ---------- Control rail ---------- */
+  .rail {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--bench-panel);
+    border-right: 1px solid var(--bench-line);
+    padding: 28px 24px 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+  }
+
+  .rail-head { display: flex; flex-direction: column; gap: 6px; }
+  .rail-title { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+  .rail-sub { font-size: 12px; line-height: 1.55; color: var(--bench-ink-2); margin: 0; }
+
+  .eyebrow {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.11em;
+    text-transform: uppercase; color: var(--bench-ink-3); margin: 0;
+  }
+  .eyebrow.primary { color: var(--bench-focus); }
+
+  .group { display: flex; flex-direction: column; gap: 10px; }
+  .group-note { font-size: 11.5px; line-height: 1.5; color: var(--bench-ink-3); margin: 0; }
+  .group-note em { font-style: italic; }
+
+  .group.featured {
+    background: var(--bench-raise);
+    border: 1px solid var(--bench-line-2);
+    border-radius: 10px;
+    padding: 14px;
+    margin: 0 -2px;
+  }
+
+  /* ---------- Segmented switch ---------- */
+  .seg {
+    display: flex; flex-direction: column; gap: 1px;
+    background: var(--bench-line);
+    border: 1px solid var(--bench-line);
+    border-radius: 8px; overflow: hidden;
+  }
+
+  .seg button {
+    appearance: none; border: 0; text-align: left;
+    background: var(--bench-raise); color: var(--bench-ink-2);
+    padding: 9px 11px; font: inherit; font-size: 12.5px;
+    cursor: pointer; display: flex; align-items: baseline; gap: 8px;
+    transition: background .12s ease, color .12s ease;
+  }
+
+  .seg button:hover { background: var(--bench-sunk); color: var(--bench-ink); }
+  .seg button[aria-pressed="true"] { background: var(--bench-ink); color: var(--bench-bg); font-weight: 550; }
+  .seg button:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: -2px; }
+  .seg .k {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10px; opacity: .55; flex: none; width: 12px;
+  }
+
+  /* ---------- Checkbox switches ---------- */
+  .switch {
+    display: flex; align-items: flex-start; gap: 9px;
+    font-size: 12.5px; color: var(--bench-ink-2); cursor: pointer; padding: 3px 0;
+  }
+
+  .switch input {
+    appearance: none; width: 15px; height: 15px; margin: 2px 0 0; flex: none;
+    border: 1px solid var(--bench-line-2); border-radius: 4px;
+    background: var(--bench-raise); cursor: pointer;
+    display: grid; place-content: center;
+    transition: background .12s ease, border-color .12s ease;
+  }
+  .switch input:checked { background: var(--bench-ink); border-color: var(--bench-ink); }
+  .switch input:checked::after {
+    content: ""; width: 8px; height: 5px; margin-top: -2px;
+    border-left: 1.8px solid var(--bench-bg); border-bottom: 1.8px solid var(--bench-bg);
+    transform: rotate(-45deg);
+  }
+  .switch input:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 2px; }
+  .switch .sub { color: var(--bench-ink-3); font-size: 11px; }
+
+  kbd {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10.5px; background: var(--bench-raise);
+    border: 1px solid var(--bench-line-2); border-bottom-width: 2px;
+    border-radius: 4px; padding: 1px 4px; color: var(--bench-ink-2);
+  }
+
+  /* ---------- Main bench area ---------- */
+  .bench {
+    padding: 40px 40px 72px;
+    display: flex; flex-direction: column; gap: 24px;
+    align-items: center; min-width: 0;
+  }
+
+  @media (max-width: 640px) { .bench { padding: 26px 16px 56px; } }
+
+  .bench-inner {
+    width: 100%; max-width: 620px;
+    display: flex; flex-direction: column; gap: 24px; min-width: 0;
+  }
+
+  .mount-label {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+  }
+  .mount-label p { margin: 0; font-size: 12px; color: var(--bench-ink-3); }
+  /* r3 runs two screens side by side, so the column is wider */
+  .bench-inner { max-width: 1120px; }
+
+  .screens {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px; align-items: start;
+  }
+  @media (max-width: 900px) { .screens { grid-template-columns: minmax(0, 1fr); } }
+
+  .screen { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .screen-label {
+    display: flex; align-items: baseline; gap: 8px;
+    font-size: 12px; color: var(--bench-ink-3);
+  }
+  .screen-label .name { font-weight: 600; color: var(--bench-ink-2); }
+  .screen-label .tag {
+    font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--bench-ink-3); border: 1px solid var(--bench-line-2);
+    border-radius: 999px; padding: 1px 7px;
+  }
+  /* ============================================================
+     SPECIMEN - Mission Control widget, real tokens
+     ============================================================ */
+  .specimen {
+    background: var(--surface-1);
+    border: 1px solid var(--border-default);
+    border-radius: 12px;
+    box-shadow: var(--shadow-mount);
+    font-family: "Noto Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--text-default);
+    font-size: 14px; line-height: 20px;
+    padding: 16px 20px 18px;
+    position: relative;
+  }
+  .specimen[data-role="viewer"] { box-shadow: var(--shadow-lift); }
+
+  .spec-head {
+    display: flex; align-items: center; gap: 8px;
+    padding-bottom: 12px; margin-bottom: 4px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .spec-head h2 { font-size: 14px; font-weight: 600; margin: 0; flex: 1; }
+  .spec-icon { width: 20px; height: 20px; display: grid; place-content: center; color: var(--text-subdued); }
+
+  /* the list needs a little left room for a floater to hang into */
+  /* left gutter for the presence floater, same idea as the reorder
+     bench's drag-handle gutter, so it never sits on the checkbox */
+  .list { display: flex; flex-direction: column; gap: 12px; padding: 12px 0 0 12px; }
+
+  .row {
+    position: relative;
+    display: flex; align-items: flex-start; gap: 10px;
+    margin: -2px; padding: 2px;
+    border-radius: 8px; background: transparent;
+  }
+  /* Hover is an affordance, so it only appears where a click does
+     something: your own screen, and only on rows you may edit. The
+     watching screen never highlights, and neither does a row somebody
+     else is holding. */
+  .specimen[data-role="you"] .row:not(.is-readonly):hover { background: var(--surface-2); }
+
+  .cb {
+    flex: none; width: 20px; height: 20px; margin-top: 1px;
+    display: grid; place-content: center; cursor: pointer;
+    background: none; border: 0; padding: 0; color: var(--text-subdued);
+  }
+  .cb:hover { color: var(--text-default); }
+  .cb[data-done="true"] { color: var(--positive); }
+  .cb:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; border-radius: 4px; }
+  .specimen[data-role="viewer"] .cb { cursor: default; }
+
+  .content { flex: 1 1 auto; min-width: 0; position: relative; }
+
+  /* ---------- The invisible field (settled r2) ---------- */
+  .prose {
+    display: block; outline: none; border-radius: 4px;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .row[data-done="true"] .prose { text-decoration: line-through; opacity: .5; }
+  .specimen[data-role="you"] .row:not(.is-readonly) .prose:hover,
+  .prose[contenteditable="true"] { cursor: text; }
+  .specimen[data-role="you"] .row.is-readonly .prose { cursor: default; }
+
+  /* ============================================================
+     PRESENCE ON THE ROW
+     The signal that someone is inside an item. It sits on the row
+     itself rather than in a strip at the bottom, and it hangs off
+     the left edge so it never reads as a second author - the
+     author tag already lives on the right.
+     ============================================================ */
+  .floater {
+    position: absolute; left: -20px; top: -3px; z-index: 6;
+    width: 20px; height: 20px; border-radius: 50%;
+    display: grid; place-content: center;
+    font-size: 8.5px; font-weight: 700; letter-spacing: .02em;
+    color: #fff; background: var(--action);
+    border: 2px solid var(--surface-1);
+    box-shadow: 0 2px 5px rgba(16, 20, 28, .22);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .floater { animation: land .18s ease-out; }
+    @keyframes land {
+      from { opacity: 0; transform: translate(2px, 3px) scale(.86); }
+      to   { opacity: 1; transform: none; }
+    }
+    .floater.is-refused { animation: nudge .32s ease-in-out; }
+    @keyframes nudge {
+      0%, 100% { transform: none; }
+      25% { transform: translateX(-2px); }
+      75% { transform: translateX(2px); }
+    }
+  }
+
+  /* hairline variant - Slack shows a border on the held row */
+  .row.is-outlined { box-shadow: inset 0 0 0 1px var(--border-strong); background: var(--surface-1); }
+
+  /* highlight: the row takes a wash of the holder's own colour, so the
+     avatar and the row it belongs to are obviously the same event.
+     Says "something is happening here". */
+  .row.is-highlit { background: var(--hl); }
+
+  /* dim: the row recedes instead. Says "this is in use". The floater is
+     deliberately excluded - dimming the one thing that carries the
+     information would defeat the point. */
+  .row .cb, .row .content, .row .who { transition: opacity .18s ease; }
+  .row.is-dimmed .cb,
+  .row.is-dimmed .content,
+  .row.is-dimmed .who { opacity: .42; }
+
+  /* the r3 treatment, kept only so the two can be compared */
+  .prose.is-washed {
+    background: rgba(30, 64, 175, .055);
+    box-shadow: 0 0 0 4px rgba(30, 64, 175, .055);
+    border-radius: 3px;
+  }
+  .byline {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; color: var(--action); margin-bottom: 2px;
+  }
+  .byline .pip { width: 5px; height: 5px; border-radius: 50%; background: var(--action); }
+
+  .live-caret {
+    display: inline-block; width: 1.5px; height: 14px;
+    margin-left: 1px; vertical-align: -2px; background: currentColor; opacity: .75;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .live-caret { animation: blink 1.05s steps(1) infinite; }
+    @keyframes blink { 0%, 49% { opacity: .75; } 50%, 100% { opacity: 0; } }
+  }
+
+  .who {
+    flex: none; display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; color: var(--text-subdued); white-space: nowrap; margin-top: 1px;
+  }
+  .who .av {
+    width: 18px; height: 18px; border-radius: 50%; flex: none;
+    display: grid; place-content: center; font-size: 9px; font-weight: 600;
+    background: var(--surface-3); color: var(--text-subdued);
+    border: 1px solid var(--border-default);
+  }
+  .row[data-done="true"] .who { opacity: .5; }
+
+  .kebab {
+    flex: none; width: 22px; height: 22px; border-radius: 4px;
+    display: grid; place-content: center; cursor: pointer;
+    background: none; border: 0; padding: 0; color: var(--text-subdued);
+    opacity: 0; transition: opacity .1s ease, background .1s ease;
+  }
+  .kebab:hover { background: var(--surface-3); color: var(--text-default); }
+  .row:hover .kebab, .row:focus-within .kebab { opacity: 1; }
+  .specimen[data-role="viewer"] .kebab { display: none; }
+
+  /* ---------- Log ---------- */
+  .log {
+    background: var(--bench-panel); border: 1px solid var(--bench-line);
+    border-radius: 10px; overflow: hidden;
+  }
+  .log-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 11px 14px; border-bottom: 1px solid var(--bench-line);
+  }
+  .log-body {
+    max-height: 250px; overflow-y: auto; padding: 10px 14px 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11.5px; line-height: 1.65;
+  }
+  .log-empty { color: var(--bench-ink-3); margin: 0; font-family: inherit; }
+  .log-line { margin: 0 0 3px; color: var(--bench-ink-2); display: flex; gap: 8px; }
+  .log-line .n { color: var(--bench-ink-3); flex: none; width: 20px; text-align: right; font-variant-numeric: tabular-nums; }
+  .log-line .w { word-break: break-word; }
+  .log-line.write .w { color: var(--bench-ink); }
+  .log-line.noise .w { color: var(--amber); }
+  .log-line.quiet .w { color: var(--bench-ink-3); }
+
+  .mini-seg { display: flex; gap: 1px; background: var(--bench-line); border: 1px solid var(--bench-line); border-radius: 6px; overflow: hidden; }
+  .mini-seg button {
+    appearance: none; border: 0; background: var(--bench-raise); color: var(--bench-ink-2);
+    font: inherit; font-size: 11px; padding: 4px 9px; cursor: pointer;
+  }
+  .mini-seg button[aria-pressed="true"] { background: var(--bench-ink); color: var(--bench-bg); }
+
+  /* ---------- Notes ---------- */
+  .note {
+    border-left: 2px solid var(--bench-line-2); padding-left: 14px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .note p { margin: 0; font-size: 12.5px; line-height: 1.6; color: var(--bench-ink-2); }
+  .note strong { color: var(--bench-ink); font-weight: 600; }
+  .note em { font-style: italic; }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+</style>
+
+<div class="frame">
+
+  <aside class="rail">
+    <div class="rail-head">
+      <h1 class="rail-title">Presence edit bench</h1>
+      <p class="rail-sub">
+        Round 4. Everything a viewer needs to know is carried by the row itself.
+        The count, the badge strip and the "nobody is typing" line are gone; if
+        presence needs saying, it gets said where it happened.
+      </p>
+    </div>
+
+    <div class="group featured">
+      <p class="eyebrow primary">Showing that someone is inside an item</p>
+      <div class="seg" id="seg-mark" role="group" aria-label="Presence treatment">
+        <button data-v="none" aria-pressed="false"><span class="k">1</span>Nothing at all</button>
+        <button data-v="float" aria-pressed="false"><span class="k">2</span>Floating avatar</button>
+        <button data-v="floatline" aria-pressed="false"><span class="k">3</span>Avatar and a hairline</button>
+        <button data-v="floathi" aria-pressed="false"><span class="k">4</span>Avatar and a highlight</button>
+        <button data-v="floatdim" aria-pressed="true"><span class="k">5</span>Avatar, row dimmed</button>
+        <button data-v="wash" aria-pressed="false"><span class="k">6</span>Wash and a byline</button>
+      </div>
+      <p class="group-note">
+        The avatar hangs off the top-left corner, deliberately away from the
+        author tag on the right. A row already carries one avatar; a second one
+        beside it would read as a second author rather than as presence.
+      </p>
+      <p class="group-note">
+        <em>Highlight</em> and <em>dimmed</em> say opposite things. A highlight
+        means come and look; dimming means hands off. Whichever you pick should
+        agree with the locking control below, because dimming a row you are
+        still allowed to type in is a lie.
+      </p>
+      <p class="group-note">
+        The avatar and the dim carry two different facts. The avatar is there
+        for as long as somebody has the field focused. The row dims while their
+        words are moving, and lifts a second and a half after their changes
+        save, so it reads as "being changed" rather than literally "unsaved".
+      </p>
+      <p class="group-note">
+        That tail matters. Autosave lands during the pauses people take to think
+        of a word, and lifting the dim on each save would blink the row on and
+        off over an ordinary typing rhythm. Typing again cancels the pending
+        lift, so it never flickers.
+      </p>
+      <p class="group-note">
+        Dimming also fights an earlier decision. The whole point of sending
+        keystrokes live is that people can follow along; greying the text out is
+        the one treatment that makes the words <em>harder</em> to read at exactly
+        the moment they are changing.
+      </p>
+      <p class="group-note">
+        <em>Wash and a byline</em> is round 3, kept only for comparison. It is
+        the heavy version.
+      </p>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Can you type in it anyway</p>
+      <div class="seg" id="seg-lock" role="group" aria-label="Locking">
+        <button data-v="open" aria-pressed="false"><span class="k">Q</span>Yes, nothing stops you</button>
+        <button data-v="locked" aria-pressed="false"><span class="k">W</span>No, they hold it</button>
+        <button data-v="timeout" aria-pressed="true"><span class="k">E</span>They hold it, then it releases</button>
+      </div>
+      <p class="group-note">
+        Slack's list does not lock. It shows initials on the row and a border,
+        and lets anybody type. Turn on <em>Others are active</em> and try to type
+        into a row somebody else is in.
+      </p>
+      <p class="group-note">
+        The last option drops the hold after 8 seconds of their inactivity, which
+        is the only version of locking that survives someone closing their
+        laptop mid-sentence.
+      </p>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">You are</p>
+      <div class="seg" id="seg-me" role="group" aria-label="Who you are">
+        <button data-v="dana" aria-pressed="true"><span class="k">A</span>Dana, Mission staff</button>
+        <button data-v="marco" aria-pressed="false"><span class="k">S</span>Marco, a customer</button>
+        <button data-v="guest" aria-pressed="false"><span class="k">D</span>A read-only participant</button>
+      </div>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Who may edit</p>
+      <div class="seg" id="seg-perm" role="group" aria-label="Permission rule">
+        <button data-v="anyone" aria-pressed="true"><span class="k">F</span>Anyone in the Loop</button>
+        <button data-v="author" aria-pressed="false"><span class="k">G</span>Staff or the author</button>
+      </div>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Inspect</p>
+      <label class="switch">
+        <input type="checkbox" id="chk-others">
+        <span>Others are active<br><span class="sub">Marco and Priya edit, tick and add on their own</span></span>
+      </label>
+      <label class="switch">
+        <input type="checkbox" id="chk-latency">
+        <span>Realistic latency<br><span class="sub">~180ms before anything reaches the other screen</span></span>
+      </label>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Settled earlier</p>
+      <p class="group-note">
+        Invisible field, no Save button, autosave at 4s idle with a 15s ceiling,
+        click the text to start, and the other screen sees your words as you type.
+      </p>
+    </div>
+  </aside>
+
+  <main class="bench">
+    <div class="bench-inner">
+
+      <div class="mount-label">
+        <p class="eyebrow">Two screens, one Loop / @m/tokens, light only</p>
+        <p id="hint">Click any item's text on the left</p>
+      </div>
+
+      <div class="screens">
+        <div class="screen">
+          <div class="screen-label">
+            <span class="name" id="you-name">Dana Whitfield</span>
+            <span class="tag">Your screen</span>
+          </div>
+          <section class="specimen" data-role="you" aria-label="Your screen">
+            <div class="spec-head">
+              <div class="spec-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h7"/></svg>
+              </div>
+              <h2>Discussion</h2>
+            </div>
+            <div class="list" id="list-you"></div>
+          </section>
+        </div>
+
+        <div class="screen">
+          <div class="screen-label">
+            <span class="name">Priya Raman</span>
+            <span class="tag">Watching</span>
+          </div>
+          <section class="specimen" data-role="viewer" aria-label="Priya's screen">
+            <div class="spec-head">
+              <div class="spec-icon" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h7"/></svg>
+              </div>
+              <h2>Discussion</h2>
+            </div>
+            <div class="list" id="list-them"></div>
+          </section>
+        </div>
+      </div>
+
+      <section class="log" aria-label="Wire log">
+        <div class="log-head">
+          <p class="eyebrow">What crosses the wire</p>
+          <div class="mini-seg" id="seg-activity" role="group" aria-label="Activity stream behaviour">
+            <button data-v="every" aria-pressed="true">Log every write</button>
+            <button data-v="coalesce" aria-pressed="false">Coalesce</button>
+          </div>
+        </div>
+        <div class="log-body" id="log">
+          <p class="log-empty">Type on the left. Grey lines are ephemeral client events, dark lines are writes.</p>
+        </div>
+      </section>
+
+      <div class="note">
+        <p><strong>Why the avatar hangs off the corner.</strong> Inside the row it
+        competes with the author tag and reads as co-authorship. Off the corner,
+        overlapping the edge with a ring and a shadow, it reads as somebody
+        leaning over the row rather than belonging to it, and it costs the text
+        no space at all.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>The case against locking.</strong> Two people editing the same
+        sentence is rare; one person leaving a tab open on a row nobody else can
+        touch is not. A hard hold turns a rare collision into a common
+        obstruction, which is presumably why Slack shows who is in a row and then
+        gets out of the way. If we do hold it, the timeout is not a nicety.</p>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<div class="sr-only" role="status" aria-live="polite" id="live"></div>
+
+<script>
+(() => {
+  "use strict";
+
+  const PEOPLE = {
+    dana:  { name: "Dana Whitfield", staff: true },
+    marco: { name: "Marco Reyes",    staff: false },
+    guest: { name: "A participant",  staff: false, readonly: true }
+  };
+  const WATCHER = "Priya Raman";
+  const COLOR = {
+    "Dana Whitfield": "#1E40AF",
+    "Marco Reyes":    "#7C3AED",
+    "Priya Raman":    "#0D9488",
+    "A participant":  "#6B7280"
+  };
+
+  const AVATAR_MARKS = ["float", "floatline", "floathi", "floatdim"];
+
+  // hex -> rgba, so a row wash can be tinted with the holder's own colour
+  const tint = (hex, a) => {
+    const n = parseInt(hex.slice(1), 16);
+    return "rgba(" + ((n >> 16) & 255) + "," + ((n >> 8) & 255) + "," + (n & 255) + "," + a + ")";
+  };
+
+  const ITEMS = [
+    { id: "di_4a91", text: "Reserved Instance coverage dropped to 61% this month after the m5 fleet was retired. We should decide whether to re-cover with Savings Plans or let it ride until the r7g migration lands.", who: "Dana Whitfield", done: false, liveBy: null, liveText: null, beat: 0, dirty: false },
+    { id: "di_7c02", text: "Budget alert thresholds are still pointing at the old prod account.", who: "Marco Reyes", done: false, liveBy: null, liveText: null, beat: 0, dirty: false },
+    { id: "di_9b3d", text: "Open question on the CloudFront invalidation spike. Finance flagged it as an anomaly but it tracks a deploy.", who: "Priya Raman", done: false, liveBy: null, liveText: null, beat: 0, dirty: false },
+    { id: "di_1f5e", text: "Walk through the S3 lifecycle policy proposal.", who: "Dana Whitfield", done: true, liveBy: null, liveText: null, beat: 0, dirty: false },
+    { id: "di_6d17", text: "Quick status on the GuardDuty findings backlog.", who: "Priya Raman", done: false, liveBy: null, liveText: null, beat: 0, dirty: false }
+  ];
+
+  const S = {
+    mark: "floatdim", lock: "timeout", me: "dana", perm: "anyone",
+    activity: "every", others: false, latency: false,
+    editingId: null, baseline: ""
+  };
+
+  const HOLD_MS = 8000;
+  const youEl = document.getElementById("list-you");
+  const themEl = document.getElementById("list-them");
+  const logEl = document.getElementById("log");
+  const hintEl = document.getElementById("hint");
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const me = () => PEOPLE[S.me];
+  const byId = (id) => ITEMS.find(i => i.id === id);
+  const esc = (s) => s.replace(/[&<>"]/g, c => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" }[c]));
+  const initials = (n) => n.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
+  const now = () => performance.now();
+
+  const ICON = {
+    circle: '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/></svg>',
+    check:  '<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/><path d="M5.3 8.2l1.9 1.9 3.5-3.9"/></svg>',
+    dots:   '<svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><circle cx="7" cy="3" r="1.2"/><circle cx="7" cy="7" r="1.2"/><circle cx="7" cy="11" r="1.2"/></svg>'
+  };
+
+  let logN = 0;
+  function log(text, kind) {
+    const empty = logEl.querySelector(".log-empty");
+    if (empty) empty.remove();
+    const p = document.createElement("p");
+    p.className = "log-line " + (kind || "");
+    p.innerHTML = '<span class="n">' + (++logN) + '</span><span class="w">' + esc(text) + "</span>";
+    logEl.appendChild(p);
+    while (logEl.children.length > 60) logEl.removeChild(logEl.firstChild);
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  const heldByOther = (item) => item.liveBy && item.liveBy !== me().name;
+
+  function canEdit(item) {
+    const p = me();
+    if (p.readonly) return false;
+    if (heldByOther(item) && S.lock !== "open") return false;
+    if (S.perm === "anyone") return true;
+    return p.staff || item.who === p.name;
+  }
+
+  const wire = (fn) => S.latency ? setTimeout(fn, 180) : fn();
+
+  // ---------------------------------------------------------------
+  // Markup
+  // ---------------------------------------------------------------
+  function contentHTML(item, role) {
+    const live = !!item.liveBy;
+    const mine = item.liveBy === me().name;
+    // your own screen never marks your own row - you know you are in it
+    const showMark = live && S.mark !== "none" && !(role === "you" && mine);
+    const wash = showMark && S.mark === "wash";
+    const body = live ? item.liveText : item.text;
+    const colour = COLOR[item.liveBy] || "#1E40AF";
+
+    const byline = wash
+      ? '<span class="byline" style="color:' + colour + '"><i class="pip" style="background:' + colour + '"></i>' + esc(item.liveBy) + " is typing</span>"
+      : "";
+    const caret = showMark && role === "viewer"
+      ? '<span class="live-caret" style="color:' + colour + '"></span>' : "";
+
+    return byline +
+      '<div class="prose' + (wash ? " is-washed" : "") + '">' + esc(body) + caret + "</div>";
+  }
+
+  function floaterHTML(item, role) {
+    const mine = item.liveBy === me().name;
+    if (!item.liveBy || (role === "you" && mine)) return "";
+    if (!AVATAR_MARKS.includes(S.mark)) return "";
+    const colour = COLOR[item.liveBy] || "#1E40AF";
+    return '<span class="floater" data-who="' + esc(item.liveBy) + '" style="background:' + colour +
+           '" title="' + esc(item.liveBy) + ' is editing">' + initials(item.liveBy) + "</span>";
+  }
+
+  function rowFlags(item, role) {
+    const mine = item.liveBy === me().name;
+    // your own hold is never dressed on your own screen
+    const shown = !!item.liveBy && !(role === "you" && mine);
+    return {
+      shown,
+      readOnly: role === "you" && !canEdit(item),
+      outlined: shown && S.mark === "floatline",
+      highlit:  shown && S.mark === "floathi",
+      // the avatar tracks focus; the dim tracks unsaved changes, so a row
+      // somebody is parked in but not typing shows presence without
+      // implying the words are moving
+      dimmed:   shown && S.mark === "floatdim" && item.dirty,
+      avatar:   shown && AVATAR_MARKS.includes(S.mark),
+      colour:   COLOR[item.liveBy] || "#1E40AF"
+    };
+  }
+
+  function rowHTML(item, role) {
+    const f = rowFlags(item, role);
+    const style = f.highlit ? ' style="--hl:' + tint(f.colour, .07) + '"' : "";
+    return (
+      '<div class="row' + (f.readOnly ? " is-readonly" : "") + (f.outlined ? " is-outlined" : "") +
+           (f.highlit ? " is-highlit" : "") + (f.dimmed ? " is-dimmed" : "") + '"' + style +
+           ' data-id="' + item.id + '" data-done="' + item.done + '">' +
+        floaterHTML(item, role) +
+        '<button class="cb" data-act="check" data-done="' + item.done + '" aria-label="' + (item.done ? "Mark open" : "Mark done") + '">' +
+          (item.done ? ICON.check : ICON.circle) + "</button>" +
+        '<div class="content">' + contentHTML(item, role) + "</div>" +
+        '<span class="who"><span class="av">' + initials(item.who) + "</span></span>" +
+        (role === "you" ? '<button class="kebab" aria-label="More">' + ICON.dots + "</button>" : "") +
+      "</div>"
+    );
+  }
+
+  // Update in place. Replacing the row wholesale re-created the avatar on
+  // every keystroke, which restarted its entrance animation ten times a
+  // second and read as flashing.
+  function paintRow(listEl, item, role) {
+    const row = listEl.querySelector('[data-id="' + item.id + '"]');
+    if (!row) return;
+    const f = rowFlags(item, role);
+
+    row.classList.toggle("is-readonly", f.readOnly);
+    row.classList.toggle("is-outlined", f.outlined);
+    row.classList.toggle("is-highlit", f.highlit);
+    row.classList.toggle("is-dimmed", f.dimmed);
+    if (f.highlit) row.style.setProperty("--hl", tint(f.colour, .07));
+    else row.style.removeProperty("--hl");
+
+    // the avatar is only touched when it appears, disappears or changes hands
+    const have = row.querySelector(".floater");
+    if (f.avatar) {
+      if (!have) row.insertAdjacentHTML("afterbegin", floaterHTML(item, role));
+      else if (have.dataset.who !== item.liveBy) have.outerHTML = floaterHTML(item, role);
+    } else if (have) {
+      have.remove();
+    }
+
+    if (row.dataset.done !== String(item.done)) {
+      row.dataset.done = item.done;
+      const cb = row.querySelector(".cb");
+      if (cb) {
+        cb.dataset.done = item.done;
+        cb.innerHTML = item.done ? ICON.check : ICON.circle;
+        cb.setAttribute("aria-label", item.done ? "Mark open" : "Mark done");
+      }
+    }
+
+    // text last, and never while a caret is live in it
+    if (!(listEl === youEl && S.editingId === item.id)) {
+      row.querySelector(".content").innerHTML = contentHTML(item, role);
+    }
+  }
+
+  function renderList(listEl, role) {
+    listEl.innerHTML = ITEMS.map(i => rowHTML(i, role)).join("");
+  }
+
+  function renderAll() {
+    if (!S.editingId) renderList(youEl, "you");
+    renderList(themEl, "viewer");
+    document.getElementById("you-name").textContent = me().name;
+    hintEl.textContent = me().readonly
+      ? "Nothing here responds. That is the point."
+      : (S.editingId ? "Click anywhere else to commit, Esc to revert" : "Click any item's text on the left");
+  }
+
+  // ---------------------------------------------------------------
+  // Autosave
+  // ---------------------------------------------------------------
+  const IDLE_MS = 4000, MAX_MS = 15000;
+  // The dim lifts on a trailing delay. Without it, a save landing during a
+  // natural pause un-dims the row and the next keystroke re-dims it, which
+  // strobes over the ordinary rhythm of typing and thinking.
+  const DIM_TAIL_MS = 1500;
+  const dimTails = new Map();
+  let idleT = null, maxT = null;
+
+  function markDirty(item) {
+    const t = dimTails.get(item.id);
+    if (t) { clearTimeout(t); dimTails.delete(item.id); }
+    item.dirty = true;
+  }
+
+  // typing again before this fires simply cancels it, so the row never blinks
+  function scheduleUndim(item) {
+    const prev = dimTails.get(item.id);
+    if (prev) clearTimeout(prev);
+    dimTails.set(item.id, setTimeout(() => {
+      dimTails.delete(item.id);
+      item.dirty = false;
+      paintRow(youEl, item, "you");
+      paintRow(themEl, item, "viewer");
+    }, DIM_TAIL_MS));
+  }
+
+  function clearDirtyNow(item) {
+    const t = dimTails.get(item.id);
+    if (t) { clearTimeout(t); dimTails.delete(item.id); }
+    item.dirty = false;
+  }
+  const clearTimers = () => { clearTimeout(idleT); clearTimeout(maxT); idleT = maxT = null; };
+
+  function armAutosave() {
+    clearTimeout(idleT);
+    idleT = setTimeout(() => commit("idle"), IDLE_MS);
+    if (!maxT) maxT = setTimeout(() => commit("ceiling"), MAX_MS);
+  }
+
+  function writeItem(item, author, reason) {
+    log('updateLoopDiscussionItem({ id: "' + item.id + '", content: <' + item.text.length + " chars> })", "write");
+    if (S.activity === "every") log('  activity stream: "' + author + ' updated a discussion item"', "noise");
+    if (reason) log("  triggered by: " + reason, "quiet");
+    wire(() => paintRow(themEl, item, "viewer"));
+  }
+
+  function commit(reason) {
+    if (!S.editingId) return;
+    const item = byId(S.editingId);
+    const el = youEl.querySelector('[data-id="' + item.id + '"] .prose');
+    if (!el) return;
+    const text = el.innerText;
+    if (text === S.baseline) { clearTimers(); return; }
+    item.text = text; item.liveText = text; S.baseline = text;
+    scheduleUndim(item);
+    clearTimers();
+    writeItem(item, me().name, reason);
+  }
+
+  // ---------------------------------------------------------------
+  // Editing on your screen
+  // ---------------------------------------------------------------
+  function refuse(id) {
+    const f = youEl.querySelector('[data-id="' + id + '"] .floater');
+    if (!f) return;
+    f.classList.remove("is-refused"); void f.offsetWidth; f.classList.add("is-refused");
+    const item = byId(id);
+    log("edit refused: " + item.liveBy + " holds " + id, "noise");
+  }
+
+  function beginEdit(id) {
+    const item = byId(id);
+    if (!item) return;
+    if (heldByOther(item) && S.lock !== "open") return refuse(id);
+    if (!canEdit(item)) return;
+    if (S.editingId && S.editingId !== id) leaveEdit(true);
+    const el = youEl.querySelector('[data-id="' + id + '"] .prose');
+    if (!el) return;
+    S.editingId = id;
+    S.baseline = item.text;
+    item.liveBy = me().name;
+    item.liveText = item.text;
+    item.beat = now();
+    el.setAttribute("contenteditable", "true");
+    el.setAttribute("role", "textbox");
+    el.setAttribute("aria-multiline", "true");
+    log("presence: " + me().name + " entered " + id, "quiet");
+    wire(() => paintRow(themEl, item, "viewer"));
+    hintEl.textContent = "Click anywhere else to commit, Esc to revert";
+  }
+
+  function leaveEdit(save) {
+    if (!S.editingId) return;
+    const id = S.editingId;
+    const item = byId(id);
+    const el = youEl.querySelector('[data-id="' + id + '"] .prose');
+    if (el) {
+      if (save) commit("left the field");
+      else {
+        if (el.innerText !== item.text) log("reverted " + id + " (nothing written)", "quiet");
+        el.innerText = item.text;
+      }
+      el.removeAttribute("contenteditable");
+      el.removeAttribute("role");
+      el.removeAttribute("aria-multiline");
+    }
+    if (S.activity === "coalesce" && save) log("  activity stream: one entry for the session", "noise");
+    clearTimers();
+    item.liveBy = null; item.liveText = item.text; clearDirtyNow(item);
+    S.editingId = null;
+    log("presence: " + me().name + " left " + id, "quiet");
+    wire(() => paintRow(themEl, item, "viewer"));
+    renderAll();
+  }
+
+  youEl.addEventListener("mousedown", (e) => {
+    const p = e.target.closest(".prose");
+    if (!p) return;
+    const row = p.closest(".row");
+    if (!row) return;
+    const id = row.dataset.id;
+    if (S.editingId === id) return;
+    const item = byId(id);
+    if (heldByOther(item) && S.lock !== "open") return refuse(id);
+    if (row.classList.contains("is-readonly")) return;
+    beginEdit(id);
+  });
+
+  document.addEventListener("input", (e) => {
+    if (!S.editingId) return;
+    const el = youEl.querySelector('[data-id="' + S.editingId + '"] .prose');
+    if (e.target !== el) return;
+    const item = byId(S.editingId);
+    item.liveText = el.innerText;
+    item.beat = now();
+    if (el.innerText !== item.text) markDirty(item); else scheduleUndim(item);
+    log("client-event discussion.typing (ephemeral, no write)", "quiet");
+    wire(() => paintRow(themEl, item, "viewer"));
+    if (el.innerText !== S.baseline) armAutosave();
+  });
+
+  document.addEventListener("click", (e) => {
+    const cb = e.target.closest('[data-act="check"]');
+    if (cb && youEl.contains(cb)) {
+      if (me().readonly) return;
+      const id = cb.closest(".row").dataset.id;
+      const item = byId(id);
+      leaveEdit(true);
+      item.done = !item.done;
+      log('updateLoopDiscussionItem({ id: "' + id + '", status: ' + (item.done ? "COMPLETED" : "OPEN") + " })", "write");
+      wire(() => paintRow(themEl, item, "viewer"));
+      renderAll();
+      return;
+    }
+    if (S.editingId && !e.target.closest('.prose[contenteditable="true"]')) leaveEdit(true);
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (S.editingId && e.key === "Escape") { e.preventDefault(); leaveEdit(false); }
+  });
+
+  // ---------------------------------------------------------------
+  // Holds that outlive their holder
+  // ---------------------------------------------------------------
+  setInterval(() => {
+    if (S.lock !== "timeout") return;
+    ITEMS.forEach(item => {
+      if (!item.liveBy || item.liveBy === me().name) return;
+      if (now() - item.beat < HOLD_MS) return;
+      log("hold on " + item.id + " expired after 8s of silence", "noise");
+      item.liveBy = null; item.liveText = item.text; clearDirtyNow(item);
+      paintRow(youEl, item, "you"); paintRow(themEl, item, "viewer");
+    });
+  }, 700);
+
+  // ---------------------------------------------------------------
+  // Other people
+  // ---------------------------------------------------------------
+  const APPENDS = [
+    " Finance is fine with it either way.",
+    " I will pull the numbers before Thursday.",
+    " This one is blocked on the payer account move."
+  ];
+  const ADDITIONS = [
+    "Can we get the Q4 renewal dates on one page before the next Loop.",
+    "Reminder to close out the tagging standard ticket."
+  ];
+
+  let othersTimer = null, seq = 0;
+  const freeItems = () => ITEMS.filter(i => !i.liveBy && i.id !== S.editingId);
+
+  function remoteType() {
+    const who = Math.random() < 0.5 ? "Marco Reyes" : WATCHER;
+    const pool = freeItems().filter(i => !i.done);
+    if (!pool.length) return schedule();
+    const item = pool[Math.floor(Math.random() * pool.length)];
+    const addition = APPENDS[seq++ % APPENDS.length];
+    item.liveBy = who; item.liveText = item.text; item.beat = now();
+    log("presence: " + who + " entered " + item.id, "quiet");
+    paintRow(youEl, item, "you"); paintRow(themEl, item, "viewer");
+
+    let i = 0;
+    const tick = () => {
+      if (!S.others || item.liveBy !== who) return;
+      i += 2 + Math.floor(Math.random() * 3);
+      item.liveText = item.text + addition.slice(0, i);
+      item.beat = now();
+      markDirty(item);
+      log("client-event discussion.typing from " + who + " (ephemeral)", "quiet");
+      paintRow(youEl, item, "you"); paintRow(themEl, item, "viewer");
+      if (i < addition.length) return void setTimeout(tick, 95);
+      // they stop typing and their changes save, but they are still in the
+      // field: avatar stays, dim lifts. Only later do they actually leave.
+      item.text = item.liveText; scheduleUndim(item);
+      writeItem(item, who, "idle");
+      paintRow(youEl, item, "you");
+      setTimeout(() => {
+        if (item.liveBy !== who) return;
+        item.liveBy = null; item.liveText = item.text;
+        log("presence: " + who + " left " + item.id, "quiet");
+        paintRow(youEl, item, "you"); paintRow(themEl, item, "viewer");
+      }, 5000);
+      schedule();
+    };
+    setTimeout(tick, 420);
+  }
+
+  // somebody opens a row and then walks away without committing
+  function remoteAbandon() {
+    const pool = freeItems();
+    if (!pool.length) return schedule();
+    const item = pool[Math.floor(Math.random() * pool.length)];
+    const who = Math.random() < 0.5 ? "Marco Reyes" : WATCHER;
+    item.liveBy = who; item.liveText = item.text; item.beat = now(); clearDirtyNow(item);
+    log("presence: " + who + " entered " + item.id + " and stopped typing", "noise");
+    paintRow(youEl, item, "you"); paintRow(themEl, item, "viewer");
+    schedule();
+  }
+
+  function remoteTick() {
+    const pool = freeItems();
+    if (!pool.length) return schedule();
+    const item = pool[Math.floor(Math.random() * pool.length)];
+    item.done = !item.done;
+    log('updateLoopDiscussionItem({ id: "' + item.id + '", status: ' + (item.done ? "COMPLETED" : "OPEN") + " }) from " + WATCHER, "write");
+    paintRow(youEl, item, "you"); paintRow(themEl, item, "viewer");
+    schedule();
+  }
+
+  function remoteAdd() {
+    const id = "di_" + (9000 + seq).toString(16);
+    ITEMS.push({ id, text: ADDITIONS[seq++ % ADDITIONS.length], who: "Marco Reyes", done: false, liveBy: null, liveText: null, beat: 0, dirty: false });
+    log("createLoopDiscussionItem({ content: <new> }) from Marco Reyes", "write");
+    renderAll();
+    schedule();
+  }
+
+  function schedule() {
+    clearTimeout(othersTimer);
+    if (!S.others) return;
+    othersTimer = setTimeout(() => {
+      if (!S.others) return;
+      const r = Math.random();
+      if (r < 0.5) remoteType();
+      else if (r < 0.72) remoteAbandon();
+      else if (r < 0.9) remoteTick();
+      else remoteAdd();
+    }, 2400 + Math.random() * 2400);
+  }
+
+  // ---------------------------------------------------------------
+  // Rail
+  // ---------------------------------------------------------------
+  function seg(elId, key) {
+    const root = document.getElementById(elId);
+    root.addEventListener("click", (e) => {
+      const b = e.target.closest("button[data-v]");
+      if (!b) return;
+      leaveEdit(true);
+      S[key] = b.dataset.v;
+      [...root.querySelectorAll("button")].forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+      renderAll();
+    });
+  }
+  seg("seg-mark", "mark");
+  seg("seg-lock", "lock");
+  seg("seg-me", "me");
+  seg("seg-perm", "perm");
+  seg("seg-activity", "activity");
+
+  document.getElementById("chk-others").addEventListener("change", (e) => {
+    S.others = e.target.checked;
+    if (S.others) { log("-- other people are now active --", "quiet"); schedule(); }
+    else {
+      clearTimeout(othersTimer);
+      ITEMS.forEach(i => { if (i.liveBy && i.liveBy !== me().name) { i.liveBy = null; i.liveText = i.text; clearDirtyNow(i); } });
+      renderAll();
+    }
+  });
+  document.getElementById("chk-latency").addEventListener("change", (e) => { S.latency = e.target.checked; });
+
+  // ---------------------------------------------------------------
+  // Deep links. ?mark=floatdim&lock=timeout&others=1 opens the bench in
+  // a named configuration, so a ticket can point at one exact state
+  // instead of asking the reader to set five switches first.
+  // ---------------------------------------------------------------
+  function applyDeepLink() {
+    const q = new URLSearchParams(location.search);
+    const allowed = {
+      mark: ["none", "float", "floatline", "floathi", "floatdim", "wash"],
+      lock: ["open", "locked", "timeout"],
+      me:   ["dana", "marco", "guest"],
+      perm: ["anyone", "author"]
+    };
+    Object.keys(allowed).forEach(k => {
+      const v = q.get(k);
+      if (v && allowed[k].includes(v)) S[k] = v;
+    });
+
+    const segs = { mark: "seg-mark", lock: "seg-lock", me: "seg-me", perm: "seg-perm", activity: "seg-activity" };
+    Object.keys(segs).forEach(k => {
+      const root = document.getElementById(segs[k]);
+      if (!root) return;
+      [...root.querySelectorAll("button[data-v]")].forEach(b =>
+        b.setAttribute("aria-pressed", String(b.dataset.v === S[k])));
+    });
+
+    if (q.get("others") === "1") {
+      S.others = true;
+      const chk = document.getElementById("chk-others");
+      if (chk) chk.checked = true;
+      log("-- other people are now active --", "quiet");
+      schedule();
+    }
+    if (q.get("latency") === "1") {
+      S.latency = true;
+      const chk = document.getElementById("chk-latency");
+      if (chk) chk.checked = true;
+    }
+  }
+
+  applyDeepLink();
+  renderAll();
+})();
+</script>

@@ -1,0 +1,26 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+// GATE 0 SPIKE. Raw iframe, no LiveEmbed template yet. The question this
+// slide exists to answer is whether a live prototype can sit on a Reveal
+// slide without breaking deck navigation:
+//
+//   1. Does the bench render at all inside Reveal's CSS-transform scaling?
+//   2. Do arrow keys still advance the deck when focus is OUTSIDE the frame?
+//   3. What happens to arrow keys once focus is INSIDE the frame?
+//   4. Can focus get back out?
+//
+// Reveal binds its keyboard handler to `document`. An iframe has its own
+// document, so keydown inside it should not reach the parent at all. That
+// is the mechanism; this slide is here to confirm it rather than assume it.
+---
+
+<Slide subtitle="Gate 0 spike">
+	<div class="flex flex-col gap-4">
+		<iframe
+			src="/decks/2026-checklist-component/prototypes/edit-bench"
+			title="Checklist edit bench"
+			class="live-embed block h-[820px] w-[1600px] rounded-2xl border-0 bg-white"
+		></iframe>
+	</div>
+</Slide>

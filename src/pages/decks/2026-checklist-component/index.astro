@@ -1,0 +1,23 @@
+---
+import { Deck, DeckShell } from '@decks';
+
+import { AfterEmbed, EmbedSpike, Title } from './_slides';
+
+const meta = {
+	title: 'Checklist',
+	description:
+		'A checkable, orderable, editable list row, taken from a product feature to a design system component: what it costs to get one row right.',
+};
+
+// GATE 0 ONLY. Three slides, existing to answer whether a live prototype can
+// sit on a Reveal slide without breaking deck navigation. The real slide
+// order lands at Gate 8.
+---
+
+<DeckShell {...meta}>
+	<Deck title="Checklist">
+		<Title />
+		<EmbedSpike />
+		<AfterEmbed />
+	</Deck>
+</DeckShell>
