@@ -625,6 +625,23 @@
       </p>
     </div>
 
+    <div class="group">
+      <p class="eyebrow">Does this list allow sub-items at all?</p>
+      <div class="seg" id="seg-nesting" role="group" aria-label="Nesting capability">
+        <button data-v="on" aria-pressed="true"><span class="k">N</span>Yes</button>
+        <button data-v="off" aria-pressed="false"><span class="k">M</span>No, it is a flat list</button>
+      </div>
+      <p class="group-note">
+        Nesting is a capability the component can be told not to offer, not a fact about
+        it. Switch it off and the same component withdraws one gesture and one affordance:
+        no twisties, no dropping onto a row, and the insertion line never insets, because
+        there is nothing to inset to. <em>Only the line appears.</em>
+        Switching it off flattens the list for real rather than just hiding the indents,
+        because a consumer that does not offer sub-items never had nested rows. Reload for
+        the nested version again.
+      </p>
+    </div>
+
     <div class="group featured">
       <p class="eyebrow primary">Ticking a parent, and ticking its children</p>
       <div class="seg" id="seg-nest" role="group" aria-label="Parent and child completion">
@@ -791,6 +808,7 @@
   seed();
 
   const S = {
+    nesting: "on",
     nest: "independent",
     drag: "context",
     indicator: "inset",
@@ -836,8 +854,21 @@
   // ---------------------------------------------------------------
   // Flatten to what is on screen, carrying tier with each row.
   // ---------------------------------------------------------------
+  // Nesting is a capability, not a fact about the component. A list
+  // told not to offer it is the same component with one gesture and
+  // one affordance withdrawn: no twisties, no folder drop, and the
+  // insertion line never insets because there is nothing to inset to.
+  const nestingOn = () => S.nesting !== "off";
+
   function visible() {
     const out = [];
+    if (!nestingOn()) {
+      tops().forEach(p => {
+        out.push({ it: p, tier: 0 });
+        kidsOf(p.id).forEach(c => out.push({ it: c, tier: 0 }));
+      });
+      return out;
+    }
     tops().forEach(p => {
       out.push({ it: p, tier: 0 });
       if (S.open[p.id] !== false) kidsOf(p.id).forEach(c => out.push({ it: c, tier: 1 }));
@@ -922,6 +953,8 @@
   function move(id, targetIndex, targetTier, parentId) {
     const it = byId(id);
 
+    if (targetTier === 1 && !nestingOn()) { targetTier = 0; parentId = null; }
+
     // One level only. A row with children cannot become a child.
     if (targetTier === 1 && hasKids(id)) {
       announce("That row has sub-items, so it cannot become one.");
@@ -964,7 +997,7 @@
 
     listEl.innerHTML = rows.map(({ it, tier }) => {
       const kids = kidsOf(it.id);
-      const isParent = kids.length > 0;
+      const isParent = nestingOn() && kids.length > 0;
       const open = S.open[it.id] !== false;
       const doneKids = kids.filter(k => k.done).length;
 
@@ -1079,6 +1112,7 @@
 
   // Which level does this gap mean? Read from the row above it.
   function gapTier(prev, next) {
+    if (!nestingOn()) return { tier: 0, parent: null };
     if (!prev) return { tier: 0, parent: null };
     if (prev.parent !== null) return { tier: 1, parent: prev.parent };
     if (next && next.parent === prev.id) return { tier: 1, parent: prev.id };
@@ -1118,7 +1152,7 @@
 
     // Drop inside. Only a top-level row can receive, and only when the
     // row being dragged has no children of its own.
-    if (S.drag === "context") {
+    if (S.drag === "context" && nestingOn()) {
       const hover = others.find(r => {
         const b = r.getBoundingClientRect();
         const band = b.height * INTO_BAND;
@@ -1126,7 +1160,12 @@
       });
       if (hover) {
         const it = byId(hover.dataset.id);
-        if (it.parent === null && it.id !== byId(drag.id).parent) {
+        // Any top-level row is a folder. No exceptions, including the
+        // row's own current parent: an extra case there would mean the
+        // same gesture over the same kind of row sometimes did nothing,
+        // which is worse than a move that happens to be a no-op.
+        // Children are not folders, because one level is the ceiling.
+        if (it.parent === null) {
           mode = "into";
           intoId = it.id;
           if (hasKids(drag.id)) blocked = true;
@@ -1142,14 +1181,14 @@
       const prev = idx > 0 ? byId(others[idx - 1].dataset.id) : null;
       const next = idx < others.length ? byId(others[idx].dataset.id) : null;
 
-      if (S.drag === "sideways") {
+      if (S.drag === "sideways" && nestingOn()) {
         // The rejected alternative: level comes from how far right you
         // dragged, not from the gap.
         const dx = e.clientX - drag.startX;
         const canParent = prev && prev.parent === null;
         if (dx > 24 && canParent) { tier = 1; parentId = prev.id; }
         else if (prev && prev.parent !== null && dx > -24) { tier = 1; parentId = prev.parent; }
-      } else if (S.drag === "line") {
+      } else if (S.drag === "line" || !nestingOn()) {
         // Insertion line only, and it never changes level: the row keeps
         // the level it already had, so nesting is keyboard-only.
         const it = byId(drag.id);
@@ -1302,6 +1341,7 @@
 
     if (e.key === "ArrowRight") {
       e.preventDefault();
+      if (!nestingOn()) { announce("This list does not use sub-items."); return; }
       if (tier === 1) { announce("Already a sub-item. Only one level is allowed."); return; }
       if (hasKids(id)) { announce("This row has sub-items, so it cannot become one."); return; }
       const above = tops().filter(s => s.id !== id)[at - 1];
@@ -1313,6 +1353,7 @@
 
     if (e.key === "ArrowLeft") {
       e.preventDefault();
+      if (!nestingOn()) { announce("This list does not use sub-items."); return; }
       if (tier === 0) { announce("Already at the top level."); return; }
       const p = byId(it.parent);
       const pIndex = tops().findIndex(s => s.id === p.id);
@@ -1345,6 +1386,23 @@
       render();
     });
   }
+  // Switching nesting off flattens the data, it does not just hide the
+  // indents. A consumer that does not offer sub-items never has nested
+  // rows to begin with, and leaving them in the model while the view
+  // showed them flat made reordering count the wrong sequence: the list
+  // said "3 of 5" while eight rows were on screen. Reload for the
+  // nested seed again.
+  function flatten() {
+    const order = visible().map(v => v.it);
+    order.forEach((it, i) => {
+      it.parent = null;
+      it.pos = String.fromCharCode(102 + i * 2);
+    });
+    entry('<span class="op">flattened</span> <span class="dim">nesting turned off, ' +
+      order.length + " rows are now one sequence</span>");
+  }
+
+  wireSeg("seg-nesting", "nesting", () => { if (!nestingOn()) flatten(); updateHint(); });
   wireSeg("seg-nest", "nest");
   wireSeg("seg-drag", "drag", updateHint);
   wireSeg("seg-indicator", "indicator");
@@ -1357,6 +1415,7 @@
 
   function updateHint() {
     hintEl.textContent =
+      S.nesting === "off"  ? "Flat list. Dragging shows an insertion line and nothing else" :
       S.drag === "context" ? "Drag between rows to place it, or onto a row to drop it inside" :
       S.drag === "line"    ? "Dragging only reorders. Arrow keys change the level" :
                              "Drag a row right to make it a sub-item";
@@ -1366,6 +1425,7 @@
   const KEYS = {
     "1": ["seg-nest", "independent"], "2": ["seg-nest", "cascade"],
     "3": ["seg-nest", "rollup"], "4": ["seg-nest", "both"],
+    "n": ["seg-nesting", "on"], "m": ["seg-nesting", "off"],
     "q": ["seg-drag", "context"], "w": ["seg-drag", "line"], "e": ["seg-drag", "sideways"],
     "a": ["seg-indicator", "line"], "s": ["seg-indicator", "inset"],
     "z": ["seg-collapsed", "count"], "x": ["seg-collapsed", "progress"], "c": ["seg-collapsed", "bare"]
@@ -1386,6 +1446,7 @@
   function applyDeepLink() {
     const q = new URLSearchParams(location.search);
     const allowed = {
+      nesting:   ["on", "off"],
       nest:      ["independent", "cascade", "rollup", "both"],
       drag:      ["context", "line", "sideways"],
       indicator: ["line", "inset"],

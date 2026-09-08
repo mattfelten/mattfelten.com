@@ -310,6 +310,14 @@
       name: "Sub-items",
       items: [
         {
+          q: "Does every list get sub-items?",
+          opts: [
+            { t: "No. It is a capability a list can be told not to offer", u: N + "?nesting=off", status: "chosen" },
+            { t: "A list that does allow them", u: N + "?nesting=on" }
+          ],
+          why: "One component, with nesting as something a consumer switches on. Turn it off and the same component withdraws one gesture and one affordance: no twisties, no dropping onto a row, and <strong>only the insertion line appears</strong>, never indented, because there is nothing to indent to. That is what makes this a component rather than two: a flat agenda and a nested runbook are the same thing configured differently."
+        },
+        {
           q: "How deep can sub-items go?",
           opts: [
             { t: "One level. Parent and child, nothing further", u: N, status: "chosen" }
@@ -334,7 +342,7 @@
             { t: "A line only. Dragging never changes level", u: N + "?drag=line" },
             { t: "How far right you drag decides", u: N + "?drag=sideways", status: "rejected" }
           ],
-          why: "Two gestures rather than one setting, the way Reminders does it. <strong>Between rows you get an insertion line, and its indent is read off the gap</strong>, not off how far sideways you dragged: after a child means sibling of that child, in the gap under a parent means inside it, between two top-level rows means top level. <strong>Over the body of a row there is no line at all.</strong> The row lights up and letting go drops the item inside, like a file into a folder. Nothing depends on a sideways nudge, which is a fine-motor gesture worth not requiring, and the arrow keys do the same job for anyone not using a pointer."
+          why: "Two gestures rather than one setting, the way Reminders does it. <strong>Between rows you get an insertion line, and its indent is read off the gap</strong>, not off how far sideways you dragged: after a child means sibling of that child, in the gap under a parent means inside it, between two top-level rows means top level. <strong>Over the body of any top-level row there is no line at all.</strong> The row lights up and letting go drops the item inside, like a file into a folder. Every top-level row is a folder, whether or not it already has sub-items; child rows are not, because one level is the ceiling. Nothing depends on a sideways nudge, which is a fine-motor gesture worth not requiring, and the arrow keys do the same job for anyone not using a pointer."
         },
         {
           q: "What does the drop indicator say now that level matters?",
