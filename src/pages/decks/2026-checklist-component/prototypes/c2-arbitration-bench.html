@@ -1,0 +1,1036 @@
+<meta charset="utf-8">
+<title>Checklist: arbitration bench</title>
+
+<style>
+  /* ============================================================
+     BENCH CHROME - achromatic, theme-aware instrument panel.
+     The only saturated colour on the page belongs to the
+     specimen (the blue drop indicator). Everything else is grey.
+     ============================================================ */
+  :root {
+    --bench-bg: #EDEEF1;
+    --bench-panel: #F6F7F9;
+    --bench-ink: #242830;
+    --bench-ink-2: #5C6371;
+    --bench-ink-3: #878E9C;
+    --bench-line: #D8DBE2;
+    --bench-line-2: #C4C9D3;
+    --bench-raise: #FFFFFF;
+    --bench-sunk: #E4E6EB;
+    --bench-focus: #1E40AF;
+    --shadow-lift: 0 1px 2px rgba(16, 20, 28, .06), 0 8px 24px rgba(16, 20, 28, .10);
+    --shadow-mount: 0 1px 3px rgba(16, 20, 28, .08), 0 18px 50px rgba(16, 20, 28, .10);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bench-bg: #15171C;
+      --bench-panel: #1C1F26;
+      --bench-ink: #DDE0E6;
+      --bench-ink-2: #99A0AD;
+      --bench-ink-3: #6E7481;
+      --bench-line: #282C35;
+      --bench-line-2: #363B46;
+      --bench-raise: #23262E;
+      --bench-sunk: #121419;
+      --bench-focus: #7C97E8;
+      --shadow-lift: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .45);
+      --shadow-mount: 0 1px 3px rgba(0, 0, 0, .5), 0 24px 60px rgba(0, 0, 0, .55);
+    }
+  }
+
+  :root[data-theme="light"] {
+    --bench-bg: #EDEEF1;
+    --bench-panel: #F6F7F9;
+    --bench-ink: #242830;
+    --bench-ink-2: #5C6371;
+    --bench-ink-3: #878E9C;
+    --bench-line: #D8DBE2;
+    --bench-line-2: #C4C9D3;
+    --bench-raise: #FFFFFF;
+    --bench-sunk: #E4E6EB;
+    --bench-focus: #1E40AF;
+    --shadow-lift: 0 1px 2px rgba(16, 20, 28, .06), 0 8px 24px rgba(16, 20, 28, .10);
+    --shadow-mount: 0 1px 3px rgba(16, 20, 28, .08), 0 18px 50px rgba(16, 20, 28, .10);
+  }
+
+  :root[data-theme="dark"] {
+    --bench-bg: #15171C;
+    --bench-panel: #1C1F26;
+    --bench-ink: #DDE0E6;
+    --bench-ink-2: #99A0AD;
+    --bench-ink-3: #6E7481;
+    --bench-line: #282C35;
+    --bench-line-2: #363B46;
+    --bench-raise: #23262E;
+    --bench-sunk: #121419;
+    --bench-focus: #7C97E8;
+    --shadow-lift: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .45);
+    --shadow-mount: 0 1px 3px rgba(0, 0, 0, .5), 0 24px 60px rgba(0, 0, 0, .55);
+  }
+
+  /* ============================================================
+     SPECIMEN TOKENS - locked to @m/tokens light mode.
+     Mission Control has no dark mode, so the specimen never
+     inverts. It stays a light sample mounted on the bench.
+     ============================================================ */
+  .specimen, .proxy {
+    --surface-1: #FFFFFF;
+    --surface-2: #FAFAFA;
+    --surface-3: #F4F4F5;
+    --border-soft: #EFEFF1;
+    --border-default: #E4E4E7;
+    --border-strong: #D4D4D8;
+    --text-default: #1C1917;
+    --text-subdued: #6B7280;
+    --action: #1E40AF;
+    --positive: #10B981;
+    --negative: #DC2626;
+    --amber: #F59E0B;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--bench-bg);
+    color: var(--bench-ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------------------------------------------------------------
+     EMBED MODE - ?embed=1
+     Strips the instrument down to the specimen so a slide can carry
+     one idea at a size readable from across a room. The rail's 10px
+     labels are unreadable at presentation distance anyway, and a
+     dense panel competes with the speaker; the configuration it
+     would set arrives through deep-link params instead.
+     The full bench is always one click away for questions.
+     --------------------------------------------------------------- */
+  body.is-embed .rail,
+  body.is-embed .mount-label,
+  body.is-embed .log,
+  body.is-embed .note { display: none; }
+  body.is-embed .frame { display: block; min-height: 0; }
+  /* Keep the bench's own max-width. The specimen's line length is a
+     design decision, so the iframe gets sized to the specimen rather
+     than the specimen stretched to the iframe. */
+  body.is-embed .bench-inner { gap: 0; zoom: var(--embed-scale, 1); }
+  /* Top-aligned, never vertically centred. Centring splits any height
+     change in both directions, which halves the apparent movement and
+     wrecks the one demo that exists to show a 14px shove. Size the
+     iframe to the specimen instead. */
+  body.is-embed .bench {
+    padding: 28px;
+    min-height: 0;
+    justify-content: flex-start;
+  }
+
+  /* ---------- Page frame ---------- */
+  .frame {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    min-height: 100vh;
+    align-items: start;
+  }
+
+  @media (max-width: 1040px) {
+    .frame { grid-template-columns: minmax(0, 1fr); }
+    .rail { position: static !important; height: auto !important; border-right: 0 !important; border-bottom: 1px solid var(--bench-line); }
+  }
+
+  /* ---------- Control rail ---------- */
+  .rail {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--bench-panel);
+    border-right: 1px solid var(--bench-line);
+    padding: 28px 24px 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+  }
+
+  .rail-head { display: flex; flex-direction: column; gap: 6px; }
+  .rail-title { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+  .rail-sub { font-size: 12px; line-height: 1.55; color: var(--bench-ink-2); margin: 0; }
+
+  .eyebrow {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.11em;
+    text-transform: uppercase; color: var(--bench-ink-3); margin: 0;
+  }
+
+  .eyebrow.primary { color: var(--bench-focus); }
+
+  .group { display: flex; flex-direction: column; gap: 10px; }
+  .group-note { font-size: 11.5px; line-height: 1.5; color: var(--bench-ink-3); margin: 0; }
+  .group-note em { font-style: italic; }
+
+  .group.featured {
+    background: var(--bench-raise);
+    border: 1px solid var(--bench-line-2);
+    border-radius: 10px;
+    padding: 14px;
+    margin: 0 -2px;
+  }
+
+  /* ---------- Segmented switch ---------- */
+  .seg {
+    display: flex; flex-direction: column; gap: 1px;
+    background: var(--bench-line);
+    border: 1px solid var(--bench-line);
+    border-radius: 8px; overflow: hidden;
+  }
+
+  .seg button {
+    appearance: none; border: 0; text-align: left;
+    background: var(--bench-raise); color: var(--bench-ink-2);
+    padding: 9px 11px; font: inherit; font-size: 12.5px;
+    cursor: pointer; display: flex; align-items: baseline; gap: 8px;
+    transition: background .12s ease, color .12s ease;
+  }
+
+  .seg button:hover { background: var(--bench-sunk); color: var(--bench-ink); }
+  .seg button[aria-pressed="true"] { background: var(--bench-ink); color: var(--bench-bg); font-weight: 550; }
+  .seg button:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: -2px; }
+  .seg .k {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10px; opacity: .55; flex: none; width: 12px;
+  }
+
+  /* ---------- Checkbox switches ---------- */
+  .switch {
+    display: flex; align-items: flex-start; gap: 9px;
+    font-size: 12.5px; color: var(--bench-ink-2); cursor: pointer; padding: 3px 0;
+  }
+
+  .switch input {
+    appearance: none; width: 15px; height: 15px; margin: 2px 0 0; flex: none;
+    border: 1px solid var(--bench-line-2); border-radius: 4px;
+    background: var(--bench-raise); cursor: pointer;
+    display: grid; place-content: center;
+    transition: background .12s ease, border-color .12s ease;
+  }
+
+  .switch input::after {
+    content: ""; width: 7px; height: 4px;
+    border-left: 1.75px solid var(--bench-bg);
+    border-bottom: 1.75px solid var(--bench-bg);
+    transform: rotate(-45deg) translate(0.5px, -1px);
+    opacity: 0;
+  }
+
+  .switch input:checked { background: var(--bench-ink); border-color: var(--bench-ink); }
+  .switch input:checked::after { opacity: 1; }
+  .switch input:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 2px; }
+  .switch:hover { color: var(--bench-ink); }
+  .switch .sub { color: var(--bench-ink-3); }
+
+  /* ---------- Main bench area ---------- */
+  .bench {
+    padding: 40px 40px 72px;
+    display: flex; flex-direction: column; gap: 24px;
+    align-items: center; min-width: 0;
+  }
+
+  @media (max-width: 640px) { .bench { padding: 26px 16px 56px; } }
+
+  .bench-inner {
+    width: 100%; max-width: 620px;
+    display: flex; flex-direction: column; gap: 24px; min-width: 0;
+  }
+
+  .mount-label {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+  }
+  .mount-label p { margin: 0; font-size: 12px; color: var(--bench-ink-3); }
+
+  /* ============================================================
+     SPECIMEN - Mission Control widget, real tokens
+     ============================================================ */
+  .specimen {
+    background: var(--surface-1);
+    border: 1px solid var(--border-default);
+    border-radius: 12px;
+    box-shadow: var(--shadow-mount);
+    font-family: "Noto Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--text-default);
+    font-size: 14px; line-height: 20px;
+    padding: 16px 24px 20px;
+    overflow: hidden;
+  }
+
+  .spec-head {
+    display: flex; align-items: center; gap: 8px;
+    padding-bottom: 12px; margin-bottom: 4px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .spec-head h2 { font-size: 14px; font-weight: 600; margin: 0; flex: 1; }
+  .spec-head .count { font-size: 12px; color: var(--text-subdued); font-variant-numeric: tabular-nums; }
+  .spec-icon { width: 20px; height: 20px; display: grid; place-content: center; color: var(--text-subdued); }
+
+  .list {
+    display: flex; flex-direction: column; gap: 12px;
+    padding-top: 12px; position: relative;
+  }
+
+  /* ---------- Row ---------- */
+  .row {
+    position: relative;
+    display: flex; align-items: flex-start; gap: 12px;
+    margin: -2px; padding: 2px;
+    border-radius: 8px; background: transparent;
+  }
+
+  .row:hover { background: var(--surface-2); }
+  .row:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; }
+  .row.is-source { opacity: .28; }
+  .row.is-source-hidden { visibility: hidden; }
+  .row.is-lifted { background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--action); }
+
+  .handle {
+    position: absolute; left: -22px; top: 3px;
+    width: 18px; height: 18px;
+    display: grid; place-content: center;
+    border-radius: 4px; color: var(--text-subdued);
+    opacity: 0; cursor: grab;
+    transition: opacity .1s ease, background .1s ease;
+    touch-action: none; background: transparent; border: 0; padding: 0;
+  }
+
+  .handle:hover { background: var(--surface-3); color: var(--text-default); }
+  .handle:active { cursor: grabbing; }
+  .row:hover .handle, .row:focus .handle, .row:focus-within .handle { opacity: 1; }
+  body[data-grab="blank"] .handle { display: none; }
+
+  .cb {
+    flex: none; width: 20px; height: 20px;
+    display: grid; place-content: center; cursor: pointer;
+    background: none; border: 0; padding: 0; color: var(--text-subdued);
+  }
+  .cb:hover { color: var(--text-default); }
+  .cb[data-state="done"] { color: var(--positive); }
+  .cb[data-state="progress"] { color: var(--amber); }
+  .cb[data-state="cancelled"] { color: var(--text-subdued); }
+  .cb:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; border-radius: 4px; }
+
+  .content { flex: 1 1 auto; min-width: 0; }
+  /* inline so the hit area follows the text lines, leaving a
+     ragged grabbable tail after the last line */
+  .content .prose { display: inline; cursor: text; }
+
+  .row[data-done="true"] .content { text-decoration: line-through; opacity: .6; }
+  /* The author tag is NOT dimmed on completed rows. It uses --text-subdued,
+     which is only 4.83:1 at full strength, so any dim at all fails 1.4.3:
+     .6 measures 2.33:1. Dim is a treatment for full-strength colour only. */
+  .row[data-done="true"] .person { opacity: 1; }
+
+  .person {
+    flex: none; display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; color: var(--text-subdued);
+    background: var(--surface-3); border-radius: 999px;
+    padding: 2px 8px 2px 2px; cursor: pointer; max-width: 150px;
+  }
+
+  .avatar {
+    width: 16px; height: 16px; border-radius: 999px;
+    background: var(--action); color: #fff;
+    font-size: 9px; font-weight: 600;
+    display: grid; place-content: center; flex: none;
+  }
+
+  .person span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .menu {
+    flex: none; width: 20px; height: 20px;
+    display: grid; place-content: center; border-radius: 4px;
+    color: var(--text-subdued); background: none; border: 0; padding: 0;
+    opacity: 0; cursor: pointer;
+  }
+  .row:hover .menu, .row:focus-within .menu { opacity: 1; }
+  .menu:hover { background: var(--surface-3); color: var(--text-default); }
+  .menu:focus-visible { opacity: 1; outline: 2px solid var(--action); outline-offset: 1px; }
+
+  .chip {
+    flex: none; font-size: 11px; line-height: 14px;
+    padding: 2px 7px; border-radius: 999px;
+    border: 1px solid var(--border-default);
+    color: var(--text-subdued); background: var(--surface-1);
+    cursor: pointer; white-space: nowrap; max-width: 130px;
+    overflow: hidden; text-overflow: ellipsis;
+  }
+  .chip:hover { border-color: var(--border-strong); color: var(--text-default); }
+  .chip.status { font-size: 10px; letter-spacing: .04em; text-transform: uppercase; font-weight: 600; }
+  .chip.due { font-variant-numeric: tabular-nums; }
+  .chip.overdue { color: var(--negative); border-color: #FCA5A5; }
+
+  /* ---------- Collapsed completed group ---------- */
+  .done-group {
+    display: flex; align-items: center; gap: 8px;
+    margin: -2px; padding: 4px 2px;
+    border-radius: 8px; background: none; border: 0;
+    font: inherit; font-size: 12.5px;
+    color: var(--text-subdued); cursor: pointer; width: 100%;
+    text-align: left;
+  }
+  .done-group:hover { background: var(--surface-2); color: var(--text-default); }
+  .done-group:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; }
+  .done-group .chev { transition: transform .15s ease; display: grid; place-content: center; }
+  .done-group[aria-expanded="true"] .chev { transform: rotate(90deg); }
+  .done-group .rule { flex: 1; height: 1px; background: var(--border-soft); }
+
+  /* ---------- Composer ---------- */
+  .composer {
+    display: flex; align-items: center; gap: 12px;
+    padding: 2px; margin: -2px; margin-top: 4px;
+  }
+  .composer .cb { opacity: .4; cursor: default; }
+  .composer input {
+    flex: 1; border: 0; background: none; font: inherit;
+    color: var(--text-default); padding: 0;
+  }
+  .composer input::placeholder { color: #94A3B8; }
+  .composer input:focus { outline: none; }
+
+  /* ---------- Drop indicator ---------- */
+  .drop-line {
+    position: absolute; left: 0; right: 0; height: 2px;
+    background: var(--action); border-radius: 2px;
+    pointer-events: none; opacity: 0; z-index: 5;
+  }
+  .drop-line::before {
+    content: ""; position: absolute; left: -1px; top: -3px;
+    width: 8px; height: 8px; border-radius: 999px; background: var(--action);
+  }
+  .drop-line.on { opacity: 1; }
+
+  /* ---------- Drag proxy ---------- */
+  .proxy {
+    position: fixed; z-index: 9999; pointer-events: none;
+    background: var(--surface-1); border: 1px solid var(--border-default);
+    border-radius: 8px; box-shadow: var(--shadow-lift);
+    padding: 6px 10px;
+    font-family: "Noto Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size: 14px; line-height: 20px; color: var(--text-default);
+    display: flex; align-items: center; gap: 10px;
+    left: 0; top: 0; will-change: transform;
+  }
+  .proxy.compact { max-width: 380px; white-space: nowrap; overflow: hidden; }
+  .proxy.compact .ptext { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .proxy.full { align-items: flex-start; padding: 8px 12px; }
+  .proxy.full .ptext { white-space: normal; }
+
+  /* ---------- Grab-zone inspection ---------- */
+  body[data-zones="on"] .row {
+    background-image: repeating-linear-gradient(
+      45deg, rgba(30, 64, 175, .12) 0px, rgba(30, 64, 175, .12) 4px,
+      transparent 4px, transparent 8px);
+    outline: 1px dashed rgba(30, 64, 175, .45);
+    outline-offset: -1px; border-radius: 6px;
+  }
+  body[data-zones="on"] [data-interactive] {
+    background-color: var(--surface-1); background-image: none;
+    box-shadow: 0 0 0 1px rgba(220, 38, 38, .35); border-radius: 3px;
+  }
+  body[data-zones="on"] .content .prose {
+    background-color: rgba(220, 38, 38, .10);
+    box-shadow: 0 0 0 1px rgba(220, 38, 38, .30);
+  }
+  body[data-zones="on"][data-grab="handle"] .row {
+    background-image: none; outline-color: rgba(120, 126, 138, .35);
+  }
+  body[data-zones="on"][data-grab="handle"] .handle {
+    opacity: 1; background: rgba(30, 64, 175, .18);
+    box-shadow: 0 0 0 1px rgba(30, 64, 175, .5);
+  }
+  body[data-zones="on"][data-grab="handle"] [data-interactive],
+  body[data-zones="on"][data-grab="handle"] .content .prose {
+    background-color: transparent; box-shadow: none;
+  }
+
+  /* ---------- Uniform-height mode ---------- */
+  body[data-uniform="on"] .content .prose {
+    display: -webkit-box; -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical; overflow: hidden;
+  }
+  body[data-uniform="on"] .content { display: block; }
+
+  /* ============================================================
+     MUTATION LOG
+     ============================================================ */
+  .log {
+    background: var(--bench-panel);
+    border: 1px solid var(--bench-line);
+    border-radius: 10px; overflow: hidden;
+  }
+  .log-head {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 14px; border-bottom: 1px solid var(--bench-line); flex-wrap: wrap;
+  }
+  .log-head .eyebrow { flex: 1; }
+
+  .mini-seg { display: flex; border: 1px solid var(--bench-line-2); border-radius: 6px; overflow: hidden; }
+  .mini-seg button {
+    appearance: none; border: 0; background: var(--bench-raise); color: var(--bench-ink-2);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10.5px; letter-spacing: .04em; text-transform: uppercase;
+    padding: 4px 9px; cursor: pointer;
+  }
+  .mini-seg button + button { border-left: 1px solid var(--bench-line-2); }
+  .mini-seg button[aria-pressed="true"] { background: var(--bench-ink); color: var(--bench-bg); }
+  .mini-seg button:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: -2px; }
+
+  .log-body {
+    max-height: 250px; overflow-y: auto; overflow-x: auto;
+    padding: 12px 14px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11.5px; line-height: 1.65; color: var(--bench-ink-2);
+  }
+  .log-empty { color: var(--bench-ink-3); font-style: italic; }
+  .entry { padding: 7px 0; border-top: 1px dashed var(--bench-line); white-space: pre; }
+  .entry:first-child { border-top: 0; padding-top: 0; }
+  .entry .op { color: var(--bench-ink); font-weight: 600; }
+  .entry .dim { color: var(--bench-ink-3); }
+  .entry .hot { color: var(--bench-focus); font-weight: 600; }
+
+  /* ---------- Notes ---------- */
+  .note {
+    background: var(--bench-panel);
+    border: 1px solid var(--bench-line);
+    border-left: 2px solid var(--bench-line-2);
+    border-radius: 8px; padding: 14px 16px;
+    font-size: 12.5px; line-height: 1.6; color: var(--bench-ink-2);
+  }
+  .note strong { color: var(--bench-ink); font-weight: 600; }
+  .note p { margin: 0; }
+  .note p + p { margin-top: 8px; }
+
+  kbd {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10.5px; border: 1px solid var(--bench-line-2);
+    border-bottom-width: 2px; border-radius: 4px; padding: 1px 5px;
+    background: var(--bench-raise); color: var(--bench-ink); white-space: nowrap;
+  }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+  }
+
+  /* ============================================================
+     C2 - GESTURE ARBITRATION
+     Three gestures want the same pixels. Everything below exists
+     to make the overlap visible and to keep score honestly.
+     ============================================================ */
+
+  /* The whole conflict is one CSS property on one element.
+     Reordering wants inline, so the ragged tail after the last line
+     is not part of the text and stays grabbable. Editing wants
+     block, so the click target is the full-width rectangle. */
+  .prose {
+    outline: none; border-radius: 4px;
+    white-space: pre-wrap; word-break: break-word;
+    transition: background .12s ease, box-shadow .12s ease;
+  }
+  body[data-prose="inline"] .prose { display: inline; cursor: text; }
+  body[data-prose="block"]  .prose { display: block;  cursor: text; }
+  body[data-click="none"] .prose { cursor: default; }
+  body[data-textdrag="reorder"] .prose { cursor: grab; user-select: none; }
+
+  .prose.editing { background: var(--surface-3); box-shadow: 0 0 0 4px var(--surface-3); }
+
+  /* ---------- Claim map ---------- */
+  /* Each gesture gets its own colour, painted over the exact area it
+     can start from. Where two colours meet is the argument. */
+  body[data-paint="on"] .row {
+    outline: 1px dashed rgba(30, 64, 175, .40); outline-offset: -1px; border-radius: 6px;
+    background-image: repeating-linear-gradient(45deg,
+      rgba(30, 64, 175, .13) 0 4px, transparent 4px 8px);
+  }
+  body[data-paint="on"] [data-interactive] {
+    background-color: var(--surface-1) !important; background-image: none !important;
+    box-shadow: 0 0 0 1px rgba(120, 126, 138, .45); border-radius: 3px;
+  }
+  /* Editing's claim, amber. */
+  body[data-paint="on"][data-click="edit"] .prose {
+    background-color: rgba(245, 158, 11, .20);
+    box-shadow: 0 0 0 1px rgba(245, 158, 11, .55);
+  }
+  /* Selection's claim, green. Sits on the same pixels as editing,
+     which is exactly why they can share: one is a click, one is a drag. */
+  body[data-paint="on"][data-textdrag="select"] .prose {
+    background-image: repeating-linear-gradient(-45deg,
+      rgba(16, 185, 129, .22) 0 3px, transparent 3px 6px);
+  }
+  /* When dragging the text reorders, the text belongs to reordering
+     and selection has nothing left. */
+  body[data-paint="on"][data-textdrag="reorder"] .prose {
+    background-color: rgba(30, 64, 175, .22);
+    box-shadow: 0 0 0 1px rgba(30, 64, 175, .5);
+    background-image: none;
+  }
+  body[data-paint="on"][data-grab="handle"] .row { background-image: none; outline-color: rgba(120,126,138,.35); }
+  body[data-paint="on"][data-grab="handle"] .handle { opacity: 1; background: rgba(30,64,175,.20); box-shadow: 0 0 0 1px rgba(30,64,175,.55); }
+
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 2px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--bench-ink-2); }
+  .legend i { width: 11px; height: 11px; border-radius: 3px; display: block; }
+
+  /* ---------- Format bar ---------- */
+  .fmtbar {
+    position: fixed; z-index: 200; transform: translate(-50%, -100%);
+    background: var(--bench-ink); color: var(--bench-bg);
+    border-radius: 7px; padding: 4px; display: none; gap: 2px;
+    box-shadow: var(--shadow-lift);
+  }
+  .fmtbar.on { display: flex; }
+  .fmtbar button {
+    appearance: none; border: 0; background: none; color: inherit;
+    font: inherit; font-size: 12.5px; padding: 3px 8px; border-radius: 4px; cursor: pointer;
+  }
+  .fmtbar button:hover { background: rgba(255,255,255,.16); }
+
+  /* ---------- Scorecard ---------- */
+  .score { background: var(--bench-panel); border: 1px solid var(--bench-line); border-radius: 10px; overflow: hidden; }
+  .score-head { padding: 11px 14px; border-bottom: 1px solid var(--bench-line); display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .score-head .eyebrow { flex: 1; }
+  .tally { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; border-radius: 4px; padding: 3px 8px; }
+  .tally.bad { color: var(--negative); border: 1px solid currentColor; }
+  .tally.ok  { color: var(--bench-ink-2); border: 1px solid var(--bench-line-2); }
+
+  .score-row { display: grid; grid-template-columns: 190px 1fr; gap: 14px; padding: 12px 14px; border-top: 1px dashed var(--bench-line); align-items: start; }
+  .score-row:first-of-type { border-top: 0; }
+  .score-what { font-size: 13px; font-weight: 600; color: var(--bench-ink); }
+  .score-what em { display: block; font-weight: 400; font-style: normal; font-size: 11.5px; color: var(--bench-ink-3); margin-top: 2px; }
+  .score-state { font-size: 12.5px; line-height: 1.55; color: var(--bench-ink-2); }
+  .pill { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; border-radius: 4px; padding: 2px 6px; margin-right: 8px; }
+  .pill.full { background: var(--bench-ink); color: var(--bench-bg); }
+  .pill.part { color: #8A6D1F; border: 1px solid currentColor; }
+  .pill.lost { color: var(--negative); border: 1px solid currentColor; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .pill.part { color: #D9B44A; } }
+  :root[data-theme="dark"] .pill.part { color: #D9B44A; }
+
+  .verdict { padding: 12px 14px; border-top: 1px solid var(--bench-line); font-size: 12.5px; line-height: 1.6; color: var(--bench-ink-2); }
+  .verdict strong { color: var(--bench-ink); }
+</style>
+
+<div class="frame">
+
+  <aside class="rail">
+    <div class="rail-head">
+      <h1 class="rail-title">Arbitration bench</h1>
+      <p class="rail-sub">
+        Three gestures want the same pixels: dragging a row to reorder it,
+        clicking its text to edit, and dragging across that text to select
+        it. Try all three in every setting and watch the scorecard.
+      </p>
+    </div>
+
+    <div class="group featured">
+      <p class="eyebrow primary">The one property the whole thing turns on</p>
+      <div class="seg" id="seg-prose" role="group" aria-label="Prose display">
+        <button data-v="inline" aria-pressed="true"><span class="k">1</span>Text is inline</button>
+        <button data-v="block" aria-pressed="false"><span class="k">2</span>Text is a full-width block</button>
+      </div>
+      <p class="group-note">
+        Reordering wants <em>inline</em>, so the ragged tail after the last line is not
+        part of the text and stays grabbable. Editing wants <em>block</em>, so the click
+        target is the whole rectangle including that tail. One element, one property,
+        two features.
+      </p>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Pressing on the text and moving</p>
+      <div class="seg" id="seg-textdrag" role="group" aria-label="Text drag">
+        <button data-v="select" aria-pressed="true"><span class="k">Q</span>Selects the text</button>
+        <button data-v="reorder" aria-pressed="false"><span class="k">W</span>Drags the row</button>
+      </div>
+      <p class="group-note">
+        Selection is not optional decoration: there is no toolbar, so the format bar
+        appears on selection and is the only way to make anything bold.
+      </p>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">A plain click on the text</p>
+      <div class="seg" id="seg-click" role="group" aria-label="Click behaviour">
+        <button data-v="edit" aria-pressed="true"><span class="k">A</span>Starts editing</button>
+        <button data-v="none" aria-pressed="false"><span class="k">S</span>Does nothing</button>
+      </div>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Inspect</p>
+      <label class="switch">
+        <input type="checkbox" id="chk-paint">
+        <span>Paint what each gesture claims<br><span class="sub">one colour per gesture, over the area it can start from</span></span>
+      </label>
+      <div class="legend">
+        <span><i style="background:rgba(30,64,175,.55)"></i>Reorder</span>
+        <span><i style="background:rgba(245,158,11,.7)"></i>Edit</span>
+        <span><i style="background:rgba(16,185,129,.7)"></i>Select</span>
+        <span><i style="background:rgba(120,126,138,.5)"></i>Already a control</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="bench">
+    <div class="bench-inner">
+
+      <div class="mount-label">
+        <p class="eyebrow">Mounted specimen / @m/tokens, light only</p>
+        <p id="hint"></p>
+      </div>
+
+      <section class="specimen" aria-label="Checklist specimen">
+        <div class="spec-head">
+          <div class="spec-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h7"/></svg>
+          </div>
+          <h2>Checklist</h2>
+        </div>
+        <div class="list" id="list"></div>
+      </section>
+
+      <section class="score" aria-label="Scorecard">
+        <div class="score-head">
+          <p class="eyebrow">Can you still do all three?</p>
+          <span class="tally" id="tally"></span>
+        </div>
+        <div id="rows"></div>
+        <div class="verdict" id="verdict"></div>
+      </section>
+
+      <section class="log" aria-label="Gesture log">
+        <div class="log-head"><p class="eyebrow">What that gesture did</p></div>
+        <div class="log-body" id="log">
+          <p class="log-empty">Drag a row, click some text, and drag across some text.</p>
+        </div>
+      </section>
+
+      <div class="note">
+        <p><strong>This round is not expected to come out clean.</strong> Three gestures,
+        one region, and only one of them can own a plain press. The useful outcome is
+        knowing exactly what each arrangement costs, so that when a rule arrives from
+        outside the interaction design it settles the argument instead of adding to it.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="fmtbar" id="fmtbar" role="toolbar" aria-label="Formatting">
+  <button type="button" data-f="b"><b>B</b></button>
+  <button type="button" data-f="i"><i>I</i></button>
+  <button type="button" data-f="code">Code</button>
+</div>
+
+<div class="sr-only" role="status" aria-live="polite" id="announce"></div>
+
+<script>
+  const ITEMS = [
+    { id: "a", text: "Reserved Instance coverage dropped to 61% this month after the m5 fleet was retired. We should decide whether to re-cover with Savings Plans.", who: "Dana", done: false },
+    { id: "b", text: "Budget alert thresholds are still pointing at the old prod account.", who: "Marco", done: false },
+    { id: "c", text: "Walk through the S3 lifecycle policy proposal.", who: "Dana", done: true },
+    { id: "d", text: "Quick status on the GuardDuty findings backlog.", who: "Priya", done: false }
+  ];
+
+  const S = { prose: "inline", textdrag: "select", click: "edit", paint: false };
+
+  const listEl = document.getElementById("list");
+  const logEl = document.getElementById("log");
+  const hintEl = document.getElementById("hint");
+  const bar = document.getElementById("fmtbar");
+  const announceEl = document.getElementById("announce");
+
+  const esc = s => String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  const byId = id => ITEMS.find(i => i.id === id);
+
+  const ICON = {
+    circle: '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/></svg>',
+    check: '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/><path d="M5.8 9.2l2.2 2.2 4.2-4.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    grip: '<svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="4" cy="2.5" r="1.1"/><circle cx="8" cy="2.5" r="1.1"/><circle cx="4" cy="6" r="1.1"/><circle cx="8" cy="6" r="1.1"/><circle cx="4" cy="9.5" r="1.1"/><circle cx="8" cy="9.5" r="1.1"/></svg>'
+  };
+
+  function render() {
+    listEl.innerHTML = ITEMS.map(it =>
+      '<div class="row" data-id="' + it.id + '" data-done="' + it.done + '" tabindex="0">' +
+      '<button class="handle" data-act="grab" data-interactive aria-label="Reorder">' + ICON.grip + "</button>" +
+      '<button class="cb" data-act="check" data-interactive data-state="' + (it.done ? "done" : "open") +
+      '" aria-label="' + (it.done ? "Mark not done" : "Mark done") + '">' + (it.done ? ICON.check : ICON.circle) + "</button>" +
+      '<span class="content"><span class="prose">' + esc(it.text) + "</span></span>" +
+      '<span class="who" data-interactive>' + it.who + "</span>" +
+      "</div>").join("") + '<div class="drop-line" id="dropline"></div>';
+
+    const b = document.body.dataset;
+    b.prose = S.prose; b.textdrag = S.textdrag; b.click = S.click;
+    b.paint = S.paint ? "on" : "off";
+    b.grab = "both";
+    score();
+  }
+
+  let n = 0;
+  function log(html, cls) {
+    const empty = logEl.querySelector(".log-empty");
+    if (empty) empty.remove();
+    const p = document.createElement("p");
+    p.className = "entry";
+    p.innerHTML = html;
+    logEl.prepend(p);
+  }
+  const announce = m => { announceEl.textContent = m; };
+
+  // ---------------------------------------------------------------
+  // Scorecard. Computed from the settings rather than written out,
+  // so the claim that no arrangement gets all three is checked every
+  // time rather than asserted once.
+  // ---------------------------------------------------------------
+  function states() {
+    const reorder = S.textdrag === "reorder"
+      ? { k: "full", t: "Anywhere on the row, including the text." }
+      : S.prose === "inline"
+        ? { k: "part", t: "The handle, plus the ragged tail after the last line. On a row whose text fills the width, that tail is a sliver. Turn the paint on to see how little is left." }
+        : { k: "lost", t: "The handle only. A full-width text block leaves no blank space at all, so blank-space dragging is gone." };
+
+    const edit = S.click === "edit"
+      ? { k: "full", t: "Click the text." }
+      : { k: "lost", t: "Nothing starts editing. It needs a pencil on hover or an item in the row menu, which is a control the row was trying not to have." };
+
+    const select = S.textdrag === "reorder"
+      ? { k: "lost", t: "Pressing on the text starts a drag, so text can never be selected. With no toolbar, the format bar appears on selection, so formatting goes with it." }
+      : { k: "full", t: "Drag across the text. The format bar appears." };
+
+    return { reorder, edit, select };
+  }
+
+  function score() {
+    const s = states();
+    const defs = [
+      ["Reorder by dragging", "Move a row without a menu", s.reorder],
+      ["Edit by clicking", "No pencil, no mode, no Save button", s.edit],
+      ["Select text to format", "The only route to bold, since there is no toolbar", s.select]
+    ];
+    document.getElementById("rows").innerHTML = defs.map(([what, sub, st]) =>
+      '<div class="score-row"><div class="score-what">' + what + "<em>" + sub + "</em></div>" +
+      '<div class="score-state"><span class="pill ' + st.k + '">' +
+      (st.k === "full" ? "Works" : st.k === "part" ? "Degraded" : "Lost") + "</span>" + st.t + "</div></div>").join("");
+
+    const full = Object.values(s).filter(x => x.k === "full").length;
+    const lost = Object.values(s).filter(x => x.k === "lost").length;
+    const tally = document.getElementById("tally");
+    tally.textContent = full + " of 3 intact";
+    tally.className = "tally " + (full === 3 ? "ok" : "bad");
+
+    const v = document.getElementById("verdict");
+    if (S.textdrag === "reorder") {
+      v.innerHTML = "<strong>Reordering took the text, and formatting died with it.</strong> " +
+        "This is the arrangement that looks best on paper and is worst in use: dragging works everywhere, " +
+        "and the price is that nobody can ever bold a word.";
+    } else if (S.click === "none") {
+      v.innerHTML = "<strong>Editing gave up the click, which is what it was trying to avoid.</strong> " +
+        "The row gets a pencil or a menu item back, and the whole point of an invisible field was not needing one.";
+    } else if (S.prose === "block") {
+      v.innerHTML = "<strong>Two work fully and reordering is down to the handle alone.</strong> " +
+        "Nothing is broken, but blank-space dragging is gone, and a handle is a small target that only appears on hover.";
+    } else {
+      v.innerHTML = "<strong>All three are reachable, and reordering is the one paying.</strong> " +
+        "Inline text leaves a ragged tail to grab, and on a row whose text runs the full width that tail is a sliver. " +
+        "This is the least-bad arrangement, and it is still a compromise: reordering is really handle-first, " +
+        "and a hover-only handle is exactly the affordance that a keyboard, a touchscreen and a screen reader cannot use.";
+    }
+  }
+
+  // ---------------------------------------------------------------
+  // Gestures
+  // ---------------------------------------------------------------
+  let drag = null;
+
+  listEl.addEventListener("pointerdown", (e) => {
+    const row = e.target.closest && e.target.closest(".row");
+    if (!row) return;
+    const onHandle = e.target.closest('[data-act="grab"]');
+    const onProse = e.target.closest(".prose");
+    const onOther = e.target.closest("[data-interactive]");
+
+    if (!onHandle && onOther) return;
+    if (onProse && S.textdrag === "select") return;    // let the browser select
+    if (onProse && S.click === "edit" && S.textdrag === "select") return;
+
+    e.preventDefault();
+    drag = { id: row.dataset.id, y: e.clientY, moved: false, from: onHandle ? "handle" : onProse ? "text" : "blank space" };
+    try { row.setPointerCapture(e.pointerId); } catch (_) {}
+  });
+
+  listEl.addEventListener("pointermove", (e) => {
+    if (!drag) return;
+    if (!drag.moved && Math.abs(e.clientY - drag.y) < 3) return;
+    drag.moved = true;
+    const rows = [...listEl.querySelectorAll(".row")];
+    rows.find(r => r.dataset.id === drag.id).classList.add("is-source");
+    const others = rows.filter(r => r.dataset.id !== drag.id);
+    let idx = others.length;
+    for (let i = 0; i < others.length; i++) {
+      const b = others[i].getBoundingClientRect();
+      if (e.clientY < b.top + b.height / 2) { idx = i; break; }
+    }
+    const dl = document.getElementById("dropline");
+    const box = listEl.getBoundingClientRect();
+    const y = idx < others.length
+      ? others[idx].getBoundingClientRect().top - box.top - 3
+      : others[others.length - 1].getBoundingClientRect().bottom - box.top + 1;
+    dl.style.top = y + "px";
+    dl.classList.add("on");
+    drag.index = idx;
+  });
+
+  function endDrag(commit) {
+    if (!drag) return;
+    const d = drag; drag = null;
+    document.querySelectorAll(".row").forEach(r => r.classList.remove("is-source"));
+    const dl = document.getElementById("dropline");
+    if (dl) dl.classList.remove("on");
+    if (!d.moved) return;
+    if (!commit) { log('<span class="dim">drag cancelled</span>'); return; }
+    const from = ITEMS.findIndex(i => i.id === d.id);
+    const [it] = ITEMS.splice(from, 1);
+    ITEMS.splice(d.index, 0, it);
+    log('<span class="op">reorder</span> <span class="dim">started from the ' + d.from + '</span>');
+    render();
+  }
+  listEl.addEventListener("pointerup", () => endDrag(true));
+  listEl.addEventListener("pointercancel", () => endDrag(false));
+
+  listEl.addEventListener("click", (e) => {
+    const act = e.target.closest("[data-act]");
+    if (act && act.dataset.act === "check") {
+      const it = byId(e.target.closest(".row").dataset.id);
+      it.done = !it.done;
+      log('<span class="op">tick</span> <span class="dim">' + it.id + " -> " + it.done + "</span>");
+      render();
+      return;
+    }
+    const p = e.target.closest(".prose");
+    if (!p) return;
+    if (window.getSelection().toString()) return;   // a selection, not a click
+    if (S.click !== "edit") {
+      log('<span class="dim">click on the text did nothing. Editing needs a pencil or a menu item.</span>');
+      announce("Editing is not available by clicking in this setting.");
+      return;
+    }
+    if (p.isContentEditable) return;
+    p.setAttribute("contenteditable", "true");
+    p.classList.add("editing");
+    p.focus();
+    log('<span class="op">edit</span> <span class="dim">started by clicking the text</span>');
+  });
+
+  document.addEventListener("focusout", (e) => {
+    if (e.target.classList && e.target.classList.contains("prose")) {
+      e.target.removeAttribute("contenteditable");
+      e.target.classList.remove("editing");
+    }
+  });
+
+  // Format bar on selection. This is what makes selection load-bearing:
+  // there is no toolbar anywhere else.
+  document.addEventListener("selectionchange", () => {
+    const sel = window.getSelection();
+    const text = sel && sel.toString();
+    if (!text || !sel.rangeCount) { bar.classList.remove("on"); return; }
+    const node = sel.anchorNode;
+    const el = node && (node.nodeType === 1 ? node : node.parentElement);
+    if (!el || !el.closest(".prose")) { bar.classList.remove("on"); return; }
+    const r = sel.getRangeAt(0).getBoundingClientRect();
+    bar.style.left = (r.left + r.width / 2) + "px";
+    bar.style.top = (r.top - 6) + "px";
+    bar.classList.add("on");
+  });
+  bar.addEventListener("pointerdown", e => e.preventDefault());
+  bar.addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-f]");
+    if (!b) return;
+    log('<span class="op">format</span> <span class="dim">' + b.dataset.f + " on the selection</span>");
+    bar.classList.remove("on");
+  });
+
+  // ---------------------------------------------------------------
+  // Controls
+  // ---------------------------------------------------------------
+  function wireSeg(id, key) {
+    const root = document.getElementById(id);
+    root.addEventListener("click", (e) => {
+      const b = e.target.closest("button[data-v]");
+      if (!b) return;
+      S[key] = b.dataset.v;
+      [...root.querySelectorAll("button[data-v]")].forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+      hint(); render();
+    });
+  }
+  wireSeg("seg-prose", "prose");
+  wireSeg("seg-textdrag", "textdrag");
+  wireSeg("seg-click", "click");
+  document.getElementById("chk-paint").addEventListener("change", e => { S.paint = e.target.checked; render(); });
+
+  function hint() {
+    hintEl.textContent = S.textdrag === "reorder"
+      ? "Try to select a word. You cannot."
+      : S.prose === "inline"
+        ? "Drag from the end of a line, after the last word"
+        : "Drag from the handle. There is no blank space left";
+  }
+
+  const KEYS = {
+    "1": ["seg-prose", "inline"], "2": ["seg-prose", "block"],
+    "q": ["seg-textdrag", "select"], "w": ["seg-textdrag", "reorder"],
+    "a": ["seg-click", "edit"], "s": ["seg-click", "none"]
+  };
+  window.addEventListener("keydown", (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const ae = document.activeElement;
+    if (ae && (ae.isContentEditable || /^(INPUT|TEXTAREA)$/.test(ae.tagName))) return;
+    const hit = KEYS[e.key.toLowerCase()];
+    if (!hit) return;
+    const btn = document.querySelector("#" + hit[0] + ' button[data-v="' + hit[1] + '"]');
+    if (btn) btn.click();
+  });
+
+  function applyDeepLink() {
+    const q = new URLSearchParams(location.search);
+    const allowed = { prose: ["inline", "block"], textdrag: ["select", "reorder"], click: ["edit", "none"] };
+    Object.keys(allowed).forEach(k => {
+      const v = q.get(k);
+      if (!v || !allowed[k].includes(v)) return;
+      const btn = document.querySelector("#seg-" + k + ' button[data-v="' + v + '"]');
+      if (btn) btn.click();
+    });
+    if (q.get("paint") === "1") {
+      const c = document.getElementById("chk-paint");
+      c.checked = true; c.dispatchEvent(new Event("change"));
+    }
+    if (q.get("embed") === "1") document.body.classList.add("is-embed");
+    const sc = parseFloat(q.get("scale"));
+    if (sc > 0 && sc <= 4) document.documentElement.style.setProperty("--embed-scale", String(sc));
+  }
+
+  hint();
+  render();
+  applyDeepLink();
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape" || window.parent === window) return;
+    const el = document.activeElement;
+    if (el && el !== document.body) el.blur();
+    window.parent.focus();
+  });
+</script>

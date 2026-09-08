@@ -218,6 +218,10 @@
       <b>Nesting bench</b>
       <span>Sub-items one level deep, with a panel showing what a screen reader would actually hear.</span>
     </a>
+    <a class="tool" href="/decks/2026-checklist-component/prototypes/c2-arbitration-bench?paint=1">
+      <b>Arbitration bench</b>
+      <span>Three gestures fighting over one row, with a scorecard that says how many survive each arrangement.</span>
+    </a>
     <a class="tool" href="/decks/2026-checklist-component/prototypes/edit-presence-bench">
       <b>Presence bench</b>
       <span>Two screens on one list. All seven multiplayer dimensions, plus the wire log.</span>
@@ -243,6 +247,7 @@
   const R = "/decks/2026-checklist-component/prototypes/reorder-bench";
   const REJ = "/decks/2026-checklist-component/prototypes/rejections";
   const N = "/decks/2026-checklist-component/prototypes/c1-nesting-bench";
+  const A = "/decks/2026-checklist-component/prototypes/c2-arbitration-bench";
 
   // Grouped by the part of the component they belong to, not by which
   // bench a switch happens to live in and not by when the work happened.
@@ -427,11 +432,21 @@
         },
         {
           q: "Do editing and dragging want the same pixels?",
+          opts: [
+            { t: "Show me the overlap painted", u: A + "?paint=1" },
+            { t: "Text inline, drag selects, click edits", u: A + "?prose=inline&textdrag=select&click=edit", status: "chosen" },
+            { t: "Text as a full-width block", u: A + "?prose=block&textdrag=select&click=edit", status: "rejected" },
+            { t: "Pressing the text drags the row", u: A + "?prose=inline&textdrag=reorder&click=edit", status: "rejected" }
+          ],
+          why: "Yes, and the conflict comes down to <strong>one CSS property on one element</strong>. Reordering needs the text <code>inline</code> so the ragged tail after the last line stays grabbable. Editing needs it <code>block</code> so the click target is the whole rectangle. Selecting text is a third claimant on the same pixels, and it is not optional, because with no toolbar the format bar only appears on a selection. <strong>The bench scores all eight arrangements and none of them keeps all three: the best any of them manages is two.</strong> The one chosen is the least-bad, and reordering is what pays: it comes down to the handle plus a sliver of tail."
+        },
+        {
+          q: "Is a hover-only drag handle good enough?",
           open: true,
           opts: [
-            { t: "Show me the overlap", u: M + "?conflict=1" }
+            { t: "See what reordering is left with", u: A + "?prose=inline&paint=1" }
           ],
-          why: "<strong>Yes, and it is unresolved.</strong> The hatching marks the area dragging already claims. Clicking to edit wants that same area, and so does selecting text, which the format bar depends on. Three gestures, one region, and only one of them can own a plain click."
+          why: "<strong>No, and that is what the next round is for.</strong> Once the text belongs to editing and selection, reordering is really handle-first, and a handle that appears on hover is exactly the affordance a keyboard, a touchscreen and a screen reader cannot use. Interaction design alone cannot break this tie: every arrangement is somebody losing something. What settles it comes from outside, in Accessibility."
         }
       ]
     },
