@@ -104,7 +104,7 @@
   /* Keep the bench's own max-width. The specimen's line length is a
      design decision, so the iframe gets sized to the specimen rather
      than the specimen stretched to the iframe. */
-  body.is-embed .bench-inner { gap: 0; }
+  body.is-embed .bench-inner { gap: 0; zoom: var(--embed-scale, 1); }
   /* Centre in whatever height the slide gives the frame, so one embed
      rule survives every iframe size instead of needing a per-slide fit. */
   body.is-embed .bench {
@@ -1192,6 +1192,13 @@
     // Embed mode. Slides load the bench with ?embed=1 so only the
     // specimen shows; the rail's job is done by the params above.
     if (q.get("embed") === "1") document.body.classList.add("is-embed");
+
+    // Slides are 1920 wide and get scaled down to whatever is projecting,
+    // so a specimen rendered at 1:1 lands around 10px on a screen. ?scale
+    // renders it larger inside the frame to buy that back. zoom rather than
+    // transform, so layout and hit areas scale together.
+    const sc = parseFloat(q.get("scale"));
+    if (sc > 0 && sc <= 4) document.documentElement.style.setProperty("--embed-scale", String(sc));
   }
 
   // ---------------------------------------------------------------

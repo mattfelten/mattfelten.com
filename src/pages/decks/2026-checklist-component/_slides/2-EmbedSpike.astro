@@ -1,26 +1,29 @@
 ---
 import Slide from '@decks/templates/Slide.astro';
 
-// GATE 0 SPIKE. Raw iframe, no LiveEmbed template yet. The question this
-// slide exists to answer is whether a live prototype can sit on a Reveal
-// slide without breaking deck navigation:
+// Reference implementation for every live-embed slide. Raw iframe for now;
+// LiveEmbed.astro (Gate 7) wraps this and adds blank-on-exit.
 //
-//   1. Does the bench render at all inside Reveal's CSS-transform scaling?
-//   2. Do arrow keys still advance the deck when focus is OUTSIDE the frame?
-//   3. What happens to arrow keys once focus is INSIDE the frame?
-//   4. Can focus get back out?
+// Sizing is measured, not guessed. In embed mode each bench reports its
+// natural content box, and the iframe is that box plus the 28px padding
+// on each side:
 //
-// Reveal binds its keyboard handler to `document`. An iframe has its own
-// document, so keydown inside it should not reach the parent at all. That
-// is the mechanism; this slide is here to confirm it rather than assume it.
+//   mechanics  620 x 357   presence  1120 x 365   reorder  620 x 409
+//
+// scale multiplies those. The deck is 1920 wide and gets scaled down to
+// whatever is projecting, so a specimen at 1:1 lands near 10px on screen.
+// scale=1.6 buys that back: reorder becomes 992 x 655, so the frame is
+// 992+56 by 655+56.
+//
+// Gate 0 established that keys inside an iframe never reach Reveal, so
+// the deck simply will not advance while focus is in here. Escape inside
+// any bench blurs to the parent and hands navigation back.
 ---
 
-<Slide subtitle="Gate 0 spike">
-	<div class="flex flex-col gap-4">
-		<iframe
-			src="/decks/2026-checklist-component/prototypes/edit-bench"
-			title="Checklist edit bench"
-			class="live-embed block h-[820px] w-[1600px] rounded-2xl border-0 bg-white"
-		></iframe>
-	</div>
+<Slide subtitle="Live embed">
+	<iframe
+		src="/decks/2026-checklist-component/prototypes/reorder-bench?embed=1&grab=both&scale=1.6"
+		title="Checklist reorder bench"
+		class="live-embed m-0! block h-[711px] w-[1048px] max-h-none! max-w-none! border-0"
+	></iframe>
 </Slide>
