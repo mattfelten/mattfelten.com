@@ -6,11 +6,14 @@
      The navigation page, built for someone with half a brain
      free in the middle of an interview.
 
-     Organised as the explorations that happened, in order, not as
-     the benches they live in. Each exploration is a plain question
-     with every variation tried underneath it. The chosen one is
-     marked "Chosen" in words, not just colour, because colour
-     alone does not survive nerves.
+     Grouped by the part of the component a decision belongs to,
+     not by which bench a switch lives in. Each entry is a plain
+     question with every variation that got built underneath it.
+     The chosen one is marked "Chosen" in words, not just colour,
+     because colour alone does not survive nerves.
+
+     No dates anywhere. When the work happened is Matt's to say
+     out loud, not the page's to announce.
      ============================================================ */
   :root {
     --bench-bg: #EDEEF1;
@@ -85,7 +88,11 @@
     border-bottom: 1px solid var(--bench-line-2);
   }
   .phase h2 { font-size: 17px; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
-  .phase .when { font-size: 12px; color: var(--bench-ink-3); margin-left: auto; }
+
+  .phase-note {
+    color: var(--bench-ink-3); font-size: 12.5px; line-height: 1.6;
+    margin: 14px 0 -6px; max-width: 720px;
+  }
 
   /* ---------- one exploration ---------- */
   .ex { padding: 20px 0; border-bottom: 1px solid var(--bench-line); }
@@ -169,13 +176,33 @@
   <div class="head">
     <h1>What we explored</h1>
     <p class="lede">
-      Every question the Checklist component had to answer, in the order it came up, with every
-      variation that was actually built. The one marked <strong>Chosen</strong> is what won.
-      Click any of them to open that exact state.
+      Every question the Checklist component had to answer, with every variation that was
+      actually built. The one marked <strong>Chosen</strong> is what won. Click any of them to
+      open that exact state.
     </p>
   </div>
 
   <div id="out"></div>
+
+  <div class="phase"><h2>Not the component's call</h2></div>
+  <p class="phase-note">
+    Things the benches can show, and that the component deliberately does not decide. Knowing
+    where the component stops is part of the spec.
+  </p>
+  <div class="ex">
+    <div class="q"><h3>Who is allowed to edit an item?</h3></div>
+    <div class="opts">
+      <a class="opt" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?perm=anyone">Anyone with access</a>
+      <a class="opt" href="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?perm=author">Staff, or whoever wrote it</a>
+    </div>
+    <p class="settled">
+      This is business logic, not component behaviour. Both products will answer it differently,
+      and a checklist inside a runbook has different rules from one inside a meeting. The
+      component takes the answer as input and renders the read-only state properly; it does not
+      hold an opinion about who qualifies. Worth showing both, because the read-only state is
+      the component's problem even though the rule is not.
+    </p>
+  </div>
 
   <div class="phase"><h2>The instruments</h2></div>
   <div class="tools">
@@ -212,12 +239,13 @@
   const R = "/decks/2026-checklist-component/prototypes/reorder-bench";
   const REJ = "/decks/2026-checklist-component/prototypes/rejections";
 
-  // Ordered as the work happened. Each entry is one question, with every
-  // variation that got built. status: "chosen" | "rejected" | undefined.
+  // Grouped by the part of the component they belong to, not by which
+  // bench a switch happens to live in and not by when the work happened.
+  // Each entry is one question, with every variation that got built.
+  // status: "chosen" | "rejected" | undefined.
   const PHASES = [
     {
-      name: "Ordering a list",
-      when: "31 August",
+      name: "Reordering",
       items: [
         {
           q: "How do you pick a row up?",
@@ -246,14 +274,14 @@
         },
         {
           q: "Where do ticked-off items go?",
-          open: true,
           opts: [
-            { t: "Stay where they are", u: R + "?checked=inplace" },
+            { t: "Stay where they are", u: R + "?checked=inplace", status: "chosen" },
             { t: "Jump to the top", u: R + "?checked=top" },
             { t: "Collapse into a group at the top", u: R + "?checked=collapsed" },
-            { t: "Drop to the bottom", u: R + "?checked=bottom" }
+            { t: "Drop to the bottom", u: R + "?checked=bottom" },
+            { t: "Collapse into a group at the bottom", u: R + "?checked=collapsedbottom" }
           ],
-          why: "<strong>Still open.</strong> Staying in place is what ships first, because it needs no new data. Grouping needs a completed-at column, and it also stops done rows being draggable, since completion time becomes their order."
+          why: "They stay put. It is the only one that needs no new data, and it keeps a done row draggable. Every grouping option needs a completed-at column, and grouping also takes the ordering away from the person, since completion time becomes the order. Collapsing at the <em>bottom</em> is the strongest of the grouped options: finished work gets out of the way instead of sitting between you and the next thing to do."
         },
         {
           q: "Should tasks get a manual order too?",
@@ -274,8 +302,7 @@
       ]
     },
     {
-      name: "Editing in place",
-      when: "1 September",
+      name: "Editing",
       items: [
         {
           q: "How do you start editing?",
@@ -285,7 +312,7 @@
             { t: "A pencil on hover", u: M + "?enter=pencil" },
             { t: "Edit in the row menu", u: M + "?enter=menu" }
           ],
-          why: "Click the text. It is the only one that adds no control to the row. It is also the one that collides with dragging, which is still unresolved further down this page."
+          why: "Click the text. It is the only one that adds no control to the row. It is also the one that collides with dragging, which is the last question in this section."
         },
         {
           q: "How much does edit mode show?",
@@ -332,15 +359,6 @@
           why: "Collapse it. Type in each and watch the amber lines in the log. The write itself is fine; it is the <em>record</em> of the write that needs collapsing, or one edit session fills the feed."
         },
         {
-          q: "Who is allowed to edit?",
-          open: true,
-          opts: [
-            { t: "Anyone with access", u: M + "?perm=anyone" },
-            { t: "Staff, or whoever wrote it", u: M + "?perm=author" }
-          ],
-          why: "<strong>Still open.</strong> Deleting is already staff-or-author, but the original spec said anyone may edit. Editing someone else's words is a bigger act than ticking their item off, so this needs a deliberate answer rather than an inherited one."
-        },
-        {
           q: "Do editing and dragging want the same pixels?",
           open: true,
           opts: [
@@ -351,8 +369,29 @@
       ]
     },
     {
-      name: "When other people are in it",
-      when: "1 September",
+      name: "Accessibility",
+      items: [
+        {
+          q: "Are completed items still readable?",
+          opts: [
+            { t: "Fade them to 60%, measures 4.58:1", u: R + "?checked=inplace", status: "chosen" },
+            { t: "Fade them to 50%, measures 3.35:1", u: REJ, status: "rejected" }
+          ],
+          why: "60% is the lowest fade that clears the 4.5:1 contrast minimum. 50% was what shipped, and it failed at 3.35:1. 55% is still short at 3.89:1, so there is very little room here."
+        },
+        {
+          q: "Should the author's name fade too?",
+          opts: [
+            { t: "No, leave it at full strength", u: R + "?checked=inplace", status: "chosen" },
+            { t: "Fade it with the row", u: REJ, status: "rejected" }
+          ],
+          why: "No. The name is already a quiet grey and only measures 4.83:1 at full strength, so fading it at all drops it under: at 60% it is 2.33:1. <strong>Fading only works on a full-strength colour.</strong> That rule is what rules out dimming a row to show presence, further down."
+        }
+      ],
+      note: "The next round adds the rest: reordering by keyboard, a way to move a row without dragging at all, a focus state that works with an invisible field, and what any of this does on a touchscreen where there is no pointer."
+    },
+    {
+      name: "Multiplayer viewing",
       items: [
         {
           q: "How do you show somebody is inside a row?",
@@ -360,11 +399,11 @@
             { t: "A small avatar in the gutter", u: P + "?mark=float&others=1", status: "chosen" },
             { t: "Avatar, plus a hairline", u: P + "?mark=floatline&others=1" },
             { t: "Avatar, plus a highlight", u: P + "?mark=floathi&others=1" },
-            { t: "Avatar, plus the row dimmed", u: P + "?mark=floatdim&others=1", status: "rejected" },
+            { t: "Avatar, plus the row faded", u: P + "?mark=floatdim&others=1", status: "rejected" },
             { t: "A wash, a name and a caret", u: P + "?mark=wash&others=1", status: "rejected" },
             { t: "Nothing at all", u: P + "?mark=none&others=1" }
           ],
-          why: "The avatar. It hangs in the left gutter so it never sits beside the author tag, where a second face reads as co-authorship rather than presence. <strong>Which treatment the row itself gets is still open:</strong> dimming was the leaning until it measured 2.67:1 and failed contrast."
+          why: "The avatar. It hangs in the left gutter so it never sits beside the author's name, where a second face reads as co-authorship rather than presence. <strong>Which treatment the row itself gets is still open:</strong> fading was the leaning until it measured 2.67:1, which is the same rule that stopped the author's name fading."
         },
         {
           q: "Does being in a row lock everyone else out?",
@@ -374,7 +413,7 @@
             { t: "A hard hold", u: P + "?lock=locked&others=1" },
             { t: "A hold that frees after 8 seconds", u: P + "?lock=timeout&others=1" }
           ],
-          why: "<strong>Still open.</strong> Slack marks a held row and does not lock it. Two people editing one sentence is rare; one person leaving a tab open on a row is not. The simulation includes somebody walking away mid-edit, so under a hard hold that row goes permanently dead and you can feel the difference."
+          why: "<strong>Still open, and it lands with the realtime work rather than the first release.</strong> Slack marks a held row and does not lock it. Two people editing one sentence is rare; one person leaving a tab open on a row is not. The simulation includes somebody walking away mid-edit, so under a hard hold that row goes permanently dead and you can feel the difference."
         },
         {
           q: "What does it look like if you are not allowed to edit?",
@@ -383,20 +422,6 @@
             { t: "As someone who cannot", u: P + "?me=guest&others=1" }
           ],
           why: "With an invisible field, 'no' is said only by the pointer <em>not</em> turning into a caret, which is about the quietest refusal available. Unresolved, and worse on a touchscreen where there is no pointer to withhold."
-        }
-      ]
-    },
-    {
-      name: "Making it a component",
-      when: "7 September",
-      items: [
-        {
-          q: "Are completed items still readable?",
-          opts: [
-            { t: "opacity .6, measures 4.58:1", u: R + "?checked=inplace", status: "chosen" },
-            { t: "opacity .5, measures 3.35:1", u: REJ, status: "rejected" }
-          ],
-          why: "<code>.6</code> is the lowest value that clears the 4.5:1 that WCAG asks for. <code>.5</code> was what shipped and it failed at 3.35:1. The author tag on a completed row is no longer dimmed at all, because it starts at 4.83:1 and any dim at all drops it below. <strong>Dim only works on a full-strength colour.</strong>"
         }
       ]
     }
@@ -415,8 +440,15 @@
   PHASES.forEach(ph => {
     const h = document.createElement("div");
     h.className = "phase";
-    h.innerHTML = "<h2>" + ph.name + '</h2><span class="when">' + ph.when + "</span>";
+    h.innerHTML = "<h2>" + ph.name + "</h2>";
     out.appendChild(h);
+
+    if (ph.note) {
+      const n = document.createElement("p");
+      n.className = "phase-note";
+      n.innerHTML = ph.note;
+      out.appendChild(n);
+    }
 
     ph.items.forEach(it => {
       const ex = document.createElement("div");

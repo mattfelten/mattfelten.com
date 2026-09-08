@@ -120,8 +120,6 @@
      design decision, so the iframe gets sized to the specimen rather
      than the specimen stretched to the iframe. */
   body.is-embed .bench-inner { gap: 0; zoom: var(--embed-scale, 1); }
-  /* Centre in whatever height the slide gives the frame, so one embed
-     rule survives every iframe size instead of needing a per-slide fit. */
   /* Top-aligned, never vertically centred. Centring splits any height
      change in both directions, which halves the apparent movement and
      wrecks the one demo that exists to show a 14px shove. Size the
@@ -550,6 +548,7 @@
         <button data-v="top" aria-pressed="false"><span class="k">2</span>Group done at top</button>
         <button data-v="collapsed" aria-pressed="false"><span class="k">3</span>Collapse done at top</button>
         <button data-v="bottom" aria-pressed="false"><span class="k">4</span>Group done at bottom</button>
+        <button data-v="collapsedbottom" aria-pressed="false"><span class="k">5</span>Collapse done at bottom</button>
       </div>
       <p class="group-note">
         In the grouped modes the Done group runs in the order things were ticked,
@@ -782,13 +781,18 @@
     if (b === "bottom") return [...open, ...done].map(it => ({ kind: "row", it }));
     if (b === "top")    return [...done, ...open].map(it => ({ kind: "row", it }));
 
-    const out = [];
+    // The two collapsed variants differ only in where the group sits.
+    // "collapsed" puts it above the open items; "collapsedbottom" puts it
+    // below them, which is what a list you are working down actually wants,
+    // since finished work gets out of the way instead of sitting between
+    // you and the next thing to do.
+    const group = [];
     if (done.length) {
-      out.push({ kind: "group", count: done.length });
-      if (S.expanded) done.forEach(it => out.push({ kind: "row", it }));
+      group.push({ kind: "group", count: done.length });
+      if (S.expanded) done.forEach(it => group.push({ kind: "row", it }));
     }
-    open.forEach(it => out.push({ kind: "row", it }));
-    return out;
+    const openRows = open.map(it => ({ kind: "row", it }));
+    return b === "collapsedbottom" ? [...openRows, ...group] : [...group, ...openRows];
   }
 
   const rowItems = () => visible().filter(v => v.kind === "row").map(v => v.it);
@@ -1254,6 +1258,7 @@
   const KEYS = {
     "1": ["seg-checked", "inplace"], "2": ["seg-checked", "top"],
     "3": ["seg-checked", "collapsed"], "4": ["seg-checked", "bottom"],
+    "5": ["seg-checked", "collapsedbottom"],
     "d": ["seg-mode", "checklist"], "t": ["seg-mode", "tasks"],
     "q": ["seg-grab", "handle"], "w": ["seg-grab", "blank"], "e": ["seg-grab", "both"],
     "a": ["seg-drop", "line"], "s": ["seg-drop", "shift"],
@@ -1280,7 +1285,7 @@
   function applyDeepLink() {
     const q = new URLSearchParams(location.search);
     const allowed = {
-      checked: ["inplace", "top", "collapsed", "bottom"],
+      checked: ["inplace", "top", "collapsed", "bottom", "collapsedbottom"],
       grab:    ["handle", "blank", "both"],
       drop:    ["line", "shift"],
       proxy:   ["compact", "full"],
