@@ -1338,7 +1338,18 @@
   function relabel() {
     ITEMS.forEach(it => {
       const n = listEl.querySelector('.row[data-id="' + it.id + '"]');
-      if (n) n.setAttribute("aria-label", rowLabel(it));
+      if (!n) return;
+      n.setAttribute("aria-label", rowLabel(it));
+      // The action buttons name the row they act on, so an edit leaves
+      // them stale too. They are only refreshed here because stopEdit
+      // no longer rebuilds the row.
+      const t = short(it.text);
+      const h = n.querySelector(".handle");
+      const pen = n.querySelector(".pencil");
+      const m = n.querySelector(".menu");
+      if (h) h.setAttribute("aria-label", "Reorder " + t);
+      if (pen) pen.setAttribute("aria-label", "Edit " + t);
+      if (m) m.setAttribute("aria-label", "Actions for " + t);
     });
   }
 
@@ -1464,6 +1475,12 @@
   // Editing. Enough of it to show what focus looks like against an
   // invisible field; the mechanics themselves were settled in R2.
   // ---------------------------------------------------------------
+  // Routes with no pointer behind them (Enter, the pencil, the menu
+  // item) have no caret position of their own, so they get one: the
+  // end of the text, which is where you would want to carry on typing.
+  //
+  // Clicking the text does NOT come through here, and must not. See
+  // the pointerdown handler below.
   function startEdit(id) {
     const p = listEl.querySelector('.row[data-id="' + id + '"] .prose');
     if (!p) return;
@@ -1479,6 +1496,39 @@
     announce("Editing. Escape to stop.");
   }
 
+  // Entering edit by clicking the text has to leave the caret where the
+  // click landed, and that is harder than it looks.
+  //
+  // Doing it on "click" is already too late: the element was not
+  // editable at pointerdown, so the browser never placed a caret, and
+  // there is nothing left to preserve by the time the click fires.
+  // Focusing and then collapsing the selection is what the first
+  // version did, and it meant every click into the middle of a word
+  // jumped to the end of the line.
+  //
+  // So the element becomes editable during pointerdown, before the
+  // browser does its own caret placement, and then gets out of the way:
+  // no focus() call and no preventDefault, because the default action
+  // in progress is exactly the one wanted. It focuses the element and
+  // drops the caret under the pointer, and a press-and-drag selects,
+  // which is the selection gesture C2 established has to survive.
+  listEl.addEventListener("pointerdown", (e) => {
+    if (e.button !== 0) return;
+    const p = e.target.closest && e.target.closest('[data-act="prose"]');
+    if (!p) return;
+    if (p.getAttribute("contenteditable") === "true") return;
+    const row = p.closest(".row");
+    p.setAttribute("contenteditable", "true");
+    // On a coarse pointer with the caret affordance, the tap works and
+    // nothing on screen ever said it would. That is the finding, so it
+    // gets logged from the path that actually demonstrates it.
+    if (S.enter === "text" && S.coarse) {
+      log('<span class="op">tap</span> <span class="dim">it worked, and nothing on screen said it would</span>');
+    }
+    log('<span class="op">edit</span> <span class="dim">entered on ' + esc(short(byId(row.dataset.id).text)) + ", caret where the click landed</span>");
+    announce("Editing. Escape to stop.");
+  });
+
   function stopEdit(p) {
     if (!p || p.getAttribute("contenteditable") !== "true") return;
     const row = p.closest(".row");
@@ -1490,7 +1540,16 @@
     p.removeAttribute("contenteditable");
     log('<span class="op">save</span> <span class="dim">autosave would fire here, 4s idle / 15s ceiling</span>');
     announce("Saved.");
-    render();
+    // Not render(). Leaving one row's text for another fires focusout
+    // on the row being left while the row being entered is already
+    // editable and already holding the caret, so a rebuild here throws
+    // away the row the pointer just landed in. Update in place: the
+    // text is already correct in the DOM, it is the derived labels and
+    // panels that are stale.
+    relabel();
+    audit();
+    contrast();
+    peek();
   }
 
   // ---------------------------------------------------------------
@@ -1513,16 +1572,10 @@
     }
     if (act === "menu") { e.stopPropagation(); openMenu(el); return; }
     if (act === "pencil") { startEdit(id); return; }
-    if (act === "prose") {
-      // On a coarse pointer with the caret affordance, tapping still
-      // works. Nothing ever said so, which is the finding: the
-      // gesture is operable and undiscoverable at the same time.
-      if (S.enter === "text" && S.coarse) {
-        log('<span class="op">tap</span> <span class="dim">it worked, and nothing on screen said it would</span>');
-      }
-      startEdit(id);
-      return;
-    }
+    // "prose" is deliberately absent: clicking the text is handled on
+    // pointerdown so the caret survives, and handling it again here
+    // would re-enter edit and throw the caret to the end, which is the
+    // exact bug that path was written to fix.
   });
 
   // ---------------------------------------------------------------
