@@ -364,11 +364,18 @@
     transition: background .12s ease, box-shadow .12s ease;
   }
 
+  /* Nothing. No background, no hairline, no edge of any kind.
+     The field is invisible at rest, on hover, and WHILE EDITING. That
+     was settled in the first round and it is not a preference, it is
+     the whole model: the text is the document, so editing it cannot
+     look like filling in a form.
+     This bench briefly shipped background + a 1px box-shadow here,
+     which is the `chrome=field` option sitting in the rejections
+     gallery under "A hairline around the field". Caret and nothing
+     else. */
   .prose[contenteditable="true"] {
     display: block;
     cursor: text;
-    background: var(--surface-1);
-    box-shadow: 0 0 0 1px var(--border-strong);
   }
 
   /* The completed treatment, settled earlier and measured at 4.58:1.
@@ -520,6 +527,25 @@
   body[data-presence="dim"] .row.is-held .cb,
   body[data-presence="dim"] .row.is-held .content,
   body[data-presence="dim"] .row.is-held .person { opacity: .42; }
+
+  /* The primary presence signal, ported from R4 where it was settled
+     rather than re-invented here. It hangs off the top-left corner,
+     deliberately away from the author tag on the right: a row already
+     carries one avatar, and a second one beside it reads as
+     co-authorship rather than as presence.
+     This bench shipped without it, which is why the row treatment below
+     was appearing on its own as an unexplained mark. The avatar says
+     WHO. The row treatment says what they are doing to it. */
+  .floater {
+    position: absolute; left: -20px; top: -3px; z-index: 6;
+    width: 20px; height: 20px; border-radius: 50%;
+    display: none; place-content: center;
+    font-size: 8.5px; font-weight: 700; letter-spacing: .02em;
+    color: #fff; background: var(--action);
+    border: 2px solid var(--surface-1);
+    box-shadow: 0 2px 5px rgba(16, 20, 28, .22);
+  }
+  .row.is-held .floater { display: grid; }
 
   /* A bar in the gutter. Non-text, so it answers to 1.4.11 at 3:1
      rather than 1.4.3 at 4.5:1, and it does not touch the words. */
@@ -1087,6 +1113,9 @@
   const byId = id => ITEMS.find(i => i.id === id);
   const idx = id => ITEMS.findIndex(i => i.id === id);
   const short = t => t.length > 34 ? t.slice(0, 34).trim() + "..." : t;
+  // First letter of each word, capped at two. Same rule as R4, so the
+  // presence avatar reads the same everywhere: Marco is M, not MA.
+  const initials = n => n.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
 
   const ICON = {
     circle: '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/></svg>',
@@ -1126,6 +1155,8 @@
         '" data-done="' + it.done + '"' + rowTab + ' role="group" aria-label="' +
         esc(rowLabel(it)) + '">' +
         '<span class="hold-bar" aria-hidden="true"></span>' +
+        (held ? '<span class="floater" aria-hidden="true" title="' + HELD_BY + ' is editing">' +
+          initials(HELD_BY) + "</span>" : "") +
         '<button class="handle" tabindex="-1" data-act="grab" aria-label="Reorder ' + esc(short(it.text)) + '">' + ICON.grip + "</button>" +
         '<button class="cb" data-act="check" data-state="' + (it.done ? "done" : "open") +
         '" aria-label="' + (it.done ? "Mark not done" : "Mark done") + '">' +
@@ -1525,9 +1556,23 @@
   }
 
   // ---------------------------------------------------------------
-  // Pointer drag. Deliberately simple: this bench is not re-testing
-  // the drag model, it is testing what is left when dragging is not
-  // available.
+  // Pointer drag, ported from the reorder bench rather than rewritten.
+  //
+  // The first version here was rewritten and got it wrong in two ways
+  // that both show up as a line pointing at the wrong slot:
+  //
+  //   It measured rows live on every pointermove, so any row that moved
+  //   changed the geometry it was measuring against mid-drag. The rects
+  //   are cached once, at grab.
+  //
+  //   It counted the dragged row among the drop targets. The row in
+  //   your hand is not a slot you can drop into, so it has to be
+  //   excluded from the ordering, which is what made the line land a
+  //   position out whenever you dragged downwards.
+  //
+  // The offset is a symmetric 6px: rows sit in a 12px gap, so half of
+  // it centres a 2px line. The old -7 / +5 pair was two different
+  // guesses at the same number.
   // ---------------------------------------------------------------
   let drag = null;
 
@@ -1537,39 +1582,53 @@
     if (!h) return;
     const row = h.closest(".row");
     e.preventDefault();
-    drag = { id: row.dataset.id, y: e.clientY };
-    row.setPointerCapture && h.setPointerCapture(e.pointerId);
+    const rows = [...listEl.querySelectorAll(".row")];
+    drag = {
+      id: row.dataset.id,
+      from: rows.indexOf(row),
+      to: rows.indexOf(row),
+      rects: rows.map(r => {
+        const b = r.getBoundingClientRect();
+        return { el: r, top: b.top, height: b.height, mid: b.top + b.height / 2 };
+      })
+    };
+    // Guarded: capturing a pointer id that is not active throws, and a
+    // throw here abandons the rest of the handler, so the drag starts
+    // half set up.
+    try { h.setPointerCapture(e.pointerId); } catch (err) { /* no active pointer */ }
     log('<span class="op">grab</span> <span class="dim">' + esc(short(byId(drag.id).text)) + "</span>");
   });
 
   window.addEventListener("pointermove", (e) => {
     if (!drag) return;
-    const rows = [...listEl.querySelectorAll(".row")];
+    // How many rows the cursor has passed, ignoring the one in hand.
+    let above = 0;
+    for (let i = 0; i < drag.rects.length; i++) {
+      if (i === drag.from) continue;
+      if (e.clientY > drag.rects[i].mid) above++;
+    }
+    drag.to = above;
+
     const line = document.getElementById("dropline");
-    let target = null;
-    for (const r of rows) {
-      const b = r.getBoundingClientRect();
-      if (e.clientY < b.top + b.height / 2) { target = r; break; }
-    }
-    const lb = listEl.getBoundingClientRect();
-    if (target) {
-      const b = target.getBoundingClientRect();
-      line.style.top = (b.top - lb.top - 7) + "px";
-      drag.before = target.dataset.id;
+    const listTop = listEl.getBoundingClientRect().top;
+    const order = drag.rects.map((r, i) => i).filter(i => i !== drag.from);
+    let y;
+    if (!order.length) y = 0;
+    else if (above >= order.length) {
+      const last = drag.rects[order[order.length - 1]];
+      y = last.top + last.height - listTop + 6;
     } else {
-      const b = rows[rows.length - 1].getBoundingClientRect();
-      line.style.top = (b.bottom - lb.top + 5) + "px";
-      drag.before = null;
+      y = drag.rects[order[above]].top - listTop - 6;
     }
+    line.style.top = y + "px";
     line.classList.add("on");
   });
 
   window.addEventListener("pointerup", () => {
     if (!drag) return;
     document.getElementById("dropline").classList.remove("on");
-    const to = drag.before === null ? ITEMS.length - 1 : idx(drag.before) - (idx(drag.id) < idx(drag.before) ? 1 : 0);
-    if (to !== idx(drag.id)) {
-      move(drag.id, Math.max(0, to));
+    if (drag.to !== drag.from) {
+      move(drag.id, drag.to);
       announce("Moved to " + (idx(drag.id) + 1) + " of " + ITEMS.length + ".");
       log('<span class="op">drop</span> <span class="dim">to ' + (idx(drag.id) + 1) + " of " + ITEMS.length + "</span>");
       reflow();
