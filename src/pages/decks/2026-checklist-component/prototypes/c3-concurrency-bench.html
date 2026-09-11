@@ -752,6 +752,17 @@
   // ---------------------------------------------------------------
   // Saving
   // ---------------------------------------------------------------
+  // After a save lands, whoever saved is now up to date: their base and
+  // their buffer both become whatever ended up stored. For Dana that also
+  // means replacing the text in the field she is typing in, which is the
+  // one place that has to be done carefully.
+  function rebase(whoKey) {
+    const w = whoKey === "you" ? you : them;
+    w.base = stored;
+    w.buf = stored;
+    if (whoKey === "you") setEditorText(edYou, stored);
+  }
+
   function save(whoKey) {
     const w = whoKey === "you" ? you : them;
     const name = whoKey === "you" ? "Dana" : "Marco";
@@ -763,6 +774,7 @@
       stored = w.buf;
       log('<span class="op">updateChecklistItem</span> <span class="dim">from ' + name +
         ', nothing had changed underneath</span>');
+      rebase(whoKey);
       paint(null);
       return;
     }
@@ -775,12 +787,13 @@
       log('<span class="op">updateChecklistItem</span> <span class="dim">from ' + name + '</span>\n' +
         '  <span class="hot">overwrote a change nobody was told about</span>\n' +
         '  <span class="dim">gone: "' + esc(clobbered) + '"</span>');
+      rebase(whoKey);
       paint({ kind: "lost", who: loser });
       return;
     }
 
     if (S.strategy === "conflict") {
-      if (whoKey !== "you") { stored = w.buf; log('<span class="op">updateChecklistItem</span> <span class="dim">from Marco</span>'); paint(null); return; }
+      if (whoKey !== "you") { stored = w.buf; log('<span class="op">updateChecklistItem</span> <span class="dim">from Marco</span>'); rebase("them"); paint(null); return; }
       $("pick-mine-t").textContent = w.buf;
       $("pick-theirs-t").textContent = stored;
       $("sheetwrap").classList.add("on");
@@ -797,6 +810,7 @@
         ? '\n  <span class="hot">' + m.conflicts + " place" + (m.conflicts > 1 ? "s" : "") +
           " both people changed the same words, so both were kept</span>"
         : '\n  <span class="dim">no overlap, nothing to garble</span>'));
+    rebase(whoKey);
     paint({ kind: "merged", parts: m.parts, conflicts: m.conflicts });
   }
 
@@ -805,11 +819,13 @@
     $("sheetwrap").classList.remove("on");
     log('<span class="op">updateChecklistItem</span> <span class="dim">from Dana, after choosing</span>\n' +
       '  <span class="hot">Marco\'s change discarded</span>');
+    rebase("you");
     paint({ kind: "lost", who: "Marco" });
   });
   $("pick-theirs").addEventListener("click", () => {
     $("sheetwrap").classList.remove("on");
     log('<span class="dim">Dana discarded her own edit and kept Marco\'s</span>');
+    rebase("you");
     paint({ kind: "lost", who: "Dana" });
   });
 
@@ -849,8 +865,26 @@
     sync();
   }
 
+  // Never reassign textContent on the field somebody is typing in.
+  // Assigning it replaces the text node, which collapses the caret to
+  // position 0, so the next keystroke lands at the start and the text
+  // comes out backwards. sync() therefore never touches edYou; the few
+  // places that genuinely need to replace it call setEditorText, which
+  // puts the caret back at the end afterwards.
+  function setEditorText(el, text) {
+    if (el.textContent === text) return;
+    const focused = document.activeElement === el;
+    el.textContent = text;
+    if (!focused) return;
+    const r = document.createRange();
+    r.selectNodeContents(el);
+    r.collapse(false);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(r);
+  }
+
   function sync() {
-    edYou.textContent = you.buf;
     edThem.textContent = them.editing ? them.buf : stored;
     $("m-state").textContent = them.editing ? "Editing" : "Not editing";
     $("meta-you").innerHTML = "started from: <b>" + (you.base === stored ? "current" : "an older version") + "</b>" +
@@ -891,6 +925,7 @@
     you.base = ORIGINAL; you.buf = ORIGINAL; you.editing = true;
     them.editing = false; them.base = null; them.buf = null;
     logEl.innerHTML = '<p class="log-empty">Type on the left, start Marco editing, then save them in either order.</p>';
+    setEditorText(edYou, ORIGINAL);
     paint(null);
   });
 
@@ -924,6 +959,7 @@
     if (sc > 0 && sc <= 4) document.documentElement.style.setProperty("--embed-scale", String(sc));
   }
 
+  setEditorText(edYou, you.buf);
   paint(null);
   applyDeepLink();
 
