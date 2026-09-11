@@ -450,10 +450,14 @@
   /* The adaptive answer: where hover cannot carry the affordance,
      the affordance becomes permanent instead. Nobody with a mouse
      pays for it. */
+  /* The settled answer, and it adds no control at all. The kebab is
+     already on the row carrying the non-drag reorder, so edit goes in
+     the same menu, the menu becomes permanently visible where hover
+     cannot reveal it, and a long press opens it. A pencil would be a
+     second control doing a job the first one was already doing. */
+  body[data-coarse="on"][data-enter="menu"] .menu,
   body[data-coarse="on"][data-enter="adaptive"] .menu,
   body[data-enter="pencil"] .menu { opacity: 1; }
-  body[data-coarse="on"][data-enter="adaptive"] .prose,
-  body[data-enter="pencil"] .prose { }
 
   .pencil {
     flex: none; width: 20px; height: 20px;
@@ -470,9 +474,15 @@
   body[data-coarse="on"][data-enter="adaptive"] .pencil { display: grid; }
 
   @media (pointer: coarse) {
+    body[data-enter="menu"] .menu { opacity: 1; }
     body[data-enter="adaptive"] .pencil { display: grid; }
     body[data-enter="adaptive"] .menu { opacity: 1; }
   }
+
+  /* Long press feedback. The press has to say it registered before the
+     menu opens, or the delay reads as the tap having failed. */
+  .row.is-pressing { background: var(--surface-2); }
+  .row.is-pressing .menu { opacity: 1; }
 
   /* ---------- Drop indicator ---------- */
   .drop-line {
@@ -548,14 +558,35 @@
     box-shadow: 0 0 0 2px var(--surface-1), 0 0 0 4px var(--action);
   }
 
-  /* The rejected one, kept visible. A 2px rule in the gutter reads
-     as decoration rather than as focus, and it collides with the
-     presence bar which lives in the same 12px of gutter. Two
-     different meanings in one column is worse than a heavy ring. */
-  body[data-focus="bar"] .row:focus-visible { outline: none; }
-  body[data-focus="bar"] .row:focus-visible::before {
+  /* A 2px rule in the gutter. Quiet, and it shares the gutter with the
+     presence bar, which is the thing to watch: focus row b, the one
+     Marco is in, and both are drawn in the same 12px column. */
+  body[data-focus="bar"] .row:focus-visible,
+  body[data-focus="rowbar"] .row:focus-visible { outline: none; }
+  body[data-focus="bar"] .row:focus-visible::before,
+  body[data-focus="rowbar"] .row:focus-visible::before {
     content: ""; position: absolute; left: -12px; top: 2px; bottom: 2px;
     width: 2px; border-radius: 1px; background: var(--action);
+  }
+
+  /* The whole row tints, and nothing else. This is the one that feels
+     best and cannot pass on its own: 1.4.11 wants 3:1 between the
+     focused and unfocused states, and the lightest grey that reaches
+     3:1 against a white row is #949494, which is a solid band rather
+     than a highlight. The readout measures it live. It also collides
+     with hover, which is already a background change, so on a pointer
+     the two states are nearly the same picture. */
+  body[data-focus="row"] .row:focus-visible {
+    outline: none;
+    background: var(--surface-3);
+  }
+
+  /* Tint plus rule. The rule carries the 3:1 so the compliance does not
+     rest on the tint, and the tint does the work the rule alone was too
+     quiet for. A focus indicator is allowed to be more than one thing,
+     and only one part of it has to clear the bar. */
+  body[data-focus="rowbar"] .row:focus-visible {
+    background: var(--surface-3);
   }
 
   /* ============================================================
@@ -805,13 +836,16 @@
     <div class="group">
       <p class="eyebrow">Entering edit on a touchscreen</p>
       <div class="seg" id="seg-enter" role="group" aria-label="Edit affordance">
-        <button data-v="text" aria-pressed="true"><span class="k">q</span>Caret on hover</button>
-        <button data-v="pencil" aria-pressed="false"><span class="k">w</span>A pencil, always</button>
-        <button data-v="adaptive" aria-pressed="false"><span class="k">e</span>A pencil only where hover cannot</button>
+        <button data-v="text" aria-pressed="true"><span class="k">q</span>Caret on hover, nothing else</button>
+        <button data-v="menu" aria-pressed="false"><span class="k">w</span>Caret, plus edit in the menu</button>
+        <button data-v="pencil" aria-pressed="false"><span class="k">e</span>A pencil, always</button>
+        <button data-v="adaptive" aria-pressed="false"><span class="k">r</span>A pencil only where hover cannot</button>
       </div>
       <p class="group-note">
         The whole resting affordance is the pointer turning into a caret.
         There is no pointer on a touchscreen, so there is nothing to turn.
+        <em>Caret plus the menu</em> adds no control: the kebab is already
+        on the row. <strong>Long press a row, or right click it.</strong>
       </p>
     </div>
 
@@ -835,10 +869,14 @@
         <button data-v="outline" aria-pressed="true"><span class="k">z</span>Outline</button>
         <button data-v="ring" aria-pressed="false"><span class="k">x</span>Offset ring</button>
         <button data-v="bar" aria-pressed="false"><span class="k">c</span>Gutter rule</button>
+        <button data-v="row" aria-pressed="false"><span class="k">v</span>Tint the whole row</button>
+        <button data-v="rowbar" aria-pressed="false"><span class="k">b</span>Tint the row, and the rule</button>
       </div>
       <p class="group-note">
         <kbd>Tab</kbd> through the list to see it. The field is invisible at
         rest by design, so focus cannot be the field appearing.
+        <strong>The tint on its own cannot pass 1.4.11</strong>, and the
+        readout below says by how much.
       </p>
     </div>
 
@@ -912,6 +950,7 @@
           <tbody id="ctable-body"></tbody>
         </table>
         <div class="cnote" id="cnote"></div>
+        <div class="cnote" id="fnote"></div>
       </section>
 
       <section class="log" aria-label="Log">
@@ -1165,8 +1204,23 @@
         (pass ? "Passes" : "Fails") + "</span></td></tr>";
     };
 
+    // Focus is measured against 1.4.11, which asks for 3:1 between the
+    // focused and unfocused states of the same pixels. A tint is
+    // compared against the unfocused row; a rule or an outline is
+    // compared against the surface it sits on.
+    const tint = rgb("#F4F4F5");
+    const FOCUS = [
+      { key: "outline", what: "Outline", sub: "2px of --action around the row", fg: BLUE, bg: WHITE, min: 3 },
+      { key: "ring", what: "Offset ring", sub: "the same colour, held off the edge", fg: BLUE, bg: WHITE, min: 3 },
+      { key: "bar", what: "Gutter rule", sub: "2px in the left gutter", fg: BLUE, bg: WHITE, min: 3 },
+      { key: "row", what: "Tint the whole row", sub: "the tint against the unfocused row, alone", fg: tint, bg: WHITE, min: 3 },
+      { key: "rowbar", what: "Tint the row, and the rule", sub: "the rule carries it, the tint does not have to", fg: BLUE, bg: tint, min: 3 }
+    ];
+
     body.innerHTML =
       ROWS.map(r => line(r, r.key === S.presence)).join("") +
+      '<tr><td colspan="5" style="border-top:1px solid var(--bench-line);padding:7px 14px;font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--bench-ink-3);">Focus, against 1.4.11 at 3:1</td></tr>' +
+      FOCUS.map(r => line(r, r.key === S.focus)).join("") +
       '<tr><td colspan="5" style="border-top:1px solid var(--bench-line);padding:7px 14px;font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--bench-ink-3);">Already settled, for the rule</td></tr>' +
       REF.map(r => line(r, false)).join("");
 
@@ -1192,6 +1246,29 @@
         "This one is already words, so it goes into the row's label without a live region. " +
         "The cost is width on a row that is already carrying an author tag.";
     }
+
+    const FOCUS_NOTE = {
+      row: "<strong>The tint on its own cannot pass, and no kinder grey fixes it.</strong> " +
+        "1.4.11 wants 3:1 between the focused and unfocused states, and the lightest grey that " +
+        "reaches 3:1 against a white row is #949494, which is a solid band rather than a highlight. " +
+        "It also collides with hover, which is already a background change, so on a pointer the " +
+        "two states are very nearly the same picture.",
+      rowbar: "<strong>This is the one to take.</strong> A focus indicator is allowed to be more " +
+        "than one thing, and only one part of it has to clear the bar. The rule carries the 3:1, " +
+        "so the tint is free to be as quiet as it likes and do the job the rule alone was too " +
+        "subtle for. Watch the gutter on row b, which is the row Marco is in: the focus rule and " +
+        "the presence bar are drawn in the same 12px column, and that collision is the open cost.",
+      bar: "Quiet, and it passes on the rule's own contrast. The thing to watch is the gutter on " +
+        "row b, the row Marco is in, where the focus rule and the presence bar land in the same " +
+        "12px column.",
+      outline: "Passes comfortably and never touches layout. It is also the least interesting " +
+        "answer, and on a row whose text runs the full width it draws a rectangle around most of " +
+        "the list.",
+      ring: "Passes on the same colour as the outline, held off the edge so the glyphs get some " +
+        "air. Costs a second surface-coloured ring to sit against."
+    };
+    const fn = document.getElementById("fnote");
+    if (fn) fn.innerHTML = FOCUS_NOTE[S.focus] || "";
   }
 
   // ---------------------------------------------------------------
@@ -1472,6 +1549,115 @@
   });
 
   // ---------------------------------------------------------------
+  // Long press, and right click
+  //
+  // The same menu, reached the way each input reaches a context menu.
+  // This is why the menu answer costs nothing extra: the control is
+  // already on the row, so touch needs a gesture to reach it rather
+  // than a new affordance to look at.
+  //
+  // 500ms, the platform figure both iOS and Android use. Movement
+  // cancels, because a press that turned into a scroll or a drag was
+  // never a long press.
+  // ---------------------------------------------------------------
+  const LONG_PRESS_MS = 500;
+  const MOVE_TOLERANCE = 10;
+  const coarse = () => S.coarse || window.matchMedia("(pointer: coarse)").matches;
+
+  let press = null;
+  let pendingTap = null;
+
+  listEl.addEventListener("pointerdown", (e) => {
+    if (e.button !== 0) return;
+    const row = e.target.closest && e.target.closest(".row");
+    if (!row) return;
+    // Buttons keep their own behaviour. A long press on the checkbox
+    // should tick it, not open a menu about it.
+    if (e.target.closest("button")) return;
+    // Touch only. A mouse already has right click, and a mouse resting
+    // on a word for half a second is reading, not asking for a menu.
+    if (!coarse()) return;
+    const target = row.dataset.id;
+    press = {
+      id: target, x: e.clientX, y: e.clientY,
+      timer: setTimeout(() => {
+        press = null;
+        pendingTap = null;
+        row.classList.remove("is-pressing");
+        openMenuAt(row, e.clientX, e.clientY);
+        log('<span class="op">long press</span> <span class="hot">' + LONG_PRESS_MS + 'ms</span> <span class="dim">opened the row menu</span>');
+        announce("Row menu open.");
+      }, LONG_PRESS_MS)
+    };
+    row.classList.add("is-pressing");
+  });
+
+  function cancelPress() {
+    if (!press) return;
+    clearTimeout(press.timer);
+    const row = listEl.querySelector('.row[data-id="' + press.id + '"]');
+    if (row) row.classList.remove("is-pressing");
+    press = null;
+  }
+
+  window.addEventListener("pointermove", (e) => {
+    if (!press) return;
+    if (Math.abs(e.clientX - press.x) > MOVE_TOLERANCE || Math.abs(e.clientY - press.y) > MOVE_TOLERANCE) {
+      cancelPress();
+      pendingTap = null;
+    }
+  });
+
+  window.addEventListener("pointerup", () => {
+    cancelPress();
+    // The press ended before the hold fired, so it was a tap. On a
+    // coarse pointer this is where editing starts, because pointerdown
+    // deliberately did not commit.
+    if (!pendingTap) return;
+    const id = pendingTap.id;
+    pendingTap = null;
+    const p = listEl.querySelector('.row[data-id="' + id + '"] .prose');
+    if (!p || p.getAttribute("contenteditable") === "true") return;
+    startEdit(id);
+    if (S.enter === "text") {
+      log('<span class="op">tap</span> <span class="dim">it worked, and nothing on screen said it would</span>');
+    }
+  });
+
+  window.addEventListener("pointercancel", () => { cancelPress(); pendingTap = null; });
+
+  // Right click gets the same menu. Without this the browser's own
+  // context menu appears over a row that has its own actions, which is
+  // the version every real app fixes.
+  listEl.addEventListener("contextmenu", (e) => {
+    const row = e.target.closest && e.target.closest(".row");
+    if (!row) return;
+    e.preventDefault();
+    cancelPress();
+    openMenuAt(row, e.clientX, e.clientY);
+    log('<span class="op">right click</span> <span class="dim">opened the row menu</span>');
+  });
+
+  // Open the menu at a point rather than under the kebab, which is what
+  // a press or a right click wants. Clamped so it never leaves the
+  // viewport on a narrow screen.
+  function openMenuAt(row, x, y) {
+    menuFor = row.dataset.id;
+    popup.classList.add("on");
+    const pb = popup.getBoundingClientRect();
+    let left = Math.min(x, window.innerWidth - pb.width - 8);
+    let top = y + 4;
+    if (top + pb.height > window.innerHeight - 8) top = Math.max(8, y - pb.height - 4);
+    popup.style.left = (Math.max(8, left) + window.scrollX) + "px";
+    popup.style.top = (top + window.scrollY) + "px";
+    const at = idx(menuFor);
+    popup.querySelector('[data-act="up"]').disabled = at === 0;
+    popup.querySelector('[data-act="down"]').disabled = at === ITEMS.length - 1;
+    const first = [...popup.querySelectorAll("button")].find(b => !b.disabled);
+    if (first) first.focus();
+  }
+
+  // ---------------------------------------------------------------
   // Editing. Enough of it to show what focus looks like against an
   // invisible field; the mechanics themselves were settled in R2.
   // ---------------------------------------------------------------
@@ -1518,6 +1704,11 @@
     if (!p) return;
     if (p.getAttribute("contenteditable") === "true") return;
     const row = p.closest(".row");
+    // On a coarse pointer the press is ambiguous until it ends: a tap
+    // edits, a hold opens the menu. Entering edit here would commit to
+    // the tap before knowing, and would also place a caret the long
+    // press then has to take away. Wait for pointerup instead.
+    if (coarse()) { pendingTap = { id: row.dataset.id }; return; }
     p.setAttribute("contenteditable", "true");
     // On a coarse pointer with the caret affordance, the tap works and
     // nothing on screen ever said it would. That is the finding, so it
@@ -1676,10 +1867,12 @@
   const KEYS = {
     "1": ["seg-reorder", "drag"], "2": ["seg-reorder", "keyboard"],
     "3": ["seg-reorder", "menu"], "4": ["seg-reorder", "both"],
-    "q": ["seg-enter", "text"], "w": ["seg-enter", "pencil"], "e": ["seg-enter", "adaptive"],
+    "q": ["seg-enter", "text"], "w": ["seg-enter", "menu"],
+    "e": ["seg-enter", "pencil"], "r": ["seg-enter", "adaptive"],
     "a": ["seg-presence", "dim"], "s": ["seg-presence", "bar"],
     "d": ["seg-presence", "tint"], "f": ["seg-presence", "label"],
-    "z": ["seg-focus", "outline"], "x": ["seg-focus", "ring"], "c": ["seg-focus", "bar"]
+    "z": ["seg-focus", "outline"], "x": ["seg-focus", "ring"], "c": ["seg-focus", "bar"],
+    "v": ["seg-focus", "row"], "b": ["seg-focus", "rowbar"]
   };
   window.addEventListener("keydown", (e) => {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -1696,9 +1889,9 @@
     const q = new URLSearchParams(location.search);
     const allowed = {
       reorder: ["drag", "keyboard", "menu", "both"],
-      enter: ["text", "pencil", "adaptive"],
+      enter: ["text", "menu", "pencil", "adaptive"],
       presence: ["dim", "bar", "tint", "label"],
-      focus: ["outline", "ring", "bar"]
+      focus: ["outline", "ring", "bar", "row", "rowbar"]
     };
     Object.keys(allowed).forEach(k => {
       const v = q.get(k);
