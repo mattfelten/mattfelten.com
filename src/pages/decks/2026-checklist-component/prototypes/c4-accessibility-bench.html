@@ -590,6 +590,43 @@
   }
 
   /* ============================================================
+     THE ROW IS THE OBJECT
+     The one that treats hover and focus as the same idea at two
+     strengths rather than as two unrelated treatments.
+
+     Hover says this row WILL be active. Focus says it IS. "Active"
+     is deliberately vague: being reordered, being edited, being
+     anything the row is about to do. So both get the same tint, and
+     what separates will-be from is is the ring, not two greys nobody
+     can tell apart.
+
+     focus-WITHIN, not focus-visible. Focus landing on the text, the
+     checkbox, the handle or the menu all mean the same thing at the
+     row level, which is: this row. Lighting up the row rather than
+     the part is what makes the row read as the object instead of a
+     container full of separately interesting controls.
+
+     The ring is on the row's own edge rather than in the gutter, and
+     that is what frees presence to keep the gutter. The rowbar
+     option above puts it in the gutter instead, where it lands on
+     exactly the same pixels as the presence bar.
+     ============================================================ */
+  body[data-focus="object"] .row:hover,
+  body[data-focus="object"] .row:focus-within {
+    background: var(--surface-3);
+  }
+  body[data-focus="object"] .row:focus-within {
+    outline: none;
+    box-shadow: inset 0 0 0 1.5px var(--action);
+  }
+  /* The controls keep their own focus rings. The row says which row;
+     the ring on the control says which control, and dropping that
+     would leave a keyboard user knowing where they are but not what
+     Enter is about to do. The text is the exception: while editing,
+     the caret already says it. */
+  body[data-focus="object"] .prose:focus-visible { outline: none; }
+
+  /* ============================================================
      C4 - FORCED COLORS
      Windows high contrast replaces every author colour with a small
      system palette, and drops background-color and box-shadow
@@ -871,6 +908,7 @@
         <button data-v="bar" aria-pressed="false"><span class="k">c</span>Gutter rule</button>
         <button data-v="row" aria-pressed="false"><span class="k">v</span>Tint the whole row</button>
         <button data-v="rowbar" aria-pressed="false"><span class="k">b</span>Tint the row, and the rule</button>
+        <button data-v="object" aria-pressed="false"><span class="k">n</span>The row is the object</button>
       </div>
       <p class="group-note">
         <kbd>Tab</kbd> through the list to see it. The field is invisible at
@@ -1214,7 +1252,8 @@
       { key: "ring", what: "Offset ring", sub: "the same colour, held off the edge", fg: BLUE, bg: WHITE, min: 3 },
       { key: "bar", what: "Gutter rule", sub: "2px in the left gutter", fg: BLUE, bg: WHITE, min: 3 },
       { key: "row", what: "Tint the whole row", sub: "the tint against the unfocused row, alone", fg: tint, bg: WHITE, min: 3 },
-      { key: "rowbar", what: "Tint the row, and the rule", sub: "the rule carries it, the tint does not have to", fg: BLUE, bg: tint, min: 3 }
+      { key: "rowbar", what: "Tint the row, and the rule", sub: "the rule carries it, the tint does not have to", fg: BLUE, bg: tint, min: 3 },
+      { key: "object", what: "The row is the object", sub: "same tint as hover, and the row's own ring carries it", fg: BLUE, bg: tint, min: 3 }
     ];
 
     body.innerHTML =
@@ -1265,7 +1304,15 @@
         "answer, and on a row whose text runs the full width it draws a rectangle around most of " +
         "the list.",
       ring: "Passes on the same colour as the outline, held off the edge so the glyphs get some " +
-        "air. Costs a second surface-coloured ring to sit against."
+        "air. Costs a second surface-coloured ring to sit against.",
+      object: "<strong>Hover and focus are the same idea at two strengths, not two treatments.</strong> " +
+        "Hover says this row will be active, focus says it is, and active covers reordering, editing " +
+        "or anything else the row is about to do. Both get the same tint, and the ring is what " +
+        "separates will-be from is, because two greys a hair apart separate nothing. It uses " +
+        "<em>focus-within</em>, so focus on the text, the checkbox or the menu all light the row: " +
+        "the row reads as the object rather than a container of separately interesting parts. The " +
+        "controls keep their own rings, since the row says which row and the ring says which control. " +
+        "<strong>And the ring sits on the row's own edge, which leaves the gutter to presence.</strong>"
     };
     const fn = document.getElementById("fnote");
     if (fn) fn.innerHTML = FOCUS_NOTE[S.focus] || "";
@@ -1872,7 +1919,7 @@
     "a": ["seg-presence", "dim"], "s": ["seg-presence", "bar"],
     "d": ["seg-presence", "tint"], "f": ["seg-presence", "label"],
     "z": ["seg-focus", "outline"], "x": ["seg-focus", "ring"], "c": ["seg-focus", "bar"],
-    "v": ["seg-focus", "row"], "b": ["seg-focus", "rowbar"]
+    "v": ["seg-focus", "row"], "b": ["seg-focus", "rowbar"], "n": ["seg-focus", "object"]
   };
   window.addEventListener("keydown", (e) => {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -1891,7 +1938,7 @@
       reorder: ["drag", "keyboard", "menu", "both"],
       enter: ["text", "menu", "pencil", "adaptive"],
       presence: ["dim", "bar", "tint", "label"],
-      focus: ["outline", "ring", "bar", "row", "rowbar"]
+      focus: ["outline", "ring", "bar", "row", "rowbar", "object"]
     };
     Object.keys(allowed).forEach(k => {
       const v = q.get(k);

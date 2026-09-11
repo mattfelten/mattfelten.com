@@ -522,13 +522,14 @@
         {
           q: "What does focus look like on a field with no edges?",
           opts: [
-            { t: "Tint the row, plus a rule in the gutter", u: X + "?focus=rowbar", status: "chosen" },
+            { t: "The row is the object: the hover tint, plus a ring", u: X + "?focus=object", status: "chosen" },
+            { t: "Tint the row, plus a rule in the gutter", u: X + "?focus=rowbar" },
             { t: "A rule in the gutter", u: X + "?focus=bar" },
             { t: "An outline", u: X + "?focus=outline" },
             { t: "An offset ring", u: X + "?focus=ring" },
             { t: "Tint the whole row, on its own", u: X + "?focus=row", status: "rejected" }
           ],
-          why: "The field is invisible at rest by design, so focus cannot be the field appearing: there is nothing to appear. It has to be painted, and painted with something outside layout, or arriving in a row shoves every row under it. <strong>Tinting the row is the one that feels right and it cannot pass on its own:</strong> 1.4.11 wants 3:1 between the focused and unfocused states, and the lightest grey reaching 3:1 against a white row is #949494, a solid band rather than a highlight. A tint at 1.10:1 is not close. But a focus indicator is allowed to be more than one thing, and <strong>only one part of it has to clear the bar</strong>, so the gutter rule carries the contrast and the tint is free to stay quiet. The open cost: the rule and the presence bar are drawn in exactly the same 12px column, same width, same colour, so taking this means presence moves to words."
+          why: "<strong>The row is the object, not the field inside it.</strong> That reframes the question: hover and focus stop being two treatments and become one idea at two strengths. Hover says this row <em>will</em> be active, focus says it <em>is</em>, and active covers being reordered, being edited, or anything else the row is about to do. So both get the same tint, and the ring is what separates will-be from is, because two greys a hair apart separate nothing. It keys off <em>focus-within</em>, so focus landing on the text, the checkbox or the menu all light the row: that is what makes it read as an object rather than a container of separately interesting parts. The controls keep their own rings, since the row says which row and the ring says which control. <strong>Tinting alone cannot carry it:</strong> a focus indicator needs 3:1 against what is next to it, and a tint at 1.10:1 is not close, with the lightest passing grey being #949494, a solid band rather than a highlight. A focus indicator is allowed to be more than one thing and only one part has to clear the bar, so the ring pays. Putting that ring on the row's own edge rather than in the gutter is also what <strong>leaves the gutter to presence</strong>, which the gutter-rule version collides with pixel for pixel."
         },
         {
           q: "What survives Windows high contrast?",
@@ -563,7 +564,7 @@
             { t: "Say it in words", u: X + "?presence=label" },
             { t: "Fade the row to 42%", u: X + "?presence=dim", status: "rejected" }
           ],
-          why: "A bar. <strong>There is no opacity value that saves the fade</strong>, because the treatment works by weakening the text and the text is what has to stay readable. Every replacement here moves the signal off the words and onto something that is not carrying text contrast: the bar answers to the 3:1 non-text minimum instead of 4.5:1 and measures 8.72:1, and the words never change at all. Words are the honest runner-up and the only option a screen reader gets for free, but they cost width on a row already carrying an author tag. The bench computes all four ratios on every toggle rather than quoting them. <strong>Now contested by the focus decision:</strong> the chosen focus treatment draws a rule in the same 12px gutter, at the same width and the same colour, so the two are not merely adjacent, they are identical pixels. One of them has to move, and words is where presence goes if it is the one that does."
+          why: "A bar. <strong>There is no opacity value that saves the fade</strong>, because the treatment works by weakening the text and the text is what has to stay readable. Every replacement here moves the signal off the words and onto something that is not carrying text contrast: the bar answers to the 3:1 non-text minimum instead of 4.5:1 and measures 8.72:1, and the words never change at all. Words are the honest runner-up and the only option a screen reader gets for free, but they cost width on a row already carrying an author tag. The bench computes all four ratios on every toggle rather than quoting them. <strong>The bar survives because focus went to the row's own edge rather than into the gutter.</strong> The gutter-rule version of focus draws in the same 12px column at the same width and the same colour, so the two would not be merely adjacent, they would be identical pixels. Choosing the row as the object is what keeps the gutter unambiguous."
         },
         {
           q: "Does being in a row lock everyone else out?",
