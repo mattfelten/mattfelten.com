@@ -246,6 +246,10 @@
       <b>Concurrency bench</b>
       <span>Two people editing one item. Stage the collision and watch what each strategy does to the stored text.</span>
     </a>
+    <a class="tool" href="/decks/2026-checklist-component/prototypes/c4-accessibility-bench">
+      <b>Accessibility bench</b>
+      <span>Four inputs scored against one question, and a contrast table computed on every toggle rather than quoted.</span>
+    </a>
     <a class="tool" href="/decks/2026-checklist-component/prototypes/edit-presence-bench">
       <b>Presence bench</b>
       <span>Two screens on one list. All seven multiplayer dimensions, plus the wire log.</span>
@@ -273,6 +277,7 @@
   const N = "/decks/2026-checklist-component/prototypes/c1-nesting-bench";
   const A = "/decks/2026-checklist-component/prototypes/c2-arbitration-bench";
   const C = "/decks/2026-checklist-component/prototypes/c3-concurrency-bench";
+  const X = "/decks/2026-checklist-component/prototypes/c4-accessibility-bench";
 
   // Grouped by the part of the component they belong to, not by which
   // bench a switch happens to live in and not by when the work happened.
@@ -471,7 +476,7 @@
           opts: [
             { t: "See what reordering is left with", u: A + "?prose=inline&paint=1" }
           ],
-          why: "<strong>No, and that is what the next round is for.</strong> Once the text belongs to editing and selection, reordering is really handle-first, and a handle that appears on hover is exactly the affordance a keyboard, a touchscreen and a screen reader cannot use. Interaction design alone cannot break this tie: every arrangement is somebody losing something. What settles it comes from outside, in Accessibility."
+          why: "<strong>Not on its own.</strong> Once the text belongs to editing and selection, reordering is really handle-first, and a handle that appears on hover is exactly the affordance a keyboard, a touchscreen and a screen reader cannot use. Interaction design alone cannot break this tie: every arrangement is somebody losing something. What settles it comes from outside, in Accessibility, and the answer is that the arrangement is fine once the handle has stopped being the only way in."
         }
       ]
     },
@@ -493,9 +498,44 @@
             { t: "Fade it with the row", u: REJ, status: "rejected" }
           ],
           why: "No. The name is already a quiet grey and only measures 4.83:1 at full strength, so fading it at all drops it under: at 60% it is 2.33:1. <strong>Fading only works on a full-strength colour.</strong> That rule is what rules out dimming a row to show presence, further down."
+        },
+        {
+          q: "Can you move a row without dragging?",
+          opts: [
+            { t: "A handle you drag, and nothing else", u: X + "?reorder=drag", status: "rejected" },
+            { t: "Lift it with the keyboard", u: X + "?reorder=keyboard" },
+            { t: "Move up and Move down in the row menu", u: X + "?reorder=menu" },
+            { t: "The menu, with dragging kept on top", u: X + "?reorder=both", status: "chosen" }
+          ],
+          why: "The menu, and the handle stays. <strong>SC 2.5.7 asks for a single pointer alternative, and a keyboard is not a single pointer.</strong> The keyboard path arrived a round early, in nesting, and it covers a keyboard and a screen reader, which is why it felt like the answer at the time. It does nothing for a touchscreen, which has no hover to reveal the handle and no keyboard to replace it. The bench scores all four settings against all four inputs: drag alone covers one, keyboard covers three, the menu covers everything. Once the menu exists the handle stops being load-bearing and goes back to being the nice way to do it."
+        },
+        {
+          q: "How do you start editing on a touchscreen?",
+          opts: [
+            { t: "The pointer becomes a caret", u: X + "?enter=text&coarse=1", status: "rejected" },
+            { t: "A pencil on every row, always", u: X + "?enter=pencil", status: "rejected" },
+            { t: "A pencil only where hover cannot work", u: X + "?enter=adaptive&coarse=1", status: "chosen" }
+          ],
+          why: "The whole resting affordance is the pointer turning into a caret, and there is no pointer to turn. Tapping the text does still work, which is the trap: <strong>the gesture is operable and undiscoverable at the same time</strong>, so it reads as a bug rather than a secret. A pencil on every row fixes it and charges everybody, including the people whose hover was working. Under a coarse pointer query the affordance becomes permanent only where it has to be."
+        },
+        {
+          q: "What does focus look like on a field with no edges?",
+          opts: [
+            { t: "An outline", u: X + "?focus=outline", status: "chosen" },
+            { t: "An offset ring", u: X + "?focus=ring" },
+            { t: "A rule in the gutter", u: X + "?focus=bar", status: "rejected" }
+          ],
+          why: "The field is invisible at rest by design, so focus cannot be the field appearing: there is nothing to appear. It has to be painted, and it has to be painted with something outside layout, or arriving in a row shoves every row under it. Outline and box-shadow both qualify. The gutter rule is out because the gutter already belongs to presence, and <strong>two meanings in one 12px column is worse than a heavy ring.</strong>"
+        },
+        {
+          q: "What survives Windows high contrast?",
+          opts: [
+            { t: "What the component paints today", u: X + "?forced=1&presence=bar", status: "rejected" },
+            { t: "The same thing, repaired with outlines", u: X + "?forced=1&fix=1&presence=bar", status: "chosen" }
+          ],
+          why: "Forced colors drops <code>background-color</code> and <code>box-shadow</code> outright, and every treatment this component owns is painted with one of those two, because the no-layout-shift rule ruled out border and padding at the start. <strong>The rule that protected the glyphs is the rule that makes the component vanish here.</strong> The presence bar, the drop indicator and the lifted row all disappear with nothing left behind. Outline is the one non-layout property forced colors keeps, so that is what the repair is built from."
         }
-      ],
-      note: "The next round adds the rest: reordering by keyboard, a way to move a row without dragging at all, a focus state that works with an invisible field, and what any of this does on a touchscreen where there is no pointer."
+      ]
     },
     {
       name: "Multiplayer viewing",
@@ -510,7 +550,17 @@
             { t: "A wash, a name and a caret", u: P + "?mark=wash&others=1", status: "rejected" },
             { t: "Nothing at all", u: P + "?mark=none&others=1" }
           ],
-          why: "The avatar. It hangs in the left gutter so it never sits beside the author's name, where a second face reads as co-authorship rather than presence. <strong>Which treatment the row itself gets is still open:</strong> fading was the leaning until it measured 2.67:1, which is the same rule that stopped the author's name fading."
+          why: "The avatar. It hangs in the left gutter so it never sits beside the author's name, where a second face reads as co-authorship rather than presence. Fading the row was the leaning until it measured 2.67:1, which is the same rule that stopped the author's name fading. What replaces the fade is settled below."
+        },
+        {
+          q: "So what does the row itself do, if it cannot fade?",
+          opts: [
+            { t: "A bar in the gutter", u: X + "?presence=bar", status: "chosen" },
+            { t: "A wash behind the row", u: X + "?presence=tint" },
+            { t: "Say it in words", u: X + "?presence=label" },
+            { t: "Fade the row to 42%", u: X + "?presence=dim", status: "rejected" }
+          ],
+          why: "A bar. <strong>There is no opacity value that saves the fade</strong>, because the treatment works by weakening the text and the text is what has to stay readable. Every replacement here moves the signal off the words and onto something that is not carrying text contrast: the bar answers to the 3:1 non-text minimum instead of 4.5:1 and measures 8.72:1, and the words never change at all. Words are the honest runner-up and the only option a screen reader gets for free, but they cost width on a row already carrying an author tag. The bench computes all four ratios on every toggle rather than quoting them."
         },
         {
           q: "Does being in a row lock everyone else out?",
@@ -534,9 +584,10 @@
           q: "What does it look like if you are not allowed to edit?",
           opts: [
             { t: "As someone who can", u: P + "?me=dana&others=1" },
-            { t: "As someone who cannot", u: P + "?me=guest&others=1" }
+            { t: "As someone who cannot", u: P + "?me=guest&others=1" },
+            { t: "On a touchscreen, where the affordance is a pencil", u: X + "?enter=adaptive&coarse=1" }
           ],
-          why: "With an invisible field, 'no' is said only by the pointer <em>not</em> turning into a caret, which is about the quietest refusal available. Unresolved, and worse on a touchscreen where there is no pointer to withhold."
+          why: "With an invisible field, 'no' is said only by the pointer <em>not</em> turning into a caret, which is about the quietest refusal available. <strong>The touch half of this answered itself in the accessibility round:</strong> once the affordance on a coarse pointer is a pencil rather than a cursor change, read-only is a pencil that is not there, which is at least a visible difference. The pointer case is still the quiet one, and it is still open."
         }
       ]
     }

@@ -1,0 +1,1676 @@
+<meta charset="utf-8">
+<title>Checklist: accessibility bench</title>
+
+<style>
+  /* ============================================================
+     BENCH CHROME - achromatic, theme-aware instrument panel.
+     The only saturated colour on the page belongs to the
+     specimen (the blue drop indicator). Everything else is grey.
+     ============================================================ */
+  :root {
+    --bench-bg: #EDEEF1;
+    --bench-panel: #F6F7F9;
+    --bench-ink: #242830;
+    --bench-ink-2: #5C6371;
+    --bench-ink-3: #878E9C;
+    --bench-line: #D8DBE2;
+    --bench-line-2: #C4C9D3;
+    --bench-raise: #FFFFFF;
+    --bench-sunk: #E4E6EB;
+    --bench-focus: #1E40AF;
+    --shadow-lift: 0 1px 2px rgba(16, 20, 28, .06), 0 8px 24px rgba(16, 20, 28, .10);
+    --shadow-mount: 0 1px 3px rgba(16, 20, 28, .08), 0 18px 50px rgba(16, 20, 28, .10);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bench-bg: #15171C;
+      --bench-panel: #1C1F26;
+      --bench-ink: #DDE0E6;
+      --bench-ink-2: #99A0AD;
+      --bench-ink-3: #6E7481;
+      --bench-line: #282C35;
+      --bench-line-2: #363B46;
+      --bench-raise: #23262E;
+      --bench-sunk: #121419;
+      --bench-focus: #7C97E8;
+      --shadow-lift: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .45);
+      --shadow-mount: 0 1px 3px rgba(0, 0, 0, .5), 0 24px 60px rgba(0, 0, 0, .55);
+    }
+  }
+
+  :root[data-theme="light"] {
+    --bench-bg: #EDEEF1;
+    --bench-panel: #F6F7F9;
+    --bench-ink: #242830;
+    --bench-ink-2: #5C6371;
+    --bench-ink-3: #878E9C;
+    --bench-line: #D8DBE2;
+    --bench-line-2: #C4C9D3;
+    --bench-raise: #FFFFFF;
+    --bench-sunk: #E4E6EB;
+    --bench-focus: #1E40AF;
+    --shadow-lift: 0 1px 2px rgba(16, 20, 28, .06), 0 8px 24px rgba(16, 20, 28, .10);
+    --shadow-mount: 0 1px 3px rgba(16, 20, 28, .08), 0 18px 50px rgba(16, 20, 28, .10);
+  }
+
+  :root[data-theme="dark"] {
+    --bench-bg: #15171C;
+    --bench-panel: #1C1F26;
+    --bench-ink: #DDE0E6;
+    --bench-ink-2: #99A0AD;
+    --bench-ink-3: #6E7481;
+    --bench-line: #282C35;
+    --bench-line-2: #363B46;
+    --bench-raise: #23262E;
+    --bench-sunk: #121419;
+    --bench-focus: #7C97E8;
+    --shadow-lift: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .45);
+    --shadow-mount: 0 1px 3px rgba(0, 0, 0, .5), 0 24px 60px rgba(0, 0, 0, .55);
+  }
+
+  /* ============================================================
+     SPECIMEN TOKENS - locked to @m/tokens light mode.
+     Mission Control has no dark mode, so the specimen never
+     inverts. It stays a light sample mounted on the bench.
+     ============================================================ */
+  .specimen, .proxy {
+    --surface-1: #FFFFFF;
+    --surface-2: #FAFAFA;
+    --surface-3: #F4F4F5;
+    --border-soft: #EFEFF1;
+    --border-default: #E4E4E7;
+    --border-strong: #D4D4D8;
+    --text-default: #1C1917;
+    --text-subdued: #6B7280;
+    --action: #1E40AF;
+    --positive: #10B981;
+    --negative: #DC2626;
+    --amber: #F59E0B;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--bench-bg);
+    color: var(--bench-ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------------------------------------------------------------
+     EMBED MODE - ?embed=1
+     Strips the instrument down to the specimen so a slide can carry
+     one idea at a size readable from across a room. The rail's 10px
+     labels are unreadable at presentation distance anyway, and a
+     dense panel competes with the speaker; the configuration it
+     would set arrives through deep-link params instead.
+     The full bench is always one click away for questions.
+     --------------------------------------------------------------- */
+  body.is-embed .rail,
+  body.is-embed .mount-label,
+  body.is-embed .log,
+  body.is-embed .note { display: none; }
+  body.is-embed .frame { display: block; min-height: 0; }
+  /* Keep the bench's own max-width. The specimen's line length is a
+     design decision, so the iframe gets sized to the specimen rather
+     than the specimen stretched to the iframe. */
+  body.is-embed .bench-inner { gap: 0; zoom: var(--embed-scale, 1); }
+  /* The audit and the contrast table are the argument on two of the
+     slides, so embed keeps whichever one was asked for by param and
+     drops the other. Default is neither: just the specimen. */
+  body.is-embed .audit,
+  body.is-embed .contrast { display: none; }
+  body.is-embed[data-show="audit"] .audit,
+  body.is-embed[data-show="contrast"] .contrast { display: block; }
+  body.is-embed[data-show="audit"] .bench-inner,
+  body.is-embed[data-show="contrast"] .bench-inner { gap: 20px; }
+  /* Top-aligned, never vertically centred. Centring splits any height
+     change in both directions, which halves the apparent movement and
+     wrecks the one demo that exists to show a 14px shove. Size the
+     iframe to the specimen instead. */
+  body.is-embed .bench {
+    padding: 28px;
+    min-height: 0;
+    justify-content: flex-start;
+  }
+
+  /* ---------- Page frame ---------- */
+  .frame {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    min-height: 100vh;
+    align-items: start;
+  }
+
+  @media (max-width: 1040px) {
+    .frame { grid-template-columns: minmax(0, 1fr); }
+    .rail { position: static !important; height: auto !important; border-right: 0 !important; border-bottom: 1px solid var(--bench-line); }
+  }
+
+  /* ---------- Control rail ---------- */
+  .rail {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--bench-panel);
+    border-right: 1px solid var(--bench-line);
+    padding: 28px 24px 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+  }
+
+  .rail-head { display: flex; flex-direction: column; gap: 6px; }
+  .rail-title { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+  .rail-sub { font-size: 12px; line-height: 1.55; color: var(--bench-ink-2); margin: 0; }
+
+  .eyebrow {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.11em;
+    text-transform: uppercase; color: var(--bench-ink-3); margin: 0;
+  }
+
+  .eyebrow.primary { color: var(--bench-focus); }
+
+  .group { display: flex; flex-direction: column; gap: 10px; }
+  .group-note { font-size: 11.5px; line-height: 1.5; color: var(--bench-ink-3); margin: 0; }
+  .group-note em { font-style: italic; }
+
+  .group.featured {
+    background: var(--bench-raise);
+    border: 1px solid var(--bench-line-2);
+    border-radius: 10px;
+    padding: 14px;
+    margin: 0 -2px;
+  }
+
+  /* ---------- Segmented switch ---------- */
+  .seg {
+    display: flex; flex-direction: column; gap: 1px;
+    background: var(--bench-line);
+    border: 1px solid var(--bench-line);
+    border-radius: 8px; overflow: hidden;
+  }
+
+  .seg button {
+    appearance: none; border: 0; text-align: left;
+    background: var(--bench-raise); color: var(--bench-ink-2);
+    padding: 9px 11px; font: inherit; font-size: 12.5px;
+    cursor: pointer; display: flex; align-items: baseline; gap: 8px;
+    transition: background .12s ease, color .12s ease;
+  }
+
+  .seg button:hover { background: var(--bench-sunk); color: var(--bench-ink); }
+  .seg button[aria-pressed="true"] { background: var(--bench-ink); color: var(--bench-bg); font-weight: 550; }
+  .seg button:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: -2px; }
+  .seg .k {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10px; opacity: .55; flex: none; width: 12px;
+  }
+
+  /* ---------- Checkbox switches ---------- */
+  .switch {
+    display: flex; align-items: flex-start; gap: 9px;
+    font-size: 12.5px; color: var(--bench-ink-2); cursor: pointer; padding: 3px 0;
+  }
+
+  .switch input {
+    appearance: none; width: 15px; height: 15px; margin: 2px 0 0; flex: none;
+    border: 1px solid var(--bench-line-2); border-radius: 4px;
+    background: var(--bench-raise); cursor: pointer;
+    display: grid; place-content: center;
+    transition: background .12s ease, border-color .12s ease;
+  }
+
+  .switch input::after {
+    content: ""; width: 7px; height: 4px;
+    border-left: 1.75px solid var(--bench-bg);
+    border-bottom: 1.75px solid var(--bench-bg);
+    transform: rotate(-45deg) translate(0.5px, -1px);
+    opacity: 0;
+  }
+
+  .switch input:checked { background: var(--bench-ink); border-color: var(--bench-ink); }
+  .switch input:checked::after { opacity: 1; }
+  .switch input:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 2px; }
+  .switch:hover { color: var(--bench-ink); }
+  .switch .sub { color: var(--bench-ink-3); }
+
+  /* ---------- Main bench area ---------- */
+  .bench {
+    padding: 40px 40px 72px;
+    display: flex; flex-direction: column; gap: 24px;
+    align-items: center; min-width: 0;
+  }
+
+  @media (max-width: 640px) { .bench { padding: 26px 16px 56px; } }
+
+  .bench-inner {
+    width: 100%; max-width: 620px;
+    display: flex; flex-direction: column; gap: 24px; min-width: 0;
+  }
+
+  .mount-label {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+  }
+  .mount-label p { margin: 0; font-size: 12px; color: var(--bench-ink-3); }
+
+  /* ============================================================
+     SPECIMEN - Mission Control widget, real tokens
+     ============================================================ */
+  .specimen {
+    background: var(--surface-1);
+    border: 1px solid var(--border-default);
+    border-radius: 12px;
+    box-shadow: var(--shadow-mount);
+    font-family: "Noto Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--text-default);
+    font-size: 14px; line-height: 20px;
+    padding: 16px 24px 20px;
+    overflow: hidden;
+  }
+
+  .spec-head {
+    display: flex; align-items: center; gap: 8px;
+    padding-bottom: 12px; margin-bottom: 4px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .spec-head h2 { font-size: 14px; font-weight: 600; margin: 0; flex: 1; }
+  .spec-head .count { font-size: 12px; color: var(--text-subdued); font-variant-numeric: tabular-nums; }
+  .spec-icon { width: 20px; height: 20px; display: grid; place-content: center; color: var(--text-subdued); }
+
+  .list {
+    display: flex; flex-direction: column; gap: 12px;
+    padding-top: 12px; position: relative;
+  }
+
+  /* ---------- Row ---------- */
+  .row {
+    position: relative;
+    display: flex; align-items: flex-start; gap: 12px;
+    margin: -2px; padding: 2px;
+    border-radius: 8px; background: transparent;
+  }
+
+  .row:hover { background: var(--surface-2); }
+  .row.is-lifted { background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--action); }
+
+  .handle {
+    position: absolute; left: -22px; top: 3px;
+    width: 18px; height: 18px;
+    display: grid; place-content: center;
+    border-radius: 4px; color: var(--text-subdued);
+    opacity: 0; cursor: grab;
+    transition: opacity .1s ease, background .1s ease;
+    touch-action: none; background: transparent; border: 0; padding: 0;
+  }
+
+  .handle:hover { background: var(--surface-3); color: var(--text-default); }
+  .handle:active { cursor: grabbing; }
+  .row:hover .handle, .row:focus .handle, .row:focus-within .handle { opacity: 1; }
+
+  .cb {
+    flex: none; width: 20px; height: 20px;
+    display: grid; place-content: center; cursor: pointer;
+    background: none; border: 0; padding: 0; color: var(--text-subdued);
+  }
+  .cb:hover { color: var(--text-default); }
+  .cb[data-state="done"] { color: var(--positive); }
+  .cb:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; border-radius: 4px; }
+
+  .content { flex: 1 1 auto; min-width: 0; }
+
+  /* ============================================================
+     THE INLINE FIELD
+     Carried in from the mechanics bench unchanged. Every edit
+     treatment paints with background or box-shadow, never border
+     or padding, because those take layout space and shove the
+     glyphs. That rule is what makes the focus question below
+     awkward: the field is invisible at rest by design.
+     ============================================================ */
+  .prose {
+    display: inline;
+    outline: none;
+    border-radius: 4px;
+    white-space: pre-wrap; word-break: break-word;
+    transition: background .12s ease, box-shadow .12s ease;
+  }
+
+  .prose[contenteditable="true"] {
+    display: block;
+    cursor: text;
+    background: var(--surface-1);
+    box-shadow: 0 0 0 1px var(--border-strong);
+  }
+
+  /* The completed treatment, settled earlier and measured at 4.58:1.
+     Kept here because the contrast readout quotes it as the one fade
+     that does pass, which is what makes the presence dim's failure
+     a treatment problem rather than a number problem. */
+  .row[data-done="true"] .content { text-decoration: line-through; opacity: .6; }
+  /* The author tag is NOT dimmed on completed rows. --text-subdued is
+     only 4.83:1 at full strength, so any dim at all fails 1.4.3:
+     .6 measures 2.33:1. Dim is a treatment for full-strength colour only. */
+  .row[data-done="true"] .person { opacity: 1; }
+
+  .person {
+    flex: none; display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; color: var(--text-subdued);
+    background: var(--surface-3); border-radius: 999px;
+    padding: 2px 8px 2px 2px; max-width: 150px;
+  }
+
+  .avatar {
+    width: 16px; height: 16px; border-radius: 999px;
+    background: var(--action); color: #fff;
+    font-size: 9px; font-weight: 600;
+    display: grid; place-content: center; flex: none;
+  }
+
+  .person span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* ---------- Row menu ---------- */
+  .menu {
+    flex: none; width: 20px; height: 20px;
+    display: grid; place-content: center; border-radius: 4px;
+    color: var(--text-subdued); background: none; border: 0; padding: 0;
+    opacity: 0; cursor: pointer;
+  }
+  .row:hover .menu, .row:focus-within .menu { opacity: 1; }
+  .menu:hover { background: var(--surface-3); color: var(--text-default); }
+  .menu:focus-visible { opacity: 1; outline: 2px solid var(--action); outline-offset: 1px; }
+
+  .popup {
+    position: absolute; z-index: 30; min-width: 176px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-default);
+    border-radius: 8px; box-shadow: var(--shadow-lift);
+    padding: 4px; display: none;
+  }
+  .popup.on { display: block; }
+  .popup button {
+    display: flex; align-items: center; gap: 8px; width: 100%;
+    appearance: none; border: 0; background: none; font: inherit;
+    font-size: 13px; color: var(--text-default);
+    padding: 7px 9px; border-radius: 5px; cursor: pointer; text-align: left;
+  }
+  .popup button:hover:not(:disabled) { background: var(--surface-3); }
+  .popup button:focus-visible { outline: 2px solid var(--action); outline-offset: -2px; }
+  .popup button:disabled { color: var(--text-subdued); opacity: .55; cursor: default; }
+  .popup .sep { height: 1px; background: var(--border-soft); margin: 4px 2px; }
+
+  /* ============================================================
+     C4 - THE NON-DRAG PATH
+     SC 2.5.7 asks that anything done with a dragging movement can
+     also be done with a single pointer. The keyboard path arrived
+     early, in the nesting round. It is necessary and it is not
+     sufficient: a keyboard is not a single pointer, and a
+     touchscreen has no keyboard.
+     ============================================================ */
+
+  /* The handle is hover-only, which is the affordance C2 ended on.
+     On a coarse pointer there is no hover, so it never appears at
+     all: not small, not awkward, absent. */
+  body[data-reorder="menu"] .handle { display: none; }
+
+  /* The reorder items only exist in the menu when the menu is
+     carrying the non-drag path. */
+  body[data-reorder="drag"] .popup [data-act="up"],
+  body[data-reorder="drag"] .popup [data-act="down"],
+  body[data-reorder="keyboard"] .popup [data-act="up"],
+  body[data-reorder="keyboard"] .popup [data-act="down"],
+  body[data-reorder="drag"] .popup .sep,
+  body[data-reorder="keyboard"] .popup .sep { display: none; }
+
+  /* ---------- Coarse pointer simulation ---------- */
+  /* Not a media query, because a media query cannot be toggled from
+     a slide and the whole point is to watch the affordances leave.
+     The real rule is the media query below; this mirrors it so the
+     loss can be demonstrated on a laptop with a trackpad. */
+  body[data-coarse="on"] .row:hover { background: transparent; }
+  body[data-coarse="on"] .row:hover .handle,
+  body[data-coarse="on"] .row:hover .menu { opacity: 0; }
+  body[data-coarse="on"] .handle:hover { background: transparent; color: var(--text-subdued); }
+  body[data-coarse="on"] .prose { cursor: default; }
+  body[data-coarse="on"] .row:focus-within .menu { opacity: 1; }
+
+  /* The adaptive answer: where hover cannot carry the affordance,
+     the affordance becomes permanent instead. Nobody with a mouse
+     pays for it. */
+  body[data-coarse="on"][data-enter="adaptive"] .menu,
+  body[data-enter="pencil"] .menu { opacity: 1; }
+  body[data-coarse="on"][data-enter="adaptive"] .prose,
+  body[data-enter="pencil"] .prose { }
+
+  .pencil {
+    flex: none; width: 20px; height: 20px;
+    display: none; place-content: center; border-radius: 4px;
+    color: var(--text-subdued); background: none; border: 0; padding: 0;
+    cursor: pointer;
+  }
+  .pencil:hover { background: var(--surface-3); color: var(--text-default); }
+  .pencil:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; }
+  /* Always there, for everybody, on every input. The honest cost of
+     the simplest fix: a control on every row forever. */
+  body[data-enter="pencil"] .pencil { display: grid; }
+  /* Only where hover cannot do the job. */
+  body[data-coarse="on"][data-enter="adaptive"] .pencil { display: grid; }
+
+  @media (pointer: coarse) {
+    body[data-enter="adaptive"] .pencil { display: grid; }
+    body[data-enter="adaptive"] .menu { opacity: 1; }
+  }
+
+  /* ---------- Drop indicator ---------- */
+  .drop-line {
+    position: absolute; left: 0; right: 0; height: 2px;
+    background: var(--action); border-radius: 1px;
+    display: none; pointer-events: none;
+  }
+  .drop-line.on { display: block; }
+
+  /* ============================================================
+     C4 - PRESENCE WITHOUT DIMMING
+     The dim measured 2.67:1 and there is no opacity value that
+     saves it, because the treatment works by weakening the text.
+     Every replacement below leaves the text at full strength and
+     puts the signal somewhere that is not carrying text contrast.
+     ============================================================ */
+
+  /* The rejected baseline, kept so the comparison is made rather
+     than asserted. #1C1917 at .42 on #FFFFFF resolves to #A09E9E. */
+  body[data-presence="dim"] .row.is-held .cb,
+  body[data-presence="dim"] .row.is-held .content,
+  body[data-presence="dim"] .row.is-held .person { opacity: .42; }
+
+  /* A bar in the gutter. Non-text, so it answers to 1.4.11 at 3:1
+     rather than 1.4.3 at 4.5:1, and it does not touch the words. */
+  .hold-bar {
+    position: absolute; left: -12px; top: 2px; bottom: 2px;
+    width: 2px; border-radius: 1px; display: none;
+    background: var(--action);
+  }
+  body[data-presence="bar"] .row.is-held .hold-bar { display: block; }
+
+  /* A wash behind the row. The text stays at full strength and the
+     background moves instead, so the ratio drops by a hair rather
+     than by half. The readout prints the exact cost. */
+  body[data-presence="tint"] .row.is-held { background: rgba(30, 64, 175, .055); }
+
+  /* Words. The only treatment that says what is happening rather
+     than signalling it, and the only one a screen reader gets for
+     free. */
+  .hold-label {
+    flex: none; display: none; align-items: center; gap: 5px;
+    font-size: 11px; line-height: 14px; padding: 2px 8px;
+    border-radius: 999px; white-space: nowrap;
+    color: #1E40AF; background: rgba(30, 64, 175, .09);
+  }
+  body[data-presence="label"] .row.is-held .hold-label { display: inline-flex; }
+
+  /* ============================================================
+     C4 - FOCUS AGAINST AN INVISIBLE FIELD
+     The field has no outline at rest, on hover, or while editing.
+     So focus cannot be "the field appears": there is no field to
+     appear. It has to be painted, and it has to be painted with
+     something that does not take layout space, or entering edit
+     shoves every row below it.
+     ============================================================ */
+  body[data-focus="outline"] .row:focus-visible {
+    outline: 2px solid var(--action); outline-offset: 1px;
+  }
+  body[data-focus="outline"] .prose:focus-visible {
+    outline: 2px solid var(--action); outline-offset: 2px;
+  }
+
+  /* box-shadow, matching how the edit chrome is already painted.
+     Sits outside layout exactly like outline does, and takes a
+     radius that follows the row. */
+  body[data-focus="ring"] .row:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--surface-1), 0 0 0 4px var(--action);
+  }
+  body[data-focus="ring"] .prose:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--surface-1), 0 0 0 4px var(--action);
+  }
+
+  /* The rejected one, kept visible. A 2px rule in the gutter reads
+     as decoration rather than as focus, and it collides with the
+     presence bar which lives in the same 12px of gutter. Two
+     different meanings in one column is worse than a heavy ring. */
+  body[data-focus="bar"] .row:focus-visible { outline: none; }
+  body[data-focus="bar"] .row:focus-visible::before {
+    content: ""; position: absolute; left: -12px; top: 2px; bottom: 2px;
+    width: 2px; border-radius: 1px; background: var(--action);
+  }
+
+  /* ============================================================
+     C4 - FORCED COLORS
+     Windows high contrast replaces every author colour with a small
+     system palette, and drops background-color and box-shadow
+     entirely. Every treatment this component owns is painted with
+     one of those two, because the no-layout-shift rule ruled out
+     border and padding from the start. The rule that protected the
+     glyphs is the rule that makes the whole component vanish here.
+
+     Checked in the browser rather than reasoned about, and the first
+     answer was wrong. The edit chrome does go, but the field does not
+     end up with no edge: focus-visible still paints one, because
+     browsers always match focus-visible on a text-entry element. What
+     actually happens is subtler and worse to explain, which is that
+     "this is a field" and "you are in it" collapse into a single
+     signal that only exists while focused.
+
+     The unambiguous losses are the three treatments that carry
+     meaning while nobody is focused on them: the presence bar, the
+     drop indicator, and the lifted row. Those disappear with nothing
+     left behind, which is why the repair below is about them.
+     ============================================================ */
+
+  /* The simulation. A real forced-colors session cannot be entered
+     from a slide, so this reproduces the two rules that matter:
+     author colours collapse to the system palette, and background
+     plus box-shadow are stripped. */
+  body[data-forced="on"] .specimen {
+    --surface-1: #000000;
+    --surface-2: #000000;
+    --surface-3: #000000;
+    --border-soft: #FFFFFF;
+    --border-default: #FFFFFF;
+    --border-strong: #FFFFFF;
+    --text-default: #FFFFFF;
+    --text-subdued: #FFFFFF;
+    --action: #1AEBFF;
+    --positive: #FFFFFF;
+    --negative: #FFFFFF;
+    background: #000000;
+  }
+  body[data-forced="on"] .prose[contenteditable="true"] {
+    background: none;
+    box-shadow: none;
+  }
+  body[data-forced="on"] .row:hover,
+  body[data-forced="on"] .row.is-lifted,
+  body[data-forced="on"] .row.is-held { background: none; box-shadow: none; }
+  body[data-forced="on"] .hold-bar,
+  body[data-forced="on"] .hold-label { background: none; }
+  body[data-forced="on"] .hold-label { color: #1AEBFF; box-shadow: inset 0 0 0 1px #1AEBFF; }
+  body[data-forced="on"] .avatar { background: none; box-shadow: inset 0 0 0 1px #FFFFFF; color: #FFFFFF; }
+  body[data-forced="on"] .person { background: none; box-shadow: inset 0 0 0 1px #FFFFFF; }
+  body[data-forced="on"] .popup { background: #000000; }
+
+  /* The repair, under the simulation. Anything that was carrying
+     meaning through background or shadow gets an outline instead,
+     because outline is the one non-layout property forced colors
+     keeps. */
+  body[data-forced="on"][data-fix="on"] .prose[contenteditable="true"] {
+    outline: 2px solid #1AEBFF; outline-offset: 2px;
+  }
+  body[data-forced="on"][data-fix="on"] .row.is-lifted {
+    outline: 2px dashed #1AEBFF; outline-offset: 1px;
+  }
+  body[data-forced="on"][data-fix="on"] .hold-bar {
+    background: #1AEBFF; forced-color-adjust: none;
+  }
+  body[data-forced="on"][data-fix="on"] .drop-line {
+    background: #1AEBFF; forced-color-adjust: none;
+  }
+
+  /* The real rule, for a real forced-colors session. The simulation
+     above is a teaching device; this is the deliverable, and it is
+     written so the file is correct in an actual high contrast
+     browser rather than only demonstrating the problem. */
+  @media (forced-colors: active) {
+    .prose[contenteditable="true"] {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+    }
+    .row:focus-visible,
+    .prose:focus-visible {
+      outline: 2px solid Highlight !important;
+      outline-offset: 1px;
+      box-shadow: none !important;
+    }
+    .row.is-lifted {
+      outline: 2px dashed Highlight;
+      outline-offset: 1px;
+      box-shadow: none;
+    }
+    .hold-bar,
+    .drop-line {
+      background: Highlight;
+      forced-color-adjust: none;
+    }
+    .hold-label {
+      outline: 1px solid CanvasText;
+      color: CanvasText;
+    }
+    /* The completed fade goes too. Opacity survives forced colors,
+       so a line-through plus full-strength text is what carries it,
+       and the fade is removed rather than left to stack with a
+       palette that is already at maximum contrast. */
+    .row[data-done="true"] .content { opacity: 1; }
+  }
+
+  /* ============================================================
+     AUDIT SCORECARD
+     ============================================================ */
+  .audit { background: var(--bench-panel); border: 1px solid var(--bench-line); border-radius: 10px; overflow: hidden; }
+  .audit-head { padding: 11px 14px; border-bottom: 1px solid var(--bench-line); display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .audit-head .eyebrow { flex: 1; }
+  .tally { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; border-radius: 4px; padding: 3px 8px; }
+  .tally.bad { color: var(--negative); border: 1px solid currentColor; }
+  .tally.ok  { color: var(--bench-ink-2); border: 1px solid var(--bench-line-2); }
+
+  .audit-row { display: grid; grid-template-columns: 150px 1fr; gap: 14px; padding: 12px 14px; border-top: 1px dashed var(--bench-line); align-items: start; }
+  .audit-row:first-of-type { border-top: 0; }
+  .audit-what { font-size: 13px; font-weight: 600; color: var(--bench-ink); }
+  .audit-what em { display: block; font-weight: 400; font-style: normal; font-size: 11.5px; color: var(--bench-ink-3); margin-top: 2px; }
+  .audit-state { font-size: 12.5px; line-height: 1.55; color: var(--bench-ink-2); }
+  .pill { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; border-radius: 4px; padding: 2px 6px; margin-right: 8px; }
+  .pill.full { background: var(--bench-ink); color: var(--bench-bg); }
+  .pill.part { color: #8A6D1F; border: 1px solid currentColor; }
+  .pill.lost { color: var(--negative); border: 1px solid currentColor; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .pill.part { color: #D9B44A; } }
+  :root[data-theme="dark"] .pill.part { color: #D9B44A; }
+
+  .verdict { padding: 12px 14px; border-top: 1px solid var(--bench-line); font-size: 12.5px; line-height: 1.6; color: var(--bench-ink-2); }
+  .verdict strong { color: var(--bench-ink); }
+
+  /* ============================================================
+     CONTRAST READOUT
+     Computed from the resolved colours on every toggle, not typed
+     in. The numbers in the design note came out of this, so if a
+     treatment changes the table changes with it.
+     ============================================================ */
+  .contrast { background: var(--bench-panel); border: 1px solid var(--bench-line); border-radius: 10px; overflow: hidden; }
+  .contrast-head { padding: 11px 14px; border-bottom: 1px solid var(--bench-line); display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .contrast-head .eyebrow { flex: 1; }
+  .ctable { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  .ctable th, .ctable td { text-align: left; padding: 9px 14px; border-top: 1px dashed var(--bench-line); vertical-align: middle; }
+  .ctable thead th { border-top: 0; font-size: 10px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--bench-ink-3); padding-top: 11px; padding-bottom: 7px; }
+  .ctable td.n { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric: tabular-nums; color: var(--bench-ink); }
+  .ctable td.sw { width: 30px; padding-right: 0; }
+  .ctable tr.current td { background: var(--bench-raise); }
+  .ctable tr.current td:first-child { box-shadow: inset 2px 0 0 var(--bench-focus); }
+  .swatch { display: block; width: 16px; height: 16px; border-radius: 4px; border: 1px solid var(--bench-line-2); }
+  .verdict-c { font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; border-radius: 4px; padding: 2px 6px; }
+  .verdict-c.pass { background: var(--bench-ink); color: var(--bench-bg); }
+  .verdict-c.fail { color: var(--negative); border: 1px solid currentColor; }
+  .cnote { padding: 12px 14px; border-top: 1px solid var(--bench-line); font-size: 12.5px; line-height: 1.6; color: var(--bench-ink-2); }
+  .cnote strong { color: var(--bench-ink); }
+
+  /* ============================================================
+     MUTATION LOG
+     ============================================================ */
+  .log {
+    background: var(--bench-panel);
+    border: 1px solid var(--bench-line);
+    border-radius: 10px; overflow: hidden;
+  }
+  .log-head {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 14px; border-bottom: 1px solid var(--bench-line); flex-wrap: wrap;
+  }
+  .log-head .eyebrow { flex: 1; }
+
+  .log-body {
+    max-height: 250px; overflow-y: auto; overflow-x: auto;
+    padding: 12px 14px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11.5px; line-height: 1.65; color: var(--bench-ink-2);
+  }
+  .log-empty { color: var(--bench-ink-3); font-style: italic; }
+  .entry { padding: 7px 0; border-top: 1px dashed var(--bench-line); white-space: pre-wrap; }
+  .entry:first-child { border-top: 0; padding-top: 0; }
+  .entry .op { color: var(--bench-ink); font-weight: 600; }
+  .entry .dim { color: var(--bench-ink-3); }
+  .entry .hot { color: var(--bench-focus); font-weight: 600; }
+
+  /* ---------- Notes ---------- */
+  .note {
+    background: var(--bench-panel);
+    border: 1px solid var(--bench-line);
+    border-left: 2px solid var(--bench-line-2);
+    border-radius: 8px; padding: 14px 16px;
+    font-size: 12.5px; line-height: 1.6; color: var(--bench-ink-2);
+  }
+  .note strong { color: var(--bench-ink); font-weight: 600; }
+  .note p { margin: 0; }
+  .note p + p { margin-top: 8px; }
+
+  kbd {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10.5px; border: 1px solid var(--bench-line-2);
+    border-bottom-width: 2px; border-radius: 4px; padding: 1px 5px;
+    background: var(--bench-raise); color: var(--bench-ink); white-space: nowrap;
+  }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+
+  /* The announced-structure panel, so what a screen reader is told
+     is visible rather than described. Same idea as the nesting
+     bench's inspector. */
+  .sr-peek { padding: 12px 14px; border-top: 1px solid var(--bench-line); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; color: var(--bench-ink-2); }
+  .sr-peek .lbl { display: block; font-family: ui-sans-serif, system-ui, sans-serif; font-size: 10px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--bench-ink-3); margin-bottom: 6px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+  }
+</style>
+
+<div class="frame">
+
+  <aside class="rail">
+    <div class="rail-head">
+      <h1 class="rail-title">Accessibility bench</h1>
+      <p class="rail-sub">
+        The round that settles whether a hover-only drag handle is good enough.
+        It is not, and the interesting part is which fix covers everybody.
+      </p>
+    </div>
+
+    <div class="group featured">
+      <p class="eyebrow primary">The non-drag path</p>
+      <div class="seg" id="seg-reorder" role="group" aria-label="Non-drag reordering">
+        <button data-v="drag" aria-pressed="true"><span class="k">1</span>Drag only</button>
+        <button data-v="keyboard" aria-pressed="false"><span class="k">2</span>Keyboard lift</button>
+        <button data-v="menu" aria-pressed="false"><span class="k">3</span>Move up / down in the menu</button>
+        <button data-v="both" aria-pressed="false"><span class="k">4</span>Both</button>
+      </div>
+      <p class="group-note">
+        SC 2.5.7 asks for a <em>single pointer</em> alternative to any dragging
+        movement. A keyboard is not a single pointer. Watch the audit below
+        change as this moves.
+      </p>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Entering edit on a touchscreen</p>
+      <div class="seg" id="seg-enter" role="group" aria-label="Edit affordance">
+        <button data-v="text" aria-pressed="true"><span class="k">q</span>Caret on hover</button>
+        <button data-v="pencil" aria-pressed="false"><span class="k">w</span>A pencil, always</button>
+        <button data-v="adaptive" aria-pressed="false"><span class="k">e</span>A pencil only where hover cannot</button>
+      </div>
+      <p class="group-note">
+        The whole resting affordance is the pointer turning into a caret.
+        There is no pointer on a touchscreen, so there is nothing to turn.
+      </p>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Somebody is in this row</p>
+      <div class="seg" id="seg-presence" role="group" aria-label="Presence treatment">
+        <button data-v="dim" aria-pressed="true"><span class="k">a</span>Dim the row</button>
+        <button data-v="bar" aria-pressed="false"><span class="k">s</span>A bar in the gutter</button>
+        <button data-v="tint" aria-pressed="false"><span class="k">d</span>A wash behind it</button>
+        <button data-v="label" aria-pressed="false"><span class="k">f</span>Say it in words</button>
+      </div>
+      <p class="group-note">
+        The dim measures 2.67:1 and no opacity value saves it. Marco is
+        holding the second row.
+      </p>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Focus, on a field with no edges</p>
+      <div class="seg" id="seg-focus" role="group" aria-label="Focus treatment">
+        <button data-v="outline" aria-pressed="true"><span class="k">z</span>Outline</button>
+        <button data-v="ring" aria-pressed="false"><span class="k">x</span>Offset ring</button>
+        <button data-v="bar" aria-pressed="false"><span class="k">c</span>Gutter rule</button>
+      </div>
+      <p class="group-note">
+        <kbd>Tab</kbd> through the list to see it. The field is invisible at
+        rest by design, so focus cannot be the field appearing.
+      </p>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Inspect</p>
+      <label class="switch">
+        <input type="checkbox" id="chk-coarse">
+        <span>Simulate a touchscreen<span class="sub"><br>Kills hover everywhere, the way a finger does</span></span>
+      </label>
+      <label class="switch">
+        <input type="checkbox" id="chk-forced">
+        <span>Simulate forced colors<span class="sub"><br>Strips background and box-shadow, collapses the palette</span></span>
+      </label>
+      <label class="switch">
+        <input type="checkbox" id="chk-fix">
+        <span>Apply the forced-colors repair<span class="sub"><br>Outline is the one non-layout property that survives</span></span>
+      </label>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Keyboard</p>
+      <p class="group-note">
+        <kbd>Tab</kbd> to a row, <kbd>Space</kbd> to lift, <kbd>&#8593;</kbd><kbd>&#8595;</kbd>
+        to move, <kbd>Space</kbd> to drop. <kbd>Enter</kbd> on the text starts
+        editing, <kbd>Escape</kbd> leaves it.
+      </p>
+    </div>
+  </aside>
+
+  <main class="bench">
+    <div class="bench-inner">
+
+      <div class="mount-label">
+        <p>Checklist, accessibility pass</p>
+        <p>C4</p>
+      </div>
+
+      <section class="specimen" aria-label="Checklist specimen">
+        <div class="spec-head">
+          <div class="spec-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h7" stroke-linecap="round"/></svg>
+          </div>
+          <h2>Checklist</h2>
+          <span class="count" id="count"></span>
+        </div>
+        <div class="list" id="list"></div>
+      </section>
+
+      <section class="audit" aria-label="Audit">
+        <div class="audit-head">
+          <p class="eyebrow">Can you reorder a row</p>
+          <span class="tally" id="tally"></span>
+        </div>
+        <div id="audit-rows"></div>
+        <div class="verdict" id="verdict"></div>
+        <div class="sr-peek">
+          <span class="lbl">What the row announces</span>
+          <span id="sr-peek-body"></span>
+        </div>
+      </section>
+
+      <section class="contrast" aria-label="Contrast readout">
+        <div class="contrast-head">
+          <p class="eyebrow">Measured, not asserted</p>
+          <span class="tally ok">Computed on every toggle</span>
+        </div>
+        <table class="ctable">
+          <thead>
+            <tr><th colspan="2">Treatment</th><th>Resolves to</th><th>Ratio</th><th>1.4.3 AA</th></tr>
+          </thead>
+          <tbody id="ctable-body"></tbody>
+        </table>
+        <div class="cnote" id="cnote"></div>
+      </section>
+
+      <section class="log" aria-label="Log">
+        <div class="log-head"><p class="eyebrow">What that did</p></div>
+        <div class="log-body" id="log">
+          <p class="log-empty">Move a row, or tab into one.</p>
+        </div>
+      </section>
+
+      <div class="note">
+        <p>
+          <strong>The keyboard path was necessary and it was never sufficient.</strong>
+          It arrived a round early, in nesting, and it covers a keyboard and a
+          screen reader on a desktop. It does nothing at all for a touchscreen,
+          which has neither hover to reveal the handle nor a keyboard to replace
+          it. Turn on <em>Simulate a touchscreen</em> with <em>Keyboard lift</em>
+          selected and there is no way to move a row at all.
+        </p>
+        <p>
+          <strong>Move up and Move down in the row menu is the one path that covers
+          everybody</strong>, and it is also the smallest thing to build. It is a
+          single pointer, so it satisfies 2.5.7 literally. It is a button, so the
+          keyboard and the screen reader get it for nothing. The handle stays for
+          people who like dragging, and it stops being the only way in.
+        </p>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<div class="popup" id="popup" role="menu" aria-label="Row actions">
+  <button data-act="up" role="menuitem">Move up</button>
+  <button data-act="down" role="menuitem">Move down</button>
+  <div class="sep"></div>
+  <button data-act="edit" role="menuitem">Edit text</button>
+  <button data-act="del" role="menuitem" disabled>Delete</button>
+</div>
+
+<div class="sr-only" role="status" aria-live="polite" id="announce"></div>
+
+<script>
+  const ITEMS = [
+    { id: "a", text: "Reserved Instance coverage dropped to 61% this month after the m5 fleet was retired.", who: "Dana", done: false },
+    { id: "b", text: "Budget alert thresholds are still pointing at the old prod account.", who: "Marco", done: false },
+    { id: "c", text: "Walk through the S3 lifecycle policy proposal.", who: "Dana", done: true },
+    { id: "d", text: "Quick status on the GuardDuty findings backlog.", who: "Priya", done: false }
+  ];
+
+  // Marco is parked in his own row, which is what every presence
+  // treatment below is painting.
+  const HELD = "b";
+  const HELD_BY = "Marco";
+
+  const S = {
+    reorder: "drag",
+    enter: "text",
+    presence: "dim",
+    focus: "outline",
+    coarse: false,
+    forced: false,
+    fix: false
+  };
+
+  const listEl = document.getElementById("list");
+  const logEl = document.getElementById("log");
+  const countEl = document.getElementById("count");
+  const announceEl = document.getElementById("announce");
+  const popup = document.getElementById("popup");
+
+  const esc = s => String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  const byId = id => ITEMS.find(i => i.id === id);
+  const idx = id => ITEMS.findIndex(i => i.id === id);
+  const short = t => t.length > 34 ? t.slice(0, 34).trim() + "..." : t;
+
+  const ICON = {
+    circle: '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/></svg>',
+    check: '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/><path d="M5.8 9.2l2.2 2.2 4.2-4.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    grip: '<svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="4" cy="2.5" r="1.1"/><circle cx="8" cy="2.5" r="1.1"/><circle cx="4" cy="6" r="1.1"/><circle cx="8" cy="6" r="1.1"/><circle cx="4" cy="9.5" r="1.1"/><circle cx="8" cy="9.5" r="1.1"/></svg>',
+    kebab: '<svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><circle cx="7" cy="3" r="1.2"/><circle cx="7" cy="7" r="1.2"/><circle cx="7" cy="11" r="1.2"/></svg>',
+    pencil: '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9.5 2.2l2.3 2.3-6.6 6.6-2.9.6.6-2.9z" stroke-linejoin="round"/></svg>'
+  };
+
+  // ---------------------------------------------------------------
+  // Render. Repaint in place is not needed here because nothing in
+  // this bench animates on entry, but the row is still rebuilt as a
+  // whole only on a settings change, never on a keystroke.
+  // ---------------------------------------------------------------
+  function render() {
+    const b = document.body.dataset;
+    b.reorder = S.reorder;
+    b.enter = S.enter;
+    b.presence = S.presence;
+    b.focus = S.focus;
+    b.coarse = S.coarse ? "on" : "off";
+    b.forced = S.forced ? "on" : "off";
+    b.fix = S.fix ? "on" : "off";
+
+    listEl.innerHTML = ITEMS.map(it => {
+      const held = it.id === HELD;
+      return '<div class="row' + (held ? " is-held" : "") + '" data-id="' + it.id +
+        '" data-done="' + it.done + '" tabindex="0" role="group" aria-label="' +
+        esc(rowLabel(it)) + '">' +
+        '<span class="hold-bar" aria-hidden="true"></span>' +
+        '<button class="handle" data-act="grab" aria-label="Reorder ' + esc(short(it.text)) + '">' + ICON.grip + "</button>" +
+        '<button class="cb" data-act="check" data-state="' + (it.done ? "done" : "open") +
+        '" aria-label="' + (it.done ? "Mark not done" : "Mark done") + '">' +
+        (it.done ? ICON.check : ICON.circle) + "</button>" +
+        '<span class="content"><span class="prose" data-act="prose">' + esc(it.text) + "</span></span>" +
+        (held ? '<span class="hold-label">' + HELD_BY + " is editing</span>" : "") +
+        '<span class="person"><span class="avatar">' + it.who[0] + "</span><span>" + it.who + "</span></span>" +
+        '<button class="pencil" data-act="pencil" aria-label="Edit ' + esc(short(it.text)) + '">' + ICON.pencil + "</button>" +
+        '<button class="menu" data-act="menu" aria-haspopup="menu" aria-label="Actions for ' + esc(short(it.text)) + '">' + ICON.kebab + "</button>" +
+        "</div>";
+    }).join("") + '<div class="drop-line" id="dropline"></div>';
+
+    // A rebuild drops the lifted class but not the lifted variable, so
+    // without this, changing any setting while a row is up leaves the
+    // keyboard user still holding a row with nothing on screen saying
+    // so, and the arrow keys still moving it. Re-apply it rather than
+    // cancelling the lift: changing a setting is not a reason to drop
+    // what somebody is carrying.
+    if (lifted) {
+      const held = listEl.querySelector('.row[data-id="' + lifted + '"]');
+      if (held) held.classList.add("is-lifted");
+      else lifted = null;
+    }
+
+    countEl.textContent = ITEMS.filter(i => !i.done).length + " open";
+    audit();
+    contrast();
+    peek();
+  }
+
+  // What the row actually announces. Position is spoken because a
+  // list that can be reordered has to say where a row landed, and
+  // presence is only spoken when the treatment is words.
+  function rowLabel(it) {
+    const pos = (idx(it.id) + 1) + " of " + ITEMS.length;
+    let s = it.text + ", " + it.who + ", " + (it.done ? "done" : "not done") + ", " + pos;
+    if (it.id === HELD && S.presence === "label") s += ", " + HELD_BY + " is editing";
+    return s;
+  }
+
+  function peek() {
+    const it = byId(HELD);
+    document.getElementById("sr-peek-body").textContent = rowLabel(it);
+  }
+
+  let n = 0;
+  function log(html) {
+    const empty = logEl.querySelector(".log-empty");
+    if (empty) empty.remove();
+    const p = document.createElement("p");
+    p.className = "entry";
+    p.innerHTML = html;
+    logEl.prepend(p);
+  }
+  const announce = m => { announceEl.textContent = m; };
+
+  // ---------------------------------------------------------------
+  // CONTRAST
+  // WCAG relative luminance, computed rather than quoted. The
+  // composite is rounded to 8 bits first because that is what the
+  // compositor actually produces, and the rounding is worth a
+  // hundredth of a point on some of these.
+  // ---------------------------------------------------------------
+  const HEXRE = /^#([0-9a-f]{6})$/i;
+  function rgb(hex) {
+    const m = HEXRE.exec(hex.trim());
+    const n = parseInt(m[1], 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  }
+  function toHex(c) {
+    return "#" + c.map(v => Math.round(v).toString(16).padStart(2, "0").toUpperCase()).join("");
+  }
+  function over(fg, bg, alpha) {
+    return [0, 1, 2].map(i => Math.round(fg[i] * alpha + bg[i] * (1 - alpha)));
+  }
+  function chan(v) {
+    const c = v / 255;
+    return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  }
+  function lum(c) { return 0.2126 * chan(c[0]) + 0.7152 * chan(c[1]) + 0.0722 * chan(c[2]); }
+  function ratio(a, b) {
+    const la = lum(a), lb = lum(b);
+    return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+  }
+
+  const INK = rgb("#1C1917");        // --text-default
+  const SUBDUED = rgb("#6B7280");    // --text-subdued
+  const WHITE = rgb("#FFFFFF");      // --surface-1
+  const BLUE = rgb("#1E40AF");       // --action
+
+  function contrast() {
+    const tintBg = over(BLUE, WHITE, 0.055);
+    const labelBg = over(BLUE, WHITE, 0.09);
+
+    const ROWS = [
+      {
+        key: "dim",
+        what: "Dim the row to 42%",
+        sub: "the treatment that was leading",
+        fg: over(INK, WHITE, 0.42),
+        bg: WHITE,
+        min: 4.5
+      },
+      {
+        key: "bar",
+        what: "A bar in the gutter",
+        sub: "non-text, so 1.4.11 at 3:1",
+        fg: BLUE,
+        bg: WHITE,
+        min: 3
+      },
+      {
+        key: "tint",
+        what: "A wash behind the row",
+        sub: "text at full strength on a tinted ground",
+        fg: INK,
+        bg: tintBg,
+        min: 4.5
+      },
+      {
+        key: "label",
+        what: "Say it in words",
+        sub: "the label's own text on its own chip",
+        fg: BLUE,
+        bg: labelBg,
+        min: 4.5
+      }
+    ];
+
+    // The two already-settled numbers, carried so the table shows the
+    // rule rather than only this round's part of it.
+    const REF = [
+      { what: "Completed item at 60%", sub: "settled earlier, the lowest fade that passes", fg: over(INK, WHITE, 0.6), bg: WHITE, min: 4.5 },
+      { what: "Author tag at 60%", sub: "why a subdued colour cannot be faded at all", fg: over(SUBDUED, WHITE, 0.6), bg: WHITE, min: 4.5 }
+    ];
+
+    const body = document.getElementById("ctable-body");
+    const line = (r, current) => {
+      const v = ratio(r.fg, r.bg);
+      const pass = v >= r.min;
+      return '<tr' + (current ? ' class="current"' : "") + ">" +
+        '<td class="sw"><span class="swatch" style="background:' + toHex(r.fg) + ';"></span></td>' +
+        "<td>" + r.what + '<br><span style="color:var(--bench-ink-3);font-size:11.5px;">' + r.sub + "</span></td>" +
+        '<td class="n">' + toHex(r.fg) + "</td>" +
+        '<td class="n">' + v.toFixed(2) + ":1</td>" +
+        '<td><span class="verdict-c ' + (pass ? "pass" : "fail") + '">' +
+        (pass ? "Passes" : "Fails") + "</span></td></tr>";
+    };
+
+    body.innerHTML =
+      ROWS.map(r => line(r, r.key === S.presence)).join("") +
+      '<tr><td colspan="5" style="border-top:1px solid var(--bench-line);padding:7px 14px;font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--bench-ink-3);">Already settled, for the rule</td></tr>' +
+      REF.map(r => line(r, false)).join("");
+
+    const cn = document.getElementById("cnote");
+    if (S.presence === "dim") {
+      cn.innerHTML = "<strong>There is no opacity value that saves this one.</strong> " +
+        "Dimming works by weakening the text, and the text is what has to stay readable. " +
+        "The completed row gets away with a fade because 60% is the exact floor and it was " +
+        "worth spending; there is nothing left underneath it to spend twice.";
+    } else if (S.presence === "bar") {
+      cn.innerHTML = "<strong>The signal moved off the text entirely.</strong> " +
+        "The words never change, so the row reads the same whether or not somebody is in it, " +
+        "and the bar answers to the 3:1 non-text minimum instead of 4.5:1. " +
+        "It shares the gutter with the focus rule, which is why <em>Gutter rule</em> is not the focus treatment.";
+    } else if (S.presence === "tint") {
+      cn.innerHTML = "<strong>The ground moves, not the ink.</strong> " +
+        "A 5.5% wash costs a fraction of a point and the text stays at full strength. " +
+        "The cost is that it is the quietest of the three, and it collides with the hover state, " +
+        "which is already a background change.";
+    } else {
+      cn.innerHTML = "<strong>The only treatment a screen reader gets for free.</strong> " +
+        "Every other option here is a visual signal that has to be re-announced by hand. " +
+        "This one is already words, so it goes into the row's label without a live region. " +
+        "The cost is width on a row that is already carrying an author tag.";
+    }
+  }
+
+  // ---------------------------------------------------------------
+  // AUDIT. Three input paths, one question. Computed from the
+  // settings, so the claim is re-checked on every toggle rather
+  // than written down once.
+  // ---------------------------------------------------------------
+  function paths() {
+    const R = S.reorder;
+    const hasMenu = R === "menu" || R === "both";
+    const hasKeys = R === "keyboard" || R === "both";
+    const hasDrag = R === "drag" || R === "keyboard" || R === "both";
+
+    const mouse = hasDrag
+      ? { k: "full", t: "Drag the handle, or the ragged tail after the last line." }
+      : { k: "full", t: "Move up and Move down in the row menu. The handle is gone, and dragging went with it." };
+
+    const keyboard = hasKeys
+      ? { k: "full", t: "Tab to the row, space to lift, arrows to move. Each move is announced." }
+      : hasMenu
+        ? { k: "full", t: "The menu is a button, so it is reachable and operable without any new work." }
+        : { k: "lost", t: "Nothing. The handle cannot be focused into a drag, and there is no other route." };
+
+    const touch = hasMenu
+      ? { k: "full", t: "Tap the menu, tap Move up. One pointer, one tap, no path to trace: this is what 2.5.7 is asking for." }
+      : hasDrag
+        ? { k: "lost", t: "The handle only appears on hover, and there is no hover. It is not small here, it is absent. Turn on the touchscreen simulation and try." }
+        : { k: "lost", t: "There is no keyboard, and nothing else was provided." };
+
+    const sr = hasKeys
+      ? { k: "full", t: "The keyboard path, with the position announced after every move." }
+      : hasMenu
+        ? { k: "full", t: "A menu item named Move up, which needs no live region to explain it." }
+        : { k: "lost", t: "A drag has nothing to announce and no way to start." };
+
+    return { mouse, keyboard, touch, sr };
+  }
+
+  function audit() {
+    const p = paths();
+    const defs = [
+      ["Mouse", "the path that already worked", p.mouse],
+      ["Keyboard", "arrived early, in the nesting round", p.keyboard],
+      ["Touch", "the genuinely unbuilt one", p.touch],
+      ["Screen reader", "and what it is told afterwards", p.sr]
+    ];
+    document.getElementById("audit-rows").innerHTML = defs.map(([what, sub, st]) =>
+      '<div class="audit-row"><div class="audit-what">' + what + "<em>" + sub + "</em></div>" +
+      '<div class="audit-state"><span class="pill ' + st.k + '">' +
+      (st.k === "full" ? "Works" : st.k === "part" ? "Degraded" : "Lost") + "</span>" + st.t + "</div></div>").join("");
+
+    const full = Object.values(p).filter(x => x.k === "full").length;
+    const tally = document.getElementById("tally");
+    tally.textContent = full + " of 4 covered";
+    tally.className = "tally " + (full === 4 ? "ok" : "bad");
+
+    const v = document.getElementById("verdict");
+    if (S.reorder === "drag") {
+      v.innerHTML = "<strong>This is where C2 left it, and it fails three ways.</strong> " +
+        "A hover-only handle is not reachable by a keyboard, does not exist on a touchscreen, " +
+        "and gives a screen reader nothing to announce. The tie C2 could not break is broken here, " +
+        "from outside the interaction: the arrangement that leaves reordering handle-first is only " +
+        "acceptable once the handle has stopped being the only way in.";
+    } else if (S.reorder === "keyboard") {
+      v.innerHTML = "<strong>Better, and still not enough.</strong> " +
+        "The keyboard path covers a keyboard and a screen reader, which is why it felt like the " +
+        "answer when it arrived in the nesting round. Touch has neither hover to reveal the handle " +
+        "nor a keyboard to replace it, so a touchscreen user still cannot move a row at all.";
+    } else if (S.reorder === "menu") {
+      v.innerHTML = "<strong>Everybody is covered by one control.</strong> " +
+        "Move up and Move down is a single pointer, which is 2.5.7 satisfied literally rather than " +
+        "by argument, and being a button it carries the keyboard and the screen reader for free. " +
+        "The cost is honest: dragging is gone, and dragging is the nicest way to move a row when you can.";
+    } else {
+      v.innerHTML = "<strong>Both, and this is the answer.</strong> " +
+        "The menu covers every input on its own, so the handle stops being load-bearing and goes back " +
+        "to being the pleasant option for people who can use it. That is the shape the whole component " +
+        "keeps arriving at: the accessible path is the real one, and the gesture sits on top of it.";
+    }
+  }
+
+  // ---------------------------------------------------------------
+  // Reordering, by every route
+  // ---------------------------------------------------------------
+  function move(id, to) {
+    const from = idx(id);
+    if (to < 0 || to >= ITEMS.length || to === from) return false;
+    const [it] = ITEMS.splice(from, 1);
+    ITEMS.splice(to, 0, it);
+    return true;
+  }
+
+  function moveBy(id, delta, how) {
+    const from = idx(id);
+    const to = from + delta;
+    if (to < 0 || to >= ITEMS.length) {
+      announce("Already at the " + (to < 0 ? "top" : "bottom") + " of the list.");
+      log('<span class="op">blocked</span> <span class="dim">already at the ' + (to < 0 ? "top" : "bottom") + "</span>");
+      return;
+    }
+    move(id, to);
+    const msg = "Moved to " + (to + 1) + " of " + ITEMS.length + ".";
+    announce(msg);
+    log('<span class="op">move</span> <span class="hot">' + how + "</span> " +
+      '<span class="dim">' + esc(short(byId(id).text)) + " to " + (to + 1) + " of " + ITEMS.length + "</span>");
+    reflow();
+  }
+
+  // Move the nodes. Do not rebuild the list.
+  //
+  // Rebuilding destroys the element that had focus, and a reorder that
+  // drops focus is one a keyboard user cannot repeat: the first arrow
+  // works, the second goes nowhere because focus is on the body. Found
+  // by driving it, not by reading it.
+  //
+  // Restoring focus afterwards inside requestAnimationFrame is not the
+  // fix either. rAF does not run while the tab is in the background, so
+  // the repair silently does not happen in exactly the case nobody is
+  // watching. The restore below is synchronous for that reason.
+  //
+  // This is the same rule the presence avatar taught in R4, arrived at
+  // from the other direction: repaint in place, never rebuild the row.
+  function reflow() {
+    const active = document.activeElement;
+    const keep = listEl.contains(active) ? active : null;
+    const line = document.getElementById("dropline");
+    const nodes = new Map([...listEl.querySelectorAll(".row")].map(r => [r.dataset.id, r]));
+    ITEMS.forEach(it => {
+      const n = nodes.get(it.id);
+      if (n) listEl.insertBefore(n, line);
+    });
+    // insertBefore on an attached node is a remove plus an insert, and
+    // the remove blurs. Put it back in the same turn.
+    if (keep) keep.focus();
+    relabel();
+    countEl.textContent = ITEMS.filter(i => !i.done).length + " open";
+    audit();
+    contrast();
+    peek();
+  }
+
+  // Position is part of every row's label, so moving one row changes
+  // what every other row announces.
+  function relabel() {
+    ITEMS.forEach(it => {
+      const n = listEl.querySelector('.row[data-id="' + it.id + '"]');
+      if (n) n.setAttribute("aria-label", rowLabel(it));
+    });
+  }
+
+  // ---------------------------------------------------------------
+  // Pointer drag. Deliberately simple: this bench is not re-testing
+  // the drag model, it is testing what is left when dragging is not
+  // available.
+  // ---------------------------------------------------------------
+  let drag = null;
+
+  listEl.addEventListener("pointerdown", (e) => {
+    if (S.reorder === "menu") return;
+    const h = e.target.closest && e.target.closest(".handle");
+    if (!h) return;
+    const row = h.closest(".row");
+    e.preventDefault();
+    drag = { id: row.dataset.id, y: e.clientY };
+    row.setPointerCapture && h.setPointerCapture(e.pointerId);
+    log('<span class="op">grab</span> <span class="dim">' + esc(short(byId(drag.id).text)) + "</span>");
+  });
+
+  window.addEventListener("pointermove", (e) => {
+    if (!drag) return;
+    const rows = [...listEl.querySelectorAll(".row")];
+    const line = document.getElementById("dropline");
+    let target = null;
+    for (const r of rows) {
+      const b = r.getBoundingClientRect();
+      if (e.clientY < b.top + b.height / 2) { target = r; break; }
+    }
+    const lb = listEl.getBoundingClientRect();
+    if (target) {
+      const b = target.getBoundingClientRect();
+      line.style.top = (b.top - lb.top - 7) + "px";
+      drag.before = target.dataset.id;
+    } else {
+      const b = rows[rows.length - 1].getBoundingClientRect();
+      line.style.top = (b.bottom - lb.top + 5) + "px";
+      drag.before = null;
+    }
+    line.classList.add("on");
+  });
+
+  window.addEventListener("pointerup", () => {
+    if (!drag) return;
+    document.getElementById("dropline").classList.remove("on");
+    const to = drag.before === null ? ITEMS.length - 1 : idx(drag.before) - (idx(drag.id) < idx(drag.before) ? 1 : 0);
+    if (to !== idx(drag.id)) {
+      move(drag.id, Math.max(0, to));
+      announce("Moved to " + (idx(drag.id) + 1) + " of " + ITEMS.length + ".");
+      log('<span class="op">drop</span> <span class="dim">to ' + (idx(drag.id) + 1) + " of " + ITEMS.length + "</span>");
+      reflow();
+    }
+    drag = null;
+  });
+
+  // pointercancel has to cancel. Committing the move here was a real
+  // bug in the reorder round and it is worth not reintroducing.
+  window.addEventListener("pointercancel", () => {
+    if (!drag) return;
+    document.getElementById("dropline").classList.remove("on");
+    log('<span class="op">cancel</span> <span class="dim">move abandoned, nothing written</span>');
+    drag = null;
+  });
+
+  // ---------------------------------------------------------------
+  // Row menu
+  // ---------------------------------------------------------------
+  let menuFor = null;
+
+  function openMenu(btn) {
+    const row = btn.closest(".row");
+    menuFor = row.dataset.id;
+    const b = btn.getBoundingClientRect();
+    popup.classList.add("on");
+    const pb = popup.getBoundingClientRect();
+    let left = b.right - pb.width;
+    if (left < 8) left = 8;
+    popup.style.left = (left + window.scrollX) + "px";
+    popup.style.top = (b.bottom + 6 + window.scrollY) + "px";
+    const at = idx(menuFor);
+    popup.querySelector('[data-act="up"]').disabled = at === 0;
+    popup.querySelector('[data-act="down"]').disabled = at === ITEMS.length - 1;
+    const first = [...popup.querySelectorAll("button")].find(x => !x.disabled);
+    if (first) first.focus();
+  }
+
+  function closeMenu(refocus) {
+    if (!popup.classList.contains("on")) return;
+    popup.classList.remove("on");
+    const id = menuFor;
+    menuFor = null;
+    if (refocus && id) {
+      const r = listEl.querySelector('.row[data-id="' + id + '"] .menu');
+      if (r) r.focus();
+    }
+  }
+
+  popup.addEventListener("click", (e) => {
+    const btn = e.target.closest("button[data-act]");
+    if (!btn || btn.disabled || !menuFor) return;
+    const id = menuFor;
+    const act = btn.dataset.act;
+    if (act === "up" || act === "down") {
+      closeMenu(false);
+      moveBy(id, act === "up" ? -1 : 1, "menu");
+      return;
+    }
+    if (act === "edit") {
+      closeMenu(false);
+      startEdit(id);
+      return;
+    }
+  });
+
+  document.addEventListener("pointerdown", (e) => {
+    if (popup.contains(e.target)) return;
+    if (e.target.closest && e.target.closest('[data-act="menu"]')) return;
+    closeMenu(false);
+  });
+
+  // ---------------------------------------------------------------
+  // Editing. Enough of it to show what focus looks like against an
+  // invisible field; the mechanics themselves were settled in R2.
+  // ---------------------------------------------------------------
+  function startEdit(id) {
+    const p = listEl.querySelector('.row[data-id="' + id + '"] .prose');
+    if (!p) return;
+    p.setAttribute("contenteditable", "true");
+    p.focus();
+    const r = document.createRange();
+    r.selectNodeContents(p);
+    r.collapse(false);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(r);
+    log('<span class="op">edit</span> <span class="dim">entered on ' + esc(short(byId(id).text)) + "</span>");
+    announce("Editing. Escape to stop.");
+  }
+
+  function stopEdit(p) {
+    if (!p || p.getAttribute("contenteditable") !== "true") return;
+    const row = p.closest(".row");
+    const it = byId(row.dataset.id);
+    // Assign through the model, never by reassigning textContent on
+    // every keystroke. That was the bug that made the concurrency
+    // editor type backwards.
+    it.text = p.textContent;
+    p.removeAttribute("contenteditable");
+    log('<span class="op">save</span> <span class="dim">autosave would fire here, 4s idle / 15s ceiling</span>');
+    announce("Saved.");
+    render();
+  }
+
+  // ---------------------------------------------------------------
+  // Row interactions
+  // ---------------------------------------------------------------
+  listEl.addEventListener("click", (e) => {
+    const el = e.target.closest && e.target.closest("[data-act]");
+    if (!el) return;
+    const row = el.closest(".row");
+    const id = row.dataset.id;
+    const act = el.dataset.act;
+
+    if (act === "check") {
+      const it = byId(id);
+      it.done = !it.done;
+      log('<span class="op">' + (it.done ? "check" : "uncheck") + '</span> <span class="dim">' + esc(short(it.text)) + "</span>");
+      announce(it.done ? "Marked done." : "Marked not done.");
+      render();
+      return;
+    }
+    if (act === "menu") { e.stopPropagation(); openMenu(el); return; }
+    if (act === "pencil") { startEdit(id); return; }
+    if (act === "prose") {
+      // On a coarse pointer with the caret affordance, tapping still
+      // works. Nothing ever said so, which is the finding: the
+      // gesture is operable and undiscoverable at the same time.
+      if (S.enter === "text" && S.coarse) {
+        log('<span class="op">tap</span> <span class="dim">it worked, and nothing on screen said it would</span>');
+      }
+      startEdit(id);
+      return;
+    }
+  });
+
+  // ---------------------------------------------------------------
+  // Keyboard. Space lifts, arrows move, space drops. Carried over
+  // from the nesting round, where it was built to work in every
+  // drag setting on purpose.
+  // ---------------------------------------------------------------
+  let lifted = null;
+
+  document.addEventListener("keydown", (e) => {
+    if (popup.classList.contains("on")) {
+      if (e.key === "Escape") { e.preventDefault(); closeMenu(true); }
+      return;
+    }
+
+    const ae = document.activeElement;
+
+    if (ae && ae.getAttribute && ae.getAttribute("contenteditable") === "true") {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        const row = ae.closest(".row");
+        stopEdit(ae);
+        requestAnimationFrame(() => {
+          const r = listEl.querySelector('.row[data-id="' + row.dataset.id + '"]');
+          if (r) r.focus();
+        });
+      }
+      return;
+    }
+
+    const row = ae && ae.closest && ae.closest(".row");
+    if (!row) return;
+    const id = row.dataset.id;
+
+    if (e.key === "Enter") {
+      // e.target is not always an Element for a synthetic event, and
+      // document.closest does not exist, so this has to be guarded or
+      // the whole handler throws silently.
+      if (e.target instanceof Element && e.target.closest("[data-act]") &&
+          e.target.closest("[data-act]").dataset.act !== "prose") return;
+      e.preventDefault();
+      startEdit(id);
+      return;
+    }
+
+    if (e.key === " ") {
+      if (e.target instanceof Element && e.target.closest("button")) return;
+      if (S.reorder === "drag" || S.reorder === "menu") {
+        announce("Keyboard reordering is off in this setting.");
+        log('<span class="op">blocked</span> <span class="dim">no keyboard path in this setting</span>');
+        e.preventDefault();
+        return;
+      }
+      e.preventDefault();
+      lifted = lifted === id ? null : id;
+      document.querySelectorAll(".row").forEach(r => r.classList.toggle("is-lifted", r.dataset.id === lifted));
+      announce(lifted ? "Lifted. Arrow keys to move, space to drop." : "Dropped.");
+      log('<span class="op">' + (lifted ? "lift" : "drop") + '</span> <span class="dim">keyboard</span>');
+      return;
+    }
+
+    if (!lifted || lifted !== id) return;
+
+    if (e.key === "ArrowUp" || e.key === "ArrowDown") {
+      e.preventDefault();
+      moveBy(id, e.key === "ArrowUp" ? -1 : 1, "keyboard");
+    }
+  });
+
+  listEl.addEventListener("focusout", (e) => {
+    const p = e.target;
+    if (p && p.getAttribute && p.getAttribute("contenteditable") === "true") stopEdit(p);
+  });
+
+  // ---------------------------------------------------------------
+  // Controls
+  // ---------------------------------------------------------------
+  function wireSeg(id, key) {
+    const root = document.getElementById(id);
+    root.addEventListener("click", (e) => {
+      const b = e.target.closest("button[data-v]");
+      if (!b) return;
+      S[key] = b.dataset.v;
+      [...root.querySelectorAll("button[data-v]")].forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+      if (key === "reorder" && (S.reorder === "drag" || S.reorder === "menu")) lifted = null;
+      render();
+    });
+  }
+  wireSeg("seg-reorder", "reorder");
+  wireSeg("seg-enter", "enter");
+  wireSeg("seg-presence", "presence");
+  wireSeg("seg-focus", "focus");
+
+  document.getElementById("chk-coarse").addEventListener("change", e => { S.coarse = e.target.checked; render(); });
+  document.getElementById("chk-forced").addEventListener("change", e => { S.forced = e.target.checked; render(); });
+  document.getElementById("chk-fix").addEventListener("change", e => { S.fix = e.target.checked; render(); });
+
+  const KEYS = {
+    "1": ["seg-reorder", "drag"], "2": ["seg-reorder", "keyboard"],
+    "3": ["seg-reorder", "menu"], "4": ["seg-reorder", "both"],
+    "q": ["seg-enter", "text"], "w": ["seg-enter", "pencil"], "e": ["seg-enter", "adaptive"],
+    "a": ["seg-presence", "dim"], "s": ["seg-presence", "bar"],
+    "d": ["seg-presence", "tint"], "f": ["seg-presence", "label"],
+    "z": ["seg-focus", "outline"], "x": ["seg-focus", "ring"], "c": ["seg-focus", "bar"]
+  };
+  window.addEventListener("keydown", (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const ae = document.activeElement;
+    if (ae && (ae.isContentEditable || /^(INPUT|TEXTAREA)$/.test(ae.tagName))) return;
+    if (ae && ae.closest && ae.closest(".row")) return;
+    const hit = KEYS[e.key.toLowerCase()];
+    if (!hit) return;
+    const btn = document.querySelector("#" + hit[0] + ' button[data-v="' + hit[1] + '"]');
+    if (btn) btn.click();
+  });
+
+  function applyDeepLink() {
+    const q = new URLSearchParams(location.search);
+    const allowed = {
+      reorder: ["drag", "keyboard", "menu", "both"],
+      enter: ["text", "pencil", "adaptive"],
+      presence: ["dim", "bar", "tint", "label"],
+      focus: ["outline", "ring", "bar"]
+    };
+    Object.keys(allowed).forEach(k => {
+      const v = q.get(k);
+      if (!v || !allowed[k].includes(v)) return;
+      const btn = document.querySelector("#seg-" + k + ' button[data-v="' + v + '"]');
+      if (btn) btn.click();
+    });
+    [["coarse", "chk-coarse"], ["forced", "chk-forced"], ["fix", "chk-fix"]].forEach(([p, cid]) => {
+      if (q.get(p) !== "1") return;
+      const c = document.getElementById(cid);
+      c.checked = true;
+      c.dispatchEvent(new Event("change"));
+    });
+    const show = q.get("show");
+    if (show === "audit" || show === "contrast") document.body.dataset.show = show;
+    if (q.get("embed") === "1") document.body.classList.add("is-embed");
+    const sc = parseFloat(q.get("scale"));
+    if (sc > 0 && sc <= 4) document.documentElement.style.setProperty("--embed-scale", String(sc));
+  }
+
+  render();
+  applyDeepLink();
+
+  // Keydown never crosses out of an iframe, so without this a
+  // presenter with focus inside a bench has no keyboard route back
+  // to the deck.
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape" || window.parent === window) return;
+    const el = document.activeElement;
+    if (el && el.isContentEditable) return;
+    if (popup.classList.contains("on")) return;
+    if (el && el !== document.body) el.blur();
+    window.parent.focus();
+  });
+</script>
