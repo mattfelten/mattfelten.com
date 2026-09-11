@@ -1,0 +1,26 @@
+---
+import TextBlockSlide from '@decks/templates/TextBlockSlide.astro';
+
+// The decision that is invisible in the interface and lives in the log.
+// Here because the failure mode is silence, which is what a systems
+// panel cares about more than the drag feel.
+//
+// How the fractional index actually works gets said out loud.
+
+const items = [
+	{
+		title: 'Integers',
+		body: 'One move rewrites every row in between. Two drags overwrite each other.',
+	},
+	{
+		title: 'Floats',
+		body: 'Exhaust the mantissa after about fifty inserts between one pair, then compare equal. Ordering breaks <span class="text-strong">silently</span>.',
+	},
+	{
+		title: 'A fractional index',
+		body: 'One row written. Neighbour IDs go to the server, which resolves the key in-transaction.',
+	},
+];
+---
+
+<TextBlockSlide subtitle="How a position is stored" items={items} cols={3} bodySize="2xl" />

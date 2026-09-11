@@ -136,6 +136,11 @@
   body.is-embed[data-show="contrast"] .contrast { display: block; }
   body.is-embed[data-show="audit"] .bench-inner,
   body.is-embed[data-show="contrast"] .bench-inner { gap: 20px; }
+  /* nospec=1 drops the specimen and leaves the panel on its own. The
+     audit is 542px next to a 235px specimen, so together they only fit
+     a 1080 slide at a scale where nobody past the front row can read
+     the scorecard, and the scorecard is the argument on that slide. */
+  body.is-embed[data-nospec="on"] .specimen { display: none; }
   /* Top-aligned, never vertically centred. Centring splits any height
      change in both directions, which halves the apparent movement and
      wrecks the one demo that exists to show a 14px shove. Size the
@@ -2025,6 +2030,7 @@
     });
     const show = q.get("show");
     if (show === "audit" || show === "contrast") document.body.dataset.show = show;
+    if (q.get("nospec") === "1") document.body.dataset.nospec = "on";
     if (q.get("embed") === "1") document.body.classList.add("is-embed");
     const sc = parseFloat(q.get("scale"));
     if (sc > 0 && sc <= 4) document.documentElement.style.setProperty("--embed-scale", String(sc));

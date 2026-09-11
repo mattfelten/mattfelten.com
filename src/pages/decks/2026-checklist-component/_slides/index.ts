@@ -1,3 +1,14 @@
 export { default as Title } from './1-Title.astro';
-export { default as EmbedSpike } from './2-EmbedSpike.astro';
-export { default as AfterEmbed } from './3-AfterEmbed.astro';
+export { default as TheRow } from './2-TheRow.astro';
+export { default as TwoConsumers } from './3-TwoConsumers.astro';
+export { default as WhatItIs } from './4-WhatItIs.astro';
+export { default as InvisibleField } from './5-InvisibleField.astro';
+export { default as Reorder } from './6-Reorder.astro';
+export { default as Nesting } from './7-Nesting.astro';
+export { default as Arbitration } from './8-Arbitration.astro';
+export { default as Concurrency } from './9-Concurrency.astro';
+export { default as AccessProblem } from './10-AccessProblem.astro';
+export { default as AccessAudit } from './11-AccessAudit.astro';
+export { default as WhereItStops } from './12-WhereItStops.astro';
+export { default as WhatsNext } from './13-WhatsNext.astro';
+export { default as ThankYou } from './14-ThankYou.astro';

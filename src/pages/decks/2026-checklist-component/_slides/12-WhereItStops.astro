@@ -1,0 +1,29 @@
+---
+import TextBlockSlide from '@decks/templates/TextBlockSlide.astro';
+
+// The systems slide. Three refusals, each found by hitting it while
+// building rather than by theorising about boundaries. Why each one is
+// out of scope gets said out loud.
+
+const items = [
+	{
+		title: 'Who is allowed to edit',
+		body: 'A runbook answers this differently from a meeting. The component renders the read-only state and takes the rule as input.',
+	},
+	{
+		title: 'How merging is implemented',
+		body: 'Two mechanisms satisfy the same promise. Picking one is about cost and appetite.',
+	},
+	{
+		title: 'How the row menu behaves',
+		body: 'The menu is its own system component. What the list owns is which actions go in it.',
+	},
+];
+---
+
+<TextBlockSlide
+	subtitle="Where the component stops"
+	items={items}
+	cols={3}
+	bodySize="2xl"
+/>

@@ -1,0 +1,35 @@
+---
+import TextBlockSlide from '@decks/templates/TextBlockSlide.astro';
+
+// Why this is a systems problem rather than a feature problem. The
+// second slide on purpose: everything after it is only worth doing if
+// this lands.
+//
+// Bodies are one line each. The argument gets made out loud.
+
+const items = [
+	{
+		title: 'Collaboration Loops',
+		body: 'Has the row today.',
+	},
+	{
+		title: 'Runbooks',
+		body: 'Event-triggered guides. Visually the same list.',
+	},
+	{
+		title: 'A backlog against the first one alone',
+		body: 'Reordering. Inline editing. Sub-items.',
+	},
+	{
+		title: 'So it stops being one team&rsquo;s problem',
+		body: 'An ordering model, an autosave contract, presence, nesting, and an accessibility surface.',
+	},
+];
+---
+
+<TextBlockSlide
+	subtitle="One instance is a feature. Two is a pattern."
+	items={items}
+	cols={2}
+	bodySize="3xl"
+/>

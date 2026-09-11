@@ -1,0 +1,42 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+// The round that exists because the starting constraint turned out to be
+// wrong. The slide carries the reframing; the merge mechanics and the
+// CRDT comparison get said out loud, with the bench open if asked.
+---
+
+<Slide subtitle="Two people, one item">
+	<div class="grid gap-13">
+		<div class="text-strong max-w-[1500px] text-5xl">
+			&ldquo;One editor at a time&rdquo; was the starting constraint, not the
+			destination.
+		</div>
+		<div class="grid grid-cols-3 gap-7">
+			<div>
+				<div class="text-subdued text-xs font-medium uppercase">Today</div>
+				<div class="text-subdued mt-3 text-2xl">
+					Several people can edit. Nobody sees anything until reload. Last write wins.
+				</div>
+			</div>
+			<div>
+				<div class="text-subdued text-xs font-medium uppercase">So a lock is</div>
+				<div class="text-subdued mt-3 text-2xl">
+					Not a design. Scaffolding, and a habit that has to be untrained later.
+				</div>
+			</div>
+			<div>
+				<div class="text-subdued text-xs font-medium uppercase">Instead</div>
+				<div class="text-subdued mt-3 text-2xl">
+					Merge what they started from, what they typed, and what is stored now.
+				</div>
+			</div>
+		</div>
+		<div class="text-subdued text-3xl">
+			Both changed the same words, so it garbles.
+			<span class="text-strong">
+				Tidying a sentence beats reconstructing a paragraph you cannot see.
+			</span>
+		</div>
+	</div>
+</Slide>

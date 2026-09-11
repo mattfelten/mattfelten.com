@@ -1,0 +1,45 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+// The strongest slide in the deck, and the one to leave running while
+// talking. The scorecard is computed from the settings rather than
+// written down, so a panel can ask "what about keyboard only" and the
+// answer is a toggle away instead of a claim.
+//
+// It opens on `drag`, which reads 1 of 4. The move is to walk to
+// keyboard (3 of 4, and where most people stop) before landing on menu.
+//
+// nospec=1 drops the specimen so the audit can carry the slide: the
+// panel alone is 620 x 543.
+//
+// align="top" is required, not cosmetic. Under the default centring the
+// header is positioned absolutely so the body can centre on the real
+// slide midpoint, and a panel this tall then renders straight over the
+// subtitle. Top-aligned, the header stays in flow and the frame gets
+// what is left: 1080 less 80 of padding, the header, and its 112px gap,
+// which lands near 710. Hence scale 1.2, giving 800 x 708.
+---
+
+<Slide subtitle="Four inputs, one question" align="top">
+	<div class="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-12">
+		<iframe
+			src="/decks/2026-checklist-component/prototypes/c4-accessibility-bench?embed=1&scale=1.2&show=audit&nospec=1&reorder=drag&focus=object"
+			title="Can you reorder a row: four inputs scored live"
+			class="live-embed m-0! block h-[708px] w-[800px] max-h-none! max-w-none! border-0"
+		></iframe>
+		<div class="grid gap-13">
+			<div class="text-strong text-5xl">
+				The keyboard path was necessary and it was never sufficient.
+			</div>
+			<div>
+				<div class="text-subdued text-xs font-medium uppercase">SC 2.5.7 asks for</div>
+				<div class="text-strong mt-3 text-4xl font-medium">A single pointer</div>
+				<div class="text-subdued mt-2 text-2xl">A keyboard is not one.</div>
+			</div>
+			<div class="text-subdued text-3xl">
+				<span class="text-strong">The menu is the only path that covers all four.</span>
+				It is also the smallest thing to build.
+			</div>
+		</div>
+	</div>
+</Slide>

@@ -1,23 +1,72 @@
 ---
 import { Deck, DeckShell } from '@decks';
 
-import { AfterEmbed, EmbedSpike, Title } from './_slides';
+import {
+	AccessAudit,
+	AccessProblem,
+	Arbitration,
+	Concurrency,
+	InvisibleField,
+	Nesting,
+	Reorder,
+	TheRow,
+	ThankYou,
+	TwoConsumers,
+	Title,
+	WhatItIs,
+	WhereItStops,
+	WhatsNext,
+} from './_slides';
 
 const meta = {
 	title: 'Checklist',
 	description:
-		'A checkable, orderable, editable list row, taken from a product feature to a design system component: what it costs to get one row right.',
+		'A checkable, orderable, editable row, taken from one product feature to a design system component. The thesis: interaction design could not settle a single one of the decisions that mattered. Measurements settled them, other people settled them, and an accessibility rule settled the one that interaction design had explicitly given up on.',
 };
 
-// GATE 0 ONLY. Three slides, existing to answer whether a live prototype can
-// sit on a Reveal slide without breaking deck navigation. The real slide
-// order lands at Gate 8.
+// A component deep dive, shaped like 2026-anvil-15m rather than the
+// portfolio review: no Act I kit, no testimonials, straight at the work.
+// The audience is a design systems panel, so the interesting thing is
+// not what the row looks like, it is what each decision was decided BY.
+//
+// Every specimen on these slides is the real bench running live over the
+// same origin, not a picture. That is the point of the format and it is
+// also the risk: keys inside an iframe never reach Reveal, so the deck
+// will not advance while focus is inside one. Escape blurs back out.
+//
+// Running order, and what each beat is for:
+//
+//   1  Title
+//   2  TheRow          the specimen, live. Here is the thing
+//   3  TwoConsumers    one instance is a feature, two is a pattern
+//   4  WhatItIs        the decomposition, and that it is a sketch
+//   5  InvisibleField  0px against 14px. The first measured decision
+//   6  Reorder         fractional index, and the silent failure
+//   7  Nesting         a capability a list can decline
+//   8  Arbitration     three gestures, one row, no arrangement keeps all
+//   9  Concurrency     the premise was wrong, so the answer changed
+//  10  AccessProblem   what is left when hover is not available
+//  11  AccessAudit     four inputs, one question, computed live
+//  12  WhereItStops    three times the component declined to decide
+//  13  WhatsNext       the one open correctness problem
+//  14  ThankYou
 ---
 
 <DeckShell {...meta}>
 	<Deck title="Checklist">
 		<Title />
-		<EmbedSpike />
-		<AfterEmbed />
+		<TheRow />
+		<TwoConsumers />
+		<WhatItIs />
+		<InvisibleField />
+		<Reorder />
+		<Nesting />
+		<Arbitration />
+		<Concurrency />
+		<AccessProblem />
+		<AccessAudit />
+		<WhereItStops />
+		<WhatsNext />
+		<ThankYou />
 	</Deck>
 </DeckShell>

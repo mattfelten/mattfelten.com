@@ -1,0 +1,45 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+// The first measured decision, and the one that sets the deck's pattern:
+// two implementations that look identical in a still, separated by a
+// number.
+//
+// The naive toggle is live, so this is driven rather than described.
+// Click into the first item. Mechanics bench is 620 x 357 in embed; at
+// scale 1.15 that is 713 x 411.
+---
+
+<Slide subtitle="Editing never moves the words">
+	<div class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-12">
+		<div class="grid gap-13">
+			<div class="text-strong text-5xl">
+				The obvious implementation moves every glyph on the row, and shoves every row
+				underneath it.
+			</div>
+			<div class="grid grid-cols-2 gap-7">
+				<div>
+					<div class="text-subdued text-xs font-medium uppercase">
+						Border and padding
+					</div>
+					<div class="text-strong mt-3 text-5xl font-medium tabular-nums">
+						9px, 7px
+					</div>
+					<div class="text-subdued mt-2 text-2xl">and 14px to every row below</div>
+				</div>
+				<div>
+					<div class="text-subdued text-xs font-medium uppercase">
+						Background and box-shadow
+					</div>
+					<div class="text-strong mt-3 text-5xl font-medium tabular-nums">0px, 0px</div>
+					<div class="text-subdued mt-2 text-2xl">chosen</div>
+				</div>
+			</div>
+		</div>
+		<iframe
+			src="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?embed=1&scale=1.15&naive=1"
+			title="The naive box model, live"
+			class="live-embed m-0! block h-[467px] w-[769px] max-h-none! max-w-none! border-0"
+		></iframe>
+	</div>
+</Slide>
