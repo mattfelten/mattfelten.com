@@ -1,0 +1,937 @@
+<meta charset="utf-8">
+<title>Checklist: concurrency bench</title>
+
+<style>
+  /* ============================================================
+     BENCH CHROME - achromatic, theme-aware instrument panel.
+     Shared with the reorder bench so the two read as one
+     instrument family. Saturated colour belongs to the specimen.
+     ============================================================ */
+  :root {
+    --bench-bg: #EDEEF1;
+    --bench-panel: #F6F7F9;
+    --bench-ink: #242830;
+    --bench-ink-2: #5C6371;
+    --bench-ink-3: #878E9C;
+    --bench-line: #D8DBE2;
+    --bench-line-2: #C4C9D3;
+    --bench-raise: #FFFFFF;
+    --bench-sunk: #E4E6EB;
+    --bench-focus: #1E40AF;
+    --shadow-lift: 0 1px 2px rgba(16, 20, 28, .06), 0 8px 24px rgba(16, 20, 28, .10);
+    --shadow-mount: 0 1px 3px rgba(16, 20, 28, .08), 0 18px 50px rgba(16, 20, 28, .10);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bench-bg: #15171C;
+      --bench-panel: #1C1F26;
+      --bench-ink: #DDE0E6;
+      --bench-ink-2: #99A0AD;
+      --bench-ink-3: #6E7481;
+      --bench-line: #282C35;
+      --bench-line-2: #363B46;
+      --bench-raise: #23262E;
+      --bench-sunk: #121419;
+      --bench-focus: #7C97E8;
+      --shadow-lift: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .45);
+      --shadow-mount: 0 1px 3px rgba(0, 0, 0, .5), 0 24px 60px rgba(0, 0, 0, .55);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bench-bg: #15171C;
+    --bench-panel: #1C1F26;
+    --bench-ink: #DDE0E6;
+    --bench-ink-2: #99A0AD;
+    --bench-ink-3: #6E7481;
+    --bench-line: #282C35;
+    --bench-line-2: #363B46;
+    --bench-raise: #23262E;
+    --bench-sunk: #121419;
+    --bench-focus: #7C97E8;
+    --shadow-lift: 0 1px 2px rgba(0, 0, 0, .4), 0 8px 24px rgba(0, 0, 0, .45);
+    --shadow-mount: 0 1px 3px rgba(0, 0, 0, .5), 0 24px 60px rgba(0, 0, 0, .55);
+  }
+
+  /* ============================================================
+     SPECIMEN TOKENS - locked to @m/tokens light mode.
+     Mission Control has no dark mode, so the specimen never
+     inverts. It stays a light sample mounted on the bench.
+     ============================================================ */
+  .specimen, .sheet {
+    --surface-1: #FFFFFF;
+    --surface-2: #FAFAFA;
+    --surface-3: #F4F4F5;
+    --border-soft: #EFEFF1;
+    --border-default: #E4E4E7;
+    --border-strong: #D4D4D8;
+    --text-default: #1C1917;
+    --text-subdued: #6B7280;
+    --action: #1E40AF;
+    --positive: #10B981;
+    --negative: #DC2626;
+    --amber: #F59E0B;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--bench-bg);
+    color: var(--bench-ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------------------------------------------------------------
+     EMBED MODE - ?embed=1
+     Strips the instrument down to the specimen so a slide can carry
+     one idea at a size readable from across a room. The rail's 10px
+     labels are unreadable at presentation distance anyway, and a
+     dense panel competes with the speaker; the configuration it
+     would set arrives through deep-link params instead.
+     The full bench is always one click away for questions.
+     --------------------------------------------------------------- */
+  body.is-embed .rail,
+  body.is-embed .mount-label,
+  body.is-embed .log,
+  body.is-embed .note { display: none; }
+  body.is-embed .frame { display: block; min-height: 0; }
+  /* Keep the bench's own max-width. The specimen's line length is a
+     design decision, so the iframe gets sized to the specimen rather
+     than the specimen stretched to the iframe. */
+  body.is-embed .bench-inner { gap: 0; zoom: var(--embed-scale, 1); }
+  /* Centre in whatever height the slide gives the frame, so one embed
+     rule survives every iframe size instead of needing a per-slide fit. */
+  /* Top-aligned, never vertically centred. Centring splits any height
+     change in both directions, which halves the apparent movement and
+     wrecks the one demo that exists to show a 14px shove. Size the
+     iframe to the specimen instead. */
+  body.is-embed .bench {
+    padding: 28px;
+    min-height: 0;
+    justify-content: flex-start;
+  }
+
+  /* ---------- Page frame ---------- */
+  .frame {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr);
+    min-height: 100vh;
+    align-items: start;
+  }
+
+  @media (max-width: 1040px) {
+    .frame { grid-template-columns: minmax(0, 1fr); }
+    .rail { position: static !important; height: auto !important; border-right: 0 !important; border-bottom: 1px solid var(--bench-line); }
+  }
+
+  /* ---------- Control rail ---------- */
+  .rail {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--bench-panel);
+    border-right: 1px solid var(--bench-line);
+    padding: 28px 24px 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+  }
+
+  .rail-head { display: flex; flex-direction: column; gap: 6px; }
+  .rail-title { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+  .rail-sub { font-size: 12px; line-height: 1.55; color: var(--bench-ink-2); margin: 0; }
+
+  .eyebrow {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.11em;
+    text-transform: uppercase; color: var(--bench-ink-3); margin: 0;
+  }
+  .eyebrow.primary { color: var(--bench-focus); }
+
+  .group { display: flex; flex-direction: column; gap: 10px; }
+  .group-note { font-size: 11.5px; line-height: 1.5; color: var(--bench-ink-3); margin: 0; }
+  .group-note em { font-style: italic; }
+
+  .group.featured {
+    background: var(--bench-raise);
+    border: 1px solid var(--bench-line-2);
+    border-radius: 10px;
+    padding: 14px;
+    margin: 0 -2px;
+  }
+
+  /* ---------- Segmented switch ---------- */
+  .seg {
+    display: flex; flex-direction: column; gap: 1px;
+    background: var(--bench-line);
+    border: 1px solid var(--bench-line);
+    border-radius: 8px; overflow: hidden;
+  }
+
+  .seg button {
+    appearance: none; border: 0; text-align: left;
+    background: var(--bench-raise); color: var(--bench-ink-2);
+    padding: 9px 11px; font: inherit; font-size: 12.5px;
+    cursor: pointer; display: flex; align-items: baseline; gap: 8px;
+    transition: background .12s ease, color .12s ease;
+  }
+
+  .seg button:hover { background: var(--bench-sunk); color: var(--bench-ink); }
+  .seg button[aria-pressed="true"] { background: var(--bench-ink); color: var(--bench-bg); font-weight: 550; }
+  .seg button:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: -2px; }
+  .seg .k {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10px; opacity: .55; flex: none; width: 12px;
+  }
+
+  /* ---------- Checkbox switches ---------- */
+  .switch {
+    display: flex; align-items: flex-start; gap: 9px;
+    font-size: 12.5px; color: var(--bench-ink-2); cursor: pointer; padding: 3px 0;
+  }
+
+  .switch input {
+    appearance: none; width: 15px; height: 15px; margin: 2px 0 0; flex: none;
+    border: 1px solid var(--bench-line-2); border-radius: 4px;
+    background: var(--bench-raise); cursor: pointer;
+    display: grid; place-content: center;
+    transition: background .12s ease, border-color .12s ease;
+  }
+  .switch input:checked { background: var(--bench-ink); border-color: var(--bench-ink); }
+  .switch input:checked::after {
+    content: ""; width: 8px; height: 5px; margin-top: -2px;
+    border-left: 1.8px solid var(--bench-bg); border-bottom: 1.8px solid var(--bench-bg);
+    transform: rotate(-45deg);
+  }
+  .switch input:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 2px; }
+  .switch .sub { color: var(--bench-ink-3); font-size: 11px; }
+
+  kbd {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 10.5px; background: var(--bench-raise);
+    border: 1px solid var(--bench-line-2); border-bottom-width: 2px;
+    border-radius: 4px; padding: 1px 4px; color: var(--bench-ink-2);
+  }
+
+  /* ---------- Main bench area ---------- */
+  .bench {
+    padding: 40px 40px 72px;
+    display: flex; flex-direction: column; gap: 24px;
+    align-items: center; min-width: 0;
+  }
+
+  @media (max-width: 640px) { .bench { padding: 26px 16px 56px; } }
+
+  .bench-inner {
+    width: 100%; max-width: 620px;
+    display: flex; flex-direction: column; gap: 24px; min-width: 0;
+  }
+
+  .mount-label {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+  }
+  .mount-label p { margin: 0; font-size: 12px; color: var(--bench-ink-3); }
+  /* r3 runs two screens side by side, so the column is wider */
+  .bench-inner { max-width: 1120px; }
+
+  .screens {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px; align-items: start;
+  }
+  @media (max-width: 900px) { .screens { grid-template-columns: minmax(0, 1fr); } }
+
+  .screen { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .screen-label {
+    display: flex; align-items: baseline; gap: 8px;
+    font-size: 12px; color: var(--bench-ink-3);
+  }
+  .screen-label .name { font-weight: 600; color: var(--bench-ink-2); }
+  .screen-label .tag {
+    font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--bench-ink-3); border: 1px solid var(--bench-line-2);
+    border-radius: 999px; padding: 1px 7px;
+  }
+  /* ============================================================
+     SPECIMEN - Mission Control widget, real tokens
+     ============================================================ */
+  .specimen {
+    background: var(--surface-1);
+    border: 1px solid var(--border-default);
+    border-radius: 12px;
+    box-shadow: var(--shadow-mount);
+    font-family: "Noto Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--text-default);
+    font-size: 14px; line-height: 20px;
+    padding: 16px 20px 18px;
+    position: relative;
+  }
+  .specimen[data-role="viewer"] { box-shadow: var(--shadow-lift); }
+
+  .spec-head {
+    display: flex; align-items: center; gap: 8px;
+    padding-bottom: 12px; margin-bottom: 4px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .spec-head h2 { font-size: 14px; font-weight: 600; margin: 0; flex: 1; }
+  .spec-icon { width: 20px; height: 20px; display: grid; place-content: center; color: var(--text-subdued); }
+
+  /* the list needs a little left room for a floater to hang into */
+  /* left gutter for the presence floater, same idea as the reorder
+     bench's drag-handle gutter, so it never sits on the checkbox */
+  .list { display: flex; flex-direction: column; gap: 12px; padding: 12px 0 0 12px; }
+
+  .row {
+    position: relative;
+    display: flex; align-items: flex-start; gap: 10px;
+    margin: -2px; padding: 2px;
+    border-radius: 8px; background: transparent;
+  }
+  /* Hover is an affordance, so it only appears where a click does
+     something: your own screen, and only on rows you may edit. The
+     watching screen never highlights, and neither does a row somebody
+     else is holding. */
+  .specimen[data-role="you"] .row:not(.is-readonly):hover { background: var(--surface-2); }
+
+  .cb {
+    flex: none; width: 20px; height: 20px; margin-top: 1px;
+    display: grid; place-content: center; cursor: pointer;
+    background: none; border: 0; padding: 0; color: var(--text-subdued);
+  }
+  .cb:hover { color: var(--text-default); }
+  .cb[data-done="true"] { color: var(--positive); }
+  .cb:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; border-radius: 4px; }
+  .specimen[data-role="viewer"] .cb { cursor: default; }
+
+  .content { flex: 1 1 auto; min-width: 0; position: relative; }
+
+  /* ---------- The invisible field (settled r2) ---------- */
+  .prose {
+    display: block; outline: none; border-radius: 4px;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .row[data-done="true"] .prose { text-decoration: line-through; opacity: .6; }
+  .specimen[data-role="you"] .row:not(.is-readonly) .prose:hover,
+  .prose[contenteditable="true"] { cursor: text; }
+  .specimen[data-role="you"] .row.is-readonly .prose { cursor: default; }
+
+  /* ============================================================
+     PRESENCE ON THE ROW
+     The signal that someone is inside an item. It sits on the row
+     itself rather than in a strip at the bottom, and it hangs off
+     the left edge so it never reads as a second author - the
+     author tag already lives on the right.
+     ============================================================ */
+  .floater {
+    position: absolute; left: -20px; top: -3px; z-index: 6;
+    width: 20px; height: 20px; border-radius: 50%;
+    display: grid; place-content: center;
+    font-size: 8.5px; font-weight: 700; letter-spacing: .02em;
+    color: #fff; background: var(--action);
+    border: 2px solid var(--surface-1);
+    box-shadow: 0 2px 5px rgba(16, 20, 28, .22);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .floater { animation: land .18s ease-out; }
+    @keyframes land {
+      from { opacity: 0; transform: translate(2px, 3px) scale(.86); }
+      to   { opacity: 1; transform: none; }
+    }
+    .floater.is-refused { animation: nudge .32s ease-in-out; }
+    @keyframes nudge {
+      0%, 100% { transform: none; }
+      25% { transform: translateX(-2px); }
+      75% { transform: translateX(2px); }
+    }
+  }
+
+  /* hairline variant - Slack shows a border on the held row */
+  .row.is-outlined { box-shadow: inset 0 0 0 1px var(--border-strong); background: var(--surface-1); }
+
+  /* highlight: the row takes a wash of the holder's own colour, so the
+     avatar and the row it belongs to are obviously the same event.
+     Says "something is happening here". */
+  .row.is-highlit { background: var(--hl); }
+
+  /* dim: the row recedes instead. Says "this is in use". The floater is
+     deliberately excluded - dimming the one thing that carries the
+     information would defeat the point. */
+  .row .cb, .row .content, .row .who { transition: opacity .18s ease; }
+  .row.is-dimmed .cb,
+  .row.is-dimmed .content,
+  .row.is-dimmed .who { opacity: .42; }
+
+  /* the r3 treatment, kept only so the two can be compared */
+  .prose.is-washed {
+    background: rgba(30, 64, 175, .055);
+    box-shadow: 0 0 0 4px rgba(30, 64, 175, .055);
+    border-radius: 3px;
+  }
+  .byline {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; color: var(--action); margin-bottom: 2px;
+  }
+  .byline .pip { width: 5px; height: 5px; border-radius: 50%; background: var(--action); }
+
+  .live-caret {
+    display: inline-block; width: 1.5px; height: 14px;
+    margin-left: 1px; vertical-align: -2px; background: currentColor; opacity: .75;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .live-caret { animation: blink 1.05s steps(1) infinite; }
+    @keyframes blink { 0%, 49% { opacity: .75; } 50%, 100% { opacity: 0; } }
+  }
+
+  .who {
+    flex: none; display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; color: var(--text-subdued); white-space: nowrap; margin-top: 1px;
+  }
+  .who .av {
+    width: 18px; height: 18px; border-radius: 50%; flex: none;
+    display: grid; place-content: center; font-size: 9px; font-weight: 600;
+    background: var(--surface-3); color: var(--text-subdued);
+    border: 1px solid var(--border-default);
+  }
+  /* The author tag is NOT dimmed on completed rows. It uses --text-subdued,
+     which is only 4.83:1 at full strength, so any dim at all fails 1.4.3:
+     .6 measures 2.33:1. Dim is a treatment for full-strength colour only. */
+  .row[data-done="true"] .who { opacity: 1; }
+
+  .kebab {
+    flex: none; width: 22px; height: 22px; border-radius: 4px;
+    display: grid; place-content: center; cursor: pointer;
+    background: none; border: 0; padding: 0; color: var(--text-subdued);
+    opacity: 0; transition: opacity .1s ease, background .1s ease;
+  }
+  .kebab:hover { background: var(--surface-3); color: var(--text-default); }
+  .row:hover .kebab, .row:focus-within .kebab { opacity: 1; }
+  .specimen[data-role="viewer"] .kebab { display: none; }
+
+  /* ---------- Log ---------- */
+  .log {
+    background: var(--bench-panel); border: 1px solid var(--bench-line);
+    border-radius: 10px; overflow: hidden;
+  }
+  .log-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 11px 14px; border-bottom: 1px solid var(--bench-line);
+  }
+  .log-body {
+    max-height: 250px; overflow-y: auto; padding: 10px 14px 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11.5px; line-height: 1.65;
+  }
+  .log-empty { color: var(--bench-ink-3); margin: 0; font-family: inherit; }
+  .log-line { margin: 0 0 3px; color: var(--bench-ink-2); display: flex; gap: 8px; }
+  .log-line .n { color: var(--bench-ink-3); flex: none; width: 20px; text-align: right; font-variant-numeric: tabular-nums; }
+  .log-line .w { word-break: break-word; }
+  .log-line.write .w { color: var(--bench-ink); }
+  .log-line.noise .w { color: var(--amber); }
+  .log-line.quiet .w { color: var(--bench-ink-3); }
+
+  .mini-seg { display: flex; gap: 1px; background: var(--bench-line); border: 1px solid var(--bench-line); border-radius: 6px; overflow: hidden; }
+  .mini-seg button {
+    appearance: none; border: 0; background: var(--bench-raise); color: var(--bench-ink-2);
+    font: inherit; font-size: 11px; padding: 4px 9px; cursor: pointer;
+  }
+  .mini-seg button[aria-pressed="true"] { background: var(--bench-ink); color: var(--bench-bg); }
+
+  /* ---------- Notes ---------- */
+  .note {
+    border-left: 2px solid var(--bench-line-2); padding-left: 14px;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .note p { margin: 0; font-size: 12.5px; line-height: 1.6; color: var(--bench-ink-2); }
+  .note strong { color: var(--bench-ink); font-weight: 600; }
+  .note em { font-style: italic; }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  /* ============================================================
+     CONCURRENCY - what happens when two people edit one item
+     Everything below is new for this round.
+     ============================================================ */
+
+  .editor {
+    min-height: 64px; padding: 8px 10px; border-radius: 6px;
+    background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--border-default);
+    font-family: "Noto Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size: 14px; line-height: 20px; color: var(--text-default);
+    outline: none; white-space: pre-wrap; word-break: break-word;
+  }
+  .editor:focus { box-shadow: inset 0 0 0 1px var(--action); background: var(--surface-1); }
+  .editor[aria-disabled="true"] { background: var(--surface-3); color: var(--text-subdued); }
+
+  .meta { font-size: 11px; color: var(--text-subdued); margin: 6px 0 0; display: flex; gap: 10px; flex-wrap: wrap; }
+  .meta b { font-weight: 600; color: var(--text-default); }
+  .dirty { color: var(--amber); font-weight: 600; }
+
+  .acts { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .acts button {
+    appearance: none; font: inherit; font-size: 12px; cursor: pointer;
+    border: 1px solid var(--bench-line-2); background: var(--bench-raise);
+    color: var(--bench-ink-2); border-radius: 6px; padding: 4px 9px;
+  }
+  .acts button:hover { background: var(--bench-sunk); color: var(--bench-ink); }
+  .acts button:disabled { opacity: .4; cursor: default; }
+  .acts button.primary { background: var(--bench-ink); color: var(--bench-bg); border-color: var(--bench-ink); }
+
+  /* ---------- The stored record ---------- */
+  .store {
+    background: var(--bench-panel); border: 1px solid var(--bench-line);
+    border-radius: 10px; overflow: hidden; margin-top: 4px;
+  }
+  .store-head { padding: 11px 14px; border-bottom: 1px solid var(--bench-line); display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .store-head .eyebrow { flex: 1; }
+  .store-body {
+    padding: 14px; font-family: "Noto Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size: 14px; line-height: 21px; color: var(--bench-ink);
+  }
+  .store-body .garble {
+    background: rgba(245, 158, 11, .22);
+    box-shadow: 0 0 0 1px rgba(245, 158, 11, .5);
+    border-radius: 3px; padding: 0 2px;
+  }
+  .store-note { padding: 11px 14px; border-top: 1px solid var(--bench-line); font-size: 12.5px; line-height: 1.6; color: var(--bench-ink-2); }
+  .store-note strong { color: var(--bench-ink); }
+  .lost { color: var(--negative); font-weight: 600; }
+
+  /* ---------- Conflict dialog ---------- */
+  .sheetwrap {
+    position: fixed; inset: 0; background: rgba(10, 12, 16, .45);
+    display: none; place-content: center; z-index: 400; padding: 24px;
+  }
+  .sheetwrap.on { display: grid; }
+  .sheet {
+    background: var(--bench-raise); border: 1px solid var(--bench-line-2);
+    border-radius: 12px; max-width: 600px; width: 100%;
+    box-shadow: var(--shadow-mount); overflow: hidden;
+  }
+  .sheet h3 { margin: 0; padding: 16px 18px 0; font-size: 15px; }
+  .sheet p.lede { margin: 6px 18px 14px; font-size: 12.5px; color: var(--bench-ink-2); line-height: 1.6; }
+  .choice {
+    margin: 0 18px 10px; padding: 11px 13px; border: 1px solid var(--bench-line);
+    border-radius: 8px; cursor: pointer; background: var(--bench-panel);
+  }
+  .choice:hover { border-color: var(--bench-focus); }
+  .choice b { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .07em; color: var(--bench-ink-3); margin-bottom: 4px; }
+  .choice span { font-size: 13.5px; line-height: 20px; color: var(--bench-ink); }
+  .sheet .foot { padding: 4px 18px 16px; font-size: 12px; color: var(--bench-ink-3); }
+</style>
+
+<div class="frame">
+
+  <aside class="rail">
+    <div class="rail-head">
+      <h1 class="rail-title">Concurrency bench</h1>
+      <p class="rail-sub">
+        Two people, one item, both typing. Stage the collision on purpose and
+        watch what each strategy does to the text that ends up stored.
+      </p>
+    </div>
+
+    <div class="group featured">
+      <p class="eyebrow primary">What happens when two saves collide</p>
+      <div class="seg" id="seg-strategy" role="group" aria-label="Concurrency strategy">
+        <button data-v="lww" aria-pressed="true"><span class="k">1</span>Last save wins</button>
+        <button data-v="conflict" aria-pressed="false"><span class="k">2</span>Ask which one to keep</button>
+        <button data-v="merge" aria-pressed="false"><span class="k">3</span>Merge both, silently</button>
+      </div>
+      <p class="group-note">
+        <em>Last save wins</em> is what ships today. <em>Merge</em> is the same idea as a
+        git merge: take what the editor started from, what they typed, and what is
+        stored now, and combine all three. Where both people changed the same words it
+        cannot choose, so it keeps both, which is the garbled text somebody then fixes.
+      </p>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Marco, on the other screen</p>
+      <div class="acts">
+        <button id="m-start">Start editing</button>
+        <button id="m-edit">Type an edit</button>
+        <button id="m-where">Same sentence</button>
+      </div>
+      <div class="acts">
+        <button id="m-save" class="primary">Save Marco's copy</button>
+      </div>
+      <p class="group-note">
+        Drive Marco by hand so the collision is deliberate. <em>Same sentence</em> switches
+        between him editing a different part of the item and him editing the exact words
+        you are editing, which is the only case a merge cannot resolve cleanly.
+      </p>
+    </div>
+
+    <div class="group">
+      <p class="eyebrow">Reset</p>
+      <div class="acts"><button id="reset">Put it back</button></div>
+    </div>
+  </aside>
+
+  <main class="bench">
+    <div class="bench-inner">
+
+      <div class="mount-label">
+        <p class="eyebrow">Two screens, one item / @m/tokens, light only</p>
+        <p id="hint">Edit the text on the left, then save. Drive Marco from the rail.</p>
+      </div>
+
+      <div class="screens">
+        <div class="screen">
+          <div class="screen-label"><span class="name">Dana Whitfield</span><span class="tag">You</span></div>
+          <section class="specimen" aria-label="Your screen">
+            <div class="editor" id="ed-you" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Checklist item, your copy"></div>
+            <p class="meta" id="meta-you"></p>
+            <div class="acts">
+              <button id="y-save" class="primary">Save your copy</button>
+            </div>
+          </section>
+        </div>
+
+        <div class="screen">
+          <div class="screen-label"><span class="name">Marco Reyes</span><span class="tag" id="m-state">Not editing</span></div>
+          <section class="specimen" aria-label="Marco's screen">
+            <div class="editor" id="ed-them" aria-disabled="true" aria-label="Checklist item, Marco's copy"></div>
+            <p class="meta" id="meta-them"></p>
+          </section>
+        </div>
+      </div>
+
+      <section class="store" aria-label="Stored record">
+        <div class="store-head">
+          <p class="eyebrow">What is actually stored</p>
+          <span class="tally" id="verdict-pill"></span>
+        </div>
+        <div class="store-body" id="stored"></div>
+        <div class="store-note" id="store-note"></div>
+      </section>
+
+      <section class="log" aria-label="Write log">
+        <div class="log-head"><p class="eyebrow">Every write, and what it did to the record</p></div>
+        <div class="log-body" id="log"><p class="log-empty">Type on the left, start Marco editing, then save them in either order.</p></div>
+      </section>
+
+      <div class="note">
+        <p><strong>The base is the whole trick.</strong> A merge needs three texts, not two:
+        what the editor started from, what they typed, and what is stored now. The client
+        already has the first one, because it loaded the text when editing began, so it can
+        send "here is what I started from" along with the edit. That is what makes this
+        cheaper than it sounds: no version column, no new transport, no merge engine on the
+        client.</p>
+      </div>
+
+      <div class="note">
+        <p><strong>What this does not do.</strong> It merges at save time, not per keystroke.
+        Two people typing for a minute diverge for a minute and then meet. Real
+        character-level merging is the destination and it costs more: storing document state
+        instead of a string, and a way for someone joining mid-edit to catch up. This is the
+        same promise, implemented more crudely, and it comes out cleanly when the real thing
+        lands.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="sheetwrap" id="sheetwrap">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-h">
+    <h3 id="sheet-h">Somebody else changed this too</h3>
+    <p class="lede">Marco saved a change while you were editing. Only one of these can be kept.</p>
+    <div class="choice" id="pick-mine"><b>Yours</b><span id="pick-mine-t"></span></div>
+    <div class="choice" id="pick-theirs"><b>Marco's</b><span id="pick-theirs-t"></span></div>
+    <p class="foot">This is the dialog. Whichever you do not pick is gone.</p>
+  </div>
+</div>
+
+<div class="sr-only" role="status" aria-live="polite" id="announce"></div>
+
+<script>
+  const ORIGINAL = "Reserved Instance coverage dropped to 61% this month after the m5 fleet was retired.";
+
+  const S = { strategy: "lww", sameSentence: false };
+
+  // The record, and each person's private copy of it.
+  let stored = ORIGINAL;
+  const you   = { base: ORIGINAL, buf: ORIGINAL, editing: true };
+  const them  = { base: null, buf: null, editing: false };
+
+  const $ = id => document.getElementById(id);
+  const edYou = $("ed-you"), edThem = $("ed-them");
+  const logEl = $("log"), announceEl = $("announce");
+  const esc = s => String(s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+  const announce = m => { announceEl.textContent = m; };
+
+  // ---------------------------------------------------------------
+  // Three-way merge, word level. Same shape as a git merge: diff the
+  // base against each side, apply both sets of changes, and where the
+  // two sides touched the same words keep both rather than choosing.
+  // Keeping both is what produces the garbled text somebody fixes.
+  // ---------------------------------------------------------------
+  const words = s => s.split(/\s+/).filter(Boolean);
+
+  function lcsPairs(a, b) {
+    const n = a.length, m = b.length;
+    const dp = Array.from({ length: n + 1 }, () => new Uint16Array(m + 1));
+    for (let i = n - 1; i >= 0; i--)
+      for (let j = m - 1; j >= 0; j--)
+        dp[i][j] = a[i] === b[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+    const out = []; let i = 0, j = 0;
+    while (i < n && j < m) {
+      if (a[i] === b[j]) { out.push([i, j]); i++; j++; }
+      else if (dp[i + 1][j] >= dp[i][j + 1]) i++; else j++;
+    }
+    return out;
+  }
+
+  // Every place `other` differs from `base`, as a replacement over a
+  // range of base words.
+  function hunks(base, other) {
+    const pairs = lcsPairs(base, other);
+    const out = []; let bi = 0, oi = 0;
+    for (const [i, j] of pairs) {
+      if (i > bi || j > oi) out.push({ s: bi, e: i, rep: other.slice(oi, j) });
+      bi = i + 1; oi = j + 1;
+    }
+    if (bi < base.length || oi < other.length)
+      out.push({ s: bi, e: base.length, rep: other.slice(oi) });
+    return out;
+  }
+
+  function merge3(baseS, mineS, theirsS) {
+    const B = words(baseS);
+    const hm = hunks(B, words(mineS)).map(h => ({ ...h, side: "m" }));
+    const ht = hunks(B, words(theirsS)).map(h => ({ ...h, side: "t" }));
+    const all = [...hm, ...ht].sort((a, b) => a.s - b.s || a.e - b.e);
+
+    const out = []; let pos = 0, conflicts = 0;
+    for (let k = 0; k < all.length; k++) {
+      const group = [all[k]];
+      let end = all[k].e, start = all[k].s;
+      // Two hunks clash if their base ranges overlap, or if both are
+      // pure insertions at the same spot.
+      while (k + 1 < all.length &&
+             (all[k + 1].s < end || (all[k + 1].s === start && all[k + 1].s === all[k + 1].e && start === end))) {
+        end = Math.max(end, all[++k].e);
+        group.push(all[k]);
+      }
+      out.push(...B.slice(pos, start).map(w => ({ w })));
+      const sides = new Set(group.map(g => g.side));
+      if (sides.size === 1) {
+        group.forEach(g => g.rep.forEach(w => out.push({ w })));
+      } else {
+        conflicts++;
+        group.filter(g => g.side === "m").forEach(g => g.rep.forEach(w => out.push({ w, bad: true })));
+        group.filter(g => g.side === "t").forEach(g => g.rep.forEach(w => out.push({ w, bad: true })));
+      }
+      pos = end;
+    }
+    out.push(...B.slice(pos).map(w => ({ w })));
+    return { parts: out, conflicts, text: out.map(p => p.w).join(" ") };
+  }
+
+  // ---------------------------------------------------------------
+  // Logging
+  // ---------------------------------------------------------------
+  function log(html) {
+    const e = logEl.querySelector(".log-empty");
+    if (e) e.remove();
+    const p = document.createElement("p");
+    p.className = "entry";
+    p.innerHTML = html;
+    logEl.prepend(p);
+  }
+
+  // ---------------------------------------------------------------
+  // Saving
+  // ---------------------------------------------------------------
+  function save(whoKey) {
+    const w = whoKey === "you" ? you : them;
+    const name = whoKey === "you" ? "Dana" : "Marco";
+    if (!w.editing) return;
+
+    const staleBase = w.base !== stored;
+
+    if (!staleBase) {
+      stored = w.buf;
+      log('<span class="op">updateChecklistItem</span> <span class="dim">from ' + name +
+        ', nothing had changed underneath</span>');
+      paint(null);
+      return;
+    }
+
+    if (S.strategy === "lww") {
+      const clobbered = stored;
+      stored = w.buf;
+      // The person who loses is the one who did NOT just save.
+      const loser = whoKey === "you" ? "Marco" : "Dana";
+      log('<span class="op">updateChecklistItem</span> <span class="dim">from ' + name + '</span>\n' +
+        '  <span class="hot">overwrote a change nobody was told about</span>\n' +
+        '  <span class="dim">gone: "' + esc(clobbered) + '"</span>');
+      paint({ kind: "lost", who: loser });
+      return;
+    }
+
+    if (S.strategy === "conflict") {
+      if (whoKey !== "you") { stored = w.buf; log('<span class="op">updateChecklistItem</span> <span class="dim">from Marco</span>'); paint(null); return; }
+      $("pick-mine-t").textContent = w.buf;
+      $("pick-theirs-t").textContent = stored;
+      $("sheetwrap").classList.add("on");
+      announce("Somebody else changed this too. Pick which version to keep.");
+      return;
+    }
+
+    const m = merge3(w.base, w.buf, stored);
+    stored = m.text;
+    log('<span class="op">updateChecklistItem</span> <span class="dim">from ' + name +
+      ', merged against what was stored</span>\n' +
+      "  base + yours + theirs -> one text" +
+      (m.conflicts
+        ? '\n  <span class="hot">' + m.conflicts + " place" + (m.conflicts > 1 ? "s" : "") +
+          " both people changed the same words, so both were kept</span>"
+        : '\n  <span class="dim">no overlap, nothing to garble</span>'));
+    paint({ kind: "merged", parts: m.parts, conflicts: m.conflicts });
+  }
+
+  $("pick-mine").addEventListener("click", () => {
+    stored = you.buf;
+    $("sheetwrap").classList.remove("on");
+    log('<span class="op">updateChecklistItem</span> <span class="dim">from Dana, after choosing</span>\n' +
+      '  <span class="hot">Marco\'s change discarded</span>');
+    paint({ kind: "lost", who: "Marco" });
+  });
+  $("pick-theirs").addEventListener("click", () => {
+    $("sheetwrap").classList.remove("on");
+    log('<span class="dim">Dana discarded her own edit and kept Marco\'s</span>');
+    paint({ kind: "lost", who: "Dana" });
+  });
+
+  // ---------------------------------------------------------------
+  // Paint
+  // ---------------------------------------------------------------
+  function paint(result) {
+    const body = $("stored");
+    if (result && result.kind === "merged") {
+      body.innerHTML = result.parts.map(p =>
+        p.bad ? '<span class="garble">' + esc(p.w) + "</span>" : esc(p.w)).join(" ");
+    } else {
+      body.textContent = stored;
+    }
+
+    const pill = $("verdict-pill");
+    const note = $("store-note");
+    if (!result) {
+      pill.textContent = "clean"; pill.className = "tally ok";
+      note.innerHTML = "No collision. One person edited, one person saved.";
+    } else if (result.kind === "lost") {
+      pill.textContent = "work lost"; pill.className = "tally bad";
+      note.innerHTML = "<strong>" + result.who + "'s edit no longer exists anywhere.</strong> " +
+        (S.strategy === "lww"
+          ? "Nobody was asked and nobody was told. The only sign is that the text changed under them the next time they load the page."
+          : "Somebody had to choose, and choosing means throwing one away.");
+    } else if (result.conflicts) {
+      pill.textContent = result.conflicts + " garbled"; pill.className = "tally bad";
+      note.innerHTML = "<strong>Both edits survived, and the highlighted words read badly.</strong> " +
+        "Nobody was asked anything and no work was thrown away. Somebody now has to tidy a sentence, " +
+        "which is a smaller ask than reconstructing a paragraph they cannot see.";
+    } else {
+      pill.textContent = "merged clean"; pill.className = "tally ok";
+      note.innerHTML = "<strong>Both edits survived and the text reads normally.</strong> " +
+        "They changed different parts, so there was nothing to garble. This is the common case.";
+    }
+    sync();
+  }
+
+  function sync() {
+    edYou.textContent = you.buf;
+    edThem.textContent = them.editing ? them.buf : stored;
+    $("m-state").textContent = them.editing ? "Editing" : "Not editing";
+    $("meta-you").innerHTML = "started from: <b>" + (you.base === stored ? "current" : "an older version") + "</b>" +
+      (you.buf !== stored ? ' <span class="dirty">unsaved changes</span>' : "");
+    $("meta-them").innerHTML = them.editing
+      ? "started from: <b>" + (them.base === stored ? "current" : "an older version") + "</b>" +
+        (them.buf !== stored ? ' <span class="dirty">unsaved changes</span>' : "")
+      : "reading";
+    $("m-edit").disabled = !them.editing;
+    $("m-save").disabled = !them.editing;
+    $("m-where").textContent = S.sameSentence ? "Same sentence" : "Different part";
+  }
+
+  edYou.addEventListener("input", () => { you.buf = edYou.textContent; sync(); });
+
+  // ---------------------------------------------------------------
+  // Marco
+  // ---------------------------------------------------------------
+  $("m-start").addEventListener("click", () => {
+    them.editing = true; them.base = stored; them.buf = stored;
+    log('<span class="dim">Marco opened the item. His copy is whatever was stored just now.</span>');
+    sync();
+  });
+  $("m-edit").addEventListener("click", () => {
+    if (!them.editing) return;
+    them.buf = S.sameSentence
+      ? them.buf.replace(/61%/, "58%").replace(/dropped/, "slipped")
+      : them.buf.replace(/m5 fleet was retired\.?/, "m5 fleet was retired, which finance already flagged.");
+    log('<span class="dim">Marco typed. Nothing is written yet.</span>');
+    sync();
+  });
+  $("m-where").addEventListener("click", () => { S.sameSentence = !S.sameSentence; sync(); });
+  $("m-save").addEventListener("click", () => save("them"));
+  $("y-save").addEventListener("click", () => save("you"));
+
+  $("reset").addEventListener("click", () => {
+    stored = ORIGINAL;
+    you.base = ORIGINAL; you.buf = ORIGINAL; you.editing = true;
+    them.editing = false; them.base = null; them.buf = null;
+    logEl.innerHTML = '<p class="log-empty">Type on the left, start Marco editing, then save them in either order.</p>';
+    paint(null);
+  });
+
+  // ---------------------------------------------------------------
+  // Controls
+  // ---------------------------------------------------------------
+  const segRoot = $("seg-strategy");
+  segRoot.addEventListener("click", (e) => {
+    const b = e.target.closest("button[data-v]");
+    if (!b) return;
+    S.strategy = b.dataset.v;
+    [...segRoot.querySelectorAll("button[data-v]")].forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+  });
+
+  const KEYS = { "1": "lww", "2": "conflict", "3": "merge" };
+  window.addEventListener("keydown", (e) => {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    const ae = document.activeElement;
+    if (ae && (ae.isContentEditable || /^(INPUT|TEXTAREA)$/.test(ae.tagName))) return;
+    const v = KEYS[e.key];
+    if (v) segRoot.querySelector('button[data-v="' + v + '"]').click();
+  });
+
+  function applyDeepLink() {
+    const q = new URLSearchParams(location.search);
+    const v = q.get("strategy");
+    if (v && KEYS["1"] !== undefined && ["lww", "conflict", "merge"].includes(v))
+      segRoot.querySelector('button[data-v="' + v + '"]').click();
+    if (q.get("embed") === "1") document.body.classList.add("is-embed");
+    const sc = parseFloat(q.get("scale"));
+    if (sc > 0 && sc <= 4) document.documentElement.style.setProperty("--embed-scale", String(sc));
+  }
+
+  paint(null);
+  applyDeepLink();
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape" || window.parent === window) return;
+    if ($("sheetwrap").classList.contains("on")) { $("sheetwrap").classList.remove("on"); return; }
+    const el = document.activeElement;
+    if (el && el !== document.body) el.blur();
+    window.parent.focus();
+  });
+</script>

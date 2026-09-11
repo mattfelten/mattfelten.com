@@ -222,6 +222,10 @@
       <b>Arbitration bench</b>
       <span>Three gestures fighting over one row, with a scorecard that says how many survive each arrangement.</span>
     </a>
+    <a class="tool" href="/decks/2026-checklist-component/prototypes/c3-concurrency-bench?strategy=merge">
+      <b>Concurrency bench</b>
+      <span>Two people editing one item. Stage the collision and watch what each strategy does to the stored text.</span>
+    </a>
     <a class="tool" href="/decks/2026-checklist-component/prototypes/edit-presence-bench">
       <b>Presence bench</b>
       <span>Two screens on one list. All seven multiplayer dimensions, plus the wire log.</span>
@@ -248,6 +252,7 @@
   const REJ = "/decks/2026-checklist-component/prototypes/rejections";
   const N = "/decks/2026-checklist-component/prototypes/c1-nesting-bench";
   const A = "/decks/2026-checklist-component/prototypes/c2-arbitration-bench";
+  const C = "/decks/2026-checklist-component/prototypes/c3-concurrency-bench";
 
   // Grouped by the part of the component they belong to, not by which
   // bench a switch happens to live in and not by when the work happened.
@@ -489,13 +494,28 @@
         },
         {
           q: "Does being in a row lock everyone else out?",
-          open: true,
           opts: [
-            { t: "No lock at all", u: P + "?lock=open&others=1" },
-            { t: "A hard hold", u: P + "?lock=locked&others=1" },
-            { t: "A hold that frees after 8 seconds", u: P + "?lock=timeout&others=1" }
+            { t: "No lock. Nobody is ever shut out", u: C + "?strategy=merge", status: "chosen" },
+            { t: "A hard hold", u: P + "?lock=locked&others=1", status: "rejected" },
+            { t: "A hold that frees after 8 seconds", u: P + "?lock=timeout&others=1", status: "rejected" }
           ],
-          why: "<strong>Still open, and it lands with the realtime work rather than the first release.</strong> Slack marks a held row and does not lock it. Two people editing one sentence is rare; one person leaving a tab open on a row is not. The simulation includes somebody walking away mid-edit, so under a hard hold that row goes permanently dead and you can feel the difference."
+          why: "No lock. A lock is what you build when you have given up on merging, and the direction here is the opposite: this list is heading towards proper collaborative editing, so a hold would train a habit that has to be untrained later. Slack marks a held row and does not lock it either. What a lock was protecting against is handled below instead."
+        },
+        {
+          q: "So what stops two people overwriting each other?",
+          opts: [
+            { t: "Merge both edits, silently", u: C + "?strategy=merge", status: "chosen" },
+            { t: "Ask which version to keep", u: C + "?strategy=conflict", status: "rejected" },
+            { t: "Last save wins", u: C + "?strategy=lww", status: "rejected" }
+          ],
+          why: "Merge them. Take the text the editor started from, the text they typed, and the text stored now, and combine all three, the same way a git merge does. Where both people changed <em>different</em> parts, which is the common case, both survive and it reads normally. Where both changed the <em>same</em> words it keeps both, which produces a garbled sentence somebody tidies. <strong>That is a smaller ask than reconstructing a paragraph they cannot see.</strong> Last save wins is what ships today and it loses work with nobody asked and nobody told. A dialog never loses work silently, but it makes somebody stop and choose, and choosing still throws one away."
+        },
+        {
+          q: "How expensive is merging, really?",
+          opts: [
+            { t: "See what the three-way merge produces", u: C + "?strategy=merge" }
+          ],
+          why: "Cheaper than it sounds, because <strong>the client already has the base.</strong> It loaded the text when editing started, so it can send what it started from alongside the edit, and the server merges against whatever is current. No version column, no new transport, no merge engine on the client. What it does <em>not</em> do is merge per keystroke: two people typing for a minute diverge for a minute and then meet. Real character-level merging is the destination and costs more, because it means storing document state instead of a string and giving someone joining mid-edit a way to catch up. This is the same promise implemented more crudely, and it comes out cleanly when the real thing lands."
         },
         {
           q: "What does it look like if you are not allowed to edit?",
