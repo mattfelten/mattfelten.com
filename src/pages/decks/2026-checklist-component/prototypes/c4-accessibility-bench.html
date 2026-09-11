@@ -74,7 +74,14 @@
      Mission Control has no dark mode, so the specimen never
      inverts. It stays a light sample mounted on the bench.
      ============================================================ */
-  .specimen, .proxy {
+  /* .popup is listed here because it renders outside .specimen, as a
+     direct child of body, so it can escape the specimen's overflow.
+     It is still specimen surface, so it needs the specimen's tokens.
+     Without this every token it references resolves to nothing: the
+     panel background falls back to transparent and the rows show
+     straight through it, which reads exactly like a z-index bug and
+     is not one. */
+  .specimen, .proxy, .popup {
     --surface-1: #FFFFFF;
     --surface-2: #FAFAFA;
     --surface-3: #F4F4F5;
@@ -578,7 +585,8 @@
      from a slide, so this reproduces the two rules that matter:
      author colours collapse to the system palette, and background
      plus box-shadow are stripped. */
-  body[data-forced="on"] .specimen {
+  body[data-forced="on"] .specimen,
+  body[data-forced="on"] .popup {
     --surface-1: #000000;
     --surface-2: #000000;
     --surface-3: #000000;
@@ -604,7 +612,6 @@
   body[data-forced="on"] .hold-label { color: #1AEBFF; box-shadow: inset 0 0 0 1px #1AEBFF; }
   body[data-forced="on"] .avatar { background: none; box-shadow: inset 0 0 0 1px #FFFFFF; color: #FFFFFF; }
   body[data-forced="on"] .person { background: none; box-shadow: inset 0 0 0 1px #FFFFFF; }
-  body[data-forced="on"] .popup { background: #000000; }
 
   /* The repair, under the simulation. Anything that was carrying
      meaning through background or shadow gets an outline instead,
