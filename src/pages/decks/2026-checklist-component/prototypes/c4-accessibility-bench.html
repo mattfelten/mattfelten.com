@@ -506,6 +506,27 @@
   .row.is-pressing { background: var(--surface-2); }
   .row.is-pressing .menu { opacity: 1; }
 
+  /* ---------- Drag proxy ----------
+     The collapsed single-line proxy, settled in the reorder round and
+     missing from this bench until now. A tall block under the cursor
+     covers the list you are aiming at; the proxy only has to say which
+     row is in your hand. */
+  .proxy {
+    position: fixed; z-index: 9999; pointer-events: none;
+    background: var(--surface-1); border: 1px solid var(--border-default);
+    border-radius: 8px; box-shadow: var(--shadow-lift);
+    padding: 6px 10px;
+    font-family: "Noto Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size: 14px; line-height: 20px; color: var(--text-default);
+    display: flex; align-items: center; gap: 10px;
+    left: 0; top: 0; will-change: transform;
+    max-width: 380px; white-space: nowrap; overflow: hidden;
+  }
+  .proxy .ptext { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* The row left behind while its proxy is in the air. */
+  .row.is-source { opacity: .28; }
+
   /* ---------- Drop indicator ---------- */
   .drop-line {
     position: absolute; left: 0; right: 0; height: 2px;
@@ -1556,95 +1577,160 @@
   }
 
   // ---------------------------------------------------------------
-  // Pointer drag, ported from the reorder bench rather than rewritten.
+  // Pointer drag, ported whole from the reorder bench.
   //
-  // The first version here was rewritten and got it wrong in two ways
-  // that both show up as a line pointing at the wrong slot:
+  // The previous two attempts here ported a fragment and rebuilt the
+  // rest, which is how this bench ended up with a drag that behaves
+  // differently from the one the reorder round actually settled. The
+  // parts that were missing, and what each one was doing wrong:
   //
-  //   It measured rows live on every pointermove, so any row that moved
-  //   changed the geometry it was measuring against mid-drag. The rects
-  //   are cached once, at grab.
+  //   MEASURING AT pointerdown. Pressing a handle blurs whatever field
+  //   was focused, which drops contenteditable, which flips .prose from
+  //   block back to inline and changes that row's height. Measuring in
+  //   the same tick captured geometry that was about to be wrong, so
+  //   every row below the previously focused one was off by the height
+  //   delta and the line could not reach the slot above it. Measuring
+  //   happens in activate(), on the first move past the threshold, by
+  //   which point the layout has settled.
   //
-  //   It counted the dragged row among the drop targets. The row in
-  //   your hand is not a slot you can drop into, so it has to be
-  //   excluded from the ordering, which is what made the line land a
-  //   position out whenever you dragged downwards.
+  //   NO THRESHOLD. Every press was a drag, so a click that moved two
+  //   pixels lifted the row.
   //
-  // The offset is a symmetric 6px: rows sit in a 12px gap, so half of
-  // it centres a 2px line. The old -7 / +5 pair was two different
-  // guesses at the same number.
+  //   NO PROXY. The settled design is a collapsed single-line proxy
+  //   following the cursor: a tall block covers the list you are aiming
+  //   at, and the proxy only has to say which row is in your hand.
+  //
+  //   NO SOURCE TREATMENT. Nothing showed which row had been lifted.
+  //
+  // Target and line are computed against the ORIGINAL geometry so the
+  // drop target never slides out from under the cursor.
   // ---------------------------------------------------------------
+  const THRESHOLD = 5;
   let drag = null;
 
   listEl.addEventListener("pointerdown", (e) => {
+    if (e.button !== 0) return;
     if (S.reorder === "menu") return;
     const h = e.target.closest && e.target.closest(".handle");
     if (!h) return;
     const row = h.closest(".row");
-    e.preventDefault();
+    if (!row) return;
+
+    // A live selection means the press is about text, not about moving.
+    const sel = window.getSelection();
+    if (sel && !sel.isCollapsed && sel.toString().length) return;
+
     const rows = [...listEl.querySelectorAll(".row")];
     drag = {
-      id: row.dataset.id,
-      from: rows.indexOf(row),
-      to: rows.indexOf(row),
-      rects: rows.map(r => {
-        const b = r.getBoundingClientRect();
-        return { el: r, top: b.top, height: b.height, mid: b.top + b.height / 2 };
-      })
+      row, id: row.dataset.id,
+      from: rows.indexOf(row), to: rows.indexOf(row),
+      startX: e.clientX, startY: e.clientY,
+      active: false, pointerId: e.pointerId,
+      rects: null, proxy: null, offsetY: 16
     };
-    // Guarded: capturing a pointer id that is not active throws, and a
-    // throw here abandons the rest of the handler, so the drag starts
-    // half set up.
-    try { h.setPointerCapture(e.pointerId); } catch (err) { /* no active pointer */ }
-    log('<span class="op">grab</span> <span class="dim">' + esc(short(byId(drag.id).text)) + "</span>");
+    try { listEl.setPointerCapture(e.pointerId); } catch (err) { /* no active pointer */ }
   });
 
-  window.addEventListener("pointermove", (e) => {
-    if (!drag) return;
-    // How many rows the cursor has passed, ignoring the one in hand.
+  listEl.addEventListener("pointermove", (e) => {
+    if (!drag || e.pointerId !== drag.pointerId) return;
+    if (!drag.active) {
+      if (Math.hypot(e.clientX - drag.startX, e.clientY - drag.startY) < THRESHOLD) return;
+      activate(e);
+    }
+    e.preventDefault();
+    moveProxy(e.clientX, e.clientY);
+    updateTarget(e.clientY);
+  });
+
+  function activate(e) {
+    drag.active = true;
+    document.body.style.userSelect = "none";
+    document.body.style.cursor = "grabbing";
+
+    // Measured here, not at pointerdown. See the note above.
+    drag.rects = [...listEl.querySelectorAll(".row")].map(r => {
+      const b = r.getBoundingClientRect();
+      return { el: r, top: b.top, height: b.height, mid: b.top + b.height / 2 };
+    });
+
+    const item = byId(drag.id);
+    const p = document.createElement("div");
+    p.className = "proxy";
+    p.innerHTML =
+      '<span class="cb" data-state="' + (item.done ? "done" : "open") + '" style="pointer-events:none">' +
+      (item.done ? ICON.check : ICON.circle) + "</span>" +
+      '<span class="ptext">' + esc(item.text) + "</span>";
+    document.body.appendChild(p);
+    drag.proxy = p;
+
+    drag.row.classList.add("is-source");
+    log('<span class="op">lift</span> <span class="dim">' + esc(short(item.text)) + "</span>");
+    announce("Lifted. Move to reposition.");
+  }
+
+  function moveProxy(x, y) {
+    if (drag.proxy) drag.proxy.style.transform = "translate3d(" + (x + 12) + "px, " + (y - drag.offsetY) + "px, 0)";
+  }
+
+  function updateTarget(clientY) {
+    const rects = drag.rects;
     let above = 0;
-    for (let i = 0; i < drag.rects.length; i++) {
+    for (let i = 0; i < rects.length; i++) {
       if (i === drag.from) continue;
-      if (e.clientY > drag.rects[i].mid) above++;
+      if (clientY > rects[i].mid) above++;
     }
     drag.to = above;
+    showLine(above);
+  }
 
+  function showLine(to) {
     const line = document.getElementById("dropline");
+    if (!line) return;
+    const rects = drag.rects;
     const listTop = listEl.getBoundingClientRect().top;
-    const order = drag.rects.map((r, i) => i).filter(i => i !== drag.from);
+    const order = rects.map((r, i) => i).filter(i => i !== drag.from);
+
     let y;
     if (!order.length) y = 0;
-    else if (above >= order.length) {
-      const last = drag.rects[order[order.length - 1]];
+    else if (to >= order.length) {
+      const last = rects[order[order.length - 1]];
       y = last.top + last.height - listTop + 6;
     } else {
-      y = drag.rects[order[above]].top - listTop - 6;
+      y = rects[order[to]].top - listTop - 6;
     }
     line.style.top = y + "px";
     line.classList.add("on");
-  });
+  }
 
-  window.addEventListener("pointerup", () => {
+  function endDrag(cancelled) {
     if (!drag) return;
-    document.getElementById("dropline").classList.remove("on");
-    if (drag.to !== drag.from) {
-      move(drag.id, drag.to);
-      announce("Moved to " + (idx(drag.id) + 1) + " of " + ITEMS.length + ".");
-      log('<span class="op">drop</span> <span class="dim">to ' + (idx(drag.id) + 1) + " of " + ITEMS.length + "</span>");
+    const d = drag;
+    drag = null;
+
+    document.body.style.userSelect = "";
+    document.body.style.cursor = "";
+    if (d.proxy) d.proxy.remove();
+    const line = document.getElementById("dropline");
+    if (line) line.classList.remove("on");
+    d.row.classList.remove("is-source");
+
+    if (d.active && !cancelled && d.to !== d.from) {
+      move(d.id, d.to);
+      announce("Moved to " + (idx(d.id) + 1) + " of " + ITEMS.length + ".");
+      log('<span class="op">drop</span> <span class="dim">to ' + (idx(d.id) + 1) + " of " + ITEMS.length + "</span>");
       reflow();
+    } else if (cancelled) {
+      // pointercancel has to cancel. Committing here was a real bug in
+      // the reorder round and it is worth not reintroducing.
+      log('<span class="op">cancel</span> <span class="dim">move abandoned, nothing written</span>');
+      announce("Cancelled.");
     }
-    drag = null;
-  });
+  }
 
-  // pointercancel has to cancel. Committing the move here was a real
-  // bug in the reorder round and it is worth not reintroducing.
-  window.addEventListener("pointercancel", () => {
-    if (!drag) return;
-    document.getElementById("dropline").classList.remove("on");
-    log('<span class="op">cancel</span> <span class="dim">move abandoned, nothing written</span>');
-    drag = null;
+  listEl.addEventListener("pointerup", (e) => {
+    if (drag && e.pointerId === drag.pointerId) endDrag(false);
   });
-
+  listEl.addEventListener("pointercancel", () => endDrag(true));
   // ---------------------------------------------------------------
   // Row menu
   // ---------------------------------------------------------------
