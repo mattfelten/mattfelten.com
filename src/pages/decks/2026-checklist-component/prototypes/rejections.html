@@ -198,9 +198,10 @@
 
   <p class="eyebrow">Argued</p>
   <p class="eyebrow-note">
-    These were settled on the data model or on correctness, so there is nothing to look at. Two
-    of them (integer positions, the missing autosave ceiling) show up in the mutation log rather
-    than the interface, and link to the bench that prints it.
+    These were settled on the data model, on correctness, or on a measurement, so there is
+    nothing to stage. Several are visible once you know where to look rather than in the
+    interface itself: in the mutation log, in the tab order, or in where the caret lands. Those
+    link to the bench that shows it.
   </p>
   <div class="cards" id="argued"></div>
 
@@ -225,6 +226,10 @@
   const M = "/decks/2026-checklist-component/prototypes/edit-mechanics-bench";
   const P = "/decks/2026-checklist-component/prototypes/edit-presence-bench";
   const R = "/decks/2026-checklist-component/prototypes/reorder-bench";
+  const N = "/decks/2026-checklist-component/prototypes/c1-nesting-bench";
+  const A = "/decks/2026-checklist-component/prototypes/c2-arbitration-bench";
+  const C = "/decks/2026-checklist-component/prototypes/c3-concurrency-bench";
+  const X = "/decks/2026-checklist-component/prototypes/c4-accessibility-bench";
 
   const SEEN = [
     {
@@ -270,19 +275,114 @@
     {
       no: "A wash, a byline and a blinking caret",
       yes: "One small avatar in the gutter",
-      demo: P + "?embed=1&scale=0.9&mark=wash&others=1", h: 400,
+      demo: P + "?embed=1&scale=0.9&mark=wash&others=1", h: 500,
       act: "Wait. Other people are typing",
       why: "Three pieces of apparatus to say one fact: somebody is in this row. The avatar says it alone, and the row treatment says what they are doing to it.",
       vs: P + "?embed=1&scale=0.9&mark=float&others=1", vsLabel: "Compare with the avatar alone"
     },
     {
       no: "Dimming the row while the words move",
-      yes: "Open. Replacement is C3's job",
-      tag: "New",
-      demo: P + "?embed=1&scale=0.9&mark=floatdim&others=1", h: 400,
+      yes: "A bar in the gutter, measuring 8.72:1",
+      demo: P + "?embed=1&scale=0.9&mark=floatdim&others=1", h: 500,
       act: "Wait for a row to start changing",
-      why: "Rejected on measurement, not taste. The dim is <code>#1C1917</code> at <code>opacity: .42</code> over white, which resolves to about <code>#A09E9E</code> and measures <strong>2.67:1</strong> against the 4.5:1 WCAG 1.4.3 asks for. It also fought the point of sending keystrokes at all, by greying text exactly while it changes. Two arguments had already been made against it; the number is what settled it.",
-      vs: P + "?embed=1&scale=0.9&mark=float&others=1", vsLabel: "Compare with the avatar alone"
+      why: "Rejected on measurement, not taste. The dim is <code>#1C1917</code> at <code>opacity: .42</code> over white, which resolves to about <code>#A09E9E</code> and measures <strong>2.67:1</strong> against the 4.5:1 WCAG 1.4.3 asks for. It also fought the point of sending keystrokes at all, by greying text exactly while it changes. <strong>No opacity value saves it</strong>, because the treatment works by weakening the text and the text is what has to stay readable, so the replacement moves the signal off the words entirely.",
+      vs: X + "?embed=1&scale=1.1&presence=bar", vsLabel: "Compare with the gutter bar"
+    },
+
+    // ---- C1, sub-items one level deep ----
+    {
+      no: "Deciding the level by how far sideways you drag",
+      yes: "An insertion line, plus dropping onto a row",
+      demo: N + "?embed=1&scale=1.05&drag=sideways&nosr=1", h: 520,
+      act: "Drag a row and push it right",
+      why: "A sideways nudge is a fine-motor gesture, and requiring one excludes a whole class of people before the accessibility round even starts. Reading the indent off the gap instead means <strong>nothing depends on a horizontal drag</strong>. Between two rows is a sibling; in the gap under a parent is a child; over the body of a row is a drop into it.",
+      vs: N + "?embed=1&scale=1.05&drag=context&nosr=1", vsLabel: "Compare with line plus folder"
+    },
+    {
+      no: "<code>role=tree</code> for one level of nesting",
+      yes: "A nested list and a labelled twisty",
+      demo: N + "?embed=1&scale=1.05&sr=tree", h: 860,
+      act: "Read the announced structure panel",
+      why: "A tree does say expanded and collapsed properly and it does give levels. It also <strong>takes over the arrow keys for its own navigation contract</strong>, which is exactly the keys reordering needs, and <code>treeitem</code> carries no checked state, so the tick has to be re-announced by hand. One level does not earn any of that. Stated honestly: a plain list has no expanded state, so the twisty's relationship to its children is implied rather than announced. A deeper tree would flip this.",
+      vs: N + "?embed=1&scale=1.05&sr=list", vsLabel: "Compare with the nested list"
+    },
+    {
+      no: "Ticking a parent ticks its children",
+      yes: "A tick changes the row you ticked",
+      demo: N + "?embed=1&scale=1.05&nest=cascade&nosr=1", h: 520,
+      act: "Tick a row that has sub-items",
+      why: "Tidy for one person, and <strong>a destructive write to somebody else's row</strong> the moment the list is shared. Cascading means one tick silently changes an item another person wrote and is watching; rolling up means a checkbox flips with nobody touching it. Neither is a change you would want to explain to the person whose row it was. The multiplayer case decides it and it overrides the single-user intuition.",
+      vs: N + "?embed=1&scale=1.05&nest=independent&nosr=1", vsLabel: "Compare with independent"
+    },
+
+    // ---- C2, three gestures on one row ----
+    {
+      no: "Dragging the text reorders the row",
+      yes: "Dragging the text selects it",
+      demo: A + "?embed=1&scale=1.1&textdrag=reorder", h: 720,
+      act: "Try to select a word",
+      why: "The arrangement that looks best on paper and is worst in use: dragging works everywhere, and the price is that <strong>nobody can ever bold a word again</strong>. With no toolbar, the format bar only appears on a selection, so losing selection loses formatting entirely. The bench scores all eight arrangements and none keeps all three gestures.",
+      vs: A + "?embed=1&scale=1.1&textdrag=select", vsLabel: "Compare with selection kept"
+    },
+
+    // ---- C3, two people on one item ----
+    {
+      no: "Last save wins",
+      yes: "Merge both edits, silently",
+      demo: C + "?embed=1&scale=1.05&strategy=lww", h: 470,
+      act: "Stage the collision and save both",
+      why: "What ships today. It loses work with <strong>nobody asked and nobody told</strong>, and the record diverges silently until somebody reloads and finds their paragraph gone. The bench drives the second editor by hand so the collision is deliberate rather than lucky.",
+      vs: C + "?embed=1&scale=1.05&strategy=merge", vsLabel: "Compare with the merge"
+    },
+    {
+      no: "Ask which version to keep",
+      yes: "Merge both edits, silently",
+      demo: C + "?embed=1&scale=1.05&strategy=conflict", h: 470,
+      act: "Stage the collision and save both",
+      why: "A dialog never loses work silently, which is the honest argument for it. It also makes somebody stop and choose, and <strong>choosing still throws one of them away</strong>. Keeping both produces a garbled sentence somebody tidies, and tidying a sentence is a smaller ask than reconstructing a paragraph you cannot see.",
+      vs: C + "?embed=1&scale=1.05&strategy=merge", vsLabel: "Compare with the merge"
+    },
+    {
+      no: "A hard hold on the row while somebody edits",
+      yes: "No lock. Nobody is ever shut out",
+      demo: P + "?embed=1&scale=0.9&lock=locked&others=1", h: 500,
+      act: "Try to edit the row Marco is in",
+      why: "<strong>A lock is not a design, it is scaffolding.</strong> It is what you build when you have given up on merging, and it trains a habit that has to be untrained the moment real collaborative editing lands. The product is heading the other way. Slack does not lock a held message either.",
+      vs: C + "?embed=1&scale=1.05&strategy=merge", vsLabel: "Compare with merging instead"
+    },
+
+    // ---- C4, the accessibility pass ----
+    {
+      no: "A hover-only handle as the only way to reorder",
+      yes: "Move up and Move down in the row menu",
+      demo: X + "?embed=1&scale=1.1&reorder=drag&coarse=1", h: 400,
+      act: "Try to move a row with no hover",
+      why: "Where C2 left it, and it fails three ways at once. A hover-only handle <strong>is not reachable by a keyboard, does not exist on a touchscreen, and gives a screen reader nothing to announce</strong>. SC 2.5.7 asks for a single pointer alternative to any dragging movement, and a keyboard is not a single pointer. The bench scores four settings against four inputs: drag alone covers one, keyboard lift covers three, the menu covers all four.",
+      vs: X + "?embed=1&scale=1.1&reorder=both&coarse=1", vsLabel: "Compare with the menu"
+    },
+    {
+      no: "A pencil on every row, so touch has an affordance",
+      yes: "Edit in the menu the row already has",
+      demo: X + "?embed=1&scale=1.1&enter=pencil", h: 400,
+      act: "Look at what every row now carries",
+      why: "It fixes touch and charges everybody, including the people whose hover was working perfectly. <strong>A pencil is a second control doing a job the first one was already doing</strong>: the kebab is on the row anyway, carrying the non-drag reorder, so edit joins it there and a long press reaches it the way a right click does on a pointer.",
+      vs: X + "?embed=1&scale=1.1&enter=menu&coarse=1", vsLabel: "Compare with the menu"
+    },
+    {
+      no: "Tinting the row and calling that focus",
+      yes: "The same tint, plus a ring that carries the contrast",
+      demo: X + "?embed=1&scale=1.1&focus=row", h: 400,
+      act: "Tab into the list",
+      why: "The one that feels right and cannot pass on its own. A focus indicator needs <strong>3:1 against what sits next to it</strong>, and the tint measures <strong>1.10:1</strong>. The lightest grey that would reach 3:1 is <code>#949494</code>, a solid band rather than a highlight. A focus indicator is allowed to be more than one thing and only one part has to clear the bar, so the ring pays at 7.94:1 and the tint stays quiet.",
+      vs: X + "?embed=1&scale=1.1&focus=object", vsLabel: "Compare with the ring"
+    },
+    {
+      no: "Leaving forced colors to look after itself",
+      yes: "Repainting the lost treatments with outlines",
+      demo: X + "?embed=1&scale=1.1&forced=1&presence=bar", h: 400,
+      act: "Find the presence marker and the drop line",
+      why: "Windows high contrast drops <code>background-color</code> and <code>box-shadow</code> outright, and every treatment this component owns is painted with one of those two, <em>because</em> border and padding were ruled out at the start for moving the glyphs. <strong>The rule that protected the text is the rule that makes the component vanish.</strong> The presence bar, the drop indicator and the lifted row all disappear with nothing left behind.",
+      vs: X + "?embed=1&scale=1.1&forced=1&fix=1&presence=bar", vsLabel: "Compare with the repair"
     }
   ];
 
@@ -343,6 +443,38 @@
       no: "A 3s delay before the row settles",
       yes: "1.5s, cancelled by any further typing",
       why: "Autosave at 4s idle lands almost exactly on the pause somebody takes to think of a word, so tying the settle to the save event strobes the row. 3s stopped the strobing but read as too slow. At 1.5s, bursts separated by 3s pauses and by 5s pauses both produced zero transitions."
+    },
+    {
+      no: "Five tab stops per row",
+      yes: "Three: tick it, type in it, open its menu",
+      why: "Making every control tabbable costs a hundred Tab presses to cross a twenty-row list. The handle and the pencil go, because reordering has the menu and the pencil is a rejected affordance anyway. All three remaining stops light the whole row, because focus belongs to the row rather than to the part of it you happened to land on.",
+      link: X + "?reorder=keyboard", linkLabel: "Tab through the five-stop version"
+    },
+    {
+      no: "Two tab stops, with Mark done in the menu",
+      yes: "Three. The checkbox keeps its stop",
+      why: "Tried, and wrong. Dropping the checkbox saved a tab stop by charging two presses for <strong>the primary action of the entire component</strong>. Ticking things off is what a checklist is for. Kept here rather than quietly reversed, because the trap is general: counting tab stops is a proxy metric, and optimising it will happily eat the thing the component exists to do."
+    },
+    {
+      no: "Announcing presence only on the treatment made of words",
+      yes: "Announced on every treatment",
+      why: "A real bug inside an already-settled decision, found by auditing rather than by building. With the gutter bar chosen, the row read <strong>byte-identically</strong> whether or not somebody else was inside it. Which visual carries presence is a design choice; whether it is said at all is not. Arrivals announce live too, but only on the row you are in, because a live region that reads other people's movements is noise and noise gets the region switched off."
+    },
+    {
+      no: "Restoring focus after a reorder inside requestAnimationFrame",
+      yes: "Move the nodes, and refocus synchronously",
+      why: "Rebuilding the list destroys the element that had focus, so the first arrow key worked and the second went nowhere. Chasing it with rAF looks like a fix and is not: <strong>rAF does not run while the tab is in the background</strong>, so the repair silently does not happen in exactly the case nobody is watching."
+    },
+    {
+      no: "Entering edit on click",
+      yes: "Entering on pointerdown, then getting out of the way",
+      why: "By the time a click fires, the element was not editable at pointerdown, so the browser never placed a caret and there is nothing left to preserve. Focusing and then placing the caret is a guess, and the guess is always the end of the line, which is why clicking into the middle of a word jumped. <strong>The invisible field's whole promise is that the text is the field</strong>, so clicking it has to behave like clicking text.",
+      link: X + "?enter=menu", linkLabel: "Click into the middle of a word"
+    },
+    {
+      no: "A 20x20 checkbox, passing target size by the spacing exception",
+      yes: "24x24 outright, with the extra given back to layout",
+      why: "It cleared SC 2.5.8 only because nothing else sat within 24px of it, by a single pixel of separation. That is a pass by accident, and it breaks the moment anyone tightens the row gap. A <code>-2px</code> margin hands the extra back to layout, so the hit area grows and <strong>the glyph does not move</strong>, which is the same trick the edit chrome uses for the same reason."
     }
   ];
 
@@ -361,9 +493,15 @@
     if (r.demo) {
       const demo = document.createElement("div");
       demo.className = "demo";
+      // The label is authored by hand and carries markup, so it has to be
+      // stripped and escaped before going into an attribute. A raw double
+      // quote in it closes the title early and takes src and style down
+      // with it, which renders as a silently empty 150px frame rather
+      // than as an error.
+      const tidy = String(r.no).replace(/<[^>]*>/g, "").replace(/&/g, "&amp;").replace(/"/g, "&quot;");
       demo.innerHTML =
         '<p class="demo-do"><b>Try it</b><span>' + r.act + '</span></p>' +
-        '<div class="stage"><iframe loading="lazy" title="' + r.no + '" ' +
+        '<div class="stage"><iframe loading="lazy" title="' + tidy + '" ' +
         'src="' + r.demo + '" style="height:' + r.h + 'px"></iframe></div>';
       el.appendChild(demo);
     }
