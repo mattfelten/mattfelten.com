@@ -921,6 +921,10 @@
     <div class="group">
       <p class="eyebrow">Inspect</p>
       <label class="switch">
+        <input type="checkbox" id="chk-held" checked>
+        <span>Marco is in the second row<span class="sub"><br>Toggle it while focused in that row to hear the announcement</span></span>
+      </label>
+      <label class="switch">
         <input type="checkbox" id="chk-coarse">
         <span>Simulate a touchscreen<span class="sub"><br>Kills hover everywhere, the way a finger does</span></span>
       </label>
@@ -1020,7 +1024,13 @@
   </main>
 </div>
 
+<!-- The menu's own keyboard semantics are deliberately out of scope: it
+     is a system component in its own right, not part of the list. What
+     matters here is that every action the list owns is reachable
+     through it, because it is the only path that serves every input. -->
 <div class="popup" id="popup" role="menu" aria-label="Row actions">
+  <button data-act="check" role="menuitem">Mark done</button>
+  <div class="sep"></div>
   <button data-act="up" role="menuitem">Move up</button>
   <button data-act="down" role="menuitem">Move down</button>
   <div class="sep"></div>
@@ -1050,7 +1060,8 @@
     focus: "outline",
     coarse: false,
     forced: false,
-    fix: false
+    fix: false,
+    held: true
   };
 
   const listEl = document.getElementById("list");
@@ -1088,19 +1099,35 @@
     b.fix = S.fix ? "on" : "off";
 
     listEl.innerHTML = ITEMS.map(it => {
-      const held = it.id === HELD;
+      const held = isHeld(it.id);
+      // Two tab stops per row: the field, then the menu trigger.
+      //
+      // Everything else is reachable but not tabbable. Five stops per
+      // row means a twenty-row list costs a hundred Tab presses to
+      // cross, and four of those five stops were controls the menu
+      // already carries. The row itself only becomes a stop in the
+      // keyboard-lift comparison, which is the one setting where the
+      // row is the thing being operated on.
+      const rowTab = S.reorder === "keyboard" ? ' tabindex="0"' : "";
       return '<div class="row' + (held ? " is-held" : "") + '" data-id="' + it.id +
-        '" data-done="' + it.done + '" tabindex="0" role="group" aria-label="' +
+        '" data-done="' + it.done + '"' + rowTab + ' role="group" aria-label="' +
         esc(rowLabel(it)) + '">' +
         '<span class="hold-bar" aria-hidden="true"></span>' +
-        '<button class="handle" data-act="grab" aria-label="Reorder ' + esc(short(it.text)) + '">' + ICON.grip + "</button>" +
-        '<button class="cb" data-act="check" data-state="' + (it.done ? "done" : "open") +
+        '<button class="handle" tabindex="-1" data-act="grab" aria-label="Reorder ' + esc(short(it.text)) + '">' + ICON.grip + "</button>" +
+        '<button class="cb" tabindex="-1" data-act="check" data-state="' + (it.done ? "done" : "open") +
         '" aria-label="' + (it.done ? "Mark not done" : "Mark done") + '">' +
         (it.done ? ICON.check : ICON.circle) + "</button>" +
-        '<span class="content"><span class="prose" data-act="prose">' + esc(it.text) + "</span></span>" +
+        '<span class="content"><span class="prose" data-act="prose" tabindex="0" role="textbox" aria-multiline="true"' +
+        ' aria-label="Item text"' + (held ? ' aria-describedby="held-' + it.id + '"' : "") + ">" +
+        esc(it.text) + "</span></span>" +
+        // Presence, said in words, on every treatment rather than only
+        // the one that happens to be made of words. The visual can be a
+        // bar or a wash or nothing at all; a screen reader still has to
+        // be told somebody is in here.
+        (held ? '<span class="sr-only" id="held-' + it.id + '">' + HELD_BY + " is editing this item</span>" : "") +
         (held ? '<span class="hold-label">' + HELD_BY + " is editing</span>" : "") +
         '<span class="person"><span class="avatar">' + it.who[0] + "</span><span>" + it.who + "</span></span>" +
-        '<button class="pencil" data-act="pencil" aria-label="Edit ' + esc(short(it.text)) + '">' + ICON.pencil + "</button>" +
+        '<button class="pencil" tabindex="-1" data-act="pencil" aria-label="Edit ' + esc(short(it.text)) + '">' + ICON.pencil + "</button>" +
         '<button class="menu" data-act="menu" aria-haspopup="menu" aria-label="Actions for ' + esc(short(it.text)) + '">' + ICON.kebab + "</button>" +
         "</div>";
     }).join("") + '<div class="drop-line" id="dropline"></div>';
@@ -1129,9 +1156,16 @@
   function rowLabel(it) {
     const pos = (idx(it.id) + 1) + " of " + ITEMS.length;
     let s = it.text + ", " + it.who + ", " + (it.done ? "done" : "not done") + ", " + pos;
-    if (it.id === HELD && S.presence === "label") s += ", " + HELD_BY + " is editing";
+    // Presence is announced on every treatment, not only the one made of
+    // words. Which visual carries it is a design choice; whether it is
+    // said at all is not. Tying the two together is what made the chosen
+    // gutter bar silent to a screen reader: the row read identically
+    // whether or not somebody else was inside it.
+    if (isHeld(it.id)) s += ", " + HELD_BY + " is editing";
     return s;
   }
+
+  const isHeld = id => S.held && id === HELD;
 
   function peek() {
     const it = byId(HELD);
@@ -1557,6 +1591,7 @@
     const at = idx(menuFor);
     popup.querySelector('[data-act="up"]').disabled = at === 0;
     popup.querySelector('[data-act="down"]').disabled = at === ITEMS.length - 1;
+    popup.querySelector('[data-act="check"]').textContent = byId(menuFor).done ? "Mark not done" : "Mark done";
     const first = [...popup.querySelectorAll("button")].find(x => !x.disabled);
     if (first) first.focus();
   }
@@ -1587,7 +1622,22 @@
       startEdit(id);
       return;
     }
+    // The checkbox is no longer a tab stop, so this is the keyboard and
+    // screen reader route to the primary action of the whole component.
+    if (act === "check") {
+      closeMenu(true);
+      toggleDone(id);
+      return;
+    }
   });
+
+  function toggleDone(id) {
+    const it = byId(id);
+    it.done = !it.done;
+    log('<span class="op">' + (it.done ? "check" : "uncheck") + '</span> <span class="dim">' + esc(short(it.text)) + "</span>");
+    announce(it.done ? "Marked done." : "Marked not done.");
+    render();
+  }
 
   document.addEventListener("pointerdown", (e) => {
     if (popup.contains(e.target)) return;
@@ -1700,6 +1750,7 @@
     const at = idx(menuFor);
     popup.querySelector('[data-act="up"]').disabled = at === 0;
     popup.querySelector('[data-act="down"]').disabled = at === ITEMS.length - 1;
+    popup.querySelector('[data-act="check"]').textContent = byId(menuFor).done ? "Mark not done" : "Mark done";
     const first = [...popup.querySelectorAll("button")].find(b => !b.disabled);
     if (first) first.focus();
   }
@@ -1800,14 +1851,7 @@
     const id = row.dataset.id;
     const act = el.dataset.act;
 
-    if (act === "check") {
-      const it = byId(id);
-      it.done = !it.done;
-      log('<span class="op">' + (it.done ? "check" : "uncheck") + '</span> <span class="dim">' + esc(short(it.text)) + "</span>");
-      announce(it.done ? "Marked done." : "Marked not done.");
-      render();
-      return;
-    }
+    if (act === "check") { toggleDone(id); return; }
     if (act === "menu") { e.stopPropagation(); openMenu(el); return; }
     if (act === "pencil") { startEdit(id); return; }
     // "prose" is deliberately absent: clicking the text is handled on
@@ -1861,6 +1905,12 @@
 
     if (e.key === " ") {
       if (e.target instanceof Element && e.target.closest("button")) return;
+      // Only when the ROW itself holds focus. Now that the field is the
+      // tab stop, space belongs to the field: it types a space, and a
+      // text box that pockets the space bar to do something else is a
+      // trap. The row is only focusable in the keyboard-lift setting,
+      // which is exactly where space should lift.
+      if (ae !== row) return;
       if (S.reorder === "drag" || S.reorder === "menu") {
         announce("Keyboard reordering is off in this setting.");
         log('<span class="op">blocked</span> <span class="dim">no keyboard path in this setting</span>');
@@ -1906,6 +1956,28 @@
   wireSeg("seg-enter", "enter");
   wireSeg("seg-presence", "presence");
   wireSeg("seg-focus", "focus");
+
+  // Presence arriving or leaving is only announced on the row you are
+  // actually in. Announcing every arrival anywhere in the list would be
+  // unusable the moment a list has more than a couple of people in it:
+  // a live region that reads other people's movements is noise, and
+  // noise gets the whole region turned off. On the row you are holding,
+  // somebody else arriving is not noise, it is the thing you need to
+  // know before you keep typing.
+  document.getElementById("chk-held").addEventListener("change", e => {
+    S.held = e.target.checked;
+    const inThatRow = document.activeElement && document.activeElement.closest &&
+      document.activeElement.closest('.row[data-id="' + HELD + '"]');
+    render();
+    if (inThatRow) {
+      announce(S.held ? HELD_BY + " is now editing this item." : HELD_BY + " has stopped editing this item.");
+      log('<span class="op">announce</span> <span class="hot">live</span> <span class="dim">' +
+        (S.held ? HELD_BY + " arrived" : HELD_BY + " left") + ", and you are in that row</span>");
+    } else {
+      log('<span class="op">' + (S.held ? "arrive" : "leave") + '</span> <span class="dim">' + HELD_BY +
+        ", not announced: you are not in that row</span>");
+    }
+  });
 
   document.getElementById("chk-coarse").addEventListener("change", e => { S.coarse = e.target.checked; render(); });
   document.getElementById("chk-forced").addEventListener("change", e => { S.forced = e.target.checked; render(); });

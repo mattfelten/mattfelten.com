@@ -224,6 +224,23 @@
     </p>
   </div>
 
+  <div class="ex">
+    <div class="q"><h3>How the row menu behaves once it is open</h3></div>
+    <div class="opts">
+      <a class="opt" href="/decks/2026-checklist-component/prototypes/c4-accessibility-bench?reorder=menu">See what the list puts in it</a>
+    </div>
+    <p class="settled">
+      The menu is a system component in its own right, so its keyboard contract, its roving
+      focus and its arrow-key navigation belong to the menu, not to this list.
+      <strong>What the list owns is which actions go in there, and that turned out to be the
+      whole accessibility answer:</strong> move up, move down, edit, and mark done. Every one of
+      them is an action the row also offers by pointer, and the menu is the only path that
+      serves a keyboard, a touchscreen and a screen reader without a second affordance being
+      invented for each. Same shape as permission and the merge mechanism: the behaviour is the
+      component's call, the machinery is not.
+    </p>
+  </div>
+
   <div class="phase"><h2>The instruments</h2></div>
   <div class="tools">
     <a class="tool" href="/decks/2026-checklist-component/prototypes/reorder-bench">
@@ -532,6 +549,14 @@
           why: "<strong>The row is the object, not the field inside it.</strong> That reframes the question: hover and focus stop being two treatments and become one idea at two strengths. Hover says this row <em>will</em> be active, focus says it <em>is</em>, and active covers being reordered, being edited, or anything else the row is about to do. So both get the same tint, and the ring is what separates will-be from is, because two greys a hair apart separate nothing. It keys off <em>focus-within</em>, so focus landing on the text, the checkbox or the menu all light the row: that is what makes it read as an object rather than a container of separately interesting parts. The controls keep their own rings, since the row says which row and the ring says which control. <strong>Tinting alone cannot carry it:</strong> a focus indicator needs 3:1 against what is next to it, and a tint at 1.10:1 is not close, with the lightest passing grey being #949494, a solid band rather than a highlight. A focus indicator is allowed to be more than one thing and only one part has to clear the bar, so the ring pays. Putting that ring on the row's own edge rather than in the gutter is also what <strong>leaves the gutter to presence</strong>, which the gutter-rule version collides with pixel for pixel."
         },
         {
+          q: "How many tab stops is a row worth?",
+          opts: [
+            { t: "Two: the field, then the menu", u: X + "?focus=object&reorder=both", status: "chosen" },
+            { t: "Five: the row and every control on it", u: X + "?reorder=keyboard", status: "rejected" }
+          ],
+          why: "Two. <strong>The row is one object, so it gets one stop for the thing you type in and one for the thing that does everything else.</strong> Five stops per row is what you get by making every control tabbable, and it means a twenty-row list costs a hundred Tab presses to cross, four fifths of them on controls the menu already carries. The handle, the checkbox and the pencil stay clickable and stop being stops. <strong>The checkbox moving out of the tab order is the real cost</strong>, since ticking is the primary action of the whole component, so it moves into the menu where the keyboard and the screen reader reach it in two presses instead of one. Both tab stops light the whole row, because focus belongs to the row rather than to the part of it you happen to have landed on."
+        },
+        {
           q: "What survives Windows high contrast?",
           opts: [
             { t: "What the component paints today", u: X + "?forced=1&presence=bar", status: "rejected" },
@@ -564,7 +589,7 @@
             { t: "Say it in words", u: X + "?presence=label" },
             { t: "Fade the row to 42%", u: X + "?presence=dim", status: "rejected" }
           ],
-          why: "A bar. <strong>There is no opacity value that saves the fade</strong>, because the treatment works by weakening the text and the text is what has to stay readable. Every replacement here moves the signal off the words and onto something that is not carrying text contrast: the bar answers to the 3:1 non-text minimum instead of 4.5:1 and measures 8.72:1, and the words never change at all. Words are the honest runner-up and the only option a screen reader gets for free, but they cost width on a row already carrying an author tag. The bench computes all four ratios on every toggle rather than quoting them. <strong>The bar survives because focus went to the row's own edge rather than into the gutter.</strong> The gutter-rule version of focus draws in the same 12px column at the same width and the same colour, so the two would not be merely adjacent, they would be identical pixels. Choosing the row as the object is what keeps the gutter unambiguous."
+          why: "A bar. <strong>There is no opacity value that saves the fade</strong>, because the treatment works by weakening the text and the text is what has to stay readable. Every replacement here moves the signal off the words and onto something that is not carrying text contrast: the bar answers to the 3:1 non-text minimum instead of 4.5:1 and measures 8.72:1, and the words never change at all. Words are the honest runner-up and the only option a screen reader gets for free, but they cost width on a row already carrying an author tag. The bench computes all four ratios on every toggle rather than quoting them. <strong>Whichever visual wins, presence is said in words to a screen reader.</strong> Tying the announcement to the treatment that happened to be made of words was a real bug: with the bar chosen, the row read identically whether or not somebody else was inside it. Now the row says it on every treatment, and somebody arriving or leaving is announced live, but only on the row you are actually in. A live region that reads other people's movements around the list is noise, and noise gets the region switched off. <strong>The bar survives because focus went to the row's own edge rather than into the gutter.</strong> The gutter-rule version of focus draws in the same 12px column at the same width and the same colour, so the two would not be merely adjacent, they would be identical pixels. Choosing the row as the object is what keeps the gutter unambiguous."
         },
         {
           q: "Does being in a row lock everyone else out?",
