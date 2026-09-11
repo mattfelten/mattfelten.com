@@ -542,9 +542,9 @@
     <div class="group featured">
       <p class="eyebrow primary">What happens when two saves collide</p>
       <div class="seg" id="seg-strategy" role="group" aria-label="Concurrency strategy">
-        <button data-v="lww" aria-pressed="true"><span class="k">1</span>Last save wins</button>
+        <button data-v="lww" aria-pressed="false"><span class="k">1</span>Last save wins</button>
         <button data-v="conflict" aria-pressed="false"><span class="k">2</span>Ask which one to keep</button>
-        <button data-v="merge" aria-pressed="false"><span class="k">3</span>Merge both, silently</button>
+        <button data-v="merge" aria-pressed="true"><span class="k">3</span>Merge both, silently</button>
       </div>
       <p class="group-note">
         <em>Last save wins</em> is what ships today. <em>Merge</em> is the same idea as a
@@ -656,7 +656,7 @@
 <script>
   const ORIGINAL = "Reserved Instance coverage dropped to 61% this month after the m5 fleet was retired.";
 
-  const S = { strategy: "lww", sameSentence: false };
+  const S = { strategy: "merge", sameSentence: false };
 
   // The record, and each person's private copy of it.
   let stored = ORIGINAL;

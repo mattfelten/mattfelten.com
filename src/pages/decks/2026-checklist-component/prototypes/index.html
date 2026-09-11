@@ -204,6 +204,26 @@
     </p>
   </div>
 
+  <div class="ex">
+    <div class="q"><h3>How the merging is actually implemented</h3></div>
+    <div class="opts">
+      <a class="opt" href="/decks/2026-checklist-component/prototypes/c3-concurrency-bench?strategy=merge">See the behaviour it has to produce</a>
+    </div>
+    <p class="settled">
+      The component's promise is that concurrent edits merge, nobody is asked to choose, and
+      nobody loses work. <strong>Two very different mechanisms satisfy that same promise.</strong>
+      A three-way merge at save time is cheap: the editor already knows the text it started from,
+      so it sends that along with the edit and the server merges against whatever is current. No
+      version column, no new transport. A real character-level library merges continuously
+      instead, which mostly prevents the collision rather than resolving it, and guarantees
+      everyone converges on the identical text. Worth knowing: <strong>it garbles too.</strong>
+      Character-level merging produces "fellslipped to 5855%" where the word-level version
+      produces "fell slipped to 55% 58%". Neither can fix a conflict that is semantic.
+      Which one ships is an engineering decision about cost and appetite, and it does not change
+      what the component promises, so it is deliberately not settled here.
+    </p>
+  </div>
+
   <div class="phase"><h2>The instruments</h2></div>
   <div class="tools">
     <a class="tool" href="/decks/2026-checklist-component/prototypes/reorder-bench">
@@ -509,13 +529,6 @@
             { t: "Last save wins", u: C + "?strategy=lww", status: "rejected" }
           ],
           why: "Merge them. Take the text the editor started from, the text they typed, and the text stored now, and combine all three, the same way a git merge does. Where both people changed <em>different</em> parts, which is the common case, both survive and it reads normally. Where both changed the <em>same</em> words it keeps both, which produces a garbled sentence somebody tidies. <strong>That is a smaller ask than reconstructing a paragraph they cannot see.</strong> Last save wins is what ships today and it loses work with nobody asked and nobody told. A dialog never loses work silently, but it makes somebody stop and choose, and choosing still throws one away."
-        },
-        {
-          q: "How expensive is merging, really?",
-          opts: [
-            { t: "See what the three-way merge produces", u: C + "?strategy=merge" }
-          ],
-          why: "Cheaper than it sounds, because <strong>the client already has the base.</strong> It loaded the text when editing started, so it can send what it started from alongside the edit, and the server merges against whatever is current. No version column, no new transport, no merge engine on the client. What it does <em>not</em> do is merge per keystroke: two people typing for a minute diverge for a minute and then meet. Real character-level merging is the destination and costs more, because it means storing document state instead of a string and giving someone joining mid-edit a way to catch up. This is the same promise implemented more crudely, and it comes out cleanly when the real thing lands."
         },
         {
           q: "What does it look like if you are not allowed to edit?",
