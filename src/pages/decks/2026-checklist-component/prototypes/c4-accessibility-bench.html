@@ -308,9 +308,13 @@
   .row:hover { background: var(--surface-2); }
   .row.is-lifted { background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--action); }
 
+  /* Also 24x24, re-anchored so the grip dots stay exactly where they
+     were: left -25 and top 0 keep the same centre as the old -22/3 at
+     18x18. It is not a tab stop, but it is still a pointer target and
+     2.5.8 does not care how you reached it. */
   .handle {
-    position: absolute; left: -22px; top: 3px;
-    width: 18px; height: 18px;
+    position: absolute; left: -25px; top: 0;
+    width: 24px; height: 24px;
     display: grid; place-content: center;
     border-radius: 4px; color: var(--text-subdued);
     opacity: 0; cursor: grab;
@@ -322,8 +326,14 @@
   .handle:active { cursor: grabbing; }
   .row:hover .handle, .row:focus .handle, .row:focus-within .handle { opacity: 1; }
 
+  /* 24x24, the SC 2.5.8 minimum, with a negative margin that gives the
+     extra 4px back to layout. The hit area grows, the glyph does not
+     move. Same trick as the edit chrome, for the same reason: the
+     component is allowed to change what it is doing, not where the
+     words are. Before this the checkbox was 20x20 and only cleared
+     2.5.8 through the spacing exception, by a single pixel. */
   .cb {
-    flex: none; width: 20px; height: 20px;
+    flex: none; width: 24px; height: 24px; margin: -2px;
     display: grid; place-content: center; cursor: pointer;
     background: none; border: 0; padding: 0; color: var(--text-subdued);
   }
@@ -384,7 +394,7 @@
 
   /* ---------- Row menu ---------- */
   .menu {
-    flex: none; width: 20px; height: 20px;
+    flex: none; width: 24px; height: 24px; margin: -2px;
     display: grid; place-content: center; border-radius: 4px;
     color: var(--text-subdued); background: none; border: 0; padding: 0;
     opacity: 0; cursor: pointer;
@@ -1029,8 +1039,6 @@
      matters here is that every action the list owns is reachable
      through it, because it is the only path that serves every input. -->
 <div class="popup" id="popup" role="menu" aria-label="Row actions">
-  <button data-act="check" role="menuitem">Mark done</button>
-  <div class="sep"></div>
   <button data-act="up" role="menuitem">Move up</button>
   <button data-act="down" role="menuitem">Move down</button>
   <div class="sep"></div>
@@ -1114,7 +1122,7 @@
         esc(rowLabel(it)) + '">' +
         '<span class="hold-bar" aria-hidden="true"></span>' +
         '<button class="handle" tabindex="-1" data-act="grab" aria-label="Reorder ' + esc(short(it.text)) + '">' + ICON.grip + "</button>" +
-        '<button class="cb" tabindex="-1" data-act="check" data-state="' + (it.done ? "done" : "open") +
+        '<button class="cb" data-act="check" data-state="' + (it.done ? "done" : "open") +
         '" aria-label="' + (it.done ? "Mark not done" : "Mark done") + '">' +
         (it.done ? ICON.check : ICON.circle) + "</button>" +
         '<span class="content"><span class="prose" data-act="prose" tabindex="0" role="textbox" aria-multiline="true"' +
@@ -1591,7 +1599,6 @@
     const at = idx(menuFor);
     popup.querySelector('[data-act="up"]').disabled = at === 0;
     popup.querySelector('[data-act="down"]').disabled = at === ITEMS.length - 1;
-    popup.querySelector('[data-act="check"]').textContent = byId(menuFor).done ? "Mark not done" : "Mark done";
     const first = [...popup.querySelectorAll("button")].find(x => !x.disabled);
     if (first) first.focus();
   }
@@ -1620,13 +1627,6 @@
     if (act === "edit") {
       closeMenu(false);
       startEdit(id);
-      return;
-    }
-    // The checkbox is no longer a tab stop, so this is the keyboard and
-    // screen reader route to the primary action of the whole component.
-    if (act === "check") {
-      closeMenu(true);
-      toggleDone(id);
       return;
     }
   });
@@ -1750,7 +1750,6 @@
     const at = idx(menuFor);
     popup.querySelector('[data-act="up"]').disabled = at === 0;
     popup.querySelector('[data-act="down"]').disabled = at === ITEMS.length - 1;
-    popup.querySelector('[data-act="check"]').textContent = byId(menuFor).done ? "Mark not done" : "Mark done";
     const first = [...popup.querySelectorAll("button")].find(b => !b.disabled);
     if (first) first.focus();
   }

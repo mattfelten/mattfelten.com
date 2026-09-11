@@ -233,11 +233,13 @@
       The menu is a system component in its own right, so its keyboard contract, its roving
       focus and its arrow-key navigation belong to the menu, not to this list.
       <strong>What the list owns is which actions go in there, and that turned out to be the
-      whole accessibility answer:</strong> move up, move down, edit, and mark done. Every one of
-      them is an action the row also offers by pointer, and the menu is the only path that
-      serves a keyboard, a touchscreen and a screen reader without a second affordance being
-      invented for each. Same shape as permission and the merge mechanism: the behaviour is the
-      component's call, the machinery is not.
+      whole accessibility answer:</strong> move up, move down, and edit. Every one of them is an
+      action the row also offers by pointer, and the menu is the only path that serves a
+      keyboard, a touchscreen and a screen reader without a second affordance being invented for
+      each. <em>Mark done</em> was in here briefly, while the checkbox was not a tab stop, and
+      came back out when it became one: a menu item that duplicates a control you can already
+      reach directly is clutter. Same shape as permission and the merge mechanism: the behaviour
+      is the component's call, the machinery is not.
     </p>
   </div>
 
@@ -551,10 +553,10 @@
         {
           q: "How many tab stops is a row worth?",
           opts: [
-            { t: "Two: the field, then the menu", u: X + "?focus=object&reorder=both", status: "chosen" },
+            { t: "Three: tick it, type in it, or open its menu", u: X + "?focus=object&reorder=both", status: "chosen" },
             { t: "Five: the row and every control on it", u: X + "?reorder=keyboard", status: "rejected" }
           ],
-          why: "Two. <strong>The row is one object, so it gets one stop for the thing you type in and one for the thing that does everything else.</strong> Five stops per row is what you get by making every control tabbable, and it means a twenty-row list costs a hundred Tab presses to cross, four fifths of them on controls the menu already carries. The handle, the checkbox and the pencil stay clickable and stop being stops. <strong>The checkbox moving out of the tab order is the real cost</strong>, since ticking is the primary action of the whole component, so it moves into the menu where the keyboard and the screen reader reach it in two presses instead of one. Both tab stops light the whole row, because focus belongs to the row rather than to the part of it you happen to have landed on."
+          why: "Three, and they are the three things you can do to a row: tick it, type in it, or open the menu that does everything else. <strong>All three light the whole row</strong>, because focus belongs to the row rather than to the part of it you happened to land on. Five is what you get by making every control tabbable, and it means a twenty-row list costs a hundred Tab presses to cross; the handle and the pencil are the two that go, because reordering has the menu and the pencil is a rejected affordance anyway. <strong>Two was tried and it was wrong:</strong> dropping the checkbox and putting <em>Mark done</em> in the menu saved a stop by charging two presses for the primary action of the entire component. Ticking things off is what a checklist is for. It keeps its stop."
         },
         {
           q: "What survives Windows high contrast?",
