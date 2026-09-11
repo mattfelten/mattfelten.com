@@ -1019,9 +1019,21 @@
     document.body.style.userSelect = "none";
     document.body.style.cursor = "grabbing";
 
+    // Two coordinate spaces. `scale` is implemented with CSS `zoom`, so
+    // getBoundingClientRect reports ZOOMED viewport pixels, while
+    // style.top and translateY are both read as the element's own
+    // UNZOOMED local pixels. Mixing them puts the drop line and the
+    // shift animation out by exactly the zoom factor, which is
+    // invisible at scale 1 and badly wrong inside a scaled embed.
+    //
+    //   top / height / mid   viewport px, compared against clientY
+    //   offTop / offHeight   local px, written back into style
     drag.rects = [...listEl.querySelectorAll(".row")].map(r => {
       const b = r.getBoundingClientRect();
-      return { el: r, top: b.top, height: b.height, mid: b.top + b.height / 2 };
+      return {
+        el: r, top: b.top, height: b.height, mid: b.top + b.height / 2,
+        offTop: r.offsetTop, offHeight: r.offsetHeight
+      };
     });
 
     const srcRect = drag.rects[drag.from];
@@ -1066,16 +1078,17 @@
     const line = document.getElementById("dropline");
     if (!line) return;
     const rects = drag.rects;
-    const listTop = listEl.getBoundingClientRect().top;
     const order = rects.map((r, i) => i).filter(i => i !== drag.from);
 
+    // Local px throughout. offsetTop is already relative to the list,
+    // which is the line's containing block, so nothing is subtracted.
     let y;
     if (!order.length) y = 0;
     else if (to >= order.length) {
       const last = rects[order[order.length - 1]];
-      y = last.top + last.height - listTop + 6;
+      y = last.offTop + last.offHeight + 6;
     } else {
-      y = rects[order[to]].top - listTop - 6;
+      y = rects[order[to]].offTop - 6;
     }
     line.style.top = y + "px";
     line.classList.add("on");
@@ -1084,7 +1097,9 @@
   function showShift(to) {
     const line = document.getElementById("dropline");
     if (line) line.classList.remove("on");
-    const h = drag.rects[drag.from].height + 12;
+    // Local px: a transform is resolved in the element's own space, so
+    // this must not come from getBoundingClientRect under zoom.
+    const h = drag.rects[drag.from].offHeight + 12;
     const from = drag.from;
 
     drag.rects.forEach((r, i) => {

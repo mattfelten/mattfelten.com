@@ -1648,9 +1648,28 @@
     document.body.style.cursor = "grabbing";
 
     // Measured here, not at pointerdown. See the note above.
+    //
+    // TWO coordinate spaces, and mixing them is what put the drop line
+    // in nonsense places inside an embed. `scale` is implemented with
+    // CSS `zoom`, so getBoundingClientRect returns ZOOMED viewport
+    // pixels while style.top is interpreted in the element's own
+    // UNZOOMED local pixels. At scale 1.6 a line meant for 56 was being
+    // set to 93, and the error grows with distance down the list, which
+    // is why it read as random and clipped through rows.
+    //
+    //   mid   viewport px, because it is compared against clientY
+    //   top   local px, because it is written back into style.top
+    //
+    // offsetTop is measured from the same padding edge that absolute
+    // positioning resolves against, so the two agree at any zoom.
     drag.rects = [...listEl.querySelectorAll(".row")].map(r => {
       const b = r.getBoundingClientRect();
-      return { el: r, top: b.top, height: b.height, mid: b.top + b.height / 2 };
+      return {
+        el: r,
+        mid: b.top + b.height / 2,
+        top: r.offsetTop,
+        height: r.offsetHeight
+      };
     });
 
     const item = byId(drag.id);
@@ -1687,16 +1706,17 @@
     const line = document.getElementById("dropline");
     if (!line) return;
     const rects = drag.rects;
-    const listTop = listEl.getBoundingClientRect().top;
     const order = rects.map((r, i) => i).filter(i => i !== drag.from);
 
+    // All local px. No listTop subtraction: offsetTop is already
+    // relative to the list, which is the line's containing block.
     let y;
     if (!order.length) y = 0;
     else if (to >= order.length) {
       const last = rects[order[order.length - 1]];
-      y = last.top + last.height - listTop + 6;
+      y = last.top + last.height + 6;
     } else {
-      y = rects[order[to]].top - listTop - 6;
+      y = rects[order[to]].top - 6;
     }
     line.style.top = y + "px";
     line.classList.add("on");
