@@ -1,0 +1,16 @@
+---
+import TextBlockSlide from '@decks/templates/TextBlockSlide.astro';
+
+const items = [
+	{
+		title: 'Sole designer',
+		body: 'Two tickets landed on me. I specced both from prototypes and handed them to an engineer to build.',
+	},
+	{
+		title: 'The component came after',
+		body: 'It came out of doing that work, not before it.',
+	},
+];
+---
+
+<TextBlockSlide subtitle="Checklist: a component deep dive" items={items} cols={2} bodySize="3xl" />

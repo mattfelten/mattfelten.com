@@ -1,0 +1,20 @@
+---
+import TextBlockSlide from '@decks/templates/TextBlockSlide.astro';
+
+const items = [
+	{
+		title: 'Completed items, shipped',
+		body: 'Faded to 50%. Measures 3.35:1. Fails, and it was live in the product.',
+	},
+	{
+		title: 'Completed items, now',
+		body: '60%. Measures 4.58:1, and it is the lowest value that passes.',
+	},
+	{
+		title: 'Found by measuring',
+		body: 'Not by looking. It looks completely fine.',
+	},
+];
+---
+
+<TextBlockSlide subtitle="Accessibility → We had already shipped one that failed" items={items} cols={3} bodySize="2xl" />

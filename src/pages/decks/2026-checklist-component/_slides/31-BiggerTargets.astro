@@ -1,0 +1,20 @@
+---
+import TextBlockSlide from '@decks/templates/TextBlockSlide.astro';
+
+const items = [
+	{
+		title: 'The checkbox was 20 by 20',
+		body: 'Under the minimum, and passing only because nothing else sat within 24 pixels of it.',
+	},
+	{
+		title: 'Now 24 by 24',
+		body: 'With a negative margin handing the extra back to layout, so the target grows and the glyph does not move.',
+	},
+	{
+		title: 'The same rule, twice',
+		body: 'Four rounds apart: change what the component is doing, never where the words are.',
+	},
+];
+---
+
+<TextBlockSlide subtitle="Accessibility → Bigger targets, same pixels" items={items} cols={3} bodySize="2xl" />

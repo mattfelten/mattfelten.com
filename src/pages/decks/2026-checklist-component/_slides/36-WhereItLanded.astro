@@ -1,0 +1,24 @@
+---
+import TextBlockSlide from '@decks/templates/TextBlockSlide.astro';
+
+const items = [
+	{
+		title: 'Built',
+		body: 'Both tickets specced from these prototypes and built by an engineer.',
+	},
+	{
+		title: 'Approved',
+		body: 'Part of the Mission Control design system, on the argument that Runbooks is the second consumer.',
+	},
+	{
+		title: 'Explored',
+		body: '33 questions. 35 things rejected, 18 of them still running.',
+	},
+	{
+		title: 'Still open',
+		body: 'Autosave with no save button has no failure surface, so a failed write is silent data loss.',
+	},
+];
+---
+
+<TextBlockSlide subtitle="Where it landed" items={items} cols={2} bodySize="2xl" />

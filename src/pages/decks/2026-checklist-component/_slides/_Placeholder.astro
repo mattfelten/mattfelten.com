@@ -1,0 +1,27 @@
+---
+// Deliberately loud. Every gap in this deck renders as one of these, so
+// nothing ships by accident and `grep -rn Placeholder _slides` is the
+// to-do list.
+//
+// `need` says what has to exist. `why` says why it is not here yet.
+
+interface Props {
+	need: string;
+	why?: string;
+	/** Roughly the footprint the real asset will take, so layout is honest. */
+	height?: number;
+}
+
+const { need, why, height = 420 } = Astro.props;
+---
+
+<div
+	class="border-weak/[0.35] text-subdued grid w-full place-content-center gap-3 rounded-[20px] border-2 border-dashed px-10 py-10 text-center"
+	style={`min-height:${height}px`}
+>
+	<div class="text-strong text-xs font-medium tracking-[0.11em] uppercase">
+		Placeholder
+	</div>
+	<div class="text-strong text-3xl font-medium">{need}</div>
+	{why && <div class="text-subdued mx-auto max-w-[700px] text-xl">{why}</div>}
+</div>

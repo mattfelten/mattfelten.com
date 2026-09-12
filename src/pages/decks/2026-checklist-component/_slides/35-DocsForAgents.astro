@@ -1,0 +1,40 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+// The differentiating slide, and it is about something that already
+// exists rather than something promised. The param vocabulary is
+// machine-readable by construction, so the claim is demonstrable: every
+// decision has a URL that opens the component in exactly that state.
+//
+// If this needs an image later, the entry page is the artifact to shoot:
+// /decks/2026-checklist-component/prototypes/
+
+const properties = [
+	['Named values only', 'Never a free-form string.'],
+	['Unknown values ignored', 'Never guessed at.'],
+	['One URL per decision', 'Opens the component in exactly that state.'],
+];
+---
+
+<Slide subtitle="Docs → For the agent reading it">
+	<div class="grid gap-9">
+		<div class="text-strong max-w-[1500px] text-5xl">
+			Increasingly the thing reading a component doc is an agent writing the
+			implementation.
+		</div>
+		<div class="grid grid-cols-3 gap-7">
+			{
+				properties.map(([what, why]) => (
+					<div>
+						<div class="text-strong text-3xl font-medium">{what}</div>
+						<div class="text-subdued mt-2 text-xl">{why}</div>
+					</div>
+				))
+			}
+		</div>
+		<div class="text-subdued text-3xl">
+			So a ticket, a doc, or a model can point at one configuration and
+			<span class="text-strong">mean precisely one thing.</span>
+		</div>
+	</div>
+</Slide>
