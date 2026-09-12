@@ -220,6 +220,38 @@ These are **rules**, not suggestions.
 - Use smart quotes (`'` `"`) in slide content where the Figma source has
   them.
 
+### Density, and the slide count that follows from it
+
+**A slide is a subtitle and an image. The content lives in Matt's
+mouth.** `2024-anvil-case-study/_slides/14-DesignDetails.astro` is one
+line: an `ImageSlide` with a subtitle and nothing else. The densest
+slides in that deck are a list of bare labels next to a screenshot
+(`18-Documentation.astro`), never a paragraph.
+
+**This sets the slide count, and getting it backwards is the common
+mistake.** Matt presents at roughly 20 to 25 seconds a slide and breezes
+through. So a 15-minute segment is around 30 slides, not 12. Budgeting
+80 seconds a slide is what produces dense slides nobody can read, and
+then a deck that reads as a document. If a slide needs a paragraph to
+make sense, it is two or three slides.
+
+Counts for calibration: `2024-anvil-case-study` is 27 slides,
+`2026-portfolio-review` is 19, `2026-anvil-15m` is 9 for a recorded
+15-minute talk where the pacing is deliberately slower.
+
+**Corollary: one idea per slide, and rejected directions get their own.**
+"We considered X and did not build it" is a slide, not a clause. See
+`2026-collaboration-loops-case-study/_outline.md` slide 13.
+
+### Outline before slides
+
+For anything longer than a few slides, write `_outline.md` in the deck
+folder first and get it approved before writing any `.astro`. Format is
+`## Slide N — Title` followed by a short paragraph of **what gets said**,
+not what goes on the slide. `2026-collaboration-loops-case-study/_outline.md`
+is the reference. It is much cheaper to rearrange a narrative in Markdown
+than in fourteen Astro files.
+
 ### Section labels
 
 Small uppercase faded labels above body content (e.g. "PROBLEM
