@@ -623,6 +623,17 @@
 
   .verdict { padding: 12px 14px; border-top: 1px solid var(--bench-line); font-size: 12.5px; line-height: 1.6; color: var(--bench-ink-2); }
   .verdict strong { color: var(--bench-ink); }
+
+  /* ---------------------------------------------------------------
+     EMBED: no bench chrome on the specimen.
+     The "Checklist" title, the open count and the rule under them are
+     the BENCH's framing, not part of the component. On a slide, inside
+     a frame, they read as though the component ships a header, which
+     is the first thing it gets asked about. Hidden rather than deleted
+     because the count is written by script.
+     --------------------------------------------------------------- */
+  body.is-embed .spec-head { display: none; }
+  body.is-embed .list { padding-top: 0; }
 </style>
 
 <div class="frame">

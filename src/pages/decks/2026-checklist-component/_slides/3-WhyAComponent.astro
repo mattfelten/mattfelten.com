@@ -1,0 +1,32 @@
+---
+import TextBlockSlide from '@decks/templates/TextBlockSlide.astro';
+
+const items = [
+	{
+		title: 'Reorder them',
+		body: 'An agenda is never written in the order you want to talk about it.',
+	},
+	{
+		title: 'Edit them in place',
+		body: 'The backend has supported it for over a year. The frontend never wired it.',
+	},
+	{
+		title: 'Sub-items',
+		body: 'One topic with two or three things under it.',
+	},
+	{
+		title: 'Several people at once',
+		body: 'The meeting is the whole point of the feature, so this is not an edge case.',
+	},
+	{
+		title: 'Two tickets, one epic',
+		body: 'RND-4840 and RND-4765. Both sized as though they were small.',
+	},
+	{
+		title: 'And then Runbooks',
+		body: 'A second product about to render the same row. One instance is a feature. Two is a pattern.',
+	},
+];
+---
+
+<TextBlockSlide subtitle="Why this is a component, not two features" items={items} cols={3} bodySize="2xl" />

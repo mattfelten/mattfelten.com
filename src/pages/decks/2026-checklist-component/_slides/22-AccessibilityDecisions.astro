@@ -1,0 +1,35 @@
+---
+import TextBlockSlide from '@decks/templates/TextBlockSlide.astro';
+
+// One slide, not four. The scorecard bench was legible to me and to
+// nobody else. Build the bench version back up only if this reads thin.
+
+const items = [
+	{
+		title: 'Reorder without a drag',
+		body: 'Move up and Move down in the row menu. One pointer, so it works for a keyboard, a touchscreen and a screen reader.',
+	},
+	{
+		title: 'Three tab stops a row',
+		body: 'Tick it, type in it, open its menu. All three light the whole row.',
+	},
+	{
+		title: 'Presence in words',
+		body: 'Whatever the visual, a screen reader is told who is in the row.',
+	},
+	{
+		title: 'Completed items at 60%',
+		body: 'Shipped at 50%, which measures 3.35:1 and fails. 60% is 4.58:1 and is the lowest value that passes.',
+	},
+	{
+		title: 'Targets at 24 by 24',
+		body: 'With a negative margin, so the target grows and the glyph does not move.',
+	},
+	{
+		title: 'Nothing needs a sideways drag',
+		body: 'Indent is read off which gap you are in, never off how far you pushed.',
+	},
+];
+---
+
+<TextBlockSlide subtitle="Accessibility" items={items} cols={3} bodySize="2xl" />

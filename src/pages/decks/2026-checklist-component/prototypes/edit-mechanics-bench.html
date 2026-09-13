@@ -471,6 +471,17 @@
     position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
     overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
   }
+
+  /* ---------------------------------------------------------------
+     EMBED: no bench chrome on the specimen.
+     The "Checklist" title, the open count and the rule under them are
+     the BENCH's framing, not part of the component. On a slide, inside
+     a frame, they read as though the component ships a header, which
+     is the first thing it gets asked about. Hidden rather than deleted
+     because the count is written by script.
+     --------------------------------------------------------------- */
+  body.is-embed .spec-head { display: none; }
+  body.is-embed .list { padding-top: 0; }
 </style>
 
 <div class="frame">

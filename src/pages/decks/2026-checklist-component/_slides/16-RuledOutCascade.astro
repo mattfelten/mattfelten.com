@@ -1,11 +1,11 @@
 ---
 import Slide from '@decks/templates/Slide.astro';
 
-// The one to feel strongest about. In a shared list, cascading means
-// one tick silently rewrites an item somebody else wrote.
+// In a shared list, cascading means one tick silently rewrites an
+// item somebody else wrote and is watching.
 ---
 
-<Slide subtitle="Sub-items → Ruled out: ticking a parent ticks its children">
+<Slide subtitle="Nested items → Ruled out: ticking a parent ticks its children">
 	<iframe
 		src="/decks/2026-checklist-component/prototypes/c1-nesting-bench?embed=1&scale=1.6&nosr=1&nest=cascade"
 		title="Cascading completion, rejected"

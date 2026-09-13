@@ -1,0 +1,17 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+// A transition between features. One word, centred, no header. Gives a
+// beat between topics so the deck does not read as one long run of
+// prototypes.
+
+interface Props {
+	name: string;
+}
+
+const { name } = Astro.props;
+---
+
+<Slide hideHeader align="center">
+	<div class="text-strong flex justify-center text-7xl font-medium">{name}</div>
+</Slide>

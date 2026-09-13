@@ -2,118 +2,91 @@
 import { Deck, DeckShell } from '@decks';
 
 import {
-	AskEdit,
-	AskMultiplayer,
-	AskReorder,
-	AskSubItems,
-	BiggerTargets,
-	DocsForAgents,
-	DocsForHumans,
-	EightArrangements,
-	FourPrimitives,
-	HowItGotDecided,
-	InvisibleField,
-	MergeAndGarble,
-	MyRole,
-	PickingUpARow,
-	Presence,
+	AccessibilityDecisions,
+	AccessibilitySection,
+	Before,
+	Docs,
+	EditingFinal,
+	EditingSection,
+	MultiplayerFinal,
+	MultiplayerSection,
+	NestedFinal,
+	NestedSection,
+	Primitives,
+	ReorderingFinal,
+	ReorderingSection,
 	RuledOutCascade,
+	RuledOutDeepNesting,
 	RuledOutDim,
-	RuledOutEditorObject,
+	RuledOutEditorOpens,
 	RuledOutFullProxy,
 	RuledOutHairline,
 	RuledOutLock,
 	RuledOutShift,
-	RuledOutSidewaysDrag,
-	Runbooks,
-	ShippedAndFailing,
-	SubItems,
+	SystemSection,
 	TheRowArbitrates,
-	TheRowToday,
 	ThankYou,
-	ThreeGestures,
 	Title,
-	TwoTickets,
-	WhatILandedOn,
 	WhereItLanded,
-	WhereThisLives,
-	WithoutAMouse,
-	WordsNeverMove,
+	WhereWeLanded,
+	WhyAComponent,
 } from './_slides';
 
 const meta = {
 	title: 'Checklist',
 	description:
-		'A checkable, orderable, editable row in Collaboration Loops, taken from two tickets to an approved design system component. The argument is depth: this is the simplest thing in the product, and getting it right took 33 decisions, 35 rejected directions, and a pile of measurements that a mockup could never have produced.',
+		'A checkable, orderable, editable row in Collaboration Loops, taken from two tickets to an approved design system component. The argument is depth: this is the simplest thing in the product, and getting it right took 33 decisions and 35 rejected directions that a mockup could never have produced.',
 };
 
-// The narrative lives in _outline.md. Edit that first, then the slides.
+// Narrative lives in _outline.md. Edit that first.
 //
-// ~18 minutes, third segment of a portfolio review (intro, Anvil
-// overview, this, outro). Roughly 20 seconds a slide, with five moments
-// driven live: 4, 11, 16, 27, 29.
+// Shape: before, why it is a component, where we landed, then one
+// section per feature. Each section opens with a title slide, shows the
+// settled answer, then the directions that were ruled out. Then
+// accessibility, the system, the docs, and where it landed.
 //
-// Follows an Anvil overview, so nothing here re-explains design systems,
-// and the accessibility beat has to read as component depth rather than
-// the system-level policy Anvil already covered.
+// Feature sections are Editing, Reordering, Nested items, Multiplayer.
 //
-// Shape: where it was, what people kept asking for, Runbooks as the
-// second consumer, what I landed on, then each feature with the dead
-// ends it produced, then accessibility as the thing that settles the
-// central conflict, then the decomposition and the docs, then where it
-// landed.
-//
-// Four slides are placeholders and are deliberately loud on screen:
-// grep -rn Placeholder _slides/
+// Eleven slides are placeholders, and most of them are blocked on
+// prototype work rather than on writing:
+//   grep -rn Placeholder _slides/
 ---
 
 <DeckShell {...meta}>
 	<Deck title="Checklist">
 		<Title />
-		<MyRole />
-		<WhereThisLives />
-		<TheRowToday />
+		<Before />
+		<WhyAComponent />
+		<WhereWeLanded />
 
-		<AskReorder />
-		<AskEdit />
-		<AskSubItems />
-		<AskMultiplayer />
-		<TwoTickets />
-		<Runbooks />
-
-		<WhatILandedOn />
-		<HowItGotDecided />
-
-		<InvisibleField />
-		<RuledOutEditorObject />
+		<EditingSection />
+		<EditingFinal />
+		<RuledOutEditorOpens />
 		<RuledOutHairline />
-		<WordsNeverMove />
 
-		<PickingUpARow />
+		<ReorderingSection />
+		<ReorderingFinal />
 		<RuledOutShift />
 		<RuledOutFullProxy />
 
-		<SubItems />
-		<RuledOutSidewaysDrag />
+		<NestedSection />
+		<NestedFinal />
+		<RuledOutDeepNesting />
 		<RuledOutCascade />
 
-		<Presence />
+		<MultiplayerSection />
+		<MultiplayerFinal />
 		<RuledOutDim />
 		<RuledOutLock />
-		<MergeAndGarble />
 
-		<ThreeGestures />
-		<EightArrangements />
+		<AccessibilitySection />
+		<AccessibilityDecisions />
 
-		<WithoutAMouse />
-		<ShippedAndFailing />
-		<BiggerTargets />
-
-		<FourPrimitives />
+		<SystemSection />
+		<Primitives />
 		<TheRowArbitrates />
 
-		<DocsForHumans />
-		<DocsForAgents />
+		<Docs />
 		<WhereItLanded />
 		<ThankYou />
 	</Deck>

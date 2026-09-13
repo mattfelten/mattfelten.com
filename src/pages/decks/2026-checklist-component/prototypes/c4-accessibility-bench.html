@@ -904,6 +904,17 @@
   @media (prefers-reduced-motion: reduce) {
     * { transition-duration: .01ms !important; animation-duration: .01ms !important; }
   }
+
+  /* ---------------------------------------------------------------
+     EMBED: no bench chrome on the specimen.
+     The "Checklist" title, the open count and the rule under them are
+     the BENCH's framing, not part of the component. On a slide, inside
+     a frame, they read as though the component ships a header, which
+     is the first thing it gets asked about. Hidden rather than deleted
+     because the count is written by script.
+     --------------------------------------------------------------- */
+  body.is-embed .spec-head { display: none; }
+  body.is-embed .list { padding-top: 0; }
 </style>
 
 <div class="frame">
