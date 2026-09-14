@@ -506,6 +506,57 @@
   .row.is-pressing { background: var(--surface-2); }
   .row.is-pressing .menu { opacity: 1; }
 
+  /* ---------- Nesting ----------
+     One level, because that is the ceiling the nesting round settled
+     on. A child's text sits under its parent's text rather than under
+     its checkbox, so the structure is legible from the text column
+     with no guide lines.
+
+     Reordering here is scoped to siblings: a top-level row moves among
+     top-level rows and carries its children, a child moves among its
+     siblings. CHANGING a row's level is the nesting gesture and lives
+     in the nesting bench, which is where it is demonstrated. This bench
+     is about what the component finally does, not about re-teaching
+     that gesture, and a half-built version of it here would be worse
+     than none. */
+  .row[data-tier="1"] { margin-left: 32px; }
+
+  .twist {
+    position: absolute; left: -22px; top: 2px;
+    width: 18px; height: 18px;
+    display: grid; place-content: center;
+    background: none; border: 0; padding: 0; cursor: pointer;
+    color: var(--text-subdued); border-radius: 4px;
+  }
+  .twist:hover { background: var(--surface-3); color: var(--text-default); }
+  .twist:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; }
+  .twist svg { transition: transform .12s ease; }
+  .twist[aria-expanded="true"] svg { transform: rotate(90deg); }
+
+  /* Two things live in the gutter on a parent row, so the list is inset
+     far enough for both. Without it the handle at -42 falls outside the
+     specimen and overflow: hidden removes it, which reads as nesting
+     having taken the handle away. */
+  .list { padding-left: 22px; }
+
+  /* handles=1 pins the drag handle on. It is hover-only by design and a
+     slide never hovers, so the affordance being discussed is invisible
+     in the one place it needs to be seen. */
+  body[data-handles="on"] .handle { opacity: 1; }
+
+  /* before=1 is the list as it shipped, before any of this. No handle,
+     no menu, no presence, nothing clickable in the text, and completed
+     items at the .5 that measures 3.35:1 and fails. */
+  body[data-before="on"] .handle,
+  body[data-before="on"] .menu,
+  body[data-before="on"] .pencil,
+  body[data-before="on"] .twist,
+  body[data-before="on"] .hold-bar,
+  body[data-before="on"] .floater,
+  body[data-before="on"] .hold-label { display: none !important; }
+  body[data-before="on"] .prose { cursor: default; }
+  body[data-before="on"] .row[data-done="true"] .content { opacity: .5; }
+
   /* ---------- Drag proxy ----------
      The collapsed single-line proxy, settled in the reorder round and
      missing from this bench until now. A tall block under the cursor
@@ -1113,10 +1164,12 @@
 
 <script>
   const ITEMS = [
-    { id: "a", text: "Reserved Instance coverage dropped to 61% this month after the m5 fleet was retired.", who: "Dana", done: false },
-    { id: "b", text: "Budget alert thresholds are still pointing at the old prod account.", who: "Marco", done: false },
-    { id: "c", text: "Walk through the S3 lifecycle policy proposal.", who: "Dana", done: true },
-    { id: "d", text: "Quick status on the GuardDuty findings backlog.", who: "Priya", done: false }
+    { id: "a", parent: null, text: "Reserved Instance coverage dropped to 61% this month after the m5 fleet was retired.", who: "Dana", done: false },
+    { id: "a1", parent: "a", text: "Pull the current utilisation report", who: "Dana", done: false },
+    { id: "a2", parent: "a", text: "Decide between Savings Plans and re-covering", who: "Marco", done: false },
+    { id: "b", parent: null, text: "Budget alert thresholds are still pointing at the old prod account.", who: "Marco", done: false },
+    { id: "c", parent: null, text: "Walk through the S3 lifecycle policy proposal.", who: "Dana", done: true },
+    { id: "d", parent: null, text: "Quick status on the GuardDuty findings backlog.", who: "Priya", done: false }
   ];
 
   // Marco is parked in his own row, which is what every presence
@@ -1129,6 +1182,9 @@
     enter: "text",
     presence: "dim",
     focus: "outline",
+    nesting: true,
+    before: false,
+    open: {},
     coarse: false,
     forced: false,
     fix: false,
@@ -1153,6 +1209,7 @@
     circle: '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/></svg>',
     check: '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/><path d="M5.8 9.2l2.2 2.2 4.2-4.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
     grip: '<svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="4" cy="2.5" r="1.1"/><circle cx="8" cy="2.5" r="1.1"/><circle cx="4" cy="6" r="1.1"/><circle cx="8" cy="6" r="1.1"/><circle cx="4" cy="9.5" r="1.1"/><circle cx="8" cy="9.5" r="1.1"/></svg>',
+    twist: '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg>',
     kebab: '<svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><circle cx="7" cy="3" r="1.2"/><circle cx="7" cy="7" r="1.2"/><circle cx="7" cy="11" r="1.2"/></svg>',
     pencil: '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9.5 2.2l2.3 2.3-6.6 6.6-2.9.6.6-2.9z" stroke-linejoin="round"/></svg>'
   };
@@ -1172,8 +1229,10 @@
     b.forced = S.forced ? "on" : "off";
     b.fix = S.fix ? "on" : "off";
 
-    listEl.innerHTML = ITEMS.map(it => {
+    listEl.innerHTML = visible().map(({ it, tier }) => {
       const held = isHeld(it.id);
+      const parent = hasKids(it.id);
+      const open = S.open[it.id] !== false;
       // Two tab stops per row: the field, then the menu trigger.
       //
       // Everything else is reachable but not tabbable. Five stops per
@@ -1183,13 +1242,20 @@
       // keyboard-lift comparison, which is the one setting where the
       // row is the thing being operated on.
       const rowTab = S.reorder === "keyboard" ? ' tabindex="0"' : "";
-      return '<div class="row' + (held ? " is-held" : "") + '" data-id="' + it.id +
+      return '<div class="row' + (held ? " is-held" : "") + (parent ? " has-kids" : "") +
+        '" data-id="' + it.id + '" data-tier="' + tier +
         '" data-done="' + it.done + '"' + rowTab + ' role="group" aria-label="' +
         esc(rowLabel(it)) + '">' +
         '<span class="hold-bar" aria-hidden="true"></span>' +
+        (parent
+          ? '<button class="twist" tabindex="-1" data-act="twist" aria-expanded="' + open +
+            '" aria-label="' + (open ? "Collapse" : "Expand") + ' sub-items">' + ICON.twist + "</button>"
+          : "") +
         (held ? '<span class="floater" aria-hidden="true" title="' + HELD_BY + ' is editing">' +
           initials(HELD_BY) + "</span>" : "") +
-        '<button class="handle" tabindex="-1" data-act="grab" aria-label="Reorder ' + esc(short(it.text)) + '">' + ICON.grip + "</button>" +
+        '<button class="handle" tabindex="-1" data-act="grab"' +
+        (parent ? ' style="left:-42px"' : "") +
+        ' aria-label="Reorder ' + esc(short(it.text)) + '">' + ICON.grip + "</button>" +
         '<button class="cb" data-act="check" data-state="' + (it.done ? "done" : "open") +
         '" aria-label="' + (it.done ? "Mark not done" : "Mark done") + '">' +
         (it.done ? ICON.check : ICON.circle) + "</button>" +
@@ -1242,6 +1308,45 @@
   }
 
   const isHeld = id => S.held && id === HELD;
+
+  // ---------------------------------------------------------------
+  // Nesting helpers. Order in ITEMS is list order, and a parent's
+  // children always sit immediately after it, so a "block" is a row
+  // plus the children that must travel with it.
+  // ---------------------------------------------------------------
+  const kidsOf = id => ITEMS.filter(i => i.parent === id);
+  const hasKids = id => S.nesting && kidsOf(id).length > 0;
+  const tierOf = it => (S.nesting && it.parent !== null ? 1 : 0);
+
+  // Rows at the same level under the same parent. This is the set a row
+  // can move within.
+  const siblingsOf = id => {
+    const it = byId(id);
+    return ITEMS.filter(i => i.parent === it.parent);
+  };
+
+  function blockOf(id) {
+    const from = idx(id);
+    if (!S.nesting || byId(id).parent !== null) return { from, count: 1 };
+    let n = 1;
+    while (from + n < ITEMS.length && ITEMS[from + n].parent === id) n++;
+    return { from, count: n };
+  }
+
+  // What the list actually shows, in order, with the level for each.
+  function visible() {
+    // Before any of this, sub-items did not exist. Showing them flattened
+    // would put rows on the slide that the product never had, which is
+    // a worse lie than leaving them out.
+    if (S.before) return ITEMS.filter(i => i.parent === null).map(it => ({ it, tier: 0 }));
+    if (!S.nesting) return ITEMS.map(it => ({ it, tier: 0 }));
+    const out = [];
+    ITEMS.filter(i => i.parent === null).forEach(p => {
+      out.push({ it: p, tier: 0 });
+      if (S.open[p.id] !== false) kidsOf(p.id).forEach(c => out.push({ it: c, tier: 1 }));
+    });
+    return out;
+  }
 
   function peek() {
     const it = byId(HELD);
@@ -1510,27 +1615,52 @@
   // ---------------------------------------------------------------
   // Reordering, by every route
   // ---------------------------------------------------------------
+  // Move a row to slot `to` among its own siblings, carrying its
+  // children. `to` counts siblings, not array positions, because with
+  // nesting on the two are not the same number.
   function move(id, to) {
-    const from = idx(id);
-    if (to < 0 || to >= ITEMS.length || to === from) return false;
-    const [it] = ITEMS.splice(from, 1);
-    ITEMS.splice(to, 0, it);
+    const it = byId(id);
+    if (!it) return false;
+    // Captured BEFORE the splice. Once the block is out of ITEMS the row
+    // cannot be looked up, so anything derived from it has to be read
+    // first. Reading it afterwards threw on every single move.
+    const parentId = it.parent;
+    const sibs = ITEMS.filter(i => i.parent === parentId);
+    const at = sibs.findIndex(x => x.id === id);
+    if (to < 0 || to >= sibs.length || to === at) return false;
+
+    const { from, count } = blockOf(id);
+    const block = ITEMS.splice(from, count);
+
+    // Where that slot starts, now the block is out of the array.
+    const rest = ITEMS.filter(i => i.parent === parentId);
+    let insertAt;
+    if (!rest.length) {
+      insertAt = ITEMS.length;
+    } else if (to >= rest.length) {
+      const b = blockOf(rest[rest.length - 1].id);
+      insertAt = b.from + b.count;
+    } else {
+      insertAt = idx(rest[to].id);
+    }
+    ITEMS.splice(insertAt, 0, ...block);
     return true;
   }
 
   function moveBy(id, delta, how) {
-    const from = idx(id);
-    const to = from + delta;
-    if (to < 0 || to >= ITEMS.length) {
-      announce("Already at the " + (to < 0 ? "top" : "bottom") + " of the list.");
-      log('<span class="op">blocked</span> <span class="dim">already at the ' + (to < 0 ? "top" : "bottom") + "</span>");
+    const sibs = siblingsOf(id);
+    const at = sibs.findIndex(s => s.id === id);
+    const to = at + delta;
+    if (to < 0 || to >= sibs.length) {
+      announce("Already at the " + (to < 0 ? "top" : "bottom") + " of its level.");
+      log('<span class="op">blocked</span> <span class="dim">already at the ' + (to < 0 ? "top" : "bottom") + " of its level</span>");
       return;
     }
     move(id, to);
-    const msg = "Moved to " + (to + 1) + " of " + ITEMS.length + ".";
+    const msg = "Moved to " + (to + 1) + " of " + sibs.length + ".";
     announce(msg);
     log('<span class="op">move</span> <span class="hot">' + how + "</span> " +
-      '<span class="dim">' + esc(short(byId(id).text)) + " to " + (to + 1) + " of " + ITEMS.length + "</span>");
+      '<span class="dim">' + esc(short(byId(id).text)) + " to " + (to + 1) + " of " + sibs.length + "</span>");
     reflow();
   }
 
@@ -1553,7 +1683,7 @@
     const keep = listEl.contains(active) ? active : null;
     const line = document.getElementById("dropline");
     const nodes = new Map([...listEl.querySelectorAll(".row")].map(r => [r.dataset.id, r]));
-    ITEMS.forEach(it => {
+    visible().forEach(({ it }) => {
       const n = nodes.get(it.id);
       if (n) listEl.insertBefore(n, line);
     });
@@ -1673,13 +1803,24 @@
     //
     // offsetTop is measured from the same padding edge that absolute
     // positioning resolves against, so the two agree at any zoom.
-    drag.rects = [...listEl.querySelectorAll(".row")].map(r => {
+    // Siblings only. A row reorders within its own level and carries its
+    // children; changing level is the nesting gesture and belongs to the
+    // nesting bench. Measuring every row instead would offer drop slots
+    // that the commit cannot honour.
+    const sibIds = siblingsOf(drag.id).map(x => x.id);
+    drag.from = sibIds.indexOf(drag.id);
+    drag.rects = sibIds.map(id => {
+      const r = listEl.querySelector('.row[data-id="' + id + '"]');
       const b = r.getBoundingClientRect();
+      // A parent's block ends at its last visible child, which is where
+      // the line has to sit when dropping past it.
+      const kids = kidsOf(id).map(k => listEl.querySelector('.row[data-id="' + k.id + '"]')).filter(Boolean);
+      const last = kids.length && S.open[id] !== false ? kids[kids.length - 1] : r;
       return {
         el: r,
         mid: b.top + b.height / 2,
         top: r.offsetTop,
-        height: r.offsetHeight
+        blockBottom: last.offsetTop + last.offsetHeight
       };
     });
 
@@ -1725,7 +1866,7 @@
     if (!order.length) y = 0;
     else if (to >= order.length) {
       const last = rects[order[order.length - 1]];
-      y = last.top + last.height + 6;
+      y = last.blockBottom + 6;
     } else {
       y = rects[order[to]].top - 6;
     }
@@ -1777,9 +1918,13 @@
     if (left < 8) left = 8;
     popup.style.left = (left + window.scrollX) + "px";
     popup.style.top = (b.bottom + 6 + window.scrollY) + "px";
-    const at = idx(menuFor);
+    // Position among SIBLINGS, not in the array. A child that is first
+    // under its parent is rarely first in ITEMS, and an enabled Move up
+    // that does nothing is worse than a disabled one.
+    const sibs = siblingsOf(menuFor);
+    const at = sibs.findIndex(x => x.id === menuFor);
     popup.querySelector('[data-act="up"]').disabled = at === 0;
-    popup.querySelector('[data-act="down"]').disabled = at === ITEMS.length - 1;
+    popup.querySelector('[data-act="down"]').disabled = at === sibs.length - 1;
     const first = [...popup.querySelectorAll("button")].find(x => !x.disabled);
     if (first) first.focus();
   }
@@ -1928,9 +2073,13 @@
     if (top + pb.height > window.innerHeight - 8) top = Math.max(8, y - pb.height - 4);
     popup.style.left = (Math.max(8, left) + window.scrollX) + "px";
     popup.style.top = (top + window.scrollY) + "px";
-    const at = idx(menuFor);
+    // Position among SIBLINGS, not in the array. A child that is first
+    // under its parent is rarely first in ITEMS, and an enabled Move up
+    // that does nothing is worse than a disabled one.
+    const sibs = siblingsOf(menuFor);
+    const at = sibs.findIndex(x => x.id === menuFor);
     popup.querySelector('[data-act="up"]').disabled = at === 0;
-    popup.querySelector('[data-act="down"]').disabled = at === ITEMS.length - 1;
+    popup.querySelector('[data-act="down"]').disabled = at === sibs.length - 1;
     const first = [...popup.querySelectorAll("button")].find(b => !b.disabled);
     if (first) first.focus();
   }
@@ -2032,6 +2181,12 @@
     const act = el.dataset.act;
 
     if (act === "check") { toggleDone(id); return; }
+    if (act === "twist") {
+      S.open[id] = S.open[id] === false;
+      announce(S.open[id] !== false ? "Expanded." : "Collapsed, " + kidsOf(id).length + " sub-items hidden.");
+      render();
+      return;
+    }
     if (act === "menu") { e.stopPropagation(); openMenu(el); return; }
     if (act === "pencil") { startEdit(id); return; }
     // "prose" is deliberately absent: clicking the text is handled on
@@ -2207,6 +2362,15 @@
     const show = q.get("show");
     if (show === "audit" || show === "contrast") document.body.dataset.show = show;
     if (q.get("nospec") === "1") document.body.dataset.nospec = "on";
+    if (q.get("handles") === "1") document.body.dataset.handles = "on";
+    if (q.get("nesting") === "off") { S.nesting = false; render(); }
+    if (q.get("before") === "1") {
+      document.body.dataset.before = "on";
+      S.before = true;
+      S.nesting = false;
+      S.held = false;
+      render();
+    }
     if (q.get("embed") === "1") document.body.classList.add("is-embed");
     const sc = parseFloat(q.get("scale"));
     if (sc > 0 && sc <= 4) document.documentElement.style.setProperty("--embed-scale", String(sc));

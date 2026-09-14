@@ -1,9 +1,19 @@
 ---
 import Slide from '@decks/templates/Slide.astro';
 
-import Placeholder from './_Placeholder.astro';
+// before=1 is the list as it actually shipped. No handle, no menu, no
+// presence, and nothing in the text responds to a click. Sub-items are
+// absent rather than flattened, because they did not exist.
+//
+// The completed row is at opacity .5 here, which measures 3.35:1 and
+// fails. Say nothing about it. Slide 22 comes back to it, and the
+// point lands only if nobody was told to look.
 ---
 
 <Slide subtitle="Before">
-	<Placeholder need="The list before any of this" why="Tick and add. That is all. No reordering, no editing after the fact, no sense that anyone else is in it, and completed items faded to a level that fails contrast. Needs a before state on the c4 bench." height={470} />
+	<iframe
+		src="/decks/2026-checklist-component/prototypes/c4-accessibility-bench?embed=1&scale=2.1&before=1"
+		title="The list as it shipped, before any of this"
+		class="live-embed m-0! block h-[447px] w-[1358px] max-h-none! max-w-none! border-0"
+	></iframe>
 </Slide>

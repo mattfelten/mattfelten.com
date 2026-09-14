@@ -425,6 +425,9 @@
   .proxy.compact { max-width: 380px; white-space: nowrap; overflow: hidden; }
   .proxy.compact .ptext { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .proxy.full { align-items: flex-start; padding: 8px 12px; }
+  /* Push the badge to the trailing edge, where the row puts it. */
+  .proxy .ptext { flex: 1; min-width: 0; }
+  .proxy .person { flex: none; }
   .proxy.full .ptext { white-space: normal; }
 
   /* ---------- Grab-zone inspection ---------- */
@@ -1052,9 +1055,17 @@
 
     const p = document.createElement("div");
     p.className = "proxy " + (S.proxy === "compact" ? "compact" : "full");
+    // The proxy carries the person badge because every row carries one.
+    // Without it the full-height proxy is not a picture of the row you
+    // picked up, it is a picture of a different, simpler row, and the
+    // comparison against the collapsed proxy stops being like for like.
     p.innerHTML =
       `<span class="cb" data-state="${statusState(item)}" style="pointer-events:none">${statusIcon(item)}</span>` +
-      `<span class="ptext">${esc(item.text)}</span>`;
+      `<span class="ptext">${esc(item.text)}</span>` +
+      `<span class="person" style="pointer-events:none">` +
+        `<span class="avatar">${esc(initials(item.who))}</span>` +
+        `<span>${esc(item.who.split(" ")[0])}</span>` +
+      `</span>`;
     if (S.proxy === "full") {
       p.style.width = srcRect.el.getBoundingClientRect().width + "px";
       drag.offsetY = Math.min(e.clientY - srcRect.top, 40);

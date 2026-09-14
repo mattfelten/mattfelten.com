@@ -1,9 +1,20 @@
 ---
 import Slide from '@decks/templates/Slide.astro';
 
-import Placeholder from './_Placeholder.astro';
+// The settled answer is both, and the second half is the part that
+// matters: Move up and Move down in the row menu, which is the only
+// path that works for a keyboard, a touchscreen and a screen reader.
+// Slide 22 is where that gets its reason; here it is just shown.
+//
+// Reordering is scoped to siblings. A parent carries its children, a
+// child moves within its parent. Changing a row's LEVEL is the
+// nesting gesture and belongs to the nesting bench.
 ---
 
 <Slide subtitle="Reordering">
-	<Placeholder need="Drag, plus reordering by menu" why="The settled answer is both: drag for a mouse, and Move up / Move down in the row menu for every other input. The c4 bench does this; the reorder bench does not. Point this at c4 with nesting on, or teach the reorder bench the menu." height={470} />
+	<iframe
+		src="/decks/2026-checklist-component/prototypes/c4-accessibility-bench?embed=1&scale=2.1&reorder=both&enter=menu&focus=object&presence=tint&handles=1"
+		title="Drag and the menu path, live"
+		class="live-embed m-0! block h-[632px] w-[1358px] max-h-none! max-w-none! border-0"
+	></iframe>
 </Slide>
