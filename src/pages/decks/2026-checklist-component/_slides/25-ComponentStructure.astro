@@ -29,17 +29,17 @@ const parts = [
 <Slide subtitle="Component structure">
 	<div class="diagram">
 		<div class="box list">
-			<span class="tag tag-list">Checklist</span>
+			<span class="tag">Checklist</span>
 
 			<div class="box row">
-				<span class="tag tag-row">ChecklistRow</span>
+				<span class="tag">ChecklistRow</span>
 				<div class="parts">
 					{parts.map((p) => <span class="part">{p}</span>)}
 				</div>
 			</div>
 
 			<div class="box row nested">
-				<span class="tag tag-row">ChecklistRow</span>
+				<span class="tag">ChecklistRow</span>
 				<span class="note">nested, one level</span>
 				<div class="parts">
 					{parts.map((p) => <span class="part">{p}</span>)}
@@ -47,32 +47,29 @@ const parts = [
 			</div>
 
 			<div class="box row">
-				<span class="tag tag-row">ChecklistRow</span>
+				<span class="tag">ChecklistRow</span>
 				<div class="parts">
 					{parts.map((p) => <span class="part">{p}</span>)}
 				</div>
 			</div>
 
 			<div class="box composer">
-				<span class="tag tag-row">ChecklistComposer</span>
-				<div class="parts">
-					<span class="part">Add an item</span>
-				</div>
+				<span class="tag">ChecklistComposer</span>
+				<span class="prop">label="Add an item"</span>
 			</div>
 		</div>
 	</div>
 </Slide>
 
 <style>
-	/* Three hues, one per level, all as alpha over whatever the slide
-	   background is, so the diagram works in both colour schemes without
-	   a second palette. */
+	/* One hue per level, set directly on the box rather than through a
+	   second variable. The indirection was one var() too many: an
+	   undefined channel list makes the whole declaration invalid at
+	   computed-value time, so the box silently inherited its parent's
+	   colour instead of failing loudly.
+	   Every hue is alpha over whatever the slide background is, so the
+	   diagram works in both colour schemes without a second palette. */
 	.diagram {
-		/* Space separated, so rgb(var(--hue) / alpha) is valid. Commas
-		   here silently produce an invalid colour and no box at all. */
-		--lvl-list: 156 163 175;
-		--lvl-row: 61 223 194;
-		--lvl-part: 139 124 246;
 		display: flex;
 		justify-content: center;
 	}
@@ -85,8 +82,19 @@ const parts = [
 		padding: 44px 28px 28px;
 	}
 
+	/* The tag names the box it sits in, so it takes that box's hue. */
+	.tag {
+		position: absolute;
+		top: 10px;
+		left: 20px;
+		font-size: 20px;
+		font-weight: 500;
+		letter-spacing: 0.01em;
+		color: rgb(var(--hue) / 1);
+	}
+
 	.list {
-		--hue: var(--lvl-list);
+		--hue: 156 163 175;
 		width: 1400px;
 		display: flex;
 		flex-direction: column;
@@ -94,7 +102,7 @@ const parts = [
 	}
 
 	.row {
-		--hue: var(--lvl-row);
+		--hue: 61 223 194;
 		padding: 40px 20px 20px;
 	}
 
@@ -104,26 +112,19 @@ const parts = [
 		margin-left: 72px;
 	}
 
+	/* Its own hue, because it is not a row. It sits in the list and has
+	   none of a row's parts: no checkbox, no handle, nothing to drag. */
 	.composer {
-		--hue: var(--lvl-row);
-		padding: 40px 20px 20px;
+		--hue: 245 158 11;
+		padding: 40px 20px 22px;
 	}
 
-	.tag {
-		position: absolute;
-		top: 10px;
-		left: 20px;
-		font-size: 20px;
-		font-weight: 500;
-		letter-spacing: 0.01em;
-	}
-
-	.tag-list {
-		color: rgb(var(--lvl-list) / 1);
-	}
-
-	.tag-row {
-		color: rgb(var(--lvl-row) / 1);
+	/* The placeholder is a prop, not a part. A consumer renames it. */
+	.prop {
+		display: block;
+		font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+		font-size: 19px;
+		color: rgb(var(--hue) / 0.85);
 	}
 
 	.note {
@@ -131,7 +132,7 @@ const parts = [
 		top: 12px;
 		right: 20px;
 		font-size: 17px;
-		color: rgb(var(--lvl-list) / 0.9);
+		color: rgb(156 163 175 / 0.9);
 	}
 
 	.parts {
@@ -141,11 +142,12 @@ const parts = [
 	}
 
 	.part {
+		--hue: 139 124 246;
 		flex: none;
 		border-radius: 10px;
-		border: 2px solid rgb(var(--lvl-part) / 0.55);
-		background: rgb(var(--lvl-part) / 0.12);
-		color: rgb(var(--lvl-part) / 1);
+		border: 2px dashed rgb(var(--hue) / 0.55);
+		background: rgb(var(--hue) / 0.12);
+		color: rgb(var(--hue) / 1);
 		padding: 14px 18px;
 		font-size: 20px;
 		font-weight: 500;
@@ -154,10 +156,6 @@ const parts = [
 	/* The text is the only part that takes whatever room is left, which
 	   is true of the component too. */
 	.part:nth-child(3) {
-		flex: 1 1 auto;
-	}
-
-	.composer .part {
 		flex: 1 1 auto;
 	}
 </style>

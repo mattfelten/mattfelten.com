@@ -7,8 +7,13 @@ import Slide from '@decks/templates/Slide.astro';
 // that nothing was skipped, rather than reading six decisions and
 // working out which areas they cover.
 //
-// Deliberately includes the two that are not finished, because a list
-// where everything passed is a list nobody audited.
+// Eight, in a four by two grid, each one a heading over its answer. The
+// first version put the heading beside the answer in two columns of
+// two, which reads as four columns until you work out it is two
+// definition lists. Stacked, the grid is obvious at a glance.
+//
+// What is still open moved to the closing slide, where it belongs with
+// the other open threads rather than hiding at the end of an audit.
 
 const areas = [
 	{
@@ -47,28 +52,18 @@ const areas = [
 			'The field has no edges, so focus cannot be the field appearing. Painted with background and shadow, which sit outside layout.',
 	},
 	{
-		area: 'Forced colours',
-		detail:
-			'Windows high contrast drops background and box-shadow, which is everything this component paints with. Repaired with outline.',
-	},
-	{
 		area: 'Reduced motion',
 		detail:
 			'The drop animation and the presence entrance both respect it. Nothing conveys state by movement alone.',
-	},
-	{
-		area: 'Still open',
-		detail:
-			'Autosave has no failure surface, so a failed write is silent. And 24 clears AA on a mouse but is small for a thumb.',
 	},
 ];
 ---
 
 <Slide subtitle="Accessibility">
-	<div class="grid grid-cols-2 gap-x-16 gap-y-6">
+	<div class="grid grid-cols-4 gap-x-12 gap-y-10">
 		{
 			areas.map((a) => (
-				<div class="grid grid-cols-[280px_minmax(0,1fr)] items-baseline gap-6">
+				<div class="flex flex-col gap-3">
 					<span class="text-strong text-2xl font-medium">{a.area}</span>
 					<span class="text-subdued text-xl">{a.detail}</span>
 				</div>

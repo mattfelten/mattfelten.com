@@ -1,5 +1,6 @@
 ---
 import Slide from '@decks/templates/Slide.astro';
+import { CLASS, tokenise } from './_code.ts';
 
 // The same component, twice, which is the whole argument on one slide:
 // Loops and Runbooks differ by four lines of configuration, not by being
@@ -12,47 +13,10 @@ import Slide from '@decks/templates/Slide.astro';
 // row, so the two slides read as the same subject: on one it is a box in
 // a diagram, on the other it is the prop that turns the box on.
 
-type Token = { t: string; k: keyof typeof CLASS };
-
-// Tailwind classes rather than a scoped <style>: these spans are made
-// inside an expression, and Astro's style scoping does not reach them,
-// so a scoped .attr rule matches nothing and the code renders in one
-// colour. Four roles, not a full editor theme. The violet is the one the
-// structure diagram gives the parts of a row, so a prop here and a box
-// there are visibly the same thing.
-const CLASS = {
-	tag: 'text-accent',
-	attr: 'text-[rgb(139_124_246)]',
-	str: 'text-[rgb(245_158_11)]',
-	expr: 'text-default',
-	punc: 'text-weak',
-	ws: '',
-} as const;
-
-// A tokeniser for exactly this much JSX and no more. The snippets are
-// frozen deck content, so it only has to handle what is on the slide:
-// a capitalised tag, bare and assigned props, strings, and braces.
-function tokenise(src: string): Token[] {
-	const out: Token[] = [];
-	const re =
-		/(<\/?[A-Z][A-Za-z0-9]*)|(\/>|>)|("[^"]*")|(\{[^}]*\})|([A-Za-z][A-Za-z0-9]*)|(\s+)|([^\s])/g;
-	let m: RegExpExecArray | null;
-	while ((m = re.exec(src))) {
-		if (m[1]) out.push({ t: m[1], k: 'tag' });
-		else if (m[2]) out.push({ t: m[2], k: 'punc' });
-		else if (m[3]) out.push({ t: m[3], k: 'str' });
-		else if (m[4]) out.push({ t: m[4], k: 'expr' });
-		else if (m[5]) out.push({ t: m[5], k: 'attr' });
-		else if (m[6]) out.push({ t: m[6], k: 'ws' });
-		else out.push({ t: m[7], k: 'punc' });
-	}
-	return out;
-}
-
 const loops = `<Checklist
   items={items}
   reorderable
-  nesting="one-level"
+  nesting
   editable
   showCreator
   presence={whoIsHere}
@@ -62,7 +26,7 @@ const loops = `<Checklist
 
 const runbooks = `<Checklist
   items={steps}
-  nesting="one-level"
+  nesting
   onEdit={save}
 />`;
 

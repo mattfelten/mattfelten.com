@@ -1,0 +1,76 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+import { CLASS, tokenise } from './_code.ts';
+
+// The shapes, before the usage. Without this the next slide is a list of
+// opaque identifiers: items, whoIsHere, move, save. Showing what one row
+// actually is makes two arguments at once, and both matter more than the
+// prop names do.
+//
+// One: a row is five fields. Everything in this deck, every gesture and
+// every rejected direction, is in service of five fields and a boolean.
+//
+// Two: parentId is the whole nesting model. One nullable field is what
+// "one level" costs in the data, which is why turning nesting off can
+// flatten rather than migrate.
+//
+// The handlers take neighbour ids rather than an index, because that is
+// the fractional-index decision surfacing in the API: the server
+// resolves the position inside the transaction, so two people reordering
+// at once cannot write the same slot.
+
+const item = `type ChecklistItem = {
+  id: string
+  text: string          // markdown
+  done: boolean
+  author: string        // shown in the creator badge
+  parentId: string | null   // the entire nesting model
+}`;
+
+const presence = `type PresenceUser = {
+  itemId: string
+  name: string          // announced, not just drawn
+}`;
+
+const handlers = `const move = (id, { after, before }) =>
+  api.reorder(id, { after, before })   // neighbours, never an index
+
+const save = (id, text) =>
+  api.updateItem(id, text)             // fires on autosave, not on blur`;
+
+const blocks = [
+	{ label: 'One row', code: item },
+	{ label: 'Who is in the list', code: presence },
+	{ label: 'What comes back out', code: handlers },
+];
+---
+
+<Slide subtitle="What you hand it">
+	<div class="flex flex-col gap-7">
+		{
+			blocks.map((b) => (
+				<div class="flex flex-col gap-3">
+					<span class="text-subdued text-xs font-medium uppercase">
+						{b.label}
+					</span>
+					<pre class="snippet"><code>{tokenise(b.code, 'ts').map((tk) => (
+						tk.k === 'ws' ? tk.t : <span class={CLASS[tk.k]}>{tk.t}</span>
+					))}</code></pre>
+				</div>
+			))
+		}
+	</div>
+</Slide>
+
+<style>
+	.snippet {
+		margin: 0;
+		border-radius: 16px;
+		border: 1px solid rgb(156 163 175 / 0.25);
+		background: rgb(156 163 175 / 0.08);
+		padding: 20px 28px;
+		font-size: 21px;
+		line-height: 1.55;
+		overflow-x: auto;
+	}
+</style>

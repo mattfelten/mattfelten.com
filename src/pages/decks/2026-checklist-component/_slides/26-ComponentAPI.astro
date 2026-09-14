@@ -19,36 +19,49 @@ import Slide from '@decks/templates/Slide.astro';
 const props = [
 	{
 		name: 'items',
+		def: 'required',
 		type: 'ChecklistItem[]',
 		note: 'Order comes from the array. The component never sorts.',
 	},
 	{
 		name: 'reorderable',
+		def: 'false',
 		type: 'boolean',
 		note: 'The handle and the Move up / Move down menu items, together. Never one without the other.',
 	},
 	{
 		name: 'nesting',
-		type: "'off' | 'one-level'",
-		note: 'Off withdraws the gesture and the affordance, and flattens the data.',
+		def: 'false',
+		type: 'boolean',
+		note: 'One level, or none. False withdraws the gesture and the affordance, and flattens the data.',
 	},
 	{
 		name: 'editable',
+		def: 'false',
 		type: 'boolean',
 		note: 'Inline edit and autosave. Who may edit is the consumer&rsquo;s call, not this flag.',
 	},
 	{
 		name: 'presence',
+		def: '[]',
 		type: 'PresenceUser[]',
 		note: 'Who is in which row. The component draws it and never fetches it.',
 	},
 	{
 		name: 'showCreator',
+		def: 'false',
 		type: 'boolean',
 		note: 'The author tag. Runbooks does not want one.',
 	},
 	{
+		name: 'composerLabel',
+		def: '&ldquo;Add an item&rdquo;',
+		type: 'string?',
+		note: 'Placeholder on the add row. Defaults to &ldquo;Add an item&rdquo;. Runbooks says &ldquo;Add a step&rdquo;.',
+	},
+	{
 		name: 'onReorder, onEdit, onCreate, onDelete',
+		def: '&mdash;',
 		type: 'callbacks',
 		note: 'Intent out, new items in. The component holds no server state.',
 	},
@@ -61,6 +74,7 @@ const props = [
 			<tr>
 				<th>Prop</th>
 				<th>Type</th>
+				<th>Default</th>
 				<th>What it does</th>
 			</tr>
 		</thead>
@@ -70,6 +84,7 @@ const props = [
 					<tr>
 						<td class="name">{p.name}</td>
 						<td class="type">{p.type}</td>
+						<td class="text-weak font-mono whitespace-nowrap" set:html={p.def} />
 						<td class="note" set:html={p.note} />
 					</tr>
 				))
@@ -111,7 +126,10 @@ const props = [
 		font-size: 24px;
 	}
 
-	.api td + td {
+	/* The header has to take the same inset as the cells, or the second
+	   and third columns sit left of the content they name. */
+	.api td + td,
+	.api th + th {
 		padding-left: 40px;
 	}
 
