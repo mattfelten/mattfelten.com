@@ -302,6 +302,12 @@
     font-size: 14px; line-height: 20px;
     padding: 16px 24px 20px;
     overflow: hidden;
+    /* The formatting bar is absolutely positioned against this, and its
+       coordinates are computed relative to it. Without this the bar
+       resolves against a different ancestor and drifts further off with
+       every row down the list. The editing bench has always had it; the
+       port did not bring it across. */
+    position: relative;
   }
 
   .spec-head {

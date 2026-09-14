@@ -937,7 +937,6 @@
     const el = proseEl(S.editingId);
     if (!el || !el.contains(sel.anchorNode)) return hideBar();
     const r = sel.getRangeAt(0).getBoundingClientRect();
-    const host = specEl.getBoundingClientRect();
     if (!barEl) {
       barEl = document.createElement("div");
       barEl.className = "floatbar";
@@ -946,8 +945,31 @@
                         '<button type="button" aria-label="Link">&#128279;</button>';
       specEl.appendChild(barEl);
     }
-    barEl.style.left = Math.max(8, r.left - host.left + r.width / 2 - 40) + "px";
-    barEl.style.top  = (r.top - host.top - 36) + "px";
+    // Measured after the bar is in the DOM, so offsetWidth is real on the
+    // first selection rather than only on the second.
+    const host = specEl.getBoundingClientRect();
+    // Both rects are zoomed viewport pixels, so their difference is too,
+    // while style is read as the element's own unzoomed pixels. Without
+    // dividing, the bar drifts further off with every row down the list,
+    // which is the same trap as the drop line and the row menu.
+    const z = (function () {
+      const v = parseFloat(getComputedStyle(document.documentElement)
+        .getPropertyValue("--embed-scale"));
+      return document.body.classList.contains("is-embed") && v > 0 ? v : 1;
+    })();
+    const bw = barEl.offsetWidth || 80;
+    const bh = barEl.offsetHeight || 30;
+
+    let left = (r.left - host.left + r.width / 2) / z - bw / 2;
+    left = Math.max(4, Math.min(left, host.width / z - bw - 4));
+
+    // Above the selection, flipped below when the row sits too near the
+    // top of the specimen for the bar to fit.
+    let top = (r.top - host.top) / z - bh - 6;
+    if (top < 4) top = (r.bottom - host.top) / z + 6;
+
+    barEl.style.left = left + "px";
+    barEl.style.top = top + "px";
   }
 
 
