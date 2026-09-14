@@ -5,17 +5,19 @@ import Slide from '@decks/templates/Slide.astro';
 // menu, editing in place, sub-items one level deep, and somebody else
 // in the second row.
 //
-// handles=1 pins the drag handle on, because hover does not exist on
-// a slide and the affordance would otherwise be invisible in the one
-// place it has to be seen.
+// The handle is hover-only and stays that way. The deck is a web page,
+// so hovering a row in front of the panel reveals it exactly as it
+// would in the product. An earlier version pinned it visible to work
+// around a problem that does not exist.
 //
-// Drive it: collapse the parent, drag it and watch its children come
-// with it, then open the row menu on a child.
+// Drive it: hover a row to raise its handle, drag a parent and watch
+// its children come with it, drop an item onto another to make it a
+// sub-item, then open the row menu on a child.
 ---
 
 <Slide subtitle="Where we landed">
 	<iframe
-		src="/decks/2026-checklist-component/prototypes/c4-accessibility-bench?embed=1&scale=2.1&reorder=both&enter=menu&focus=object&presence=tint&handles=1"
+		src="/decks/2026-checklist-component/prototypes/c4-accessibility-bench?embed=1&scale=2.1&reorder=both&enter=menu&focus=object&presence=tint"
 		title="The component, live"
 		class="live-embed m-0! block h-[632px] w-[1358px] max-h-none! max-w-none! border-0"
 	></iframe>

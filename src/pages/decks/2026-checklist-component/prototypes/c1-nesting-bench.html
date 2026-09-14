@@ -553,38 +553,9 @@
   .row[data-tier="4"] { margin-left: 128px; }
   .row[data-tier="5"] { margin-left: 160px; }
 
-  /* handles=1 pins the drag handle on. It is hover-only by design, and
-     on a slide that reads as though nesting removed it: the twisty
-     sits in the same gutter, so the obvious question is what happened
-     to the handle. Parents keep theirs at -42 so both are visible at
-     once and the answer is on screen. */
-  body[data-handles="on"] .handle { opacity: 1; }
-
   /* Twisty. Only parents get one, and it sits in the same gutter as
      the drag handle rather than taking a column, so a list with no
      children is not paying for one. */
-  .twist {
-    position: absolute; left: -22px; top: 2px;
-    width: 18px; height: 18px;
-    display: grid; place-content: center;
-    background: none; border: 0; padding: 0; cursor: pointer;
-    color: var(--text-subdued); border-radius: 4px;
-  }
-  .twist:hover { background: var(--surface-3); color: var(--text-default); }
-  .twist:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; }
-  .twist svg { transition: transform .12s ease; }
-  .twist[aria-expanded="true"] svg { transform: rotate(90deg); }
-  /* A parent shows its twisty always, not on hover. Hiding the only
-     signal that a row has hidden children behind hover would mean a
-     collapsed parent looks exactly like a leaf. */
-  .row.has-kids .handle { left: -42px; }
-
-  .kids {
-    flex: none; font-size: 11px; color: var(--text-subdued);
-    background: var(--surface-3); border-radius: 999px;
-    padding: 1px 7px; align-self: center;
-  }
-
   /* Drop indicator, tier-aware. The plain line from the flat list
      cannot say which tier you are about to land in, so it insets. */
   .drop-line.tier1 { left: 32px; }
@@ -723,15 +694,6 @@
     </div>
 
     <div class="group">
-      <p class="eyebrow">A collapsed parent shows</p>
-      <div class="seg" id="seg-collapsed" role="group" aria-label="Collapsed parent">
-        <button data-v="count" aria-pressed="true"><span class="k">Z</span>How many are hidden</button>
-        <button data-v="progress" aria-pressed="false"><span class="k">X</span>How many are done</button>
-        <button data-v="bare" aria-pressed="false"><span class="k">C</span>Nothing but the twisty</button>
-      </div>
-    </div>
-
-    <div class="group">
       <p class="eyebrow">Inspect</p>
       <label class="switch">
         <input type="checkbox" id="chk-sr" checked>
@@ -847,14 +809,11 @@
     nest: "independent",
     drag: "context",
     indicator: "inset",
-    collapsed: "count",
     index: "fractional",
     sr: "list",
     showSr: true,
     zones: false,
-    open: {}   // id -> true when a parent is expanded
   };
-  ITEMS.filter(i => i.parent === null).forEach(p => { S.open[p.id] = true; });
 
   const listEl = document.getElementById("list");
   const countEl = document.getElementById("count");
@@ -913,7 +872,7 @@
     const walk = (parentId, tier) => {
       ITEMS.filter(i => i.parent === parentId).forEach(it => {
         out.push({ it, tier });
-        if (S.open[it.id] !== false) walk(it.id, tier + 1);
+        walk(it.id, tier + 1);
       });
     };
     walk(null, 0);
@@ -932,7 +891,7 @@
     }
     tops().forEach(p => {
       out.push({ it: p, tier: 0 });
-      if (S.open[p.id] !== false) kidsOf(p.id).forEach(c => out.push({ it: c, tier: 1 }));
+      kidsOf(p.id).forEach(c => out.push({ it: c, tier: 1 }));
     });
     return out;
   }
@@ -1048,8 +1007,7 @@
   const ICON = {
     circle: '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/></svg>',
     check: '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/><path d="M5.8 9.2l2.2 2.2 4.2-4.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-    grip: '<svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="4" cy="2.5" r="1.1"/><circle cx="8" cy="2.5" r="1.1"/><circle cx="4" cy="6" r="1.1"/><circle cx="8" cy="6" r="1.1"/><circle cx="4" cy="9.5" r="1.1"/><circle cx="8" cy="9.5" r="1.1"/></svg>',
-    twist: '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 2.5L8 6l-3.5 3.5"/></svg>'
+    grip: '<svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="4" cy="2.5" r="1.1"/><circle cx="8" cy="2.5" r="1.1"/><circle cx="4" cy="6" r="1.1"/><circle cx="8" cy="6" r="1.1"/><circle cx="4" cy="9.5" r="1.1"/><circle cx="8" cy="9.5" r="1.1"/></svg>'
   };
 
   function render() {
@@ -1059,27 +1017,14 @@
     listEl.innerHTML = rows.map(({ it, tier }) => {
       const kids = kidsOf(it.id);
       const isParent = nestingOn() && kids.length > 0;
-      const open = S.open[it.id] !== false;
-      const doneKids = kids.filter(k => k.done).length;
-
-      let badge = "";
-      if (isParent && !open) {
-        if (S.collapsed === "count") badge = '<span class="kids">' + kids.length + "</span>";
-        if (S.collapsed === "progress") badge = '<span class="kids">' + doneKids + " / " + kids.length + "</span>";
-      }
 
       return '<div class="row' + (isParent ? " has-kids" : "") + '" data-id="' + it.id +
         '" data-tier="' + tier + '" data-done="' + it.done + '" tabindex="0" role="listitem">' +
-        (isParent
-          ? '<button class="twist" data-act="twist" data-interactive aria-expanded="' + open +
-            '" aria-label="' + (open ? "Collapse" : "Expand") + ' sub-items of ' + esc(it.text.slice(0, 40)) + '">' + ICON.twist + "</button>"
-          : "") +
-        '<button class="handle" data-act="grab" data-interactive aria-label="Reorder"' +
-        (isParent ? ' style="left:-42px"' : "") + ">" + ICON.grip + "</button>" +
+        '<button class="handle" data-act="grab" data-interactive aria-label="Reorder">' +
+        ICON.grip + "</button>" +
         '<button class="cb" data-act="check" data-interactive data-state="' + (it.done ? "done" : "open") +
         '" aria-label="' + (it.done ? "Mark not done" : "Mark done") + '">' + (it.done ? ICON.check : ICON.circle) + "</button>" +
         '<span class="content"><span class="prose">' + esc(it.text) + "</span></span>" +
-        badge +
         '<span class="who" data-interactive>' + it.who + "</span>" +
         "</div>";
     }).join("") + '<div class="drop-line" id="dropline"></div>';
@@ -1104,7 +1049,7 @@
         const kids = kidsOf(p.id);
         out += '  <span class="lvl">|-</span> <span class="role">checkbox</span> ' +
           (p.done ? "checked" : "not checked") + ', <span class="txt">"' + esc(short(p.text)) + '"</span>\n';
-        if (kids.length && S.open[p.id] !== false) {
+        if (kids.length) {
           out += '  <span class="lvl">|</span>    <span class="role">list</span>, ' + kids.length + " items\n";
           kids.forEach(c => {
             out += '  <span class="lvl">|</span>      <span class="lvl">|-</span> <span class="role">checkbox</span> ' +
@@ -1124,11 +1069,10 @@
       out += '<span class="role">tree</span>\n';
       t.forEach(p => {
         const kids = kidsOf(p.id);
-        const open = S.open[p.id] !== false;
         out += '  <span class="lvl">|-</span> <span class="role">treeitem</span>, level 1' +
-          (kids.length ? ", " + (open ? "expanded" : "collapsed") : "") +
+          (kids.length ? ", expanded" : "") +
           ', <span class="txt">"' + esc(short(p.text)) + '"</span>\n';
-        if (kids.length && open) {
+        if (kids.length) {
           kids.forEach(c => {
             out += '  <span class="lvl">|</span>    <span class="lvl">|-</span> <span class="role">treeitem</span>, level 2' +
               ', <span class="txt">"' + esc(short(c.text)) + '"</span>\n';
@@ -1354,11 +1298,6 @@
     const row = e.target.closest(".row");
     const id = row.dataset.id;
     if (act.dataset.act === "check") setDone(id, !byId(id).done);
-    if (act.dataset.act === "twist") {
-      S.open[id] = S.open[id] === false;
-      announce(S.open[id] ? "Expanded." : "Collapsed, " + kidsOf(id).length + " sub-items hidden.");
-      render();
-    }
   });
 
   // ---------------------------------------------------------------
@@ -1467,7 +1406,6 @@
   wireSeg("seg-nest", "nest");
   wireSeg("seg-drag", "drag", updateHint);
   wireSeg("seg-indicator", "indicator");
-  wireSeg("seg-collapsed", "collapsed");
   wireSeg("seg-index", "index");
   wireSeg("seg-sr", "sr");
 
@@ -1489,7 +1427,6 @@
     "n": ["seg-nesting", "on"], "m": ["seg-nesting", "off"],
     "q": ["seg-drag", "context"], "w": ["seg-drag", "line"], "e": ["seg-drag", "sideways"],
     "a": ["seg-indicator", "line"], "s": ["seg-indicator", "inset"],
-    "z": ["seg-collapsed", "count"], "x": ["seg-collapsed", "progress"], "c": ["seg-collapsed", "bare"]
   };
   window.addEventListener("keydown", (e) => {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
@@ -1511,7 +1448,6 @@
       nest:      ["independent", "cascade", "rollup", "both"],
       drag:      ["context", "line", "sideways"],
       indicator: ["line", "inset"],
-      collapsed: ["count", "progress", "bare"],
       index:     ["fractional", "integer"],
       sr:        ["list", "tree"]
     };
@@ -1525,7 +1461,6 @@
       const c = document.getElementById("chk-zones");
       c.checked = true; c.dispatchEvent(new Event("change"));
     }
-    if (q.get("handles") === "1") document.body.dataset.handles = "on";
     if (q.get("deep") === "1") {
       S.deep = true;
       ITEMS.length = 0;
