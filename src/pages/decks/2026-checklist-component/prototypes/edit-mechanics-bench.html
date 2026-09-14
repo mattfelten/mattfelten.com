@@ -318,6 +318,46 @@
     width: 2px; border-radius: 1px; background: var(--action);
   }
 
+  /* ---------------------------------------------------------------
+     R1 - the editor that opens as an object. Kept only so the thing
+     that was rejected can be seen rather than described.
+     Everything about it announces a mode: a real border and real
+     padding, so the glyphs move, and a toolbar and Save / Cancel that
+     appear and take space. Editing a list item is not a mode, it is
+     typing, which is the whole argument for what replaced it.
+     --------------------------------------------------------------- */
+  body[data-chrome="object"] .prose[contenteditable="true"] {
+    border: 1px solid var(--border-strong);
+    border-radius: 6px 6px 0 0;
+    padding: 8px 10px;
+    background: var(--surface-1);
+    box-shadow: none;
+  }
+
+  .editor-chrome {
+    display: flex; align-items: center; gap: 6px;
+    border: 1px solid var(--border-strong); border-top: 0;
+    border-radius: 0 0 6px 6px;
+    background: var(--surface-2);
+    padding: 6px 8px;
+  }
+  .editor-chrome .tool {
+    appearance: none; border: 0; background: none; cursor: pointer;
+    width: 24px; height: 24px; border-radius: 4px;
+    color: var(--text-subdued); font-size: 13px; font-weight: 600;
+    display: grid; place-content: center;
+  }
+  .editor-chrome .tool:hover { background: var(--surface-3); color: var(--text-default); }
+  .editor-chrome .spacer { flex: 1; }
+  .editor-chrome .act {
+    appearance: none; cursor: pointer; font: inherit; font-size: 12px;
+    border-radius: 5px; padding: 4px 10px; border: 1px solid var(--border-strong);
+    background: var(--surface-1); color: var(--text-default);
+  }
+  .editor-chrome .act.primary {
+    background: var(--action); border-color: var(--action); color: #fff;
+  }
+
   /* the naive implementation, for contrast: real border + padding,
      which pushes every glyph down and to the right on entry */
   body[data-naive="on"] .prose[contenteditable="true"] {
@@ -505,6 +545,7 @@
         <button data-v="tint" aria-pressed="false"><span class="k">2</span>Tint the text block</button>
         <button data-v="rule" aria-pressed="false"><span class="k">3</span>Tint plus a left rule</button>
         <button data-v="field" aria-pressed="false"><span class="k">4</span>Hairline around it</button>
+        <button data-v="object" aria-pressed="false"><span class="k">5</span>An editor that opens</button>
       </div>
       <p class="group-note">
         All four are painted with background and box-shadow, never border or
@@ -796,6 +837,7 @@
     el.setAttribute("contenteditable", "true");
     el.setAttribute("role", "textbox");
     el.setAttribute("aria-multiline", "true");
+    if (S.chrome === "object") mountEditorChrome(el);
     log("caret into " + id + " (no write yet)", "quiet");
     if (placeCaretAtEnd) {
       el.focus();
@@ -819,6 +861,7 @@
       el.removeAttribute("contenteditable");
       el.removeAttribute("role");
       el.removeAttribute("aria-multiline");
+      unmountEditorChrome();
     }
     if (S.activity === "coalesce" && save) {
       log('  activity stream: "Dana Whitfield updated a checklist item" (once)', "noise");
@@ -833,6 +876,47 @@
   // ---------------------------------------------------------------
   // Formatting affordances
   // ---------------------------------------------------------------
+  // R1's apparatus. Mounted under the field so the row visibly grows,
+  // which is half the point: the editor does not just outline the text,
+  // it pushes the rest of the list down to make room for itself.
+  let chromeEl = null;
+  function mountEditorChrome(el) {
+    unmountEditorChrome();
+    chromeEl = document.createElement("div");
+    chromeEl.className = "editor-chrome";
+    chromeEl.innerHTML =
+      '<button class="tool" tabindex="-1" aria-label="Bold"><b>B</b></button>' +
+      '<button class="tool" tabindex="-1" aria-label="Italic"><i>I</i></button>' +
+      '<button class="tool" tabindex="-1" aria-label="Underline"><u>U</u></button>' +
+      '<span class="spacer"></span>' +
+      '<button class="act" tabindex="-1">Cancel</button>' +
+      '<button class="act primary" tabindex="-1">Save</button>';
+    const host = el.closest(".content") || el.parentElement;
+    host.appendChild(chromeEl);
+  }
+  function unmountEditorChrome() {
+    if (chromeEl) { chromeEl.remove(); chromeEl = null; }
+  }
+
+  // autoedit=1 opens a row on arrival. A slide should not need the
+  // presenter to click before the thing being discussed exists, and the
+  // hairline and the editor are both invisible until something is being
+  // edited. Deferred until the slide is actually on screen: Reveal
+  // builds every slide up front, so firing at load would open a field
+  // nobody is looking at and the first blur would close it again.
+  function autoEditWhenVisible() {
+    const begin = () => {
+      if (document.documentElement.clientWidth === 0) return void setTimeout(begin, 300);
+      const first = ITEMS.find(i => canEdit(i));
+      if (first) beginEdit(first.id, true);
+    };
+    // Always through a timer, never synchronously. applyDeepLink runs
+    // before the script's closing render(), which rebuilds the list and
+    // would throw away the field this just opened. One tick is enough to
+    // land after it.
+    setTimeout(begin, 0);
+  }
+
   let barEl = null;
   function hideBar() { if (barEl) { barEl.remove(); barEl = null; } }
 
@@ -1027,7 +1111,7 @@
   function applyDeepLink() {
     const q = new URLSearchParams(location.search);
     const allowed = {
-      chrome:   ["none", "tint", "rule", "field"],
+      chrome:   ["none", "tint", "rule", "field", "object"],
       fmt:      ["none", "md", "bar"],
       feedback: ["silent", "dot", "whisper"],
       enter:    ["text", "dbl", "pencil", "menu"],
@@ -1054,6 +1138,12 @@
     // The embed switch is "embed", not "chrome". This bench already
     // uses "chrome" for the edit-chrome dimension, and one name
     // meaning two things is a trap for whoever writes the slides.
+    // Guarded. This runs inside applyDeepLink, and an exception here
+    // previously took embed mode down with it, so the bench rendered its
+    // full rail on a slide.
+    if (q.get("autoedit") === "1") {
+      try { autoEditWhenVisible(); } catch (err) { console.warn("autoedit:", err); }
+    }
     if (q.get("embed") === "1") document.body.classList.add("is-embed");
 
     // Slides are 1920 wide and get scaled down to whatever is projecting,
