@@ -28,21 +28,24 @@ import { CLASS, tokenise } from './_code.ts';
 
 const item = `type ChecklistItem = {
   id: string
-  text: string          // markdown
-  checked: boolean      // the box, not what it means to you
-  author: string        // shown in the creator badge
-  parentId: string | null   // the entire nesting model
+  text: string                // markdown
+  checked: boolean            // the box, not your meaning
+  author: string              // the creator badge
+  parentId: string | null     // the whole nesting model
+  presence?: PresenceUser[]   // who is in THIS row
 }`;
 
-// Presence is a separate array rather than a field on the item, which is
-// the question worth being ready for. Items are persisted and change
-// when somebody saves; presence is ephemeral and changes many times a
-// second. Putting it on the item means every heartbeat produces a new
-// items array, so the whole list re-renders and any memoisation on a row
-// is defeated. They also arrive from different places: items from the
-// API, presence from a live channel. Two lifetimes, two props.
+// Presence hangs off the item, not off the list, and that is worth
+// being able to defend. A list-level presence array keyed by item id
+// means the component joins the two on every render, and it means a row
+// cannot be rendered on its own without the parent looking up who is in
+// it. A row owning who is in it is the same rule as a row owning its own
+// text: the thing that draws it holds the state that describes it.
+//
+// It also keeps ChecklistRow honest as a component. Everything the
+// structure diagram shows inside a row is reachable from one item.
 const presence = `type PresenceUser = {
-  itemId: string        // the component does the join
+  id: string
   name: string          // announced, not just drawn
 }`;
 
@@ -51,7 +54,7 @@ const save = (id, text) => api.updateItem(id, text)            // fires on autos
 
 const blocks: { label: string; code: string; wide?: boolean }[] = [
 	{ label: 'One row', code: item },
-	{ label: 'Who is in the list, and not on the item', code: presence },
+	{ label: 'Somebody in a row', code: presence },
 	{ label: 'What comes back out', code: handlers, wide: true },
 ];
 
