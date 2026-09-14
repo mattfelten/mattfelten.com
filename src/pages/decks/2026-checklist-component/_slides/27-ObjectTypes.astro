@@ -52,10 +52,13 @@ const presence = `type PresenceUser = {
 const handlers = `const move = (id, { after, before }) => api.reorder(...)   // neighbours, never an index
 const save = (id, text) => api.updateItem(id, text)            // fires on autosave, not on blur`;
 
-const blocks: { label: string; code: string; wide?: boolean }[] = [
-	{ label: 'One row', code: item },
-	{ label: 'Somebody in a row', code: presence },
-	{ label: 'What comes back out', code: handlers, wide: true },
+// No headings over the blocks. `type ChecklistItem` and `const move`
+// already say what each one is, and a label repeating the identifier
+// underneath it is furniture.
+const blocks: { code: string; wide?: boolean }[] = [
+	{ code: item },
+	{ code: presence },
+	{ code: handlers, wide: true },
 ];
 
 // Two columns rather than three stacked blocks: stacked, the slide ran
@@ -63,14 +66,11 @@ const blocks: { label: string; code: string; wide?: boolean }[] = [
 // left because it is the one worth reading line by line.
 ---
 
-<Slide subtitle="What you hand it">
+<Slide subtitle="Object types">
 	<div class="grid grid-cols-2 items-start gap-x-14 gap-y-8">
 		{
 			blocks.map((b) => (
-				<div class:list={['flex flex-col gap-3', b.wide && 'col-span-2']}>
-					<span class="text-subdued text-xs font-medium uppercase">
-						{b.label}
-					</span>
+				<div class:list={['flex flex-col', b.wide && 'col-span-2']}>
 					<pre class="snippet"><code>{tokenise(b.code, 'ts').map((tk) => (
 						tk.k === 'ws' ? tk.t : <span class={CLASS[tk.k]}>{tk.t}</span>
 					))}</code></pre>

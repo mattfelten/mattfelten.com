@@ -29,28 +29,24 @@ const runbooks = `<Checklist
   onEdit={save}
 />`;
 
+// No commentary under the Runbooks call. The shorter call is the
+// argument, and saying it in prose underneath only takes the line away
+// from Matt.
 const panels = [
-	{ label: 'Collaboration Loops', code: loops, note: null },
-	{
-		label: 'Runbooks',
-		code: runbooks,
-		note: 'Read mostly, authored briefly. It declines reordering, presence and the author tag, and never has to know they exist.',
-	},
+	{ label: 'Collaboration Loops', code: loops },
+	{ label: 'Runbooks', code: runbooks },
 ];
 ---
 
-<Slide subtitle="The same component, twice">
+<Slide subtitle="Implementation">
 	<div class="grid grid-cols-2 items-start gap-16">
 		{
 			panels.map((p) => (
 				<div class="flex flex-col gap-4">
-					<span class="text-subdued text-xs font-medium uppercase">
-						{p.label}
-					</span>
+					<span class="text-strong text-3xl font-medium">{p.label}</span>
 					<pre class="snippet"><code>{tokenise(p.code).map((tk) => (
 						tk.k === 'ws' ? tk.t : <span class={CLASS[tk.k]}>{tk.t}</span>
 					))}</code></pre>
-					{p.note && <span class="text-subdued text-2xl">{p.note}</span>}
 				</div>
 			))
 		}

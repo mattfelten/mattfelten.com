@@ -1,0 +1,60 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+// Written as documentation rather than as a list of caveats. Each line
+// is something a person does while implementing, in the imperative, so
+// it reads the way the docs page would read rather than as a disclaimer
+// about what the component failed to cover.
+//
+// The framing that makes it worth a slide: the component can be
+// accessible and the page can still fail. These are the seams, and every
+// one of them is the consumer's to close.
+
+const steps = [
+	{
+		title: 'Name the list',
+		body: 'Pass a label. The component renders a group of checkboxes and does not know what they are a list of.',
+	},
+	{
+		title: 'Put it in the heading order',
+		body: 'The component owns one region, not the page. Give it a heading somebody can navigate to.',
+	},
+	{
+		title: 'Decide who may edit',
+		body: 'Set editable per row from your own rules. The component asks the question and never answers it.',
+	},
+	{
+		title: 'Give presence real names',
+		body: 'Presence is announced, not just drawn. A missing name becomes an anonymous face a screen reader cannot report.',
+	},
+	{
+		title: 'Re-measure contrast if you re-theme',
+		body: 'Every ratio here was measured against our tokens. Swap the palette and the numbers are yours to check again.',
+	},
+	{
+		title: 'Announce what happens elsewhere',
+		body: 'The component announces its own changes. Anything arriving from another screen is yours to put in a live region.',
+	},
+	{
+		title: 'Own the menu behaviour',
+		body: 'The row menu is a system component in its own right. Its keyboard contract belongs to whoever ships it.',
+	},
+	{
+		title: 'Catch a failed save',
+		body: 'Autosave reports failure outward. Give it somewhere to land, because silence reads as saved.',
+	},
+];
+---
+
+<Slide subtitle="Accessible implementation">
+	<div class="grid grid-cols-4 gap-x-12 gap-y-10">
+		{
+			steps.map((s) => (
+				<div class="flex flex-col gap-3">
+					<span class="text-strong text-2xl font-medium">{s.title}</span>
+					<span class="text-subdued text-xl">{s.body}</span>
+				</div>
+			))
+		}
+	</div>
+</Slide>
