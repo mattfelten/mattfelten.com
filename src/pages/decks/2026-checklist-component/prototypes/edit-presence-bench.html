@@ -247,6 +247,20 @@
   }
   @media (max-width: 900px) { .screens { grid-template-columns: minmax(0, 1fr); } }
 
+  /* ---------------------------------------------------------------
+     SOLO - ?solo=1
+     One list, with somebody else working in it from off screen.
+     The two-screen layout explains the plumbing: it shows that a
+     keystroke on the left arrives on the right. That is the wrong
+     question for a slide, where what matters is what it feels like to
+     be the person watching their own list change under them. So the
+     second screen goes, the remaining one takes the full width, and
+     the other person is already mid-edit when the slide appears.
+     --------------------------------------------------------------- */
+  body[data-solo="on"] .screens { grid-template-columns: minmax(0, 1fr); }
+  body[data-solo="on"] .screen + .screen { display: none; }
+  body[data-solo="on"] .screen-label { display: none; }
+
   .screen { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
   .screen-label {
     display: flex; align-items: baseline; gap: 8px;
@@ -694,7 +708,7 @@
 
   const S = {
     mark: "floatdim", lock: "timeout", me: "dana", perm: "anyone",
-    activity: "every", others: false, latency: false,
+    activity: "every", others: false, latency: false, solo: false,
     editingId: null, baseline: ""
   };
 
@@ -1067,6 +1081,8 @@
     let i = 0;
     const tick = () => {
       if (!S.others || item.liveBy !== who) return;
+      // Off screen: hold the keystroke rather than burning a repaint.
+      if (S.solo && !soloAwake()) return void setTimeout(tick, 400);
       i += 2 + Math.floor(Math.random() * 3);
       item.liveText = item.text + addition.slice(0, i);
       item.beat = now();
@@ -1120,9 +1136,29 @@
     schedule();
   }
 
+  // In solo the bench is carrying a slide, so the cadence is tight and
+  // the mix is fixed. Random gaps of up to five seconds are fine when
+  // somebody is sitting with the bench and wrong when thirty people are
+  // waiting for something to happen. Typing is weighted heavily because
+  // it is the one that shows the row treatment.
+  const SOLO_CYCLE = ["type", "tick", "type", "abandon", "type", "add"];
+  let soloStep = 0;
+
   function schedule() {
     clearTimeout(othersTimer);
     if (!S.others) return;
+    if (S.solo) {
+      othersTimer = setTimeout(() => {
+        if (!S.others) return;
+        if (!soloAwake()) return void schedule();
+        const step = SOLO_CYCLE[soloStep++ % SOLO_CYCLE.length];
+        if (step === "type") remoteType();
+        else if (step === "tick") remoteTick();
+        else if (step === "abandon") remoteAbandon();
+        else remoteAdd();
+      }, 1400);
+      return;
+    }
     othersTimer = setTimeout(() => {
       if (!S.others) return;
       const r = Math.random();
@@ -1132,6 +1168,39 @@
       else remoteAdd();
     }, 2400 + Math.random() * 2400);
   }
+
+  // Solo starts mid-action rather than waiting out a timer. A slide gets
+  // looked at for twenty seconds, and the treatment being demonstrated
+  // only exists while somebody is actually typing, so a cold start shows
+  // an ordinary list and the point is missed.
+  function soloStart() {
+    S.solo = true;
+    S.others = true;
+    document.body.dataset.solo = "on";
+    // Wait for the slide to actually be on screen before the first
+    // action. Reveal builds every slide up front, so this bench loads
+    // while its own slide is still hidden; firing immediately spent the
+    // opening move on an audience of nobody and left the list idle by
+    // the time anyone arrived.
+    const begin = () => {
+      if (!soloAwake()) return void setTimeout(begin, 300);
+      remoteType();
+    };
+    begin();
+  }
+
+  // Reveal hides a slide it is not on with display: none, which
+  // collapses the iframe viewport to zero but does NOT stop its timers.
+  // Three of these benches on three slides would otherwise animate for
+  // the whole talk, typing into lists nobody is looking at. Asleep, the
+  // scheduler keeps ticking but does nothing, so the bench picks up
+  // where it left off the moment the slide comes round.
+  // Size, not document.hidden. Every iframe in the deck shares the tab's
+  // visibility, so document.hidden is identical for the slide you are on
+  // and the twenty you are not, which makes it useless here. A hidden
+  // Reveal slide collapses its iframe to zero width, and that is the
+  // signal. A backgrounded tab is already throttled by the browser.
+  const soloAwake = () => document.documentElement.clientWidth > 0;
 
   // ---------------------------------------------------------------
   // Rail
@@ -1194,6 +1263,11 @@
         b.setAttribute("aria-pressed", String(b.dataset.v === S[k])));
     });
 
+    if (q.get("solo") === "1") {
+      const c = document.getElementById("chk-others");
+      if (c) c.checked = true;
+      soloStart();
+    }
     if (q.get("others") === "1") {
       S.others = true;
       const chk = document.getElementById("chk-others");
