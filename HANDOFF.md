@@ -10,14 +10,10 @@ all pushed.
 
 A portfolio deep dive on the Checklist component, for an interview.
 
-**The interview is for a design engineer role, whose main responsibility is the
-company's design system.** Company deliberately not named here.
-
-That role matters more than it looks. A design engineer is assessed partly on
-whether they can build, and the senior frontend engineer on the panel is likely the
-one making that call. **Every prototype in this deck is working code Matt wrote**,
-which is the most direct evidence of the job there is, so the deck should not be shy
-about it. See the gap flagged under "Where we landed" below.
+**The role:** a designer who works in code, on the design team, whose main
+responsibility is the company's design system. Day to day he still partners with an
+engineer. He is **not** trying to present as a full engineer, so do not shape the
+deck as though the job is to prove that. Company deliberately not named here.
 
 It is the third segment of a longer portfolio review: personal intro, Anvil design
 system overview, **this**, outro. About 18 minutes inside a 45-minute slot with
@@ -71,34 +67,6 @@ engineering work:
 (`ListRow`, `EditableText`, `SortableList`, `PresenceMarker`). Four names in a grid
 does not explain what any of them is for. **Matt has said he still does not fully
 buy the four primitives**, so this wants a conversation before anything gets drawn.
-
-Worth weighing against the role: for a design engineer on a design system, the
-decomposition and "where the component stops" are close to the actual job, so these
-two slides probably carry more than their slide count suggests. That does not
-override the stated takeaway, which is craft, but it argues for getting 24 and 25
-right rather than cutting them for time.
-
-## A gap worth fixing before anything else
-
-**No slide says Matt built these.** The deck runs fourteen live prototypes and never
-states that they are working code he wrote rather than something he was shown. For a
-design engineer interview that is the most load-bearing fact in the room and it is
-currently left to be inferred.
-
-There was a slide for this in the 37-slide version, `HowItGotDecided`: *this is a
-bench, not a mockup, which is why everything after it has numbers on it*, plus the
-bugs that were only findable by driving it — a field that typed backwards, a list
-announcing "3 of 5" with eight rows on screen, a cancelled drag that saved anyway.
-It was cut in the restructure to 28 slides. It should come back, probably straight
-after "Where we landed" as the first thing said about the prototypes.
-
-It also reframes the other decision made for the old role. **The fractional index
-was cut** because Matt felt it was data modelling rather than component design and
-did not want to defend LexoRank to a senior engineer. Cutting it is still probably
-right, but the reason changes: for a design engineer the honest line is not "that is
-not my job", it is "that part is engineering's and here is the boundary I drew".
-That is a stronger answer and it is worth having ready rather than avoiding the
-topic.
 Slide 25 (`TheRowArbitrates`) is the follow-on that makes 24 worth keeping: the
 primitives do not compose on their own, the row arbitrates between them, and there
 are three things it deliberately refuses to decide.
@@ -206,9 +174,6 @@ bench framing leaking into the component.
 
 ## Suggested next step
 
-1. **Put back a slide that says Matt built these.** See the gap above. Cheapest and
-   highest value thing left, and it is writing rather than prototype work.
-2. **A full read-through at presentation scale**, slide by slide, driving each bench.
-   The deck has changed shape three times and has not been walked end to end since.
-   Time it: target 18 minutes.
-3. Then 24 and 26, which are conversations before they are work.
+A full read-through at presentation scale, slide by slide, driving each bench —
+before touching 24 or 26. The deck has changed shape three times and has not been
+walked end to end since. Time it: target 18 minutes.

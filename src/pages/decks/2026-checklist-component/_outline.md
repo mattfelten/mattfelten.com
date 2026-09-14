@@ -10,7 +10,7 @@ system-level policy Anvil already covered.
 What they should conclude: depth of craft on one small thing. Specifically that I found and
 explored things nobody would find by looking, and that I care about pixels.
 
-`[DRIVE]` marks a live bench I actually operate in front of them. Everything else is one idea
+`[DRIVE]` marks a live prototype I actually operate in front of them. Everything else is one idea
 said out loud over a picture.
 
 ---
