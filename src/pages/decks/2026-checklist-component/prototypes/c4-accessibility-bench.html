@@ -452,6 +452,7 @@
     padding: 7px 9px; border-radius: 5px; cursor: pointer; text-align: left;
   }
   .popup button:hover:not(:disabled) { background: var(--surface-3); }
+  .popup button.neg { color: var(--negative); }
   .popup button:focus-visible { outline: 2px solid var(--action); outline-offset: -2px; }
   .popup button:disabled { color: var(--text-subdued); opacity: .55; cursor: default; }
   .popup .sep { height: 1px; background: var(--border-soft); margin: 4px 2px; }
@@ -587,6 +588,22 @@
   .row.is-source { opacity: .28; }
 
   /* ---------- Drop indicator ---------- */
+
+  /* Adding an item is part of the row's product today, and part of what
+     the system would carry. Copied from the reorder bench, which was the
+     only one that had it. A mockup without it is not the feature. */
+  .composer {
+    display: flex; align-items: center; gap: 12px;
+    padding: 2px; margin: -2px; margin-top: 4px;
+  }
+  .composer .cb { opacity: .4; cursor: default; }
+  .composer input {
+    flex: 1; border: 0; background: none; font: inherit;
+    color: var(--text-default); padding: 0;
+  }
+  .composer input::placeholder { color: #94A3B8; }
+  .composer input:focus { outline: none; }
+
   .drop-line {
     position: absolute; left: 0; right: 0; height: 2px;
     background: var(--action); border-radius: 1px;
@@ -1135,6 +1152,12 @@
           <span class="count" id="count"></span>
         </div>
         <div class="list" id="list"></div>
+        <div class="composer">
+          <span class="cb" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.4"/></svg>
+          </span>
+          <input class="composer-input" placeholder="Add an item" aria-label="Add an item">
+        </div>
       </section>
 
       <section class="audit" aria-label="Audit">
@@ -1204,7 +1227,7 @@
   <button data-act="down" role="menuitem">Move down</button>
   <div class="sep"></div>
   <button data-act="edit" role="menuitem">Edit text</button>
-  <button data-act="del" role="menuitem" disabled>Delete</button>
+  <button data-act="del" role="menuitem" class="neg">Delete</button>
 </div>
 
 <div class="sr-only" role="status" aria-live="polite" id="announce"></div>
@@ -2164,7 +2187,23 @@
       toggleDone(id);
       return;
     }
+    if (act === "del") {
+      closeMenu(false);
+      removeRow(id);
+      return;
+    }
   });
+
+  function removeRow(id) {
+    const it = byId(id);
+    if (!it) return;
+    const { from, count } = blockOf(id);
+    ITEMS.splice(from, count);
+    log('<span class="op">delete</span> <span class="dim">' + esc(short(it.text)) +
+      (count > 1 ? " and " + (count - 1) + " sub-item" + (count > 2 ? "s" : "") : "") + "</span>");
+    announce("Deleted. " + ITEMS.length + " items left.");
+    render();
+  }
 
   function toggleDone(id) {
     const it = byId(id);

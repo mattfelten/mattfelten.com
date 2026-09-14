@@ -59,7 +59,7 @@
      Mission Control has no dark mode, so the specimen never
      inverts. It stays a light sample mounted on the bench.
      ============================================================ */
-  .specimen, .sheet {
+  .specimen, .sheet, .rowpop {
     --surface-1: #FFFFFF;
     --surface-2: #FAFAFA;
     --surface-3: #F4F4F5;
@@ -412,6 +412,51 @@
     @keyframes blink { 0%, 49% { opacity: .75; } 50%, 100% { opacity: 0; } }
   }
 
+
+
+  /* ---------- Row menu ----------
+     The kebab on the row is not decoration. The row as it shipped carries
+     Done/Open and Delete in that menu, so every mockup offers both rather
+     than showing a button that does nothing. Positioning is copied from
+     the accessibility bench, including the divide-by-scale: the popup
+     lives outside the zoomed specimen, so a rect-derived coordinate has
+     to be converted before it is written into style. */
+  .rowpop {
+    position: absolute; z-index: 60; min-width: 168px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-default);
+    border-radius: 8px; box-shadow: var(--shadow-lift);
+    padding: 4px; display: none;
+    font-family: "Noto Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-size: 13px; color: var(--text-default);
+  }
+  .rowpop.on { display: block; }
+  .rowpop button {
+    appearance: none; border: 0; background: none; width: 100%;
+    text-align: left; padding: 7px 10px; border-radius: 5px;
+    font: inherit; color: inherit; cursor: pointer;
+  }
+  .rowpop button:hover { background: var(--surface-3); }
+  .rowpop button.neg { color: var(--negative); }
+  .rowpop .sep { height: 1px; background: var(--border-soft); margin: 4px 0; }
+  body.is-embed .rowpop { zoom: var(--embed-scale, 1); }
+
+  /* ---------- Composer ----------
+     Adding an item is part of the row's product today, and part of what
+     the system would carry. Copied from the reorder bench. A mockup
+     without it is not the feature. */
+  .composer {
+    display: flex; align-items: center; gap: 12px;
+    padding: 2px; margin: -2px; margin-top: 4px;
+  }
+  .composer .cb { opacity: .4; cursor: default; }
+  .composer input {
+    flex: 1; border: 0; background: none; font: inherit;
+    color: var(--text-default); padding: 0;
+  }
+  .composer input::placeholder { color: #94A3B8; }
+  .composer input:focus { outline: none; }
+
   .who {
     flex: none; display: inline-flex; align-items: center; gap: 5px;
     font-size: 12px; color: var(--text-subdued); white-space: nowrap; margin-top: 1px;
@@ -628,6 +673,12 @@
               <h2>Checklist</h2>
             </div>
             <div class="list" id="list-you"></div>
+            <div class="composer">
+              <span class="cb" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.4"/></svg>
+              </span>
+              <input class="composer-input" placeholder="Add an item" aria-label="Add an item">
+            </div>
           </section>
         </div>
 
@@ -644,6 +695,12 @@
               <h2>Checklist</h2>
             </div>
             <div class="list" id="list-them"></div>
+            <div class="composer">
+              <span class="cb" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.4"/></svg>
+              </span>
+              <input class="composer-input" placeholder="Add an item" aria-label="Add an item">
+            </div>
           </section>
         </div>
       </div>
@@ -682,6 +739,13 @@
 </div>
 
 <div class="sr-only" role="status" aria-live="polite" id="live"></div>
+
+
+<div class="rowpop" id="rowpop" role="menu" aria-label="Row actions">
+  <button data-rowact="done" role="menuitem">Mark done</button>
+  <div class="sep"></div>
+  <button data-rowact="del" role="menuitem" class="neg">Delete</button>
+</div>
 
 <script>
 (() => {
@@ -1317,5 +1381,75 @@
 
   applyDeepLink();
   renderAll();
+
+  const ROWMENU = {
+    trigger: ".kebab",
+    idOf: row => row.dataset.id,
+    byId: id => byId(id),
+    toggle: id => { const it = byId(id); if (it) { it.done = !it.done; renderAll(); } },
+    remove: id => {
+      const i = ITEMS.findIndex(x => x.id === id);
+      if (i >= 0) { ITEMS.splice(i, 1); renderAll(); }
+    }
+  };
+
+  // ---------------------------------------------------------------
+  // Row menu. Wired from the kebab already on the row.
+  // ---------------------------------------------------------------
+  (function () {
+    const pop = document.getElementById("rowpop");
+    if (!pop) return;
+    let forId = null;
+
+    function scale() {
+      const v = parseFloat(getComputedStyle(document.documentElement)
+        .getPropertyValue("--embed-scale"));
+      return document.body.classList.contains("is-embed") && v > 0 ? v : 1;
+    }
+
+    function close() { pop.classList.remove("on"); forId = null; }
+
+    function open(btn, id) {
+      forId = id;
+      const it = ROWMENU.byId(id);
+      pop.querySelector('[data-rowact="done"]').textContent =
+        it && it.done ? "Mark not done" : "Mark done";
+      pop.classList.add("on");
+      const b = btn.getBoundingClientRect();
+      const pb = pop.getBoundingClientRect();
+      const z = scale();
+      let left = b.right - pb.width;
+      if (left < 8) left = 8;
+      pop.style.left = ((left + window.scrollX) / z) + "px";
+      pop.style.top = ((b.bottom + 6 + window.scrollY) / z) + "px";
+    }
+
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest(ROWMENU.trigger);
+      if (btn) {
+        const row = btn.closest(".row");
+        if (row) {
+          e.stopPropagation();
+          const id = ROWMENU.idOf(row);
+          if (forId === id) { close(); return; }
+          open(btn, id);
+          return;
+        }
+      }
+      const act = e.target.closest("[data-rowact]");
+      if (act && forId) {
+        const id = forId;
+        close();
+        if (act.dataset.rowact === "done") ROWMENU.toggle(id);
+        if (act.dataset.rowact === "del") ROWMENU.remove(id);
+        return;
+      }
+      if (!e.target.closest(".rowpop")) close();
+    });
+
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+    window.addEventListener("resize", close);
+  })();
+
 })();
 </script>

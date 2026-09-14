@@ -74,7 +74,7 @@
      Mission Control has no dark mode, so the specimen never
      inverts. It stays a light sample mounted on the bench.
      ============================================================ */
-  .specimen, .proxy {
+  .specimen, .proxy, .rowpop {
     --surface-1: #FFFFFF;
     --surface-2: #FAFAFA;
     --surface-3: #F4F4F5;
@@ -396,6 +396,34 @@
   .done-group[aria-expanded="true"] .chev { transform: rotate(90deg); }
   .done-group .rule { flex: 1; height: 1px; background: var(--border-soft); }
 
+
+  /* ---------- Row menu ----------
+     The kebab on the row is not decoration. The row as it shipped carries
+     Done/Open and Delete in that menu, so every mockup offers both rather
+     than showing a button that does nothing. Positioning is copied from
+     the accessibility bench, including the divide-by-scale: the popup
+     lives outside the zoomed specimen, so a rect-derived coordinate has
+     to be converted before it is written into style. */
+  .rowpop {
+    position: absolute; z-index: 60; min-width: 168px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-default);
+    border-radius: 8px; box-shadow: var(--shadow-lift);
+    padding: 4px; display: none;
+    font-family: "Noto Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-size: 13px; color: var(--text-default);
+  }
+  .rowpop.on { display: block; }
+  .rowpop button {
+    appearance: none; border: 0; background: none; width: 100%;
+    text-align: left; padding: 7px 10px; border-radius: 5px;
+    font: inherit; color: inherit; cursor: pointer;
+  }
+  .rowpop button:hover { background: var(--surface-3); }
+  .rowpop button.neg { color: var(--negative); }
+  .rowpop .sep { height: 1px; background: var(--border-soft); margin: 4px 0; }
+  body.is-embed .rowpop { zoom: var(--embed-scale, 1); }
+
   /* ---------- Composer ---------- */
   .composer {
     display: flex; align-items: center; gap: 12px;
@@ -704,6 +732,13 @@
 </div>
 
 <div class="sr-only" role="status" aria-live="polite" id="live"></div>
+
+
+<div class="rowpop" id="rowpop" role="menu" aria-label="Row actions">
+  <button data-rowact="done" role="menuitem">Mark done</button>
+  <div class="sep"></div>
+  <button data-rowact="del" role="menuitem" class="neg">Delete</button>
+</div>
 
 <script>
 (() => {
@@ -1402,5 +1437,89 @@
   syncBody();
   updateHint();
   render();
+
+  const ROWMENU = {
+    trigger: ".menu",
+    idOf: row => row.dataset.id,
+    byId: id => manual().find(x => x.id === id),
+    toggle: id => {
+      const it = manual().find(x => x.id === id);
+      if (!it) return;
+      if (S.mode === "tasks") {
+        it.status = TASK_CYCLE[it.status];
+        it.done = it.status === "DONE" || it.status === "CANCELLED";
+      } else {
+        it.done = !it.done;
+      }
+      it.doneAt = it.done ? ++doneSeq : null;
+      render();
+    },
+    remove: id => {
+      const arr = manual();
+      const i = arr.findIndex(x => x.id === id);
+      if (i >= 0) arr.splice(i, 1);
+      announce("Deleted.");
+      render();
+    }
+  };
+
+  // ---------------------------------------------------------------
+  // Row menu. Wired from the kebab already on the row.
+  // ---------------------------------------------------------------
+  (function () {
+    const pop = document.getElementById("rowpop");
+    if (!pop) return;
+    let forId = null;
+
+    function scale() {
+      const v = parseFloat(getComputedStyle(document.documentElement)
+        .getPropertyValue("--embed-scale"));
+      return document.body.classList.contains("is-embed") && v > 0 ? v : 1;
+    }
+
+    function close() { pop.classList.remove("on"); forId = null; }
+
+    function open(btn, id) {
+      forId = id;
+      const it = ROWMENU.byId(id);
+      pop.querySelector('[data-rowact="done"]').textContent =
+        it && it.done ? "Mark not done" : "Mark done";
+      pop.classList.add("on");
+      const b = btn.getBoundingClientRect();
+      const pb = pop.getBoundingClientRect();
+      const z = scale();
+      let left = b.right - pb.width;
+      if (left < 8) left = 8;
+      pop.style.left = ((left + window.scrollX) / z) + "px";
+      pop.style.top = ((b.bottom + 6 + window.scrollY) / z) + "px";
+    }
+
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest(ROWMENU.trigger);
+      if (btn) {
+        const row = btn.closest(".row");
+        if (row) {
+          e.stopPropagation();
+          const id = ROWMENU.idOf(row);
+          if (forId === id) { close(); return; }
+          open(btn, id);
+          return;
+        }
+      }
+      const act = e.target.closest("[data-rowact]");
+      if (act && forId) {
+        const id = forId;
+        close();
+        if (act.dataset.rowact === "done") ROWMENU.toggle(id);
+        if (act.dataset.rowact === "del") ROWMENU.remove(id);
+        return;
+      }
+      if (!e.target.closest(".rowpop")) close();
+    });
+
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+    window.addEventListener("resize", close);
+  })();
+
 })();
 </script>

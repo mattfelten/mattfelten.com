@@ -74,7 +74,7 @@
      Mission Control has no dark mode, so the specimen never
      inverts. It stays a light sample mounted on the bench.
      ============================================================ */
-  .specimen, .proxy {
+  .specimen, .proxy, .rowpop {
     --surface-1: #FFFFFF;
     --surface-2: #FAFAFA;
     --surface-3: #F4F4F5;
@@ -400,6 +400,46 @@
   .done-group .chev { transition: transform .15s ease; display: grid; place-content: center; }
   .done-group[aria-expanded="true"] .chev { transform: rotate(90deg); }
   .done-group .rule { flex: 1; height: 1px; background: var(--border-soft); }
+
+
+  /* The kebab the shipped row has. Hover-revealed, like every other
+     control in the gutter and the tail. */
+  .menu {
+    flex: none; width: 24px; height: 24px; margin: -2px;
+    display: grid; place-content: center; border-radius: 4px;
+    color: var(--text-subdued); background: none; border: 0; padding: 0;
+    opacity: 0; cursor: pointer;
+  }
+  .row:hover .menu, .row:focus-within .menu { opacity: 1; }
+  .menu:hover { background: var(--surface-3); color: var(--text-default); }
+  .menu:focus-visible { opacity: 1; outline: 2px solid var(--action); outline-offset: 1px; }
+
+  /* ---------- Row menu ----------
+     The kebab on the row is not decoration. The row as it shipped carries
+     Done/Open and Delete in that menu, so every mockup offers both rather
+     than showing a button that does nothing. Positioning is copied from
+     the accessibility bench, including the divide-by-scale: the popup
+     lives outside the zoomed specimen, so a rect-derived coordinate has
+     to be converted before it is written into style. */
+  .rowpop {
+    position: absolute; z-index: 60; min-width: 168px;
+    background: var(--surface-1);
+    border: 1px solid var(--border-default);
+    border-radius: 8px; box-shadow: var(--shadow-lift);
+    padding: 4px; display: none;
+    font-family: "Noto Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-size: 13px; color: var(--text-default);
+  }
+  .rowpop.on { display: block; }
+  .rowpop button {
+    appearance: none; border: 0; background: none; width: 100%;
+    text-align: left; padding: 7px 10px; border-radius: 5px;
+    font: inherit; color: inherit; cursor: pointer;
+  }
+  .rowpop button:hover { background: var(--surface-3); }
+  .rowpop button.neg { color: var(--negative); }
+  .rowpop .sep { height: 1px; background: var(--border-soft); margin: 4px 0; }
+  body.is-embed .rowpop { zoom: var(--embed-scale, 1); }
 
   /* ---------- Composer ---------- */
   .composer {
@@ -738,6 +778,12 @@
           <span class="count" id="count"></span>
         </div>
         <div class="list" id="list"></div>
+        <div class="composer">
+          <span class="cb" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.4"/></svg>
+          </span>
+          <input class="composer-input" placeholder="Add an item" aria-label="Add an item">
+        </div>
       </section>
 
       <section class="sr-panel" id="sr-panel" aria-label="Announced structure">
@@ -785,6 +831,13 @@
 </div>
 
 <div class="sr-only" role="status" aria-live="polite" id="announce"></div>
+
+
+<div class="rowpop" id="rowpop" role="menu" aria-label="Row actions">
+  <button data-rowact="done" role="menuitem">Mark done</button>
+  <div class="sep"></div>
+  <button data-rowact="del" role="menuitem" class="neg">Delete</button>
+</div>
 
 <script>
   // ---------------------------------------------------------------
@@ -1017,7 +1070,8 @@
   const ICON = {
     circle: '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/></svg>',
     check: '<svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/><path d="M5.8 9.2l2.2 2.2 4.2-4.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-    grip: '<svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="4" cy="2.5" r="1.1"/><circle cx="8" cy="2.5" r="1.1"/><circle cx="4" cy="6" r="1.1"/><circle cx="8" cy="6" r="1.1"/><circle cx="4" cy="9.5" r="1.1"/><circle cx="8" cy="9.5" r="1.1"/></svg>'
+    grip: '<svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><circle cx="4" cy="2.5" r="1.1"/><circle cx="8" cy="2.5" r="1.1"/><circle cx="4" cy="6" r="1.1"/><circle cx="8" cy="6" r="1.1"/><circle cx="4" cy="9.5" r="1.1"/><circle cx="8" cy="9.5" r="1.1"/></svg>',
+    dots: '<svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor"><circle cx="7" cy="3" r="1.2"/><circle cx="7" cy="7" r="1.2"/><circle cx="7" cy="11" r="1.2"/></svg>'
   };
 
   function render() {
@@ -1036,6 +1090,7 @@
         '" aria-label="' + (it.done ? "Mark not done" : "Mark done") + '">' + (it.done ? ICON.check : ICON.circle) + "</button>" +
         '<span class="content"><span class="prose">' + esc(it.text) + "</span></span>" +
         '<span class="who" data-interactive>' + it.who + "</span>" +
+        '<button class="menu" data-interactive aria-haspopup="menu" aria-label="More actions">' + ICON.dots + "</button>" +
         "</div>";
     }).join("") + '<div class="drop-line" id="dropline"></div>';
 
@@ -1497,4 +1552,80 @@
     if (el && el !== document.body) el.blur();
     window.parent.focus();
   });
+
+  const ROWMENU = {
+    trigger: ".menu",
+    idOf: row => row.dataset.id,
+    byId: id => byId(id),
+    toggle: id => setDone(id, !byId(id).done),
+    remove: id => {
+      // A parent takes its sub-items with it. Anything else orphans rows
+      // the render walk would then never show.
+      const kids = ITEMS.filter(i => i.parent === id).map(i => i.id);
+      [id].concat(kids).forEach(k => {
+        const i = ITEMS.findIndex(x => x.id === k);
+        if (i >= 0) ITEMS.splice(i, 1);
+      });
+      announce("Deleted.");
+      render();
+    }
+  };
+
+  // ---------------------------------------------------------------
+  // Row menu. Wired from the kebab already on the row.
+  // ---------------------------------------------------------------
+  (function () {
+    const pop = document.getElementById("rowpop");
+    if (!pop) return;
+    let forId = null;
+
+    function scale() {
+      const v = parseFloat(getComputedStyle(document.documentElement)
+        .getPropertyValue("--embed-scale"));
+      return document.body.classList.contains("is-embed") && v > 0 ? v : 1;
+    }
+
+    function close() { pop.classList.remove("on"); forId = null; }
+
+    function open(btn, id) {
+      forId = id;
+      const it = ROWMENU.byId(id);
+      pop.querySelector('[data-rowact="done"]').textContent =
+        it && it.done ? "Mark not done" : "Mark done";
+      pop.classList.add("on");
+      const b = btn.getBoundingClientRect();
+      const pb = pop.getBoundingClientRect();
+      const z = scale();
+      let left = b.right - pb.width;
+      if (left < 8) left = 8;
+      pop.style.left = ((left + window.scrollX) / z) + "px";
+      pop.style.top = ((b.bottom + 6 + window.scrollY) / z) + "px";
+    }
+
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest(ROWMENU.trigger);
+      if (btn) {
+        const row = btn.closest(".row");
+        if (row) {
+          e.stopPropagation();
+          const id = ROWMENU.idOf(row);
+          if (forId === id) { close(); return; }
+          open(btn, id);
+          return;
+        }
+      }
+      const act = e.target.closest("[data-rowact]");
+      if (act && forId) {
+        const id = forId;
+        close();
+        if (act.dataset.rowact === "done") ROWMENU.toggle(id);
+        if (act.dataset.rowact === "del") ROWMENU.remove(id);
+        return;
+      }
+      if (!e.target.closest(".rowpop")) close();
+    });
+
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+    window.addEventListener("resize", close);
+  })();
 </script>
