@@ -1067,9 +1067,7 @@
     if (!el) return;
     S.editingId = id;
     S.baseline = item.text;
-    item.liveBy = me().name;
-    item.liveText = item.text;
-    item.beat = now();
+    enterRow(item, me().name);
     el.setAttribute("contenteditable", "true");
     el.setAttribute("role", "textbox");
     el.setAttribute("aria-multiline", "true");
@@ -1178,13 +1176,34 @@
   let othersTimer = null, seq = 0;
   const freeItems = () => ITEMS.filter(i => !i.liveBy && i.id !== S.editingId);
 
+  // One person is in one row at a time. Entering a row takes them out of
+  // whatever row they were in, straight away and without the leaving
+  // delay: that delay exists for somebody going idle where they are, not
+  // for somebody who has demonstrably moved on. Without this the same
+  // face sat on two rows for the five seconds the old row held them,
+  // which reads as two people rather than one moving.
+  function enterRow(item, who) {
+    ITEMS.forEach(other => {
+      if (other === item || other.liveBy !== who) return;
+      other.liveBy = null;
+      other.liveText = other.text;
+      clearDirtyNow(other);
+      log("presence: " + who + " left " + other.id + " on entering " + item.id, "quiet");
+      paintRow(youEl, other, "you");
+      paintRow(themEl, other, "viewer");
+    });
+    item.liveBy = who;
+    item.liveText = item.text;
+    item.beat = now();
+  }
+
   function remoteType() {
     const who = Math.random() < 0.5 ? "Marco Reyes" : WATCHER;
     const pool = freeItems().filter(i => !i.done);
     if (!pool.length) return schedule();
     const item = pool[Math.floor(Math.random() * pool.length)];
     const addition = APPENDS[seq++ % APPENDS.length];
-    item.liveBy = who; item.liveText = item.text; item.beat = now();
+    enterRow(item, who);
     log("presence: " + who + " entered " + item.id, "quiet");
     paintRow(youEl, item, "you"); paintRow(themEl, item, "viewer");
 
@@ -1222,7 +1241,7 @@
     if (!pool.length) return schedule();
     const item = pool[Math.floor(Math.random() * pool.length)];
     const who = Math.random() < 0.5 ? "Marco Reyes" : WATCHER;
-    item.liveBy = who; item.liveText = item.text; item.beat = now(); clearDirtyNow(item);
+    enterRow(item, who); clearDirtyNow(item);
     log("presence: " + who + " entered " + item.id + " and stopped typing", "noise");
     paintRow(youEl, item, "you"); paintRow(themEl, item, "viewer");
     schedule();

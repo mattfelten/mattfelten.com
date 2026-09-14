@@ -157,6 +157,16 @@
      which are in zoomed viewport pixels, so openMenu divides before
      writing to style: with zoom set, style.left is multiplied by it. */
   body.is-embed .popup { zoom: var(--embed-scale, 1); }
+
+  /* The drag proxy is appended to the body so it can follow the cursor
+     anywhere, which also puts it outside the zoomed element. Without
+     this it draws at 1x against a list at 2x: half size, which reads as
+     a thin sliver rather than as the row you picked up. Zoomed to match,
+     and moveProxy divides the cursor position before writing it, because
+     the position comes from clientX/clientY in zoomed viewport pixels
+     and a transform on a zoomed element is read in its own. */
+  body.is-embed .proxy { zoom: var(--embed-scale, 1); }
+
   /* The audit and the contrast table are the argument on two of the
      slides, so embed keeps whichever one was asked for by param and
      drops the other. Default is neither: just the specimen. */
@@ -385,7 +395,7 @@
   }
   .cb:hover { color: var(--text-default); }
   .cb[data-state="done"] { color: var(--positive); }
-  .cb:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; border-radius: 4px; }
+  body[data-kb="on"] .cb:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; border-radius: 4px; }
 
   /* Optical centring on a single-line row.
      align-items is flex-start on purpose: when the text wraps, the
@@ -477,7 +487,7 @@
   }
   .row:hover .menu, .row:focus-within .menu { opacity: 1; }
   .menu:hover { background: var(--surface-3); color: var(--text-default); }
-  .menu:focus-visible { opacity: 1; outline: 2px solid var(--action); outline-offset: 1px; }
+  body[data-kb="on"] .menu:focus-visible { opacity: 1; outline: 2px solid var(--action); outline-offset: 1px; }
 
   .popup {
     position: absolute; z-index: 30; min-width: 176px;
@@ -495,7 +505,7 @@
   }
   .popup button:hover:not(:disabled) { background: var(--surface-3); }
   .popup button.neg { color: var(--negative); }
-  .popup button:focus-visible { outline: 2px solid var(--action); outline-offset: -2px; }
+  body[data-kb="on"] .popup button:focus-visible { outline: 2px solid var(--action); outline-offset: -2px; }
   .popup button:disabled { color: var(--text-subdued); opacity: .55; cursor: default; }
   .popup .sep { height: 1px; background: var(--border-soft); margin: 4px 2px; }
 
@@ -553,7 +563,7 @@
     cursor: pointer;
   }
   .pencil:hover { background: var(--surface-3); color: var(--text-default); }
-  .pencil:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; }
+  body[data-kb="on"] .pencil:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; }
   /* Always there, for everybody, on every input. The honest cost of
      the simplest fix: a control on every row forever. */
   body[data-enter="pencil"] .pencil { display: grid; }
@@ -751,21 +761,21 @@
      something that does not take layout space, or entering edit
      shoves every row below it.
      ============================================================ */
-  body[data-focus="outline"] .row:focus-visible {
+  body[data-kb="on"][data-focus="outline"] .row:focus-visible {
     outline: 2px solid var(--action); outline-offset: 1px;
   }
-  body[data-focus="outline"] .prose:focus-visible {
+  body[data-kb="on"][data-focus="outline"] .prose:focus-visible {
     outline: 2px solid var(--action); outline-offset: 2px;
   }
 
   /* box-shadow, matching how the edit chrome is already painted.
      Sits outside layout exactly like outline does, and takes a
      radius that follows the row. */
-  body[data-focus="ring"] .row:focus-visible {
+  body[data-kb="on"][data-focus="ring"] .row:focus-visible {
     outline: none;
     box-shadow: 0 0 0 2px var(--surface-1), 0 0 0 4px var(--action);
   }
-  body[data-focus="ring"] .prose:focus-visible {
+  body[data-kb="on"][data-focus="ring"] .prose:focus-visible {
     outline: none;
     box-shadow: 0 0 0 2px var(--surface-1), 0 0 0 4px var(--action);
   }
@@ -773,10 +783,10 @@
   /* A 2px rule in the gutter. Quiet, and it shares the gutter with the
      presence bar, which is the thing to watch: focus row b, the one
      Marco is in, and both are drawn in the same 12px column. */
-  body[data-focus="bar"] .row:focus-visible,
-  body[data-focus="rowbar"] .row:focus-visible { outline: none; }
-  body[data-focus="bar"] .row:focus-visible::before,
-  body[data-focus="rowbar"] .row:focus-visible::before {
+  body[data-kb="on"][data-focus="bar"] .row:focus-visible,
+  body[data-kb="on"][data-focus="rowbar"] .row:focus-visible { outline: none; }
+  body[data-kb="on"][data-focus="bar"] .row:focus-visible::before,
+  body[data-kb="on"][data-focus="rowbar"] .row:focus-visible::before {
     content: ""; position: absolute; left: -12px; top: 2px; bottom: 2px;
     width: 2px; border-radius: 1px; background: var(--action);
   }
@@ -788,7 +798,7 @@
      than a highlight. The readout measures it live. It also collides
      with hover, which is already a background change, so on a pointer
      the two states are nearly the same picture. */
-  body[data-focus="row"] .row:focus-visible {
+  body[data-kb="on"][data-focus="row"] .row:focus-visible {
     outline: none;
     background: var(--surface-3);
   }
@@ -797,7 +807,7 @@
      rest on the tint, and the tint does the work the rule alone was too
      quiet for. A focus indicator is allowed to be more than one thing,
      and only one part of it has to clear the bar. */
-  body[data-focus="rowbar"] .row:focus-visible {
+  body[data-kb="on"][data-focus="rowbar"] .row:focus-visible {
     background: var(--surface-3);
   }
 
@@ -827,13 +837,15 @@
   body[data-focus="object"] .row:focus-within {
     background: var(--surface-3);
   }
-  /* Keyboard focus only. :focus-within also fires when you click into
-     the text to type, and a ring appearing on a mouse click reads as
-     the field growing edges, which is the treatment ruled out at the
-     start. :has(:focus-visible) keeps the ring for the keyboard, which
-     is the case that needs it, and shows nothing for a pointer, where
-     the caret already says where you are. */
-  body[data-focus="object"] .row:has(:focus-visible) {
+  /* Keyboard focus only, and :focus-visible alone does not deliver it.
+     :focus-within fires when you click into the text, and :focus-visible
+     is no better here because browsers always match it on a text-entry
+     element, which the text becomes the moment you click it. Either way
+     a mouse click painted a keyboard ring, and a ring on click reads as
+     the field growing edges: the treatment ruled out at the start.
+     So the gate is data-kb, set by real keyboard navigation and cleared
+     by any pointerdown. See the tracker in the script. */
+  body[data-kb="on"][data-focus="object"] .row:has(:focus-visible) {
     outline: none;
     box-shadow: inset 0 0 0 1.5px var(--action);
   }
@@ -1908,6 +1920,30 @@
   // Target and line are computed against the ORIGINAL geometry so the
   // drop target never slides out from under the cursor.
   // ---------------------------------------------------------------
+
+  // ---------------------------------------------------------------
+  // Input modality, tracked by hand.
+  //
+  // :focus-visible is not enough on this component. Browsers always
+  // match it on a text-entry element, and the text here becomes one the
+  // moment you click it, so clicking to type satisfies :focus-visible
+  // and the row paints a keyboard focus ring on a mouse gesture. That is
+  // the thing the whole editing decision is trying to avoid: the field
+  // is supposed to have no edges.
+  //
+  // Only navigation keys count. Typing letters into a field is not
+  // keyboard navigation, and counting it would paint the ring over
+  // somebody's shoulder while they write.
+  // ---------------------------------------------------------------
+  const NAV_KEYS = new Set(["Tab", "ArrowUp", "ArrowDown", "ArrowLeft",
+    "ArrowRight", "Home", "End", "Escape"]);
+  window.addEventListener("keydown", (e) => {
+    if (NAV_KEYS.has(e.key)) document.body.dataset.kb = "on";
+  }, true);
+  window.addEventListener("pointerdown", () => {
+    delete document.body.dataset.kb;
+  }, true);
+
   const THRESHOLD = 5;
   const INTO_BAND = 0.34;   // middle third of a row is "drop inside"
   let drag = null;
@@ -2012,7 +2048,10 @@
   }
 
   function moveProxy(x, y) {
-    if (drag.proxy) drag.proxy.style.transform = "translate3d(" + (x + 12) + "px, " + (y - drag.offsetY) + "px, 0)";
+    if (!drag.proxy) return;
+    const z = embedScale();
+    drag.proxy.style.transform = "translate3d(" + ((x + 12) / z) + "px, " +
+      ((y - drag.offsetY) / z) + "px, 0)";
   }
 
   function updateTarget(clientY) {
@@ -2706,6 +2745,16 @@
       S.before = true;
       S.nesting = false;
       S.held = false;
+      render();
+    }
+    // held=0 empties the row of other people. The reordering slides want
+    // the row without somebody in it: presence is a different argument,
+    // made two sections later, and a face on the row while you are
+    // talking about dragging is just something else to look at.
+    if (q.get("held") === "0") {
+      S.held = false;
+      const c = document.getElementById("chk-held");
+      if (c) c.checked = false;
       render();
     }
     if (q.get("embed") === "1") document.body.classList.add("is-embed");

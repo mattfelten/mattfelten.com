@@ -131,6 +131,16 @@
   }
   :root[data-theme="dark"] body.is-embed { background: #000; }
 
+  /* The drag proxy is appended to the body so it can follow the cursor
+     anywhere, which also puts it outside the zoomed element. Without
+     this it draws at 1x against a list at 2x: half size, which reads as
+     a thin sliver rather than as the row you picked up. Zoomed to match,
+     and moveProxy divides the cursor position before writing it, because
+     the position comes from clientX/clientY in zoomed viewport pixels
+     and a transform on a zoomed element is read in its own. */
+  body.is-embed .proxy { zoom: var(--embed-scale, 1); }
+
+
   /* fit=center centres the specimen in whatever height the slide gives
      the iframe. That lets every embed use one height with room to spare,
      so a demo that grows or shrinks while it is being driven stays put
@@ -1143,7 +1153,11 @@
       `<span class="ptext">${esc(item.text)}</span>` +
       `<span class="person" style="pointer-events:none">${esc(item.who)}</span>`;
     if (S.proxy === "full") {
-      p.style.width = srcRect.el.getBoundingClientRect().width + "px";
+      // offsetWidth, not the rect. The proxy is zoomed to match the list,
+      // so a rect width (zoomed viewport px) written into style would be
+      // multiplied by the zoom a second time and come out twice the
+      // width of the row it is copying.
+      p.style.width = srcRect.el.offsetWidth + "px";
       drag.offsetY = Math.min(e.clientY - srcRect.top, 40);
     } else {
       drag.offsetY = 16;
@@ -1156,7 +1170,12 @@
   }
 
   function moveProxy(x, y) {
-    if (drag.proxy) drag.proxy.style.transform = `translate3d(${x + 12}px, ${y - drag.offsetY}px, 0)`;
+    if (!drag.proxy) return;
+    const zv = parseFloat(getComputedStyle(document.documentElement)
+      .getPropertyValue("--embed-scale"));
+    const z = document.body.classList.contains("is-embed") && zv > 0 ? zv : 1;
+    drag.proxy.style.transform =
+      `translate3d(${(x + 12) / z}px, ${(y - drag.offsetY) / z}px, 0)`;
   }
 
   function updateTarget(clientY) {
