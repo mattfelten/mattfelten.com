@@ -552,8 +552,12 @@
   /* before=1 is the list as it shipped, before any of this. No handle,
      no menu, no presence, nothing clickable in the text, and completed
      items at the .5 that measures 3.35:1 and fails. */
+  /* The kebab is NOT hidden here. The row as it shipped is checkbox,
+     text, author tag and kebab, and the kebab already carried Done/Open
+     and Delete. Hiding it made the before state look barer than the
+     product actually was. What changes is the menu's contents, handled
+     in configureMenu. */
   body[data-before="on"] .handle,
-  body[data-before="on"] .menu,
   body[data-before="on"] .pencil,
   body[data-before="on"] .hold-bar,
   body[data-before="on"] .floater,
@@ -612,7 +616,6 @@
      how far sideways the pointer went. Copied from the nesting bench,
      which is where this was settled. */
   .drop-line.tier1 { left: 32px; }
-  .drop-line.blocked { background: var(--negative); }
 
   /* Dropping inside. The whole row lights up and the insertion line is
      hidden, so the two gestures never show at once and the list is
@@ -620,13 +623,6 @@
   .row.is-parent-target {
     background: rgba(30, 64, 175, .09);
     box-shadow: inset 0 0 0 1.5px rgba(30, 64, 175, .5);
-    border-radius: 7px;
-  }
-  /* A row with sub-items cannot become one. Refusing silently is the
-     worst version, so the target says no rather than doing nothing. */
-  .row.is-blocked-target {
-    background: rgba(220, 38, 38, .07);
-    box-shadow: inset 0 0 0 1.5px rgba(220, 38, 38, .45);
     border-radius: 7px;
   }
 
@@ -1203,6 +1199,7 @@
      matters here is that every action the list owns is reachable
      through it, because it is the only path that serves every input. -->
 <div class="popup" id="popup" role="menu" aria-label="Row actions">
+  <button data-act="done" role="menuitem">Mark done</button>
   <button data-act="up" role="menuitem">Move up</button>
   <button data-act="down" role="menuitem">Move down</button>
   <div class="sep"></div>
@@ -1863,7 +1860,7 @@
       startX: e.clientX, startY: e.clientY,
       active: false, pointerId: e.pointerId,
       flat: null, proxy: null, offsetY: 16,
-      mode: "between", intoId: null, gap: 0, tier: 0, parentId: null, blocked: false
+      mode: "between", intoId: null, gap: 0, slots: null, tier: 0, parentId: null
     };
     try { listEl.setPointerCapture(e.pointerId); } catch (err) { /* no active pointer */ }
   });
@@ -1914,9 +1911,13 @@
       const kids = kidsOf(it.id).filter(k => !mine.has(k.id))
         .map(k => listEl.querySelector('.row[data-id="' + k.id + '"]')).filter(Boolean);
       const last = kids.length ? kids[kids.length - 1] : r;
+      const vBlockBottom = last.getBoundingClientRect().bottom;
       return {
         it, el: r,
         mid: b.top + b.height / 2,
+        // The midpoint of the whole block, so dragging a parent past a
+        // group crosses at the group's middle rather than its first row.
+        blockMid: (b.top + vBlockBottom) / 2,
         // The middle third of a top-level row is "drop inside". Bands
         // are viewport px, like clientY; tops are local px, like style.
         bandTop: b.top + b.height * INTO_BAND,
@@ -1946,70 +1947,74 @@
   }
 
   function updateTarget(clientY) {
-    const flat = drag.flat;
-    let mode = "between", intoId = null, tier = 0, parentId = null, blocked = false;
+    // A row with sub-items cannot become one. Rather than offering the
+    // drop and refusing it, it is not offered: no container band, and
+    // only the gaps between top-level blocks. Every target it can see is
+    // a target it can land on, so there is nothing to refuse and nothing
+    // to explain. Painting the refusal in red was the earlier answer and
+    // it read as a target rather than as a wall.
+    const carrying = hasKids(drag.id);
+    const slots = carrying ? drag.flat.filter(f => f.it.parent === null) : drag.flat;
+    let mode = "between", intoId = null, tier = 0, parentId = null;
 
-    // Drop inside, checked first. Any top-level row is a container,
-    // including the dragged row's own current parent: a gesture that
-    // sometimes does nothing over the same kind of row is worse than a
-    // move that happens to be a no-op. Children are not containers,
-    // because one level is the ceiling.
-    if (S.nesting) {
-      const hover = flat.find(f => f.it.parent === null &&
+    // Any top-level row is a container, including the dragged row's own
+    // current parent: a gesture that sometimes does nothing over the
+    // same kind of row is worse than a move that happens to be a no-op.
+    // Children are not containers, because one level is the ceiling.
+    if (S.nesting && !carrying) {
+      const hover = slots.find(f => f.it.parent === null &&
         clientY > f.bandTop && clientY < f.bandBottom);
-      if (hover) {
-        mode = "into";
-        intoId = hover.it.id;
-        if (hasKids(drag.id)) blocked = true;
-      }
+      if (hover) { mode = "into"; intoId = hover.it.id; }
     }
 
-    let gap = flat.length;
+    let gap = slots.length;
     if (mode === "between") {
       gap = 0;
-      for (let i = 0; i < flat.length; i++) {
-        if (clientY > flat[i].mid) gap++; else break;
+      for (let i = 0; i < slots.length; i++) {
+        // Carrying a block, the crossing point is the middle of the whole
+        // group; otherwise it is the middle of the row.
+        const cross = carrying ? slots[i].blockMid : slots[i].mid;
+        if (clientY > cross) gap++; else break;
       }
-      const g = gapTier(gap > 0 ? flat[gap - 1].it : null,
-                        gap < flat.length ? flat[gap].it : null);
-      tier = g.tier; parentId = g.parent;
-      if (tier === 1 && hasKids(drag.id)) blocked = true;
+      if (!carrying) {
+        const g = gapTier(gap > 0 ? slots[gap - 1].it : null,
+                          gap < slots.length ? slots[gap].it : null);
+        tier = g.tier; parentId = g.parent;
+      }
     }
 
     drag.mode = mode;
     drag.intoId = intoId;
     drag.gap = gap;
+    drag.slots = slots;
     drag.tier = tier;
     drag.parentId = parentId;
-    drag.blocked = blocked;
     paintTarget();
   }
 
   function paintTarget() {
-    listEl.querySelectorAll(".row").forEach(r =>
-      r.classList.remove("is-parent-target", "is-blocked-target"));
+    listEl.querySelectorAll(".row").forEach(r => r.classList.remove("is-parent-target"));
     const line = document.getElementById("dropline");
     if (!line) return;
 
     if (drag.mode === "into") {
       const t = listEl.querySelector('.row[data-id="' + drag.intoId + '"]');
-      if (t) t.classList.add(drag.blocked ? "is-blocked-target" : "is-parent-target");
-      line.classList.remove("on", "tier1", "blocked");
+      if (t) t.classList.add("is-parent-target");
+      line.classList.remove("on", "tier1");
       return;
     }
 
     // All local px. No listTop subtraction: offsetTop is already
     // relative to the list, which is the line's containing block.
-    const flat = drag.flat;
+    const slots = drag.slots;
     let y;
-    if (!flat.length) y = 0;
-    else if (drag.gap >= flat.length) y = flat[flat.length - 1].blockBottom + 6;
-    else y = flat[drag.gap].top - 6;
+    if (!slots.length) y = 0;
+    else if (drag.gap >= slots.length) y = slots[slots.length - 1].blockBottom + 6;
+    else y = slots[drag.gap].top - 6;
 
     line.style.top = y + "px";
     line.classList.add("on");
     line.classList.toggle("tier1", drag.tier === 1);
-    line.classList.toggle("blocked", drag.blocked);
   }
 
   function endDrag(cancelled) {
@@ -2021,17 +2026,11 @@
     document.body.style.cursor = "";
     if (d.proxy) d.proxy.remove();
     const line = document.getElementById("dropline");
-    if (line) line.classList.remove("on", "tier1", "blocked");
+    if (line) line.classList.remove("on", "tier1");
     d.row.classList.remove("is-source");
-    listEl.querySelectorAll(".row").forEach(r =>
-      r.classList.remove("is-parent-target", "is-blocked-target"));
+    listEl.querySelectorAll(".row").forEach(r => r.classList.remove("is-parent-target"));
 
-    if (d.active && !cancelled && d.blocked) {
-      // Refusing silently is the worst version of this, so it is said
-      // rather than simply not done.
-      announce("That row has sub-items, so it cannot become one.");
-      log('<span class="op">refused</span> <span class="dim">a row with sub-items cannot become one</span>');
-    } else if (d.active && !cancelled && d.mode === "into") {
+    if (d.active && !cancelled && d.mode === "into") {
       moveTo(d.id, kidsOf(d.intoId).filter(k => k.id !== d.id).length, 1, d.intoId);
       announce("Moved inside " + short(byId(d.intoId).text) + ".");
       log('<span class="op">drop</span> <span class="dim">inside ' + esc(short(byId(d.intoId).text)) + "</span>");
@@ -2041,7 +2040,7 @@
       // the row is joining. Same move as the nesting bench makes.
       const dest = (d.tier === 1 ? kidsOf(d.parentId) : tops()).filter(x => x.id !== d.id);
       let destIndex = dest.length;
-      const at = d.gap < d.flat.length ? d.flat[d.gap].it.id : null;
+      const at = d.gap < d.slots.length ? d.slots[d.gap].it.id : null;
       if (at) {
         const found = dest.findIndex(x => x.id === at);
         if (found >= 0) destIndex = found;
@@ -2085,21 +2084,16 @@
     menuFor = row.dataset.id;
     const b = btn.getBoundingClientRect();
     popup.classList.add("on");
+    // Contents first: the before state's menu is shorter, and the rect
+    // below is what the position is computed from.
+    configureMenu(menuFor);
     const pb = popup.getBoundingClientRect();
     let left = b.right - pb.width;
     if (left < 8) left = 8;
     const z = embedScale();
     popup.style.left = ((left + window.scrollX) / z) + "px";
     popup.style.top = ((b.bottom + 6 + window.scrollY) / z) + "px";
-    // Position among SIBLINGS, not in the array. A child that is first
-    // under its parent is rarely first in ITEMS, and an enabled Move up
-    // that does nothing is worse than a disabled one.
-    const sibs = siblingsOf(menuFor);
-    const at = sibs.findIndex(x => x.id === menuFor);
-    popup.querySelector('[data-act="up"]').disabled = at === 0;
-    popup.querySelector('[data-act="down"]').disabled = at === sibs.length - 1;
-    const first = [...popup.querySelectorAll("button")].find(x => !x.disabled);
-    if (first) first.focus();
+    focusFirstMenuItem();
   }
 
   function closeMenu(refocus) {
@@ -2111,6 +2105,43 @@
       const r = listEl.querySelector('.row[data-id="' + id + '"] .menu');
       if (r) r.focus();
     }
+  }
+
+  // What the menu offers depends on which row it is opened on and, more
+  // to the point, on which version of the product is on screen. The row
+  // as it shipped carried Done/Open and Delete and nothing else, so the
+  // before state must not offer reordering or editing through the menu.
+  // Right click reaches the same menu, so gating the kebab alone would
+  // have left both on a two-finger tap.
+  function configureMenu(id) {
+    const item = a => popup.querySelector('[data-act="' + a + '"]');
+    const sep = popup.querySelector(".sep");
+    const show = (el, on) => { if (el) el.style.display = on ? "" : "none"; };
+
+    const doneBtn = item("done");
+    if (doneBtn) doneBtn.textContent = byId(id).done ? "Mark not done" : "Mark done";
+
+    show(doneBtn, S.before);
+    show(item("up"), !S.before);
+    show(item("down"), !S.before);
+    show(item("edit"), !S.before);
+    show(sep, !S.before);
+    show(item("del"), true);
+
+    // Position among SIBLINGS, not in the array. A child that is first
+    // under its parent is rarely first in ITEMS, and an enabled Move up
+    // that does nothing is worse than a disabled one.
+    const sibs = siblingsOf(id);
+    const at = sibs.findIndex(x => x.id === id);
+    if (item("up")) item("up").disabled = at === 0;
+    if (item("down")) item("down").disabled = at === sibs.length - 1;
+
+  }
+
+  function focusFirstMenuItem() {
+    const first = [...popup.querySelectorAll("button")]
+      .find(b => !b.disabled && b.style.display !== "none");
+    if (first) first.focus();
   }
 
   popup.addEventListener("click", (e) => {
@@ -2126,6 +2157,11 @@
     if (act === "edit") {
       closeMenu(false);
       startEdit(id);
+      return;
+    }
+    if (act === "done") {
+      closeMenu(false);
+      toggleDone(id);
       return;
     }
   });
@@ -2240,6 +2276,7 @@
   function openMenuAt(row, x, y) {
     menuFor = row.dataset.id;
     popup.classList.add("on");
+    configureMenu(menuFor);
     const pb = popup.getBoundingClientRect();
     let left = Math.min(x, window.innerWidth - pb.width - 8);
     let top = y + 4;
@@ -2247,15 +2284,7 @@
     const z = embedScale();
     popup.style.left = ((Math.max(8, left) + window.scrollX) / z) + "px";
     popup.style.top = ((top + window.scrollY) / z) + "px";
-    // Position among SIBLINGS, not in the array. A child that is first
-    // under its parent is rarely first in ITEMS, and an enabled Move up
-    // that does nothing is worse than a disabled one.
-    const sibs = siblingsOf(menuFor);
-    const at = sibs.findIndex(x => x.id === menuFor);
-    popup.querySelector('[data-act="up"]').disabled = at === 0;
-    popup.querySelector('[data-act="down"]').disabled = at === sibs.length - 1;
-    const first = [...popup.querySelectorAll("button")].find(b => !b.disabled);
-    if (first) first.focus();
+    focusFirstMenuItem();
   }
 
   // ---------------------------------------------------------------
