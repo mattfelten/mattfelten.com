@@ -137,6 +137,20 @@
     :root:not([data-theme="light"]) body.is-embed { background: #000; }
   }
   :root[data-theme="dark"] body.is-embed { background: #000; }
+
+  /* fit=center centres the specimen in whatever height the slide gives
+     the iframe. That lets every embed use one height with room to spare,
+     so a demo that grows or shrinks while it is being driven stays put
+     instead of clipping at the bottom, and no slide needs its height
+     remeasured every time a row gets taller.
+     Top alignment stays the default, and the two layout-shift demos keep
+     it: they exist to show the list being pushed DOWN, and centring
+     would split that movement in two and halve what you can see. */
+  body.is-embed[data-fit="center"] .bench {
+    justify-content: center;
+    min-height: 100vh;
+  }
+
   /* The row menu is a sibling of .frame, so it never inherited the zoom
      above and rendered at 1x next to a list at 2.1x, which reads as a
      tiny menu. Zoom it to match. Its position is computed from rects,
@@ -278,8 +292,13 @@
 
   @media (max-width: 640px) { .bench { padding: 26px 16px 56px; } }
 
+  /* 820, not 620. The author tag carries a full name now, which took
+     about 40px out of the text column and pushed rows onto extra lines.
+     Widening gives the measure back, and it lets every checklist slide
+     share one scale and one size instead of each being tuned until it
+     happened to fit. */
   .bench-inner {
-    width: 100%; max-width: 620px;
+    width: 100%; max-width: 820px;
     display: flex; flex-direction: column; gap: 24px; min-width: 0;
   }
 
@@ -340,7 +359,7 @@
      18x18. It is not a tab stop, but it is still a pointer target and
      2.5.8 does not care how you reached it. */
   .handle {
-    position: absolute; left: -25px; top: 0;
+    position: absolute; left: -25px; top: 2px;
     width: 24px; height: 24px;
     display: grid; place-content: center;
     border-radius: 4px; color: var(--text-subdued);
@@ -360,7 +379,7 @@
      words are. Before this the checkbox was 20x20 and only cleared
      2.5.8 through the spacing exception, by a single pixel. */
   .cb {
-    flex: none; width: 24px; height: 24px; margin: -2px;
+    flex: none; width: 24px; height: 24px; margin: 0 -2px;
     display: grid; place-content: center; cursor: pointer;
     background: none; border: 0; padding: 0; color: var(--text-subdued);
   }
@@ -368,7 +387,20 @@
   .cb[data-state="done"] { color: var(--positive); }
   .cb:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; border-radius: 4px; }
 
-  .content { flex: 1 1 auto; min-width: 0; }
+  /* Optical centring on a single-line row.
+     align-items is flex-start on purpose: when the text wraps, the
+     controls have to stay level with its FIRST line rather than drift to
+     the middle of a growing block. But flex-start alone left everything
+     2px high inside the hover rectangle, because the 24px controls carry
+     a -2px vertical margin that pulls them above the row's own padding,
+     while the text's line box is 20px against their 24.
+     Fix, in two halves: the controls keep the horizontal half of that
+     margin (which is what stops the text column moving) and lose the
+     vertical half, and the text's flex item gets 2px above and below so
+     its first line box measures 24 like everything beside it. Single-line
+     rows then centre on the hover rectangle; wrapped rows keep every
+     control level with the first line. */
+  .content { flex: 1 1 auto; min-width: 0; padding-block: 2px; }
 
   /* ============================================================
      THE INLINE FIELD
@@ -410,11 +442,21 @@
      .6 measures 2.33:1. Dim is a treatment for full-strength colour only. */
   .row[data-done="true"] .person { opacity: 1; }
 
+  /* The author tag. A name in a subtle grey chip, and nothing else.
+     The avatar that used to sit beside it has gone: presence already
+     puts a face on the row, and a second one next to the author reads as
+     co-authorship rather than as who wrote it. Full names, because
+     initials are a puzzle and first names collide. */
   .person {
-    flex: none; display: inline-flex; align-items: center; gap: 5px;
-    font-size: 12px; color: var(--text-subdued);
-    background: var(--surface-3); border-radius: 999px;
-    padding: 2px 8px 2px 2px; max-width: 150px;
+    flex: none; display: inline-flex; align-items: center;
+    font-size: 12px; line-height: 16px;
+    color: var(--text-subdued);
+    background: var(--surface-3);
+    border: 1px solid var(--border-default);
+    border-radius: 999px;
+    padding: 2px 9px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    max-width: 200px;
   }
 
   .avatar {
@@ -428,7 +470,7 @@
 
   /* ---------- Row menu ---------- */
   .menu {
-    flex: none; width: 24px; height: 24px; margin: -2px;
+    flex: none; width: 24px; height: 24px; margin: 0 -2px;
     display: grid; place-content: center; border-radius: 4px;
     color: var(--text-subdued); background: none; border: 0; padding: 0;
     opacity: 0; cursor: pointer;
@@ -1234,12 +1276,12 @@
 
 <script>
   const ITEMS = [
-    { id: "a", parent: null, text: "Reserved Instance coverage dropped to 61% this month after the m5 fleet was retired.", who: "Dana", done: false },
-    { id: "a1", parent: "a", text: "Pull the current utilisation report", who: "Dana", done: false },
-    { id: "a2", parent: "a", text: "Decide between Savings Plans and re-covering", who: "Marco", done: false },
-    { id: "b", parent: null, text: "Budget alert thresholds are still pointing at the old prod account.", who: "Marco", done: false },
-    { id: "c", parent: null, text: "Walk through the S3 lifecycle policy proposal.", who: "Dana", done: true },
-    { id: "d", parent: null, text: "Quick status on the GuardDuty findings backlog.", who: "Priya", done: false }
+    { id: "a", parent: null, text: "Reserved Instance coverage dropped to 61% this month after the m5 fleet was retired.", who: "Dana Whitfield", done: false },
+    { id: "a1", parent: "a", text: "Pull the current utilisation report", who: "Dana Whitfield", done: false },
+    { id: "a2", parent: "a", text: "Decide between Savings Plans and re-covering", who: "Marco Reyes", done: false },
+    { id: "b", parent: null, text: "Budget alert thresholds are still pointing at the old prod account.", who: "Marco Reyes", done: false },
+    { id: "c", parent: null, text: "Walk through the S3 lifecycle policy proposal.", who: "Dana Whitfield", done: true },
+    { id: "d", parent: null, text: "Quick status on the GuardDuty findings backlog.", who: "Priya Raman", done: false }
   ];
 
   // Marco is parked in his own row, which is what every presence
@@ -1333,7 +1375,7 @@
         // be told somebody is in here.
         (held ? '<span class="sr-only" id="held-' + it.id + '">' + HELD_BY + " is editing this item</span>" : "") +
         (held ? '<span class="hold-label">' + HELD_BY + " is editing</span>" : "") +
-        '<span class="person"><span class="avatar">' + it.who[0] + "</span><span>" + it.who + "</span></span>" +
+        '<span class="person">' + esc(it.who) + "</span>" +
         '<button class="pencil" tabindex="-1" data-act="pencil" aria-label="Edit ' + esc(short(it.text)) + '">' + ICON.pencil + "</button>" +
         '<button class="menu" data-act="menu" aria-haspopup="menu" aria-label="Actions for ' + esc(short(it.text)) + '">' + ICON.kebab + "</button>" +
         "</div>";
@@ -2657,6 +2699,7 @@
       render();
     }
     if (q.get("embed") === "1") document.body.classList.add("is-embed");
+    if (q.get("fit") === "center") document.body.dataset.fit = "center";
     const sc = parseFloat(q.get("scale"));
     if (sc > 0 && sc <= 4) document.documentElement.style.setProperty("--embed-scale", String(sc));
   }
@@ -2688,7 +2731,7 @@
       const text = input.value.trim();
       if (e.key !== "Enter" || !text) return;
       e.preventDefault();
-      ITEMS.push({ id: "n" + ITEMS.length, parent: null, text, who: "Matt", done: false });
+      ITEMS.push({ id: "n" + ITEMS.length, parent: null, text, who: "Matt Felten", done: false });
       render();
       announce("Added to the end. " + ITEMS.length + " items.");
       log('<span class="op">create</span> <span class="dim">' + esc(short(text)) + "</span>");

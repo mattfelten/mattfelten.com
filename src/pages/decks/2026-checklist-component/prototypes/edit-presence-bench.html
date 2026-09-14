@@ -115,6 +115,20 @@
     :root:not([data-theme="light"]) body.is-embed { background: #000; }
   }
   :root[data-theme="dark"] body.is-embed { background: #000; }
+
+  /* fit=center centres the specimen in whatever height the slide gives
+     the iframe. That lets every embed use one height with room to spare,
+     so a demo that grows or shrinks while it is being driven stays put
+     instead of clipping at the bottom, and no slide needs its height
+     remeasured every time a row gets taller.
+     Top alignment stays the default, and the two layout-shift demos keep
+     it: they exist to show the list being pushed DOWN, and centring
+     would split that movement in two and halve what you can see. */
+  body.is-embed[data-fit="center"] .bench {
+    justify-content: center;
+    min-height: 100vh;
+  }
+
   /* Centre in whatever height the slide gives the frame, so one embed
      rule survives every iframe size instead of needing a per-slide fit. */
   /* Top-aligned, never vertically centred. Centring splits any height
@@ -333,7 +347,11 @@
   .cb:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; border-radius: 4px; }
   .specimen[data-role="viewer"] .cb { cursor: default; }
 
-  .content { flex: 1 1 auto; min-width: 0; position: relative; }
+  /* Optical centring on a single-line row. The controls already centre
+     on the hover rectangle; the text's 20px line box sat about a pixel
+     high against them. align-items stays flex-start so a wrapped row
+     keeps the controls level with the first line. */
+  .content { flex: 1 1 auto; min-width: 0; position: relative; padding-block: 1px; }
 
   /* ---------- The invisible field (settled r2) ---------- */
   .prose {
@@ -448,6 +466,12 @@
   .composer {
     display: flex; align-items: center; gap: 12px;
     padding: 2px; margin: -2px; margin-top: 8px;
+    /* The list is inset 12px on the left so the presence marker has a
+       gutter to sit in. The composer is a sibling of the list rather than
+       a child, so it has to take the same inset by hand, or its circle
+       sits 12px left of every checkbox above it. 10 not 12, because the
+       -2px margin it shares with the rows is already pulling it left. */
+    margin-left: 10px;
   }
   .composer .cb { opacity: .4; cursor: default; }
   .composer input {
@@ -457,9 +481,21 @@
   .composer input::placeholder { color: #94A3B8; }
   .composer input:focus { outline: none; }
 
+  /* The author tag. A name in a subtle grey chip, and nothing else.
+     The avatar that used to sit beside it has gone: presence already
+     puts a face on the row, and a second one next to the author reads as
+     co-authorship rather than as who wrote it. Full names, because
+     initials are a puzzle and first names collide. */
   .who {
-    flex: none; display: inline-flex; align-items: center; gap: 5px;
-    font-size: 12px; color: var(--text-subdued); white-space: nowrap; margin-top: 1px;
+    flex: none; display: inline-flex; align-items: center;
+    font-size: 12px; line-height: 16px;
+    color: var(--text-subdued);
+    background: var(--surface-3);
+    border: 1px solid var(--border-default);
+    border-radius: 999px;
+    padding: 2px 9px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    max-width: 200px;
   }
   .who .av {
     width: 18px; height: 18px; border-radius: 50%; flex: none;
@@ -889,7 +925,7 @@
         '<button class="cb" data-act="check" data-done="' + item.done + '" aria-label="' + (item.done ? "Mark open" : "Mark done") + '">' +
           (item.done ? ICON.check : ICON.circle) + "</button>" +
         '<div class="content">' + contentHTML(item, role) + "</div>" +
-        '<span class="who"><span class="av">' + initials(item.who) + "</span></span>" +
+        '<span class="who">' + esc(item.who) + "</span>" +
         (role === "you" ? '<button class="kebab" aria-label="More">' + ICON.dots + "</button>" : "") +
       "</div>"
     );
@@ -1358,6 +1394,7 @@
     // Embed mode. Slides load the bench with ?embed=1 so only the
     // specimen shows; the rail's job is done by the params above.
     if (q.get("embed") === "1") document.body.classList.add("is-embed");
+    if (q.get("fit") === "center") document.body.dataset.fit = "center";
 
     // Slides are 1920 wide and get scaled down to whatever is projecting,
     // so a specimen rendered at 1:1 lands around 10px on a screen. ?scale

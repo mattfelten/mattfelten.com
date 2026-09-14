@@ -130,6 +130,20 @@
     :root:not([data-theme="light"]) body.is-embed { background: #000; }
   }
   :root[data-theme="dark"] body.is-embed { background: #000; }
+
+  /* fit=center centres the specimen in whatever height the slide gives
+     the iframe. That lets every embed use one height with room to spare,
+     so a demo that grows or shrinks while it is being driven stays put
+     instead of clipping at the bottom, and no slide needs its height
+     remeasured every time a row gets taller.
+     Top alignment stays the default, and the two layout-shift demos keep
+     it: they exist to show the list being pushed DOWN, and centring
+     would split that movement in two and halve what you can see. */
+  body.is-embed[data-fit="center"] .bench {
+    justify-content: center;
+    min-height: 100vh;
+  }
+
   /* Top-aligned, never vertically centred. Centring splits any height
      change in both directions, which halves the apparent movement and
      wrecks the one demo that exists to show a 14px shove. Size the
@@ -251,8 +265,13 @@
 
   @media (max-width: 640px) { .bench { padding: 26px 16px 56px; } }
 
+  /* 820, not 620. The author tag carries a full name now, which took
+     about 40px out of the text column and pushed rows onto extra lines.
+     Widening gives the measure back, and it lets every checklist slide
+     share one scale and one size instead of each being tuned until it
+     happened to fit. */
   .bench-inner {
-    width: 100%; max-width: 620px;
+    width: 100%; max-width: 820px;
     display: flex; flex-direction: column; gap: 24px; min-width: 0;
   }
 
@@ -440,6 +459,23 @@
   .rowpop button.neg { color: var(--negative); }
   .rowpop .sep { height: 1px; background: var(--border-soft); margin: 4px 0; }
   body.is-embed .rowpop { zoom: var(--embed-scale, 1); }
+
+  /* The author tag. A name in a subtle grey chip, and nothing else.
+     The avatar that used to sit beside it has gone: presence already
+     puts a face on the row, and a second one next to the author reads as
+     co-authorship rather than as who wrote it. Full names, because
+     initials are a puzzle and first names collide. */
+  .who {
+    flex: none; display: inline-flex; align-items: center;
+    font-size: 12px; line-height: 16px;
+    color: var(--text-subdued);
+    background: var(--surface-3);
+    border: 1px solid var(--border-default);
+    border-radius: 999px;
+    padding: 2px 9px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    max-width: 200px;
+  }
 
   /* ---------- Composer ---------- */
   .composer {
@@ -838,14 +874,14 @@
   // with a parent can never itself be a parent.
   // ---------------------------------------------------------------
   const ITEMS = [
-    { id: "r1", parent: null, text: "Reserved Instance coverage dropped to 61% this month after the m5 fleet was retired.", who: "Dana", done: false },
-    { id: "r1a", parent: "r1", text: "Pull the current utilisation report", who: "Dana", done: false },
-    { id: "r1b", parent: "r1", text: "Decide between Savings Plans and re-covering", who: "Marco", done: false },
-    { id: "r2", parent: null, text: "Budget alert thresholds are still pointing at the old prod account.", who: "Marco", done: false },
-    { id: "r3", parent: null, text: "Walk through the S3 lifecycle policy proposal.", who: "Dana", done: true },
-    { id: "r4", parent: null, text: "Open question on the CloudFront invalidation spike. Finance flagged it as an anomaly but it tracks a deploy.", who: "Priya", done: false },
-    { id: "r4a", parent: "r4", text: "Confirm with Finance that it tracks the deploy", who: "Priya", done: true },
-    { id: "r5", parent: null, text: "Quick status on the GuardDuty findings backlog.", who: "Priya", done: false }
+    { id: "r1", parent: null, text: "Reserved Instance coverage dropped to 61% this month after the m5 fleet was retired.", who: "Dana Whitfield", done: false },
+    { id: "r1a", parent: "r1", text: "Pull the current utilisation report", who: "Dana Whitfield", done: false },
+    { id: "r1b", parent: "r1", text: "Decide between Savings Plans and re-covering", who: "Marco Reyes", done: false },
+    { id: "r2", parent: null, text: "Budget alert thresholds are still pointing at the old prod account.", who: "Marco Reyes", done: false },
+    { id: "r3", parent: null, text: "Walk through the S3 lifecycle policy proposal.", who: "Dana Whitfield", done: true },
+    { id: "r4", parent: null, text: "Open question on the CloudFront invalidation spike. Finance flagged it as an anomaly but it tracks a deploy.", who: "Priya Raman", done: false },
+    { id: "r4a", parent: "r4", text: "Confirm with Finance that it tracks the deploy", who: "Priya Raman", done: true },
+    { id: "r5", parent: null, text: "Quick status on the GuardDuty findings backlog.", who: "Priya Raman", done: false }
   ];
 
   // Fractional position keys, scoped per parent. Seeded a..z-ish so
@@ -915,12 +951,12 @@
   // fourth step the text column has lost 128px and the row is mostly
   // margin.
   const DEEP_ITEMS = [
-    { id: "d1", parent: null, text: "Migrate the billing service off the legacy cluster", who: "Dana", done: false },
-    { id: "d2", parent: "d1", text: "Audit the Terraform modules it depends on", who: "Dana", done: false },
-    { id: "d3", parent: "d2", text: "List every module still pinned to 0.11", who: "Marco", done: false },
-    { id: "d4", parent: "d3", text: "Check which have open upstream changes", who: "Priya", done: false },
-    { id: "d5", parent: "d4", text: "And whether any touch the prod account", who: "Marco", done: false },
-    { id: "d6", parent: null, text: "Schedule the cutover window with the customer", who: "Priya", done: false }
+    { id: "d1", parent: null, text: "Migrate the billing service off the legacy cluster", who: "Dana Whitfield", done: false },
+    { id: "d2", parent: "d1", text: "Audit the Terraform modules it depends on", who: "Dana Whitfield", done: false },
+    { id: "d3", parent: "d2", text: "List every module still pinned to 0.11", who: "Marco Reyes", done: false },
+    { id: "d4", parent: "d3", text: "Check which have open upstream changes", who: "Priya Raman", done: false },
+    { id: "d5", parent: "d4", text: "And whether any touch the prod account", who: "Marco Reyes", done: false },
+    { id: "d6", parent: null, text: "Schedule the cutover window with the customer", who: "Priya Raman", done: false }
   ];
 
   function visibleDeep() {
@@ -1176,6 +1212,19 @@
   // Which level does this gap mean? Read from the row above it.
   // The bottom of a row's block: itself, or its last visible child.
   // Viewport px, because it is compared against clientY.
+  // Local px, for writing into style.top. Never compare this against
+  // clientY, and never write blockBottomOf into style: that is the same
+  // two-pixel-space mistake this project keeps making, and mixing them
+  // here put the end-of-list drop line inside the composer at scale 2.
+  function blockBottomLocal(rowEl) {
+    const id = rowEl.dataset.id;
+    const kids = kidsOf(id)
+      .map(k => listEl.querySelector('.row[data-id="' + k.id + '"]'))
+      .filter(Boolean);
+    const last = kids.length ? kids[kids.length - 1] : rowEl;
+    return last.offsetTop + last.offsetHeight;
+  }
+
   function blockBottomOf(rowEl) {
     const id = rowEl.dataset.id;
     const kids = kidsOf(id)
@@ -1306,8 +1355,7 @@
       if (idx < slots.length) {
         y = slots[idx].offsetTop - 3;
       } else if (slots.length) {
-        const last = slots[slots.length - 1];
-        y = last.offsetTop + Math.round(blockBottomOf(last) - last.getBoundingClientRect().top) + 1;
+        y = blockBottomLocal(slots[slots.length - 1]) + 1;
       } else y = 0;
       dl.style.top = y + "px";
       dl.classList.add("on");
@@ -1552,6 +1600,7 @@
       c.checked = false; c.dispatchEvent(new Event("change"));
     }
     if (q.get("embed") === "1") document.body.classList.add("is-embed");
+    if (q.get("fit") === "center") document.body.dataset.fit = "center";
 
     const sc = parseFloat(q.get("scale"));
     if (sc > 0 && sc <= 4) document.documentElement.style.setProperty("--embed-scale", String(sc));
@@ -1661,7 +1710,7 @@
         id: "n" + ITEMS.length,
         parent: null,
         text,
-        who: "Matt",
+        who: "Matt Felten",
         done: false,
         pos: between(last && last.pos, null)
       });

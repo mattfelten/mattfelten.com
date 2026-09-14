@@ -130,6 +130,20 @@
     :root:not([data-theme="light"]) body.is-embed { background: #000; }
   }
   :root[data-theme="dark"] body.is-embed { background: #000; }
+
+  /* fit=center centres the specimen in whatever height the slide gives
+     the iframe. That lets every embed use one height with room to spare,
+     so a demo that grows or shrinks while it is being driven stays put
+     instead of clipping at the bottom, and no slide needs its height
+     remeasured every time a row gets taller.
+     Top alignment stays the default, and the two layout-shift demos keep
+     it: they exist to show the list being pushed DOWN, and centring
+     would split that movement in two and halve what you can see. */
+  body.is-embed[data-fit="center"] .bench {
+    justify-content: center;
+    min-height: 100vh;
+  }
+
   /* Top-aligned, never vertically centred. Centring splits any height
      change in both directions, which halves the apparent movement and
      wrecks the one demo that exists to show a 14px shove. Size the
@@ -251,8 +265,13 @@
 
   @media (max-width: 640px) { .bench { padding: 26px 16px 56px; } }
 
+  /* 820, not 620. The author tag carries a full name now, which took
+     about 40px out of the text column and pushed rows onto extra lines.
+     Widening gives the measure back, and it lets every checklist slide
+     share one scale and one size instead of each being tuned until it
+     happened to fit. */
   .bench-inner {
-    width: 100%; max-width: 620px;
+    width: 100%; max-width: 820px;
     display: flex; flex-direction: column; gap: 24px; min-width: 0;
   }
 
@@ -306,7 +325,7 @@
   .row.is-lifted { background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--action); }
 
   .handle {
-    position: absolute; left: -22px; top: 3px;
+    position: absolute; left: -22px; top: 5px;
     width: 18px; height: 18px;
     display: grid; place-content: center;
     border-radius: 4px; color: var(--text-subdued);
@@ -321,7 +340,7 @@
   body[data-grab="blank"] .handle { display: none; }
 
   .cb {
-    flex: none; width: 20px; height: 20px;
+    flex: none; width: 20px; height: 20px; margin-block: 2px;
     display: grid; place-content: center; cursor: pointer;
     background: none; border: 0; padding: 0; color: var(--text-subdued);
   }
@@ -331,7 +350,14 @@
   .cb[data-state="cancelled"] { color: var(--text-subdued); }
   .cb:focus-visible { outline: 2px solid var(--action); outline-offset: 1px; border-radius: 4px; }
 
-  .content { flex: 1 1 auto; min-width: 0; }
+  /* Optical centring on a single-line row. align-items stays flex-start
+     so wrapped text keeps every control level with its FIRST line, but
+     flex-start alone left the smaller controls and the text high inside
+     the hover rectangle: the row's height is set by the 24px person tag
+     while the checkbox and kebab are 20 and the text's line box is 20.
+     Each is nudged down by half the difference, so a single-line row
+     centres and a wrapped one does not move. */
+  .content { flex: 1 1 auto; min-width: 0; padding-block: 2px; }
   /* inline so the hit area follows the text lines, leaving a
      ragged grabbable tail after the last line */
   .content .prose { display: inline; cursor: text; }
@@ -342,11 +368,21 @@
      .6 measures 2.33:1. Dim is a treatment for full-strength colour only. */
   .row[data-done="true"] .person { opacity: 1; }
 
+  /* The author tag. A name in a subtle grey chip, and nothing else.
+     The avatar that used to sit beside it has gone: presence already
+     puts a face on the row, and a second one next to the author reads as
+     co-authorship rather than as who wrote it. Full names, because
+     initials are a puzzle and first names collide. */
   .person {
-    flex: none; display: inline-flex; align-items: center; gap: 5px;
-    font-size: 12px; color: var(--text-subdued);
-    background: var(--surface-3); border-radius: 999px;
-    padding: 2px 8px 2px 2px; cursor: pointer; max-width: 150px;
+    flex: none; display: inline-flex; align-items: center;
+    font-size: 12px; line-height: 16px;
+    color: var(--text-subdued);
+    background: var(--surface-3);
+    border: 1px solid var(--border-default);
+    border-radius: 999px;
+    padding: 2px 9px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    max-width: 200px;
   }
 
   .avatar {
@@ -359,7 +395,7 @@
   .person span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
   .menu {
-    flex: none; width: 20px; height: 20px;
+    flex: none; width: 20px; height: 20px; margin-block: 2px;
     display: grid; place-content: center; border-radius: 4px;
     color: var(--text-subdued); background: none; border: 0; padding: 0;
     opacity: 0; cursor: pointer;
@@ -899,9 +935,7 @@
                 aria-label="${it.done ? "Reopen" : "Mark done"}">${statusIcon(it)}</button>
         <div class="content"><span class="prose" data-interactive>${esc(it.text)}</span></div>
         ${status}${due}
-        <span class="person" data-interactive tabindex="0">
-          <span class="avatar">${esc(initials(it.who))}</span><span>${esc(it.who.split(" ")[0])}</span>
-        </span>
+        <span class="person" data-interactive tabindex="0">${esc(it.who)}</span>
         <button class="menu" data-interactive aria-label="More actions">${ICON.dots}</button>
       </div>`;
     }).join("");
@@ -1107,10 +1141,7 @@
     p.innerHTML =
       `<span class="cb" data-state="${statusState(item)}" style="pointer-events:none">${statusIcon(item)}</span>` +
       `<span class="ptext">${esc(item.text)}</span>` +
-      `<span class="person" style="pointer-events:none">` +
-        `<span class="avatar">${esc(initials(item.who))}</span>` +
-        `<span>${esc(item.who.split(" ")[0])}</span>` +
-      `</span>`;
+      `<span class="person" style="pointer-events:none">${esc(item.who)}</span>`;
     if (S.proxy === "full") {
       p.style.width = srcRect.el.getBoundingClientRect().width + "px";
       drag.offsetY = Math.min(e.clientY - srcRect.top, 40);
@@ -1392,6 +1423,7 @@
     });
 
     if (q.get("embed") === "1") document.body.classList.add("is-embed");
+    if (q.get("fit") === "center") document.body.dataset.fit = "center";
 
     // Slides are 1920 wide and get scaled down to whatever is projecting,
     // so a specimen rendered at 1:1 lands around 10px on a screen. ?scale

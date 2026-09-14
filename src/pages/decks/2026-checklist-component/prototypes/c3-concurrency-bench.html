@@ -115,6 +115,20 @@
     :root:not([data-theme="light"]) body.is-embed { background: #000; }
   }
   :root[data-theme="dark"] body.is-embed { background: #000; }
+
+  /* fit=center centres the specimen in whatever height the slide gives
+     the iframe. That lets every embed use one height with room to spare,
+     so a demo that grows or shrinks while it is being driven stays put
+     instead of clipping at the bottom, and no slide needs its height
+     remeasured every time a row gets taller.
+     Top alignment stays the default, and the two layout-shift demos keep
+     it: they exist to show the list being pushed DOWN, and centring
+     would split that movement in two and halve what you can see. */
+  body.is-embed[data-fit="center"] .bench {
+    justify-content: center;
+    min-height: 100vh;
+  }
+
   /* Centre in whatever height the slide gives the frame, so one embed
      rule survives every iframe size instead of needing a per-slide fit. */
   /* Top-aligned, never vertically centred. Centring splits any height
@@ -976,6 +990,7 @@
     if (v && KEYS["1"] !== undefined && ["lww", "conflict", "merge"].includes(v))
       segRoot.querySelector('button[data-v="' + v + '"]').click();
     if (q.get("embed") === "1") document.body.classList.add("is-embed");
+    if (q.get("fit") === "center") document.body.dataset.fit = "center";
     const sc = parseFloat(q.get("scale"));
     if (sc > 0 && sc <= 4) document.documentElement.style.setProperty("--embed-scale", String(sc));
 
