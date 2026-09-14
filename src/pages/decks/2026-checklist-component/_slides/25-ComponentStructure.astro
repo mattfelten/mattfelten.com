@@ -1,0 +1,163 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+// What the component is made of, drawn rather than listed. Three nested
+// levels, each with its own colour, so the containment is the diagram
+// rather than something said over it:
+//
+//   Checklist        the list, and the one thing that owns order
+//   ChecklistRow     one row, and the arbiter between the parts below
+//   the parts        what a row is assembled from
+//
+// The nested row is drawn as a real child so the one-level ceiling is
+// visible: a sub-row has the same parts as any other row, which is the
+// argument that nesting is a capability rather than a second component.
+//
+// Hand-drawn in CSS rather than an image, because the labels have to be
+// readable across a room and an exported diagram would not scale with
+// the deck.
+
+const parts = [
+	'DragHandle',
+	'Checkbox',
+	'EditableText',
+	'CreatorBadge',
+	'RowActions',
+];
+---
+
+<Slide subtitle="Component structure">
+	<div class="diagram">
+		<div class="box list">
+			<span class="tag tag-list">Checklist</span>
+
+			<div class="box row">
+				<span class="tag tag-row">ChecklistRow</span>
+				<div class="parts">
+					{parts.map((p) => <span class="part">{p}</span>)}
+				</div>
+			</div>
+
+			<div class="box row nested">
+				<span class="tag tag-row">ChecklistRow</span>
+				<span class="note">nested, one level</span>
+				<div class="parts">
+					{parts.map((p) => <span class="part">{p}</span>)}
+				</div>
+			</div>
+
+			<div class="box row">
+				<span class="tag tag-row">ChecklistRow</span>
+				<div class="parts">
+					{parts.map((p) => <span class="part">{p}</span>)}
+				</div>
+			</div>
+
+			<div class="box composer">
+				<span class="tag tag-row">ChecklistComposer</span>
+				<div class="parts">
+					<span class="part">Add an item</span>
+				</div>
+			</div>
+		</div>
+	</div>
+</Slide>
+
+<style>
+	/* Three hues, one per level, all as alpha over whatever the slide
+	   background is, so the diagram works in both colour schemes without
+	   a second palette. */
+	.diagram {
+		/* Space separated, so rgb(var(--hue) / alpha) is valid. Commas
+		   here silently produce an invalid colour and no box at all. */
+		--lvl-list: 156 163 175;
+		--lvl-row: 61 223 194;
+		--lvl-part: 139 124 246;
+		display: flex;
+		justify-content: center;
+	}
+
+	.box {
+		position: relative;
+		border-radius: 16px;
+		border: 2px dashed rgb(var(--hue) / 0.5);
+		background: rgb(var(--hue) / 0.07);
+		padding: 44px 28px 28px;
+	}
+
+	.list {
+		--hue: var(--lvl-list);
+		width: 1400px;
+		display: flex;
+		flex-direction: column;
+		gap: 24px;
+	}
+
+	.row {
+		--hue: var(--lvl-row);
+		padding: 40px 20px 20px;
+	}
+
+	/* A sub-row is a real child of the list, indented, with exactly the
+	   parts every other row has. */
+	.nested {
+		margin-left: 72px;
+	}
+
+	.composer {
+		--hue: var(--lvl-row);
+		padding: 40px 20px 20px;
+	}
+
+	.tag {
+		position: absolute;
+		top: 10px;
+		left: 20px;
+		font-size: 20px;
+		font-weight: 500;
+		letter-spacing: 0.01em;
+	}
+
+	.tag-list {
+		color: rgb(var(--lvl-list) / 1);
+	}
+
+	.tag-row {
+		color: rgb(var(--lvl-row) / 1);
+	}
+
+	.note {
+		position: absolute;
+		top: 12px;
+		right: 20px;
+		font-size: 17px;
+		color: rgb(var(--lvl-list) / 0.9);
+	}
+
+	.parts {
+		display: flex;
+		gap: 16px;
+		align-items: stretch;
+	}
+
+	.part {
+		flex: none;
+		border-radius: 10px;
+		border: 2px solid rgb(var(--lvl-part) / 0.55);
+		background: rgb(var(--lvl-part) / 0.12);
+		color: rgb(var(--lvl-part) / 1);
+		padding: 14px 18px;
+		font-size: 20px;
+		font-weight: 500;
+	}
+
+	/* The text is the only part that takes whatever room is left, which
+	   is true of the component too. */
+	.part:nth-child(3) {
+		flex: 1 1 auto;
+	}
+
+	.composer .part {
+		flex: 1 1 auto;
+	}
+</style>

@@ -1,0 +1,61 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+// The half a component cannot do for you, which is the thing a design
+// system usually forgets to write down. Three of these are already in
+// design-direction as "deliberately not the component's decision"
+// (permission, the merge implementation, and the menu once it is open);
+// the rest are the accessibility obligations that do not survive being
+// packaged, because they depend on the page the component lands in.
+//
+// Said out loud, the line is: the component can be accessible and the
+// page can still fail, and these are the seams where that happens.
+
+const items = [
+	{
+		title: 'Name the list',
+		body: 'The component does not know what the list is called. Without a label it is an unnamed list of checkboxes.',
+	},
+	{
+		title: 'Heading and landmark order',
+		body: 'Where the list sits in the page outline is the page&rsquo;s job. The component owns one region, not the route.',
+	},
+	{
+		title: 'Who may edit',
+		body: 'Permission is business logic. The component asks whether a row is editable and never decides it.',
+	},
+	{
+		title: 'Supply the names',
+		body: 'Presence is drawn from data the consumer provides. A missing name becomes an anonymous face.',
+	},
+	{
+		title: 'Colour tokens that pass',
+		body: 'Every ratio here was measured against our tokens. Re-theme it and the contrast has to be re-measured.',
+	},
+	{
+		title: 'Announce what happens elsewhere',
+		body: 'The component announces its own changes. Something arriving from another screen is the consumer&rsquo;s to say.',
+	},
+	{
+		title: 'The menu once it is open',
+		body: 'The row menu is a system component in its own right. Its keyboard contract belongs to whoever owns it.',
+	},
+	{
+		title: 'Save failure',
+		body: 'Autosave reports failure outward. Somewhere for it to land is the consumer&rsquo;s, and today nobody has built one.',
+	},
+];
+---
+
+<Slide subtitle="Accessibility → What the component cannot do for you">
+	<div class="grid grid-cols-4 gap-x-10 gap-y-8">
+		{
+			items.map((i) => (
+				<div class="flex flex-col gap-2">
+					<span class="text-strong text-2xl font-medium">{i.title}</span>
+					<span class="text-subdued text-xl" set:html={i.body} />
+				</div>
+			))
+		}
+	</div>
+</Slide>

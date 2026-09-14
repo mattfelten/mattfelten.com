@@ -2,18 +2,20 @@
 import { Deck, DeckShell } from '@decks';
 
 import {
-	AccessibilityDecisions,
+	AccessibilityAudit,
 	AccessibilitySection,
 	Before,
+	ComponentAPI,
+	ComponentInUse,
+	ComponentStructure,
 	Docs,
 	EditingFinal,
 	EditingSection,
-	MergeAndGarble,
+	LeftToTheConsumer,
 	MultiplayerFinal,
 	MultiplayerSection,
 	NestedFinal,
 	NestedSection,
-	Primitives,
 	ReorderingFinal,
 	ReorderingSection,
 	RuledOutCascade,
@@ -26,9 +28,8 @@ import {
 	RuledOutShift,
 	SystemSection,
 	ThankYou,
-	TheRowArbitrates,
 	Title,
-	WhereItLanded,
+	WhatsNext,
 	WhereWeLanded,
 	WhyAComponent,
 } from './_slides';
@@ -79,17 +80,18 @@ const meta = {
 		<MultiplayerFinal />
 		<RuledOutDim />
 		<RuledOutLock />
-		<MergeAndGarble />
 
 		<AccessibilitySection />
-		<AccessibilityDecisions />
+		<AccessibilityAudit />
+		<LeftToTheConsumer />
 
 		<SystemSection />
-		<Primitives />
-		<TheRowArbitrates />
+		<ComponentStructure />
+		<ComponentAPI />
+		<ComponentInUse />
 
 		<Docs />
-		<WhereItLanded />
+		<WhatsNext />
 		<ThankYou />
 	</Deck>
 </DeckShell>

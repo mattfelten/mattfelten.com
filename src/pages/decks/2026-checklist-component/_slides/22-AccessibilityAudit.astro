@@ -1,0 +1,78 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+// Organised by what was LOOKED AT, not by what was decided. The heading
+// is the keyword a panel is scanning for; the line under it is the
+// answer. Somebody should be able to read the left column alone and see
+// that nothing was skipped, rather than reading six decisions and
+// working out which areas they cover.
+//
+// Deliberately includes the two that are not finished, because a list
+// where everything passed is a list nobody audited.
+
+const areas = [
+	{
+		area: 'Colour contrast',
+		detail:
+			'Completed items dim to 60%, which measures 4.58:1. They shipped at 50%, which is 3.35:1 and fails.',
+	},
+	{
+		area: 'Target size',
+		detail:
+			'Checkbox, handle and kebab are 24 by 24, the 2.5.8 minimum, grown with a negative margin so the glyph does not move.',
+	},
+	{
+		area: 'Keyboard',
+		detail:
+			'Every row action has a keyboard path. Move up and Move down live in the row menu, so reordering never needs a drag.',
+	},
+	{
+		area: 'Pointer gestures',
+		detail:
+			'2.5.7 wants a single-pointer alternative to any drag. The menu is that path, and it covers touch and screen readers for free.',
+	},
+	{
+		area: 'Touch',
+		detail:
+			'Tapping the text already edited it and nothing said so. The affordance becomes permanent under pointer: coarse, and the menu opens on long press.',
+	},
+	{
+		area: 'Screen reader',
+		detail:
+			'A nested list, not a tree: one level does not earn the arrow-key contract a tree takes over. Presence is announced in words, whatever the visual.',
+	},
+	{
+		area: 'Focus visible',
+		detail:
+			'The field has no edges, so focus cannot be the field appearing. Painted with background and shadow, which sit outside layout.',
+	},
+	{
+		area: 'Forced colours',
+		detail:
+			'Windows high contrast drops background and box-shadow, which is everything this component paints with. Repaired with outline.',
+	},
+	{
+		area: 'Reduced motion',
+		detail:
+			'The drop animation and the presence entrance both respect it. Nothing conveys state by movement alone.',
+	},
+	{
+		area: 'Still open',
+		detail:
+			'Autosave has no failure surface, so a failed write is silent. And 24 clears AA on a mouse but is small for a thumb.',
+	},
+];
+---
+
+<Slide subtitle="Accessibility">
+	<div class="grid grid-cols-2 gap-x-16 gap-y-6">
+		{
+			areas.map((a) => (
+				<div class="grid grid-cols-[280px_minmax(0,1fr)] items-baseline gap-6">
+					<span class="text-strong text-2xl font-medium">{a.area}</span>
+					<span class="text-subdued text-xl">{a.detail}</span>
+				</div>
+			))
+		}
+	</div>
+</Slide>

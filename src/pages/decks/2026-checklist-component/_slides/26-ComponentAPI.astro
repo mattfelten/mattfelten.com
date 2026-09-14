@@ -1,0 +1,65 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+// The props are the decisions, restated as a surface. Every one of them
+// is a call made earlier in this deck, which is the point: a consumer
+// configures the component by answering the same questions, and the ones
+// that are not props are the ones the component refuses to let a
+// consumer get wrong.
+//
+// `nesting` is the sharpest of them. A flat agenda and a nested runbook
+// are one thing configured differently, and that is the argument that
+// this is a component and not two.
+
+const props = [
+	{
+		name: 'items',
+		type: 'ChecklistItem[]',
+		note: 'Order comes from the array. The component never sorts.',
+	},
+	{
+		name: 'reorderable',
+		type: 'boolean',
+		note: 'Drag handle and the Move up / Move down menu items, together. Never one without the other.',
+	},
+	{
+		name: 'nesting',
+		type: "'off' | 'one-level'",
+		note: 'Off withdraws the gesture and the affordance, and flattens the data.',
+	},
+	{
+		name: 'editable',
+		type: 'boolean',
+		note: 'Inline edit and autosave. Who may edit is the consumer&rsquo;s call, not this flag.',
+	},
+	{
+		name: 'presence',
+		type: 'PresenceUser[]',
+		note: 'Who is in which row. The component draws it and never fetches it.',
+	},
+	{
+		name: 'showCreator',
+		type: 'boolean',
+		note: 'The author tag. Runbooks does not want one.',
+	},
+	{
+		name: 'onReorder / onEdit / onCreate / onDelete',
+		type: 'callbacks',
+		note: 'Intent out, new items in. The component holds no server state.',
+	},
+];
+---
+
+<Slide subtitle="Component API">
+	<div class="grid grid-cols-[auto_auto_minmax(0,1fr)] items-baseline gap-x-8 gap-y-5">
+		{
+			props.map((p) => (
+				<>
+					<code class="text-strong text-2xl font-medium">{p.name}</code>
+					<code class="text-accent text-2xl">{p.type}</code>
+					<span class="text-subdued text-2xl" set:html={p.note} />
+				</>
+			))
+		}
+	</div>
+</Slide>
