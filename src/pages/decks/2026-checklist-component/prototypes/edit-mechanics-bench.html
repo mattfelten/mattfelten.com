@@ -105,6 +105,16 @@
      design decision, so the iframe gets sized to the specimen rather
      than the specimen stretched to the iframe. */
   body.is-embed .bench-inner { gap: 0; zoom: var(--embed-scale, 1); }
+
+  /* The deck's slides are true black in dark mode. Anything lighter
+     behind the specimen shows as a rectangle around it, and the card's
+     rounded corners make it obvious. Embed only: the standalone bench
+     keeps its own surface, where the page is the bench rather than a
+     mockup sitting on a slide. */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) body.is-embed { background: #000; }
+  }
+  :root[data-theme="dark"] body.is-embed { background: #000; }
   /* Top-aligned, never vertically centred. Centring splits any height
      change in both directions, which halves the apparent movement and
      wrecks the one demo that exists to show a 14px shove. Size the
