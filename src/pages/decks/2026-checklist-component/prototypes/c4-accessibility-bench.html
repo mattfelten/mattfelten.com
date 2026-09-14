@@ -574,6 +574,46 @@
   }
   .drop-line.on { display: block; }
 
+  /* The selection formatting bar, copied from the editing bench. With no
+     toolbar it only appears on a selection, which is why losing
+     selection would lose formatting entirely: the reason selecting text
+     had to survive the gesture arbitration. */
+  .floatbar {
+    position: absolute; z-index: 40;
+    display: flex; gap: 1px; padding: 3px;
+    background: var(--text-default); border-radius: 7px;
+    box-shadow: var(--shadow-lift);
+  }
+  .floatbar button {
+    appearance: none; border: 0; background: none; cursor: pointer;
+    color: #fff; width: 24px; height: 24px; border-radius: 5px;
+    font: inherit; font-size: 11.5px; font-weight: 700;
+    display: grid; place-content: center;
+  }
+  .floatbar button:hover { background: rgba(255, 255, 255, .16); }
+  .floatbar .i { font-style: italic; font-weight: 600; }
+  /* The insertion line's indent is read off the gap it is in, never off
+     how far sideways the pointer went. Copied from the nesting bench,
+     which is where this was settled. */
+  .drop-line.tier1 { left: 32px; }
+  .drop-line.blocked { background: var(--negative); }
+
+  /* Dropping inside. The whole row lights up and the insertion line is
+     hidden, so the two gestures never show at once and the list is
+     never offering a slot and a container in the same frame. */
+  .row.is-parent-target {
+    background: rgba(30, 64, 175, .09);
+    box-shadow: inset 0 0 0 1.5px rgba(30, 64, 175, .5);
+    border-radius: 7px;
+  }
+  /* A row with sub-items cannot become one. Refusing silently is the
+     worst version, so the target says no rather than doing nothing. */
+  .row.is-blocked-target {
+    background: rgba(220, 38, 38, .07);
+    box-shadow: inset 0 0 0 1.5px rgba(220, 38, 38, .45);
+    border-radius: 7px;
+  }
+
   /* ============================================================
      C4 - PRESENCE WITHOUT DIMMING
      The dim measured 2.67:1 and there is no opacity value that
@@ -1314,6 +1354,50 @@
     return ITEMS.filter(i => i.parent === it.parent);
   };
 
+  const tops = () => ITEMS.filter(i => i.parent === null);
+
+  // The gap decides the level, never how far sideways the pointer went.
+  // After a child means sibling of that child. Directly under a parent
+  // means inside it. Between two top-level rows means top level.
+  // Copied from the nesting bench.
+  function gapTier(prev, next) {
+    if (!S.nesting) return { tier: 0, parent: null };
+    if (!prev) return { tier: 0, parent: null };
+    if (prev.parent !== null) return { tier: 1, parent: prev.parent };
+    if (next && next.parent === prev.id) return { tier: 1, parent: prev.id };
+    return { tier: 0, parent: null };
+  }
+
+  // Move a row, possibly changing its level. C4 keeps order in the ITEMS
+  // array rather than in fractional keys, so this is the nesting bench's
+  // rule set expressed in this bench's model: the same one-level ceiling,
+  // the same block-carrying, the same gap semantics.
+  function moveTo(id, targetIndex, targetTier, parentId) {
+    const it = byId(id);
+    if (!it) return false;
+    if (!S.nesting) { targetTier = 0; parentId = null; }
+    // One level only. A row with children cannot become a child.
+    if (targetTier === 1 && hasKids(id)) return false;
+
+    const { from, count } = blockOf(id);
+    const block = ITEMS.splice(from, count);
+    it.parent = targetTier === 1 ? parentId : null;
+
+    const dest = ITEMS.filter(i => i.parent === (targetTier === 1 ? parentId : null));
+    let insertAt;
+    if (!dest.length) {
+      // First child lands immediately after its new parent.
+      insertAt = targetTier === 1 ? idx(parentId) + 1 : ITEMS.length;
+    } else if (targetIndex >= dest.length) {
+      const b = blockOf(dest[dest.length - 1].id);
+      insertAt = b.from + b.count;
+    } else {
+      insertAt = idx(dest[targetIndex].id);
+    }
+    ITEMS.splice(insertAt, 0, ...block);
+    return true;
+  }
+
   function blockOf(id) {
     const from = idx(id);
     if (!S.nesting || byId(id).parent !== null) return { from, count: 1 };
@@ -1672,9 +1756,16 @@
     const keep = listEl.contains(active) ? active : null;
     const line = document.getElementById("dropline");
     const nodes = new Map([...listEl.querySelectorAll(".row")].map(r => [r.dataset.id, r]));
-    visible().forEach(({ it }) => {
+    visible().forEach(({ it, tier }) => {
       const n = nodes.get(it.id);
-      if (n) listEl.insertBefore(n, line);
+      if (!n) return;
+      listEl.insertBefore(n, line);
+      // Dropping onto a row changes its level, not just its position,
+      // and the indent is driven off data-tier. Repaint it in place:
+      // rebuilding the row here would destroy whatever was in it, which
+      // is the most repeated bug in this project.
+      if (n.dataset.tier !== String(tier)) n.dataset.tier = String(tier);
+      n.classList.toggle("has-kids", hasKids(it.id));
     });
     // insertBefore on an attached node is a remove plus an insert, and
     // the remove blurs. Put it back in the same turn.
@@ -1736,6 +1827,7 @@
   // drop target never slides out from under the cursor.
   // ---------------------------------------------------------------
   const THRESHOLD = 5;
+  const INTO_BAND = 0.34;   // middle third of a row is "drop inside"
   let drag = null;
 
   listEl.addEventListener("pointerdown", (e) => {
@@ -1750,13 +1842,12 @@
     const sel = window.getSelection();
     if (sel && !sel.isCollapsed && sel.toString().length) return;
 
-    const rows = [...listEl.querySelectorAll(".row")];
     drag = {
       row, id: row.dataset.id,
-      from: rows.indexOf(row), to: rows.indexOf(row),
       startX: e.clientX, startY: e.clientY,
       active: false, pointerId: e.pointerId,
-      rects: null, proxy: null, offsetY: 16
+      flat: null, proxy: null, offsetY: 16,
+      mode: "between", intoId: null, gap: 0, tier: 0, parentId: null, blocked: false
     };
     try { listEl.setPointerCapture(e.pointerId); } catch (err) { /* no active pointer */ }
   });
@@ -1792,22 +1883,28 @@
     //
     // offsetTop is measured from the same padding edge that absolute
     // positioning resolves against, so the two agree at any zoom.
-    // Siblings only. A row reorders within its own level and carries its
-    // children; changing level is the nesting gesture and belongs to the
-    // nesting bench. Measuring every row instead would offer drop slots
-    // that the commit cannot honour.
-    const sibIds = siblingsOf(drag.id).map(x => x.id);
-    drag.from = sibIds.indexOf(drag.id);
-    drag.rects = sibIds.map(id => {
-      const r = listEl.querySelector('.row[data-id="' + id + '"]');
+    // The whole visible list, minus the block in your hand. Reordering
+    // within a level and changing level are the same gesture here, so
+    // measuring siblings only would refuse drops the commit can honour:
+    // a child could never leave its parent, which is what it did.
+    //
+    // Measured once, here, for the reason in the note above. Every gap
+    // and every container band is computed from this snapshot, so the
+    // target cannot slide out from under the cursor mid-drag.
+    const mine = new Set(ITEMS.slice(blockOf(drag.id).from, blockOf(drag.id).from + blockOf(drag.id).count).map(i => i.id));
+    drag.flat = visible().map(v => v.it).filter(it => !mine.has(it.id)).map(it => {
+      const r = listEl.querySelector('.row[data-id="' + it.id + '"]');
       const b = r.getBoundingClientRect();
-      // A parent's block ends at its last visible child, which is where
-      // the line has to sit when dropping past it.
-      const kids = kidsOf(id).map(k => listEl.querySelector('.row[data-id="' + k.id + '"]')).filter(Boolean);
+      const kids = kidsOf(it.id).filter(k => !mine.has(k.id))
+        .map(k => listEl.querySelector('.row[data-id="' + k.id + '"]')).filter(Boolean);
       const last = kids.length ? kids[kids.length - 1] : r;
       return {
-        el: r,
+        it, el: r,
         mid: b.top + b.height / 2,
+        // The middle third of a top-level row is "drop inside". Bands
+        // are viewport px, like clientY; tops are local px, like style.
+        bandTop: b.top + b.height * INTO_BAND,
+        bandBottom: b.bottom - b.height * INTO_BAND,
         top: r.offsetTop,
         blockBottom: last.offsetTop + last.offsetHeight
       };
@@ -1833,34 +1930,70 @@
   }
 
   function updateTarget(clientY) {
-    const rects = drag.rects;
-    let above = 0;
-    for (let i = 0; i < rects.length; i++) {
-      if (i === drag.from) continue;
-      if (clientY > rects[i].mid) above++;
+    const flat = drag.flat;
+    let mode = "between", intoId = null, tier = 0, parentId = null, blocked = false;
+
+    // Drop inside, checked first. Any top-level row is a container,
+    // including the dragged row's own current parent: a gesture that
+    // sometimes does nothing over the same kind of row is worse than a
+    // move that happens to be a no-op. Children are not containers,
+    // because one level is the ceiling.
+    if (S.nesting) {
+      const hover = flat.find(f => f.it.parent === null &&
+        clientY > f.bandTop && clientY < f.bandBottom);
+      if (hover) {
+        mode = "into";
+        intoId = hover.it.id;
+        if (hasKids(drag.id)) blocked = true;
+      }
     }
-    drag.to = above;
-    showLine(above);
+
+    let gap = flat.length;
+    if (mode === "between") {
+      gap = 0;
+      for (let i = 0; i < flat.length; i++) {
+        if (clientY > flat[i].mid) gap++; else break;
+      }
+      const g = gapTier(gap > 0 ? flat[gap - 1].it : null,
+                        gap < flat.length ? flat[gap].it : null);
+      tier = g.tier; parentId = g.parent;
+      if (tier === 1 && hasKids(drag.id)) blocked = true;
+    }
+
+    drag.mode = mode;
+    drag.intoId = intoId;
+    drag.gap = gap;
+    drag.tier = tier;
+    drag.parentId = parentId;
+    drag.blocked = blocked;
+    paintTarget();
   }
 
-  function showLine(to) {
+  function paintTarget() {
+    listEl.querySelectorAll(".row").forEach(r =>
+      r.classList.remove("is-parent-target", "is-blocked-target"));
     const line = document.getElementById("dropline");
     if (!line) return;
-    const rects = drag.rects;
-    const order = rects.map((r, i) => i).filter(i => i !== drag.from);
+
+    if (drag.mode === "into") {
+      const t = listEl.querySelector('.row[data-id="' + drag.intoId + '"]');
+      if (t) t.classList.add(drag.blocked ? "is-blocked-target" : "is-parent-target");
+      line.classList.remove("on", "tier1", "blocked");
+      return;
+    }
 
     // All local px. No listTop subtraction: offsetTop is already
     // relative to the list, which is the line's containing block.
+    const flat = drag.flat;
     let y;
-    if (!order.length) y = 0;
-    else if (to >= order.length) {
-      const last = rects[order[order.length - 1]];
-      y = last.blockBottom + 6;
-    } else {
-      y = rects[order[to]].top - 6;
-    }
+    if (!flat.length) y = 0;
+    else if (drag.gap >= flat.length) y = flat[flat.length - 1].blockBottom + 6;
+    else y = flat[drag.gap].top - 6;
+
     line.style.top = y + "px";
     line.classList.add("on");
+    line.classList.toggle("tier1", drag.tier === 1);
+    line.classList.toggle("blocked", drag.blocked);
   }
 
   function endDrag(cancelled) {
@@ -1872,14 +2005,39 @@
     document.body.style.cursor = "";
     if (d.proxy) d.proxy.remove();
     const line = document.getElementById("dropline");
-    if (line) line.classList.remove("on");
+    if (line) line.classList.remove("on", "tier1", "blocked");
     d.row.classList.remove("is-source");
+    listEl.querySelectorAll(".row").forEach(r =>
+      r.classList.remove("is-parent-target", "is-blocked-target"));
 
-    if (d.active && !cancelled && d.to !== d.from) {
-      move(d.id, d.to);
-      announce("Moved to " + (idx(d.id) + 1) + " of " + ITEMS.length + ".");
-      log('<span class="op">drop</span> <span class="dim">to ' + (idx(d.id) + 1) + " of " + ITEMS.length + "</span>");
+    if (d.active && !cancelled && d.blocked) {
+      // Refusing silently is the worst version of this, so it is said
+      // rather than simply not done.
+      announce("That row has sub-items, so it cannot become one.");
+      log('<span class="op">refused</span> <span class="dim">a row with sub-items cannot become one</span>');
+    } else if (d.active && !cancelled && d.mode === "into") {
+      moveTo(d.id, kidsOf(d.intoId).filter(k => k.id !== d.id).length, 1, d.intoId);
+      announce("Moved inside " + short(byId(d.intoId).text) + ".");
+      log('<span class="op">drop</span> <span class="dim">inside ' + esc(short(byId(d.intoId).text)) + "</span>");
       reflow();
+    } else if (d.active && !cancelled) {
+      // Translate the flat gap into an index within whichever sequence
+      // the row is joining. Same move as the nesting bench makes.
+      const dest = (d.tier === 1 ? kidsOf(d.parentId) : tops()).filter(x => x.id !== d.id);
+      let destIndex = dest.length;
+      const at = d.gap < d.flat.length ? d.flat[d.gap].it.id : null;
+      if (at) {
+        const found = dest.findIndex(x => x.id === at);
+        if (found >= 0) destIndex = found;
+      }
+      const wasParent = byId(d.id).parent;
+      const wasAt = idx(d.id);
+      moveTo(d.id, destIndex, d.tier, d.parentId);
+      if (idx(d.id) !== wasAt || byId(d.id).parent !== wasParent) {
+        announce("Moved to " + (idx(d.id) + 1) + " of " + ITEMS.length + ".");
+        log('<span class="op">drop</span> <span class="dim">to ' + (idx(d.id) + 1) + " of " + ITEMS.length + "</span>");
+        reflow();
+      }
     } else if (cancelled) {
       // pointercancel has to cancel. Committing here was a real bug in
       // the reorder round and it is worth not reintroducing.
@@ -2147,6 +2305,55 @@
     announce("Editing. Escape to stop.");
   });
 
+  // Selection formatting bar, copied from the editing bench. That bench
+  // tracks an editingId; this one tracks edit state on the element, so
+  // the guard reads contenteditable instead.
+  let barEl = null;
+  function hideBar() { if (barEl) { barEl.remove(); barEl = null; } }
+
+  function showBarForSelection() {
+    const live = listEl.querySelector('.prose[contenteditable="true"]');
+    if (!live) return hideBar();
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed || sel.rangeCount === 0) return hideBar();
+    if (!live.contains(sel.anchorNode)) return hideBar();
+
+    const host = document.querySelector(".specimen");
+    if (!host) return hideBar();
+    if (!barEl) {
+      barEl = document.createElement("div");
+      barEl.className = "floatbar";
+      barEl.setAttribute("role", "toolbar");
+      barEl.setAttribute("aria-label", "Formatting");
+      barEl.innerHTML = '<button type="button" aria-label="Bold">B</button>' +
+                        '<button type="button" class="i" aria-label="Italic">I</button>' +
+                        '<button type="button" aria-label="Link">&#128279;</button>';
+      host.appendChild(barEl);
+    }
+    // Both rects are zoomed viewport pixels, so their difference is too,
+    // and style is read as the element's own unzoomed pixels. Divide
+    // once, here. Same trap as the drop line and the row menu.
+    const z = embedScale();
+    const r = sel.getRangeAt(0).getBoundingClientRect();
+    const hb = host.getBoundingClientRect();
+    const bw = barEl.offsetWidth || 80;
+    const bh = barEl.offsetHeight || 30;
+
+    let left = (r.left - hb.left + r.width / 2) / z - bw / 2;
+    left = Math.max(4, Math.min(left, hb.width / z - bw - 4));
+
+    // Above the selection by default, flipped below when the row is near
+    // the top of the specimen. The specimen clips, so an unflipped bar
+    // on the first row is simply not there.
+    let top = (r.top - hb.top) / z - bh - 6;
+    if (top < 4) top = (r.bottom - hb.top) / z + 6;
+
+    barEl.style.left = left + "px";
+    barEl.style.top = top + "px";
+  }
+
+  document.addEventListener("selectionchange", showBarForSelection);
+
   function stopEdit(p) {
     if (!p || p.getAttribute("contenteditable") !== "true") return;
     const row = p.closest(".row");
@@ -2156,6 +2363,7 @@
     // editor type backwards.
     it.text = p.textContent;
     p.removeAttribute("contenteditable");
+    hideBar();
     log('<span class="op">save</span> <span class="dim">autosave would fire here, 4s idle / 15s ceiling</span>');
     announce("Saved.");
     // Not render(). Leaving one row's text for another fires focusout
