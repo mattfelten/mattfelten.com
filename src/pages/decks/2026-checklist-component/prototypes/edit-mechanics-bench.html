@@ -1223,5 +1223,25 @@
   });
 
   render();
+
+  // ---------------------------------------------------------------
+  // Composer. Enter adds to the end, which is what the row does today.
+  // Copied from the reorder bench; the other benches got the field and
+  // not the behaviour, so Enter did nothing in four of the five.
+  // ---------------------------------------------------------------
+  (function () {
+    const input = document.querySelector(".composer-input");
+    if (!input) return;
+    input.addEventListener("keydown", (e) => {
+      const text = input.value.trim();
+      if (e.key !== "Enter" || !text) return;
+      e.preventDefault();
+      ITEMS.push({ id: "di_n" + ITEMS.length, text, who: ME, done: false });
+      render();
+
+      input.value = "";
+    });
+  })();
+
 })();
 </script>

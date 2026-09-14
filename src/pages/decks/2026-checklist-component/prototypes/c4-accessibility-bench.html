@@ -2675,4 +2675,25 @@
     if (el && el !== document.body) el.blur();
     window.parent.focus();
   });
+
+  // ---------------------------------------------------------------
+  // Composer. Enter adds to the end, which is what the row does today.
+  // Copied from the reorder bench; the other benches got the field and
+  // not the behaviour, so Enter did nothing in four of the five.
+  // ---------------------------------------------------------------
+  (function () {
+    const input = document.querySelector(".composer-input");
+    if (!input) return;
+    input.addEventListener("keydown", (e) => {
+      const text = input.value.trim();
+      if (e.key !== "Enter" || !text) return;
+      e.preventDefault();
+      ITEMS.push({ id: "n" + ITEMS.length, parent: null, text, who: "Matt", done: false });
+      render();
+      announce("Added to the end. " + ITEMS.length + " items.");
+      log('<span class="op">create</span> <span class="dim">' + esc(short(text)) + "</span>");
+
+      input.value = "";
+    });
+  })();
 </script>
