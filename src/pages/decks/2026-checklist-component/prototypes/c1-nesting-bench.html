@@ -609,19 +609,12 @@
   /* Drop indicator, tier-aware. The plain line from the flat list
      cannot say which tier you are about to land in, so it insets. */
   .drop-line.tier1 { left: 32px; }
-  .drop-line.blocked { background: var(--negative); }
-  .drop-line.blocked::before { background: var(--negative); }
   /* Dropping inside. The whole row lights up and the insertion line is
      hidden, so the two gestures never show at once and there is never a
      moment where the list is offering both a slot and a container. */
   .row.is-parent-target {
     background: rgba(30, 64, 175, .09);
     box-shadow: inset 0 0 0 1.5px rgba(30, 64, 175, .5);
-    border-radius: 7px;
-  }
-  .row.is-blocked-target {
-    background: rgba(220, 38, 38, .07);
-    box-shadow: inset 0 0 0 1.5px rgba(220, 38, 38, .45);
     border-radius: 7px;
   }
 
@@ -1181,6 +1174,17 @@
   const INTO_BAND = 0.34;   // middle third of a row is "drop inside"
 
   // Which level does this gap mean? Read from the row above it.
+  // The bottom of a row's block: itself, or its last visible child.
+  // Viewport px, because it is compared against clientY.
+  function blockBottomOf(rowEl) {
+    const id = rowEl.dataset.id;
+    const kids = kidsOf(id)
+      .map(k => listEl.querySelector('.row[data-id="' + k.id + '"]'))
+      .filter(Boolean);
+    const last = kids.length ? kids[kids.length - 1] : rowEl;
+    return last.getBoundingClientRect().bottom;
+  }
+
   function gapTier(prev, next) {
     if (!nestingOn()) return { tier: 0, parent: null };
     if (!prev) return { tier: 0, parent: null };
@@ -1200,7 +1204,7 @@
     e.preventDefault();
     const id = row.dataset.id;
     drag = { id, startX: e.clientX, startY: e.clientY, moved: false, index: 0,
-             mode: "between", dropTier: 0, dropParent: null, blocked: false };
+             mode: "between", dropTier: 0, dropParent: null, anchorId: null };
     // Capture keeps the drag alive if the pointer leaves the row. It
     // throws for a pointer id the browser does not know about, which
     // is not worth killing the drag over.
@@ -1217,13 +1221,21 @@
     if (src) src.classList.add("is-source");
     const others = rows.filter(r => r.dataset.id !== drag.id);
 
-    let mode = "between", intoId = null, tier = 0, parentId = null, idx = others.length;
-    let blocked = false;
+    // A row with sub-items cannot become one, so it is never offered the
+    // chance: no container band, and only the gaps between top-level
+    // rows. Every target it can see is a target it can land on, which
+    // means there is nothing to refuse. Painting the refusal red was the
+    // earlier answer and it read as a target rather than as a wall.
+    const carrying = hasKids(drag.id);
+    const slots = carrying
+      ? others.filter(r => byId(r.dataset.id).parent === null)
+      : others;
 
-    // Drop inside. Only a top-level row can receive, and only when the
-    // row being dragged has no children of its own.
-    if (S.drag === "context" && nestingOn()) {
-      const hover = others.find(r => {
+    let mode = "between", intoId = null, tier = 0, parentId = null, idx = slots.length;
+
+    // Drop inside. Only a top-level row can receive.
+    if (S.drag === "context" && nestingOn() && !carrying) {
+      const hover = slots.find(r => {
         const b = r.getBoundingClientRect();
         const band = b.height * INTO_BAND;
         return e.clientY > b.top + band && e.clientY < b.bottom - band;
@@ -1238,18 +1250,23 @@
         if (it.parent === null) {
           mode = "into";
           intoId = it.id;
-          if (hasKids(drag.id)) blocked = true;
         }
       }
     }
 
     if (mode === "between") {
-      for (let i = 0; i < others.length; i++) {
-        const b = others[i].getBoundingClientRect();
-        if (e.clientY < b.top + b.height / 2) { idx = i; break; }
+      for (let i = 0; i < slots.length; i++) {
+        const b = slots[i].getBoundingClientRect();
+        // Carrying a block, the crossing point is the middle of the whole
+        // group rather than of its first row, so passing a parent with
+        // two children behaves like passing one tall thing.
+        const cross = carrying
+          ? (b.top + blockBottomOf(slots[i])) / 2
+          : b.top + b.height / 2;
+        if (e.clientY < cross) { idx = i; break; }
       }
-      const prev = idx > 0 ? byId(others[idx - 1].dataset.id) : null;
-      const next = idx < others.length ? byId(others[idx].dataset.id) : null;
+      const prev = idx > 0 ? byId(slots[idx - 1].dataset.id) : null;
+      const next = idx < slots.length ? byId(slots[idx].dataset.id) : null;
 
       if (S.drag === "sideways" && nestingOn()) {
         // The rejected alternative: level comes from how far right you
@@ -1267,16 +1284,17 @@
         const g = gapTier(prev, next);
         tier = g.tier; parentId = g.parent;
       }
-      if (tier === 1 && hasKids(drag.id)) blocked = true;
+      // Carrying a block, every gap it was shown is a top-level gap.
+      if (carrying) { tier = 0; parentId = null; }
     }
 
     // Paint
-    rows.forEach(r => r.classList.remove("is-parent-target", "is-blocked-target"));
+    rows.forEach(r => r.classList.remove("is-parent-target"));
     const dl = dropline();
 
     if (mode === "into") {
       const t = rows.find(r => r.dataset.id === intoId);
-      if (t) t.classList.add(blocked ? "is-blocked-target" : "is-parent-target");
+      if (t) t.classList.add("is-parent-target");
       dl.classList.remove("on");
     } else {
       // All local px. rect values are zoomed viewport pixels and
@@ -1285,24 +1303,23 @@
       // growing down the list. offsetTop is measured from the same
       // padding edge absolute positioning resolves against.
       let y;
-      if (idx < others.length) {
-        y = others[idx].offsetTop - 3;
-      } else if (others.length) {
-        const last = others[others.length - 1];
-        y = last.offsetTop + last.offsetHeight + 1;
+      if (idx < slots.length) {
+        y = slots[idx].offsetTop - 3;
+      } else if (slots.length) {
+        const last = slots[slots.length - 1];
+        y = last.offsetTop + Math.round(blockBottomOf(last) - last.getBoundingClientRect().top) + 1;
       } else y = 0;
       dl.style.top = y + "px";
       dl.classList.add("on");
       dl.classList.toggle("tier1", S.indicator !== "line" && tier === 1);
-      dl.classList.toggle("blocked", blocked);
     }
 
     drag.mode = mode;
     drag.intoId = intoId;
     drag.index = idx;
+    drag.anchorId = idx < slots.length ? slots[idx].dataset.id : null;
     drag.dropTier = tier;
     drag.dropParent = parentId;
-    drag.blocked = blocked;
   });
 
   // Cancelling is not dropping. A pointercancel means the gesture was
@@ -1311,9 +1328,9 @@
   function clearDrag() {
     const d = drag; drag = null;
     document.querySelectorAll(".row").forEach(r =>
-      r.classList.remove("is-source", "is-parent-target", "is-blocked-target"));
+      r.classList.remove("is-source", "is-parent-target"));
     const dl = dropline();
-    if (dl) dl.classList.remove("on", "tier1", "blocked");
+    if (dl) dl.classList.remove("on", "tier1");
     return d;
   }
 
@@ -1328,12 +1345,6 @@
     const d = clearDrag();
     if (!d.moved) return;
 
-    if (d.blocked) {
-      announce("That row has sub-items, so it cannot become one.");
-      render();
-      return;
-    }
-
     if (d.mode === "into") {
       // Into a folder: land at the end of that parent's children.
       move(d.id, kidsOf(d.intoId).filter(s => s.id !== d.id).length, 1, d.intoId);
@@ -1343,9 +1354,8 @@
     // Between: translate the flat gap into an index within whichever
     // sequence the row is joining.
     const dest = (d.dropTier === 1 ? kidsOf(d.dropParent) : tops()).filter(s => s.id !== d.id);
-    const flat = visible().map(v => v.it.id).filter(id => id !== d.id);
     let destIndex = dest.length;
-    const at = flat[d.index];
+    const at = d.anchorId;
     if (at) {
       const found = dest.findIndex(s => s.id === at);
       if (found >= 0) destIndex = found;
