@@ -45,7 +45,7 @@ const props = [
 		name: 'presence',
 		def: '[]',
 		type: 'PresenceUser[]',
-		note: 'Who is in which row. The component draws it and never fetches it.',
+		note: 'Who is in which row. Kept off the item on purpose: presence changes many times a second and items do not.',
 	},
 	{
 		name: 'showCreator',

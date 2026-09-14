@@ -10,6 +10,13 @@ import { CLASS, tokenise } from './_code.ts';
 // One: a row is five fields. Everything in this deck, every gesture and
 // every rejected direction, is in service of five fields and a boolean.
 //
+// `checked` rather than `done`, because the component knows the box is
+// ticked and not what that means to the consumer. A runbook step that is
+// checked is completed; a discussion item that is checked might be
+// agreed, covered, or dropped. Naming it `done` would be the component
+// deciding the meaning of its own data, which is the line it holds
+// everywhere else.
+//
 // Two: parentId is the whole nesting model. One nullable field is what
 // "one level" costs in the data, which is why turning nesting off can
 // flatten rather than migrate.
@@ -22,34 +29,42 @@ import { CLASS, tokenise } from './_code.ts';
 const item = `type ChecklistItem = {
   id: string
   text: string          // markdown
-  done: boolean
+  checked: boolean      // the box, not what it means to you
   author: string        // shown in the creator badge
   parentId: string | null   // the entire nesting model
 }`;
 
+// Presence is a separate array rather than a field on the item, which is
+// the question worth being ready for. Items are persisted and change
+// when somebody saves; presence is ephemeral and changes many times a
+// second. Putting it on the item means every heartbeat produces a new
+// items array, so the whole list re-renders and any memoisation on a row
+// is defeated. They also arrive from different places: items from the
+// API, presence from a live channel. Two lifetimes, two props.
 const presence = `type PresenceUser = {
-  itemId: string
+  itemId: string        // the component does the join
   name: string          // announced, not just drawn
 }`;
 
-const handlers = `const move = (id, { after, before }) =>
-  api.reorder(id, { after, before })   // neighbours, never an index
+const handlers = `const move = (id, { after, before }) => api.reorder(...)   // neighbours, never an index
+const save = (id, text) => api.updateItem(id, text)            // fires on autosave, not on blur`;
 
-const save = (id, text) =>
-  api.updateItem(id, text)             // fires on autosave, not on blur`;
-
-const blocks = [
+const blocks: { label: string; code: string; wide?: boolean }[] = [
 	{ label: 'One row', code: item },
-	{ label: 'Who is in the list', code: presence },
-	{ label: 'What comes back out', code: handlers },
+	{ label: 'Who is in the list, and not on the item', code: presence },
+	{ label: 'What comes back out', code: handlers, wide: true },
 ];
+
+// Two columns rather than three stacked blocks: stacked, the slide ran
+// past the bottom of the padded area. The row shape sits alone on the
+// left because it is the one worth reading line by line.
 ---
 
 <Slide subtitle="What you hand it">
-	<div class="flex flex-col gap-7">
+	<div class="grid grid-cols-2 items-start gap-x-14 gap-y-8">
 		{
 			blocks.map((b) => (
-				<div class="flex flex-col gap-3">
+				<div class:list={['flex flex-col gap-3', b.wide && 'col-span-2']}>
 					<span class="text-subdued text-xs font-medium uppercase">
 						{b.label}
 					</span>
