@@ -6,6 +6,48 @@ import Slide from '@decks/templates/Slide.astro';
 // two components. Worth saying out loud that the Runbooks call is the
 // shorter one, because a consumer that declines a capability should not
 // have to know it exists.
+//
+// Coloured with the deck's own palette rather than an editor theme. The
+// props take the same violet the structure diagram gives the parts of a
+// row, so the two slides read as the same subject: on one it is a box in
+// a diagram, on the other it is the prop that turns the box on.
+
+type Token = { t: string; k: keyof typeof CLASS };
+
+// Tailwind classes rather than a scoped <style>: these spans are made
+// inside an expression, and Astro's style scoping does not reach them,
+// so a scoped .attr rule matches nothing and the code renders in one
+// colour. Four roles, not a full editor theme. The violet is the one the
+// structure diagram gives the parts of a row, so a prop here and a box
+// there are visibly the same thing.
+const CLASS = {
+	tag: 'text-accent',
+	attr: 'text-[rgb(139_124_246)]',
+	str: 'text-[rgb(245_158_11)]',
+	expr: 'text-default',
+	punc: 'text-weak',
+	ws: '',
+} as const;
+
+// A tokeniser for exactly this much JSX and no more. The snippets are
+// frozen deck content, so it only has to handle what is on the slide:
+// a capitalised tag, bare and assigned props, strings, and braces.
+function tokenise(src: string): Token[] {
+	const out: Token[] = [];
+	const re =
+		/(<\/?[A-Z][A-Za-z0-9]*)|(\/>|>)|("[^"]*")|(\{[^}]*\})|([A-Za-z][A-Za-z0-9]*)|(\s+)|([^\s])/g;
+	let m: RegExpExecArray | null;
+	while ((m = re.exec(src))) {
+		if (m[1]) out.push({ t: m[1], k: 'tag' });
+		else if (m[2]) out.push({ t: m[2], k: 'punc' });
+		else if (m[3]) out.push({ t: m[3], k: 'str' });
+		else if (m[4]) out.push({ t: m[4], k: 'expr' });
+		else if (m[5]) out.push({ t: m[5], k: 'attr' });
+		else if (m[6]) out.push({ t: m[6], k: 'ws' });
+		else out.push({ t: m[7], k: 'punc' });
+	}
+	return out;
+}
 
 const loops = `<Checklist
   items={items}
@@ -23,26 +65,32 @@ const runbooks = `<Checklist
   nesting="one-level"
   onEdit={save}
 />`;
+
+const panels = [
+	{ label: 'Collaboration Loops', code: loops, note: null },
+	{
+		label: 'Runbooks',
+		code: runbooks,
+		note: 'Read mostly, authored briefly. It declines reordering, presence and the author tag, and never has to know they exist.',
+	},
+];
 ---
 
 <Slide subtitle="The same component, twice">
-	<div class="grid grid-cols-2 gap-16">
-		<div class="flex flex-col gap-4">
-			<span class="text-subdued text-xs font-medium uppercase">
-				Collaboration Loops
-			</span>
-			<pre class="snippet"><code>{loops}</code></pre>
-		</div>
-		<div class="flex flex-col gap-4">
-			<span class="text-subdued text-xs font-medium uppercase">
-				Runbooks
-			</span>
-			<pre class="snippet"><code>{runbooks}</code></pre>
-			<span class="text-subdued text-2xl">
-				Read mostly, authored briefly. It declines reordering, presence
-				and the author tag, and never has to know they exist.
-			</span>
-		</div>
+	<div class="grid grid-cols-2 items-start gap-16">
+		{
+			panels.map((p) => (
+				<div class="flex flex-col gap-4">
+					<span class="text-subdued text-xs font-medium uppercase">
+						{p.label}
+					</span>
+					<pre class="snippet"><code>{tokenise(p.code).map((tk) => (
+						tk.k === 'ws' ? tk.t : <span class={CLASS[tk.k]}>{tk.t}</span>
+					))}</code></pre>
+					{p.note && <span class="text-subdued text-2xl">{p.note}</span>}
+				</div>
+			))
+		}
 	</div>
 </Slide>
 

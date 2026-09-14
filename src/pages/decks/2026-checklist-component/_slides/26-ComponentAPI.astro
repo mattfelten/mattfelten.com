@@ -10,6 +10,11 @@ import Slide from '@decks/templates/Slide.astro';
 // `nesting` is the sharpest of them. A flat agenda and a nested runbook
 // are one thing configured differently, and that is the argument that
 // this is a component and not two.
+//
+// A real table, with rules between the rows. Three columns of loose text
+// read as a list of sentences; the rules are what make it scan as an
+// API. Headers are small and quiet: they name the columns once and then
+// get out of the way.
 
 const props = [
 	{
@@ -20,7 +25,7 @@ const props = [
 	{
 		name: 'reorderable',
 		type: 'boolean',
-		note: 'Drag handle and the Move up / Move down menu items, together. Never one without the other.',
+		note: 'The handle and the Move up / Move down menu items, together. Never one without the other.',
 	},
 	{
 		name: 'nesting',
@@ -43,7 +48,7 @@ const props = [
 		note: 'The author tag. Runbooks does not want one.',
 	},
 	{
-		name: 'onReorder / onEdit / onCreate / onDelete',
+		name: 'onReorder, onEdit, onCreate, onDelete',
 		type: 'callbacks',
 		note: 'Intent out, new items in. The component holds no server state.',
 	},
@@ -51,15 +56,80 @@ const props = [
 ---
 
 <Slide subtitle="Component API">
-	<div class="grid grid-cols-[auto_auto_minmax(0,1fr)] items-baseline gap-x-8 gap-y-5">
-		{
-			props.map((p) => (
-				<>
-					<code class="text-strong text-2xl font-medium">{p.name}</code>
-					<code class="text-accent text-2xl">{p.type}</code>
-					<span class="text-subdued text-2xl" set:html={p.note} />
-				</>
-			))
-		}
-	</div>
+	<table class="api">
+		<thead>
+			<tr>
+				<th>Prop</th>
+				<th>Type</th>
+				<th>What it does</th>
+			</tr>
+		</thead>
+		<tbody>
+			{
+				props.map((p) => (
+					<tr>
+						<td class="name">{p.name}</td>
+						<td class="type">{p.type}</td>
+						<td class="note" set:html={p.note} />
+					</tr>
+				))
+			}
+		</tbody>
+	</table>
 </Slide>
+
+<style>
+	.api {
+		width: 100%;
+		border-collapse: collapse;
+		text-align: left;
+	}
+
+	.api th {
+		font-size: 16px;
+		font-weight: 500;
+		letter-spacing: 0.11em;
+		text-transform: uppercase;
+		color: var(--color-weak);
+		padding-bottom: 16px;
+		white-space: nowrap;
+	}
+
+	/* The rule belongs to the row above it, so the header keeps a slightly
+	   stronger one and the body rows share a quieter repeat. */
+	.api thead tr {
+		border-bottom: 1px solid rgb(156 163 175 / 0.35);
+	}
+
+	.api tbody tr + tr {
+		border-top: 1px solid rgb(156 163 175 / 0.16);
+	}
+
+	.api td {
+		padding: 18px 0;
+		vertical-align: baseline;
+		font-size: 24px;
+	}
+
+	.api td + td {
+		padding-left: 40px;
+	}
+
+	.name {
+		color: var(--color-strong);
+		font-weight: 500;
+		font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+		white-space: nowrap;
+	}
+
+	.type {
+		color: var(--color-accent);
+		font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+		white-space: nowrap;
+	}
+
+	.note {
+		color: var(--color-subdued);
+		width: 100%;
+	}
+</style>
