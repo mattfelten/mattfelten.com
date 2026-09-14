@@ -1,32 +1,99 @@
 ---
-import TextBlockSlide from '@decks/templates/TextBlockSlide.astro';
+import Slide from '@decks/templates/Slide.astro';
 
-const items = [
-	{
-		title: 'Reorder them',
-		body: 'An agenda is never written in the order you want to talk about it.',
-	},
-	{
-		title: 'Edit them in place',
-		body: 'The backend has supported it for over a year. The frontend never wired it.',
-	},
-	{
-		title: 'Sub-items',
-		body: 'One topic with two or three things under it.',
-	},
-	{
-		title: 'Several people at once',
-		body: 'The meeting is the whole point of the feature, so this is not an edge case.',
-	},
-	{
-		title: 'Two tickets, one epic',
-		body: 'RND-4840 and RND-4765. Both sized as though they were small.',
-	},
-	{
-		title: 'And then Runbooks',
-		body: 'A second product about to render the same row. One instance is a feature. Two is a pattern.',
-	},
+// Two tiers, because there are two independent reasons and a list flattens
+// them into one.
+//
+// The first is that a second product renders the same row. One instance is
+// a feature; two is a pattern, and that is the argument on its own, before
+// anything about what the row can do.
+//
+// The second is the size of what is arriving. The row that shipped does
+// three things. Four more are being added at once, which is the moment a
+// feature becomes a component whether or not anybody names it.
+//
+// Solid means it exists today. Dashed and dimmed means it is what this
+// work is about. The state is carried by fill and weight rather than by
+// colour alone, so it survives a projector, and it is not labelled: Matt
+// says which is which, and a legend on a two-state diagram is furniture.
+
+const implementations = [
+	{ name: 'Collaboration Loops', live: true },
+	{ name: 'Runbooks', live: false },
+];
+
+const features = [
+	{ name: 'Check', live: true },
+	{ name: 'Add', live: true },
+	{ name: 'Remove', live: true },
+	{ name: 'Editing', live: false },
+	{ name: 'Reordering', live: false },
+	{ name: 'Nested items', live: false },
+	{ name: 'Multiplayer', live: false },
 ];
 ---
 
-<TextBlockSlide subtitle="Why this is a component, not two features" items={items} cols={3} bodySize="2xl" />
+<Slide subtitle="Why this is a component, not two features">
+	<div class="flex flex-col gap-14">
+		<div class="flex flex-col gap-5">
+			<span class="text-subdued text-xs font-medium uppercase">
+				Implementations
+			</span>
+			<div class="flex gap-6">
+				{
+					implementations.map((i) => (
+						<div class:list={['card big', i.live ? 'solid' : 'ghost']}>
+							{i.name}
+						</div>
+					))
+				}
+			</div>
+		</div>
+
+		<div class="flex flex-col gap-5">
+			<span class="text-subdued text-xs font-medium uppercase">
+				What the row can do
+			</span>
+			<div class="flex flex-wrap gap-6">
+				{
+					features.map((f) => (
+						<div class:list={['card', f.live ? 'solid' : 'ghost']}>
+							{f.name}
+						</div>
+					))
+				}
+			</div>
+		</div>
+	</div>
+</Slide>
+
+<style>
+	.card {
+		border-radius: 14px;
+		padding: 20px 28px;
+		font-size: 30px;
+		font-weight: 500;
+	}
+
+	.big {
+		padding: 32px 44px;
+		font-size: 36px;
+		min-width: 420px;
+	}
+
+	/* Shipped. A filled card with a solid edge. */
+	.solid {
+		background: rgb(156 163 175 / 0.16);
+		border: 2px solid rgb(156 163 175 / 0.5);
+		color: var(--color-strong);
+	}
+
+	/* Not yet. Dashed and dimmed, and lighter in weight, so the two states
+	   differ by more than one signal. */
+	.ghost {
+		background: none;
+		border: 2px dashed rgb(156 163 175 / 0.4);
+		color: var(--color-weak);
+		font-weight: 400;
+	}
+</style>
