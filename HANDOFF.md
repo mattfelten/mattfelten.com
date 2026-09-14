@@ -8,7 +8,11 @@ all pushed.
 
 ## What this is
 
-A portfolio deep dive on the Checklist component, for a design systems interview.
+A portfolio deep dive on the Checklist component, for an interview.
+
+**The interview is for a design systems IC role** — senior or staff, owning a design
+system rather than managing one. Company deliberately not named here.
+
 It is the third segment of a longer portfolio review: personal intro, Anvil design
 system overview, **this**, outro. About 18 minutes inside a 45-minute slot with
 questions.
@@ -61,6 +65,12 @@ engineering work:
 (`ListRow`, `EditableText`, `SortableList`, `PresenceMarker`). Four names in a grid
 does not explain what any of them is for. **Matt has said he still does not fully
 buy the four primitives**, so this wants a conversation before anything gets drawn.
+
+Worth weighing against the role: for a design systems IC, the decomposition and
+"where the component stops" are closer to the job than the pixel craft is, so these
+two slides probably carry more than their slide count suggests. That does not
+override the stated takeaway, which is craft, but it argues for getting 24 and 25
+right rather than cutting them for time.
 Slide 25 (`TheRowArbitrates`) is the follow-on that makes 24 worth keeping: the
 primitives do not compose on their own, the row arbitrates between them, and there
 are three things it deliberately refuses to decide.
