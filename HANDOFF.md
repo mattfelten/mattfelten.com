@@ -1,8 +1,11 @@
 # Checklist deck — continue here
 
-Paste this into a new session. Everything below is current as of commit `98c812c`
-on `worktree-checklist-component-deck`, working tree clean, 34 commits ahead of main,
-all pushed.
+Scaffolding for finishing this deck. **Delete it when the deck ships** — the durable
+record is `ai-brain/work/mission/2026-09-07-checklist-component/`, and anything here
+worth keeping should be moved there first.
+
+Branch `worktree-checklist-component-deck`, pushed. Check `git log` for where it
+actually stands rather than trusting a number written here.
 
 ---
 
@@ -81,68 +84,31 @@ but it is his call.
 
 Find them with `grep -rn Placeholder _slides/`. They render as loud dashed boxes.
 
-## How Matt works, learned the hard way this session
+## Conventions and recurring bugs: read these, do not re-derive them
 
-**Slide density.** A slide is a subtitle and an image. The content lives in his
-mouth. `2024-anvil-case-study/_slides/14-DesignDetails.astro` is one line. He
-presents at roughly 20 seconds a slide, so a 15-minute segment is ~30 slides, not
-12. Budgeting 80 seconds a slide produces dense slides that read as a document.
-This is now written into `decks/CLAUDE.md`. **I got this wrong twice.**
+Both live in files that outlast this handoff. Read them before writing anything.
 
-**One idea per slide, and a rejected direction gets its own slide.** Lumping eight
-dead ends into one "here is what we rejected" slide throws away the best evidence a
-case study has.
+**`src/pages/decks/CLAUDE.md`** — deck conventions. The one that matters most is slide density:
+a slide is a subtitle and one thing, presented at roughly 20 seconds, so a 15-minute segment is
+about 30 slides and not 12. Budgeting 80 seconds a slide is what produced two rebuilds. Also:
+outline before slides, no em dashes, and the templates.
 
-**Outline before slides.** For anything non-trivial, write/edit `_outline.md` first
-in the `## Slide N — Title` + narration-paragraph format and get it approved.
+**`ai-brain/work/mission/2026-09-07-checklist-component/INDEX.md`**, under "Working conventions"
+— the project's own rules and, more usefully, the six bug classes that have each bitten more than
+once here. In short, so you know whether you need them:
 
-**No em dashes** in anything he presents. Benches are ASCII-only (they carry an
-explicit charset; the build decodes entities while dev does not).
+1. Rebuilding a list destroys what was in it. Four separate bugs.
+2. `scale` is CSS `zoom`, so there are two pixel spaces and mixing them is invisible at scale 1.
+3. A hidden Reveal slide keeps its timers.
+4. Measure drag geometry on the first move, never on pointerdown.
+5. Fork a bench, never write one from memory. Porting a fragment is the same mistake.
+6. Verify by driving it, and distrust a check that passed in only one environment.
 
-**Commit messages are long on purpose** and carry reasoning, not a restatement of
-the diff. No Co-Authored-By, no "Generated with" footers.
-
-## Bug classes that have bitten repeatedly — check these first
-
-**1. Rebuilding a list destroys what was in it.** This has caused four separate
-bugs: focus lost after reorder, the presence avatar re-animating, the edit field
-vanishing, the lifted-row class being wiped. Rule: repaint in place, move nodes,
-never `innerHTML =` a list that holds focus or state. If you must, restore
-synchronously in the same turn.
-
-**2. `scale` is CSS `zoom`, so there are two pixel spaces.**
-`getBoundingClientRect` returns *zoomed* viewport pixels; `style.top`, `translateY`
-and anything written back into style are *unzoomed* local pixels. Mixing them puts
-things out by exactly the zoom factor, the error is multiplicative so it reads as
-random, and **it is invisible at scale 1** — which is why it survived in the reorder
-bench for ages and got inherited into c4. Rule: `clientY` compares against rect
-values, `offsetTop`/`offsetHeight` go into style, never cross them. **Test any drag
-or overlay at a scale other than 1.**
-
-**3. Reveal builds every slide up front and hides the ones it is not on.** Hidden
-slides have zero-width iframes but *keep their timers*. Anything animated must sleep
-when `document.documentElement.clientWidth === 0`, and must not start until it is
-non-zero. Do **not** use `document.hidden` for this — every iframe shares the tab's
-visibility, so it cannot distinguish the slide you are on from the twenty you are
-not. Size is the only signal.
-
-**4. Measure drag geometry on the first move, not on pointerdown.** Pressing a
-handle blurs whatever field was focused, which changes that row's height, so
-measuring in the same tick captures geometry that is about to be wrong.
-
-**5. Fork a bench, never write one from memory.** c4 is the only bench without a
-"forked from" lineage and it silently lost four settled decisions: it shipped the
-*rejected* hairline field as its default edit treatment, dropped the presence
-avatar, lost the collapsed drag proxy, and got the drag maths wrong twice. If a
-behaviour is settled, copy the implementation, not the idea of it. **Porting a
-fragment is the same mistake as rewriting.**
-
-**6. Verify by driving it.** Every real bug in this project was found this way and
-would have been missed by reading. Also: a passing check in one environment is not
-enough — the automation tab runs backgrounded, so real key and mouse events often
-are not delivered, `requestAnimationFrame` never fires, and CSS transitions do not
-advance. Several of my "findings" were measurement artefacts. Confirm before
-reporting.
+**One thing that is not written down elsewhere, because it is about this tooling rather than the
+work:** the automation browser tab runs backgrounded. Real key and mouse events are often not
+delivered, `requestAnimationFrame` never fires, and CSS transitions do not advance. Several
+apparent findings this session were measurement artefacts of exactly that. Confirm a surprising
+result before reporting it.
 
 ## Bench params you will need
 
@@ -163,14 +129,11 @@ bench framing leaking into the component.
 
 1. **The primitives diagram** (slide 24) — he does not fully buy the four primitives.
 2. **The docs slide** (slide 26) — show the param vocabulary, or build real docs.
-3. **Nesting drop refusal.** In the nesting bench, dragging a parent refuses 45% of
-   the list, because a row with children cannot become a child. That rule is
-   settled; what is not settled is that the interface communicates the refusal only
-   by turning the line red and announcing it to a screen reader. Either make the
-   refusal legible or revisit the rule. Flagged, not changed.
-4. **Presence treatment vs focus.** Both wanted the left gutter. Focus moved to the
-   row's own edge so the presence bar survives, but words remain the runner-up for
-   presence and are the only treatment a screen reader gets for free.
+3. **Nesting drop refusal** — dragging a parent refuses 45% of the list, and the
+   interface only says so in colour. Reasoning and the measurement are in
+   `design-direction.md` under the C1 findings.
+4. **Presence treatment vs focus** — both wanted the left gutter. Also in
+   `design-direction.md`.
 
 ## Suggested next step
 
