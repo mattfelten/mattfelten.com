@@ -56,7 +56,7 @@ Run it: `npx astro dev --port 4399` from the worktree.
 Deck at `/decks/2026-checklist-component/`. Explorations index at
 `/decks/2026-checklist-component/prototypes/`.
 
-## State: 28 slides, 14 live benches, 2 placeholders
+## State: 29 slides, 15 live benches, 2 placeholders
 
 The deck is a case study: before → why it is a component → where we landed → one
 section per feature (Editing, Reordering, Nested items, Multiplayer), each opening
@@ -121,6 +121,9 @@ Full vocabulary is in `ai-brain/.../prototypes/INDEX.md`. Recently added:
   immediately)
 - **mechanics**: `chrome=object` (the rebuilt R1 editor-as-object), `autoedit=1`
   (open a field on arrival)
+- **c3**: `autocollide=1` (stage the collision on arrival, because embed mode hides the
+  rail and the other person is only drivable from there), `where=different` (the
+  non-overlapping edit; default is the overlapping one, which is the case worth showing)
 
 All benches hide their `Checklist` header and open-count in embed mode — that was
 bench framing leaking into the component.
@@ -135,8 +138,42 @@ bench framing leaking into the component.
 4. **Presence treatment vs focus** — both wanted the left gutter. Also in
    `design-direction.md`.
 
-## Suggested next step
+## The read-through has been done
 
-A full read-through at presentation scale, slide by slide, driving each bench —
-before touching 24 or 26. The deck has changed shape three times and has not been
-walked end to end since. Time it: target 18 minutes.
+Walked slide by slide, 2026-09-13. What it found:
+
+**Timing is fine.** About 17 minutes estimated against the 18 target, so there is a
+little slack but not much. The risk is the 15 live embeds: every one of them invites
+driving, and driving all 15 is what would blow the budget. Only five are meant to be
+operated at length.
+
+**The deck builds clean and every deep link is live.** All 14 unique bench URLs were
+checked param by param against each bench's own allowed list. Every param is read and
+every value is recognised. Nothing is silently ignored.
+
+**Merging was missing, and has been added as slide 21.** Slide 20 rejects the lock and
+nothing said what replaced it, which leaves the section unresolved on a question the
+engineer on the panel will certainly ask. `c3-concurrency-bench` was built and unused.
+It needed `autocollide=1` to be usable in a slide, because embed mode hides the rail and
+the other person is only drivable from there. See below.
+
+**The scorecard and contrast panels cannot go on slides, and this is now measured.**
+Both were cut earlier on the note that the scorecard "was legible to me and to nobody
+else", with a trigger to rebuild if the accessibility slide read thin. That trigger is
+now closed: at presentation scale the audit panel renders about 1195px tall and the
+contrast table about 2090px, against a usable slide budget of roughly 780px. They are
+working instruments, not slide graphics. **Do not rebuild them as slides.**
+
+## Left for Matt, because they are his call
+
+1. **Slides 3 and 23 each carry six ideas in one grid.** That is against the deck's own
+   rule, which is a subtitle and one thing, and slide 23 breaks it at the point the
+   spine pays off. Splitting costs almost no time, because the words are already being
+   said. The one that would most repay its own slide is the completed-item contrast
+   callback, which is set up deliberately on slide 2 and currently lands as bullet four
+   of six. Not done, because it is a content judgment and the deck has been reshaped
+   three times already.
+2. The two placeholders, 25 and 27, unchanged. Still conversations before they are work.
+3. **The audit panel's verdict copy says "C2" and "the nesting round" on screen.** That
+   is internal round vocabulary. It does not reach a slide any more, but the panel is
+   linked from the explorations index, which is the thing handed to the panel afterwards.

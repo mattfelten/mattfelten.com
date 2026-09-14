@@ -968,6 +968,36 @@
     if (q.get("embed") === "1") document.body.classList.add("is-embed");
     const sc = parseFloat(q.get("scale"));
     if (sc > 0 && sc <= 4) document.documentElement.style.setProperty("--embed-scale", String(sc));
+
+    // autocollide=1 stages the collision on arrival, because embed mode
+    // hides the rail and Marco is only drivable from there. Without it a
+    // slide shows two screens and no way to make them disagree.
+    //
+    // It stops one click short on purpose: Dana has typed but not saved,
+    // and Marco's change is already stored. Pressing Save on Dana's
+    // screen is what produces the merge, and that click is the moment
+    // worth doing live.
+    //
+    // Drives the real buttons rather than writing state, same contract
+    // as every other bench here, so each action's own side effects run.
+    if (q.get("autocollide") === "1") {
+      // Default to the overlapping edit. The clean case merges invisibly,
+      // which argues nothing; the garbled one is the honest trade.
+      S.sameSentence = q.get("where") !== "different";
+
+      // Dana's edit, typed and unsaved. Set the buffer by hand: the input
+      // listener is what normally keeps you.buf in step, and assigning
+      // textContent does not fire it.
+      you.buf = S.sameSentence
+        ? ORIGINAL.replace(/61%/, "55%").replace(/dropped/, "fell")
+        : ORIGINAL.replace(/this month/, "this month and last");
+      setEditorText(edYou, you.buf);
+
+      $("m-start").click();
+      $("m-edit").click();
+      $("m-save").click();
+      sync();
+    }
   }
 
   setEditorText(edYou, you.buf);

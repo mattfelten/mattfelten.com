@@ -1,7 +1,7 @@
 # Checklist Component — Slide Deck Outline
 
 Third segment of a portfolio review: personal intro, Anvil overview, this deep dive, outro.
-Target 18 minutes. Roughly 20 seconds a slide, with four moments driven live.
+Target 18 minutes. Estimated at about 17 as built.
 
 Follows the Anvil deck, so this is the zoom-in counterpart. Nothing here re-explains design
 systems, and the accessibility beat has to read as component depth rather than as the
@@ -10,8 +10,11 @@ system-level policy Anvil already covered.
 What they should conclude: depth of craft on one small thing. Specifically that I found and
 explored things nobody would find by looking, and that I care about pixels.
 
-`[DRIVE]` marks a live prototype I actually operate in front of them. Everything else is one idea
-said out loud over a picture.
+**This file matches the deck as built: 29 slides, 15 of them running a live prototype, 2
+placeholders.** Edit it before touching any `.astro`. What was cut on the way here, and why, is
+recorded at the bottom so it is not lost.
+
+`[DRIVE]` marks a prototype I actually operate in front of them.
 
 ---
 
@@ -19,279 +22,227 @@ said out loud over a picture.
 
 Checklist. A component deep dive.
 
-## Slide 2 — My role
+## Slide 2 — Before `[DRIVE]`
 
-Sole designer. This started as two tickets on my plate, I specced both from prototypes, and
-handed them to an engineer to build. The design system component came out of doing that work.
+The list as it ships right now. You can tick an item and you can add one. That is all. You
+cannot reorder them, you cannot edit the text after you have written it, and if two people are
+in the list at once neither of them knows.
 
-## Slide 3 — Where this lives
+Do not point out the completed item. It is failing contrast and that pays off on slide 23, and
+the point only lands if nobody was told to look.
 
-Mission Control is our customer platform. Collaboration Loops is the space where our Technical
-Account Managers and their customers prepare for a meeting, work through it together, and look
-back at what was agreed. A Loop has a discussion list in it.
+## Slide 3 — Why this is a component, not two features
 
-## Slide 4 — The row today `[DRIVE]`
+Six things in one breath: reorder, edit in place, sub-items, several people at once, the two
+tickets they arrived as, and Runbooks turning up as a second consumer. One instance is a
+feature. Two is a pattern.
 
-This is that list as it ships right now. You can tick an item and you can add one. That is all.
-You cannot reorder them, you cannot edit the text after you have written it, and if two people
-are in the list at once neither of them knows.
+## Slide 4 — Where we landed `[DRIVE]`
 
-Do not point out the completed item yet. It is failing contrast and that pays off much later.
+Everything at once. Tick something, drag something, click into the text and type. Collapse the
+parent, drag it, watch its children come with it, then open the row menu on a child.
 
-## Slide 5 — Reorder them
-
-The first ask. A meeting agenda is not written in the order you want to talk about it, and right
-now the only way to move an item is to delete it and write it again.
-
-## Slide 6 — Edit them in place
-
-The second ask, and the awkward one. The backend has supported editing since a ticket we shipped
-over a year ago. The frontend just never wired it up.
-
-## Slide 7 — Sub-items
-
-The third ask. One topic with two or three things under it.
-
-## Slide 8 — And several people at once
-
-The fourth. These meetings are the whole point of the feature, so two people in the same list at
-the same time is not an edge case, it is Tuesday.
-
-## Slide 9 — Two tickets, one epic
-
-Two of those got written up and landed on me: reordering, and inline editing. Both sized as
-though they were small. My job was to spec them well enough that an engineer could build them
-without me in the room.
-
-## Slide 10 — And then Runbooks
-
-While I was in it, a second product turned up that renders the same row. Runbooks are
-event-triggered guides: when AWS has an outage, do this, then this, then get approval for that.
-Visually and behaviourally, the same list. One instance is a feature. Two is a pattern.
-
-## Slide 11 — What I landed on `[DRIVE]`
-
-So here is where it ended up. Reordering, editing in place, sub-items, other people in the row,
-and a few things you cannot see yet.
-
-Drive it: tick something, drag something, click into the text and type.
-
-## Slide 12 — How it got decided
-
-Everything you just touched is a prototype I built, not a mockup I drew. That matters for the
-next fifteen minutes, because it is the reason every decision after this has a number attached to
-it instead of an opinion.
-
-Worth saying out loud: every real bug in this project was found by driving the thing. A text
-field that typed backwards. A list that announced "3 of 5" with eight rows on screen. A cancelled
-drag that saved anyway. None of those are visible in a picture.
+Worth saying here: everything you are about to see is a prototype I built, not a mockup I drew.
+That is why every decision after this has a number attached to it instead of an opinion.
 
 ---
 
-## Slide 13 — Editing: the invisible field
+## Slide 5 — Editing
 
-The field has no edges. Not a light border, not a subtle one. None, at rest, on hover, and while
-you are typing. The pointer turning into a caret is the entire affordance.
+Section title.
 
-The reason is that the text is the document. If editing it looks like filling in a form, you have
-told people they are operating a control instead of writing.
+## Slide 6 — Editing `[DRIVE]`
 
-## Slide 14 — Ruled out: an editor that opens
+The field has no edges. Not a light border, not a subtle one. None, at rest, on hover, and
+while you are typing. The pointer turning into a caret is the entire affordance.
+
+The reason is that the text is the document. If editing it looks like filling in a form, you
+have told people they are operating a control instead of writing.
+
+The top row is already open on arrival, because a closed field just shows an ordinary list.
+
+## Slide 7 — Ruled out: an editor that opens `[DRIVE]`
 
 The first version opened an editor as an object. Bordered field, toolbar, Save and Cancel. It
 works, and it announces that you have entered a mode. Editing a list item is not a mode, it is
-typing.
+typing. Watch what it does to the rows underneath.
 
-## Slide 15 — Ruled out: a hairline on hover
+## Slide 8 — Ruled out: a field with edges `[DRIVE]`
 
-Then a one pixel outline on hover, as a hint that the text was editable. I cut it. It was the
-only thing on the row that moved when you did not ask it to, and a hint that distracting is not
-worth the discoverability.
-
-## Slide 16 — Editing never moves the words `[DRIVE]`
-
-The obvious way to paint an edit state is a border and some padding. Both take up space, so every
-glyph in the row shifts, and every row underneath it shifts too.
-
-Measured: 9 pixels right, 7 pixels down, and a 14 pixel shove to everything below. Painting the
-same state with a background and a shadow, which sit outside layout, measures zero and zero.
-
-Drive it: click into the first item with the naive version on, then with the real one.
+A one pixel outline, built the naive way, so the border and the padding are real and take up
+space. Click out and back in: 9 pixels right, 7 pixels down, and a 14 pixel shove to everything
+below. The chosen version measures zero and zero, because it paints with a background and a
+shadow, which sit outside layout.
 
 ---
 
-## Slide 17 — Reordering: how you pick a row up
+## Slide 9 — Reordering
 
-A handle in the gutter, and the blank space of the row. An insertion line to show where it lands.
-The row itself collapses to a single line that follows the cursor.
+Section title.
 
-## Slide 18 — Ruled out: rows shifting out of the way
+## Slide 10 — Reordering `[DRIVE]`
+
+A handle in the gutter, the blank space of the row, and an insertion line to show where it
+lands. The row collapses to a single line that follows the cursor.
+
+The half that matters is Move up and Move down in the row menu. Slide 23 is where that gets its
+reason. Here it is just shown.
+
+## Slide 11 — Ruled out: rows shifting out of the way `[DRIVE]`
 
 The nice version, where the list opens a gap as you drag. It only works when every row is the
 same height. These are markdown, so they are not. A tall item displacing short ones makes the
 list jump, and the gap you were aiming at slides out from under the cursor.
 
-## Slide 19 — Ruled out: the whole row following the cursor
+## Slide 12 — Ruled out: the whole row follows the cursor `[DRIVE]`
 
-A full height block under the pointer covers the list you are trying to aim at. The thing in your
-hand only has to say which row it is.
-
----
-
-## Slide 20 — Sub-items: one level, and you can turn it off
-
-Sub-items go one level deep and no further. More than that and this stops being a checklist.
-
-The more useful half: a list can decline them. Turn nesting off and the same component withdraws
-one gesture and one affordance. A flat agenda and a nested runbook are one thing configured
-differently, which is the sharpest argument I have that this is a component and not two.
-
-## Slide 21 — Ruled out: level by how far sideways you drag
-
-The familiar model, where you push a row right to indent it. A sideways nudge is a fine motor
-gesture, and requiring one excludes people before you have even started thinking about
-accessibility. Reading the indent off which gap you are in means nothing depends on a horizontal
-drag.
-
-## Slide 22 — Ruled out: ticking a parent ticks its children
-
-This one looks tidy and it is the one I feel strongest about. In a shared list, cascading means
-one tick silently rewrites an item somebody else wrote and is watching. A rule that looks neat
-for one person is a destructive write to somebody else's row.
+Drag the tallest row. A full height block under the pointer covers the list you are trying to
+aim at. The thing in your hand only has to say which row it is.
 
 ---
 
-## Slide 23 — Multiplayer: somebody is in this row
+## Slide 13 — Nested items
+
+Section title.
+
+## Slide 14 — Nested items `[DRIVE]`
+
+Sub-items go one level deep and no further. The more useful half: a list can decline them. Turn
+nesting off and the same component withdraws one gesture and one affordance. A flat agenda and a
+nested runbook are one thing configured differently, which is the sharpest argument I have that
+this is a component and not two.
+
+## Slide 15 — Ruled out: nesting without a limit `[DRIVE]`
+
+Five levels. Every step costs another 32 pixels of the text column, so by the fourth the row is
+mostly margin.
+
+## Slide 16 — Ruled out: ticking a parent ticks its children `[DRIVE]`
+
+Tick the first row and watch both children go with it. This one looks tidy and it is the one I
+feel strongest about. In a shared list, cascading means one tick silently rewrites an item
+somebody else wrote and is watching. A rule that looks neat for one person is a destructive
+write to somebody else's row.
+
+---
+
+## Slide 17 — Multiplayer
+
+Section title.
+
+## Slide 18 — Multiplayer `[DRIVE]`
 
 A small avatar hanging off the corner of the row. Deliberately not next to the author tag on the
 right, because the row already has one face on it and a second one beside it reads as
 co-authorship rather than as presence.
 
-## Slide 24 — Ruled out: dimming the row
+Say nothing for the first few seconds. Let them watch a row they did not touch start changing.
+
+## Slide 19 — Ruled out: dimming the row `[DRIVE]`
 
 Fading the row while somebody types in it. It reads well and it measures 2.67 to 1, against the
 4.5 the guidelines ask for. There is no opacity value that saves it, because the treatment works
 by weakening the text and the text is the thing that has to stay readable.
 
-## Slide 25 — Ruled out: locking the row
+## Slide 20 — Ruled out: locking the row `[DRIVE]`
 
 The obvious answer to two people editing: let the first one hold it. A lock is not a design, it
 is scaffolding. It is what you build when you have given up on merging, and it teaches a habit
 you have to untrain the moment real collaborative editing lands.
 
-## Slide 26 — So merge, and accept that it garbles
+## Slide 21 — So merge, and accept that it garbles `[DRIVE]`
 
-Take the text they started from, the text they typed, and the text stored now, and combine all
-three. Where they edited different parts, both survive. Where they edited the same words, you get
-a garbled sentence somebody tidies up.
+The answer the last slide owes. Take the text they started from, the text they typed, and the
+text stored now, and combine all three. Where they edited different parts, both survive. Where
+they edited the same words, you get a garbled sentence somebody tidies up.
+
+The collision is already staged: I have typed and not saved, and the other person's change is
+already stored. Press Save and read the result out loud. Coverage fell slipped to 55% 58%.
 
 That is the right trade. Tidying a sentence is a smaller ask than reconstructing a paragraph you
 cannot see.
 
 ---
 
-## Slide 27 — Three gestures want the same pixels `[DRIVE]`
+## Slide 22 — Accessibility
 
-Here is where the two tickets collided. Reordering wants to grab the row. Editing wants to click
-the text. Selecting text wants the same drag. All three are on the same element, and the conflict
-comes down to a single CSS property.
+Section title.
 
-Drive it: show the scorecard recomputing as the settings change.
+## Slide 23 — Accessibility
 
-## Slide 28 — None of the eight arrangements works
+Six decisions. The one that carries the section is Move up and Move down: the guideline asks
+that anything you can do with a dragging movement is possible with a single pointer, and a
+keyboard is not a single pointer. Dragging alone covers one input. Adding a keyboard covers
+three, which is where most people stop. The menu covers all four, and it is also the smallest
+thing to build.
 
-There are eight ways to arrange those three gestures and the prototype scores all of them. Not
-one keeps all three. The best any of them manages is two.
-
-Which means interaction design cannot settle this. Every arrangement is somebody losing
-something, and there is nothing inside the interaction that ranks the losses.
-
----
-
-## Slide 29 — Can you use it without a mouse `[DRIVE]`
-
-What settled it came from outside. The guideline says anything you can do with a dragging
-movement has to be possible with a single pointer. A keyboard is not a single pointer, and a
-touchscreen has no hover, so the handle is not small there, it is absent.
-
-Four inputs, one question: can you move a row. Dragging alone covers one of them. Adding keyboard
-covers three, which is where most people stop. Move up and move down in the row menu covers all
-four, and it is also the smallest thing to build.
-
-Drive it: walk the settings from drag, to keyboard, to menu, and let the score recompute.
-
-## Slide 30 — We had already shipped one that failed
-
-Back to the row from the second slide. Completed items ship faded to fifty percent, which
-measures 3.35 to 1. That fails, and it was not a proposal, it was live in the product.
-
-Sixty percent measures 4.58 and passes, and it is the lowest value that does. Fifty five is still
-short.
-
-I found that by measuring it, not by looking at it. It looks fine.
-
-## Slide 31 — Bigger targets, same pixels
-
-The checkbox was twenty by twenty, under the minimum, and passing only because nothing else sat
-near it. It is twenty four by twenty four now, with a negative margin that hands the extra space
-back to layout, so the target grows and the glyph does not move.
-
-Which is the same rule as the editing slide, arrived at again four rounds later: change what the
-component is doing, never where the words are.
+The callback is the completed item. It shipped at 50%, which measures 3.35 to 1 and fails. That
+was not a proposal, it was live in the product. 60% measures 4.58 and is the lowest value that
+passes. I found that by measuring it, not by looking at it. It looks fine.
 
 ---
 
-## Slide 32 — What the system would own
+## Slide 24 — The system
 
-Four pieces. The row itself: layout, states, the gutter, hit areas. The editable text: inline
-edit and the autosave contract. The sortable list: manual order, dragging, and the path that is
-not dragging. And the presence marker: who is in a row and what they are doing to it.
+Section title.
 
-A decomposition, not shipped packages. The prototypes are the artifact. The API is a sketch so
-the boundary between the system and the app can be argued concretely instead of waved at.
+## Slide 25 — What it would own `[PLACEHOLDER]`
 
-## Slide 33 — They do not compose on their own
+Four pieces: the row itself, the editable text, the sortable list, and the presence marker. A
+decomposition, not shipped packages.
+
+**Open.** Needs a diagram of one row exploded into its parts. Matt does not fully buy the four
+primitives, so this is a conversation before it is work.
+
+## Slide 26 — They do not compose on their own
 
 The obvious question is how those four go together, and the honest answer is that they fight.
-Everything in the last fifteen minutes was one of them arguing with another.
-
 The text: editing wants a block, reordering wants an inline. The gutter: presence wants the
 avatar, focus wants a rule. The menu carries reordering's non-drag path and editing's entry
-point, so neither piece owns it. The tab order spans three of them.
+point. The tab order spans three of them.
 
 So it is not four peers. It is one row that arbitrates, plus three capabilities it can be
-granted. And there are three things it deliberately refuses to decide: who is allowed to edit,
-how the merging is implemented, and how the menu behaves once it is open.
+granted.
 
----
+## Slide 27 — Docs `[PLACEHOLDER]`
 
-## Slide 34 — Docs for the people building it
+**Open.** Either build a real docs page or reframe the slide around the bench param vocabulary,
+which is already machine-readable by construction. Recommendation is to show what exists. The
+differentiating idea is agent-readable component docs: named values only, unknown values ignored
+rather than guessed, and every decision addressable by a URL that opens the component in exactly
+that state.
 
-What a component like this actually ships as. Purpose, anatomy, states, interactions, content
-guidelines, accessibility notes, and what it pairs with.
+## Slide 28 — Where it landed
 
-## Slide 35 — Docs an agent can read
-
-The newer half of the problem. Increasingly the thing reading a component doc is an agent writing
-the implementation, and an agent that misreads it produces confidently wrong code.
-
-The prototypes already work this way. Every switch has a name, unknown values are ignored rather
-than guessed at, and every decision has a URL that opens the component in exactly that state. So
-a ticket, a doc, or a model can point at one configuration and mean precisely one thing.
-
-## Slide 36 — Where it landed
-
-Both tickets were specced from these prototypes and built by an engineer. The component is
-approved as part of the Mission Control design system, on the argument that Runbooks is the
-second consumer.
-
-Thirty three questions. Thirty five things explored and rejected, eighteen of which are still
-running if you want to poke at them.
+Both tickets specced from these prototypes and built by an engineer. Approved as part of the
+Mission Control design system, on the argument that Runbooks is the second consumer. 33
+questions, 35 things rejected, 18 still running.
 
 One thing is still open, and it is the one that worries me: autosave with no save button has no
 failure surface, so a failed write is silent data loss.
 
-## Slide 37 — Thank you
+## Slide 29 — Thank you
 
 Leave them the explorations index: every question, every variation, and the chosen one marked in
 words.
+
+---
+
+## What was cut, and why
+
+Kept here so nothing gets rebuilt by accident.
+
+**The arbitration scorecard, and the eight arrangements.** Three gestures want the same pixels,
+the prototype scores all eight ways of arranging them, and not one keeps all three. It was cut
+because the scorecard panel is not legible at presentation scale. Measured: it renders about
+1195 pixels tall against a usable slide budget of roughly 780. The same is true of the contrast
+table at about 2090. Both are working instruments, not slide graphics. The argument survives in
+Matt's mouth on slides 10 and 23, and both panels are still reachable from the explorations
+index.
+
+**The long opening.** Role, where this lives, and the four asks each had their own slide. They
+are now compressed into slides 2 to 4. The deck is a component deep dive following an Anvil
+overview, so the context does not need re-establishing.
+
+**Prior versions of this file described 37 slides.** That was the pre-restructure narrative.
+The feature-section shape replaced it.
