@@ -86,7 +86,11 @@ const bodyJustifyClass =
 							{subtitle}
 						</span>
 						{badge && (
-							<span class="border-weak/40 text-subdued rounded-full border px-4 pt-1 pb-1.5 text-2xl leading-none font-medium">
+							// A filled tint rather than an outline, and
+							// text-default rather than text-subdued:
+							// subdued is #6b7280 in both schemes, which
+							// lands near 3.8:1 on the dark tint and fails.
+							<span class="bg-strong/[0.08] text-default inline-flex items-center rounded-full px-[14px] pt-[5px] pb-[7px] text-xl leading-none font-medium">
 								{badge}
 							</span>
 						)}
