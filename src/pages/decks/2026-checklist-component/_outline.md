@@ -10,8 +10,8 @@ system-level policy Anvil already covered.
 What they should conclude: depth of craft on one small thing. Specifically that I found and
 explored things nobody would find by looking, and that I care about pixels.
 
-**This file matches the deck as built: 29 slides, 15 of them running a live prototype, 2
-placeholders.** Edit it before touching any `.astro`. What was cut on the way here, and why, is
+**This file matches the deck as built: 30 slides, 14 of them running a live prototype, 1
+placeholder.** Edit it before touching any `.astro`. What was cut on the way here, and why, is
 recorded at the bottom so it is not lost.
 
 `[DRIVE]` marks a prototype I actually operate in front of them.
@@ -28,7 +28,7 @@ The list as it ships right now. You can tick an item and you can add one. That i
 cannot reorder them, you cannot edit the text after you have written it, and if two people are
 in the list at once neither of them knows.
 
-Do not point out the completed item. It is failing contrast and that pays off on slide 23, and
+Do not point out the completed item. It is failing contrast and that pays off on slide 22, and
 the point only lands if nobody was told to look.
 
 ## Slide 3 — Why this is a component, not two features
@@ -85,7 +85,7 @@ Section title.
 A handle in the gutter, the blank space of the row, and an insertion line to show where it
 lands. The row collapses to a single line that follows the cursor.
 
-The half that matters is Move up and Move down in the row menu. Slide 23 is where that gets its
+The half that matters is Move up and Move down in the row menu. Slide 22 is where that gets its
 reason. Here it is just shown.
 
 ## Slide 11 — Ruled out: rows shifting out of the way `[DRIVE]`
@@ -150,35 +150,30 @@ The obvious answer to two people editing: let the first one hold it. A lock is n
 is scaffolding. It is what you build when you have given up on merging, and it teaches a habit
 you have to untrain the moment real collaborative editing lands.
 
-## Slide 21 — So merge, and accept that it garbles `[DRIVE]`
-
-The answer the last slide owes. Take the text they started from, the text they typed, and the
-text stored now, and combine all three. Where they edited different parts, both survive. Where
-they edited the same words, you get a garbled sentence somebody tidies up.
-
-The collision is already staged: I have typed and not saved, and the other person's change is
-already stored. Press Save and read the result out loud. Coverage fell slipped to 55% 58%.
-
-That is the right trade. Tidying a sentence is a smaller ask than reconstructing a paragraph you
-cannot see.
-
----
-
-## Slide 22 — Accessibility
+## Slide 21 — Accessibility
 
 Section title.
 
-## Slide 23 — Accessibility
+## Slide 22 — Accessibility
 
-Six decisions. The one that carries the section is Move up and Move down: the guideline asks
-that anything you can do with a dragging movement is possible with a single pointer, and a
-keyboard is not a single pointer. Dragging alone covers one input. Adding a keyboard covers
-three, which is where most people stop. The menu covers all four, and it is also the smallest
-thing to build.
+Ten areas, not six decisions. The left column is the keyword, the right is the answer: colour
+contrast, target size, keyboard, pointer gestures, touch, screen reader, focus visible, forced
+colours, reduced motion, and what is still open.
 
-The callback is the completed item. It shipped at 50%, which measures 3.35 to 1 and fails. That
-was not a proposal, it was live in the product. 60% measures 4.58 and is the lowest value that
-passes. I found that by measuring it, not by looking at it. It looks fine.
+Read the left column out loud if the room is quiet. The point is that somebody scanning it can
+see nothing was skipped, rather than reading decisions and working out which areas they cover.
+
+It ends on Still open on purpose. A list where everything passed is a list nobody audited.
+
+## Slide 23 — What the component cannot do for you
+
+The half a component cannot carry, because it depends on the page it lands in. Name the list.
+Heading and landmark order. Who may edit. Supply the names presence draws. Re-measure contrast
+after a re-theme. Announce what happens elsewhere. The menu once it is open. Somewhere for a
+failed save to land.
+
+Worth saying plainly: the component can be accessible and the page can still fail, and these are
+the seams where that happens.
 
 ---
 
@@ -186,25 +181,25 @@ passes. I found that by measuring it, not by looking at it. It looks fine.
 
 Section title.
 
-## Slide 25 — What it would own `[PLACEHOLDER]`
+## Slide 25 — Component structure
 
-Four pieces: the row itself, the editable text, the sortable list, and the presence marker. A
-decomposition, not shipped packages.
+The diagram. Three nested levels, one colour each: the Checklist, a ChecklistRow, and the parts a
+row is assembled from. A sub-row is drawn as a real child with exactly the same parts, which is
+the one-level ceiling and the nesting-as-capability argument in one picture.
 
-**Open.** Needs a diagram of one row exploded into its parts. Matt does not fully buy the four
-primitives, so this is a conversation before it is work.
+## Slide 26 — Component API
 
-## Slide 26 — They do not compose on their own
+The props, which are the decisions restated as a surface. `nesting` is the one to point at: off
+withdraws the gesture, the affordance, and flattens the data.
 
-The obvious question is how those four go together, and the honest answer is that they fight.
-The text: editing wants a block, reordering wants an inline. The gutter: presence wants the
-avatar, focus wants a rule. The menu carries reordering's non-drag path and editing's entry
-point. The tab order spans three of them.
+The ones that are not props are the ones a consumer should not be able to get wrong.
 
-So it is not four peers. It is one row that arbitrates, plus three capabilities it can be
-granted.
+## Slide 27 — The same component, twice
 
-## Slide 27 — Docs `[PLACEHOLDER]`
+Loops and Runbooks side by side. They differ by four lines of configuration. Runbooks is the
+shorter call, and it never has to know that reordering, presence and the author tag exist.
+
+## Slide 28 — Docs `[PLACEHOLDER]`
 
 **Open.** Either build a real docs page or reframe the slide around the bench param vocabulary,
 which is already machine-readable by construction. Recommendation is to show what exists. The
@@ -212,16 +207,17 @@ differentiating idea is agent-readable component docs: named values only, unknow
 rather than guessed, and every decision addressable by a URL that opens the component in exactly
 that state.
 
-## Slide 28 — Where it landed
+## Slide 29 — What I would do next
 
-Both tickets specced from these prototypes and built by an engineer. Approved as part of the
-Mission Control design system, on the argument that Runbooks is the second consumer. 33
-questions, 35 things rejected, 18 still running.
+Four open threads. Autosave has no failure surface, which is the only correctness problem left.
+Whether anybody wants a second level of nesting. Whether multiplayer still needs a lock now that
+merging removes the reason for one. And target size: 24 clears AA on a mouse and is small for a
+thumb, where the guidance is 44.
 
-One thing is still open, and it is the one that worries me: autosave with no save button has no
-failure surface, so a failed write is silent data loss.
+Ending on open questions rather than a scoreboard, because a scoreboard invites nodding and these
+invite the panel to push.
 
-## Slide 29 — Thank you
+## Slide 30 — Thank you
 
 Leave them the explorations index: every question, every variation, and the chosen one marked in
 words.
