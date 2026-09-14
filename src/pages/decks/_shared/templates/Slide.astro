@@ -13,6 +13,9 @@ interface Props {
 	title?: string;
 	/** Subdued-color line. The section label. */
 	subtitle?: string;
+	/** Small pill after the subtitle, e.g. 'Rejected'. The word carries
+	 * the meaning: status is never left to colour alone. */
+	badge?: string;
 	/** Suppress the auto-injected header. */
 	hideHeader?: boolean;
 	/** Vertical alignment of body content. Default: 'center'. */
@@ -29,6 +32,7 @@ interface Props {
 const {
 	title: explicitTitle,
 	subtitle,
+	badge,
 	hideHeader = false,
 	align = 'center',
 	padding = 'default',
@@ -77,8 +81,15 @@ const bodyJustifyClass =
 					</div>
 				)}
 				{subtitle && (
-					<div class="text-subdued font-regular text-4xl">
-						{subtitle}
+					<div class="flex items-center gap-4">
+						<span class="text-subdued font-regular text-4xl">
+							{subtitle}
+						</span>
+						{badge && (
+							<span class="border-weak/40 text-subdued rounded-full border px-4 pt-1 pb-1.5 text-2xl leading-none font-medium">
+								{badge}
+							</span>
+						)}
 					</div>
 				)}
 			</header>

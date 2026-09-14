@@ -293,7 +293,7 @@
      the handle, which is the first thing anyone asks. */
   .list {
     display: flex; flex-direction: column; gap: 12px;
-    padding-top: 12px; padding-left: 22px; position: relative;
+    padding-top: 12px; position: relative;
   }
 
   /* ---------- Row ---------- */
@@ -1279,12 +1279,17 @@
       if (t) t.classList.add(blocked ? "is-blocked-target" : "is-parent-target");
       dl.classList.remove("on");
     } else {
-      const listBox = listEl.getBoundingClientRect();
+      // All local px. rect values are zoomed viewport pixels and
+      // style.top is the element's own unzoomed pixels, so mixing them
+      // put the line twice as far down at scale 2, with the error
+      // growing down the list. offsetTop is measured from the same
+      // padding edge absolute positioning resolves against.
       let y;
       if (idx < others.length) {
-        y = others[idx].getBoundingClientRect().top - listBox.top - 3;
+        y = others[idx].offsetTop - 3;
       } else if (others.length) {
-        y = others[others.length - 1].getBoundingClientRect().bottom - listBox.top + 1;
+        const last = others[others.length - 1];
+        y = last.offsetTop + last.offsetHeight + 1;
       } else y = 0;
       dl.style.top = y + "px";
       dl.classList.add("on");
