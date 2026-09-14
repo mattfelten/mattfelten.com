@@ -276,9 +276,14 @@
   .spec-head .count { font-size: 12px; color: var(--text-subdued); font-variant-numeric: tabular-nums; }
   .spec-icon { width: 20px; height: 20px; display: grid; place-content: center; color: var(--text-subdued); }
 
+  /* The left gutter is 22px because this bench puts TWO things in it.
+     A parent carries a twisty at -22 and its drag handle at -42, so
+     without the inset the handle falls outside the specimen and gets
+     clipped by overflow: hidden. That reads as though nesting removed
+     the handle, which is the first thing anyone asks. */
   .list {
     display: flex; flex-direction: column; gap: 12px;
-    padding-top: 12px; position: relative;
+    padding-top: 12px; padding-left: 22px; position: relative;
   }
 
   /* ---------- Row ---------- */
@@ -541,6 +546,19 @@
      the parent's checkbox. The nesting is legible from the text
      column alone, with no guide lines needed. */
   .row[data-tier="1"] { margin-left: 32px; }
+  /* Only reachable with deep=1, which exists to show why one level is
+     the ceiling. Each step eats another 32px of the text column. */
+  .row[data-tier="2"] { margin-left: 64px; }
+  .row[data-tier="3"] { margin-left: 96px; }
+  .row[data-tier="4"] { margin-left: 128px; }
+  .row[data-tier="5"] { margin-left: 160px; }
+
+  /* handles=1 pins the drag handle on. It is hover-only by design, and
+     on a slide that reads as though nesting removed it: the twisty
+     sits in the same gutter, so the obvious question is what happened
+     to the handle. Parents keep theirs at -42 so both are visible at
+     once and the answer is on screen. */
+  body[data-handles="on"] .handle { opacity: 1; }
 
   /* Twisty. Only parents get one, and it sits in the same gutter as
      the drag handle rather than taking a column, so a list with no
@@ -824,6 +842,7 @@
   seed();
 
   const S = {
+    deep: false,
     nesting: "on",
     nest: "independent",
     drag: "context",
@@ -875,8 +894,34 @@
   // one affordance withdrawn: no twisties, no folder drop, and the
   // insertion line never insets because there is nothing to inset to.
   const nestingOn = () => S.nesting !== "off";
+  // deep=1 swaps the dataset for one nested five levels deep.
+
+  // Five levels, used only by deep=1. The point is the indent: by the
+  // fourth step the text column has lost 128px and the row is mostly
+  // margin.
+  const DEEP_ITEMS = [
+    { id: "d1", parent: null, text: "Migrate the billing service off the legacy cluster", who: "Dana", done: false },
+    { id: "d2", parent: "d1", text: "Audit the Terraform modules it depends on", who: "Dana", done: false },
+    { id: "d3", parent: "d2", text: "List every module still pinned to 0.11", who: "Marco", done: false },
+    { id: "d4", parent: "d3", text: "Check which have open upstream changes", who: "Priya", done: false },
+    { id: "d5", parent: "d4", text: "And whether any touch the prod account", who: "Marco", done: false },
+    { id: "d6", parent: null, text: "Schedule the cutover window with the customer", who: "Priya", done: false }
+  ];
+
+  function visibleDeep() {
+    const out = [];
+    const walk = (parentId, tier) => {
+      ITEMS.filter(i => i.parent === parentId).forEach(it => {
+        out.push({ it, tier });
+        if (S.open[it.id] !== false) walk(it.id, tier + 1);
+      });
+    };
+    walk(null, 0);
+    return out;
+  }
 
   function visible() {
+    if (S.deep) return visibleDeep();
     const out = [];
     if (!nestingOn()) {
       tops().forEach(p => {
@@ -1479,6 +1524,13 @@
     if (q.get("zones") === "1") {
       const c = document.getElementById("chk-zones");
       c.checked = true; c.dispatchEvent(new Event("change"));
+    }
+    if (q.get("handles") === "1") document.body.dataset.handles = "on";
+    if (q.get("deep") === "1") {
+      S.deep = true;
+      ITEMS.length = 0;
+      DEEP_ITEMS.forEach(i => ITEMS.push(i));
+      render();
     }
     if (q.get("nosr") === "1") {
       const c = document.getElementById("chk-sr");
