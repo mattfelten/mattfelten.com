@@ -1366,8 +1366,12 @@
         '<button class="cb" data-act="check" data-state="' + (it.done ? "done" : "open") +
         '" aria-label="' + (it.done ? "Mark not done" : "Mark done") + '">' +
         (it.done ? ICON.check : ICON.circle) + "</button>" +
-        '<span class="content"><span class="prose" data-act="prose" tabindex="0" role="textbox" aria-multiline="true"' +
-        ' aria-label="Item text"' + (held ? ' aria-describedby="held-' + it.id + '"' : "") + ">" +
+        '<span class="content"><span class="prose"' +
+        // Before, the text is just text. Carrying data-act, a tabindex
+        // and role="textbox" would offer a keyboard user an editor that
+        // does not exist, which is a worse lie than the cursor was.
+        (S.before ? "" : ' data-act="prose" tabindex="0" role="textbox" aria-multiline="true"' +
+          ' aria-label="Item text"' + (held ? ' aria-describedby="held-' + it.id + '"' : "")) + ">" +
         esc(it.text) + "</span></span>" +
         // Presence, said in words, on every treatment rather than only
         // the one that happens to be made of words. The visual can be a
@@ -2379,6 +2383,11 @@
   // Clicking the text does NOT come through here, and must not. See
   // the pointerdown handler below.
   function startEdit(id) {
+    // The row as it shipped could not be edited at all: the backend had
+    // supported it for a year and the frontend never wired it. Every
+    // route into edit mode goes through here, so this is the one place
+    // that has to know.
+    if (S.before) return;
     const p = listEl.querySelector('.row[data-id="' + id + '"] .prose');
     if (!p) return;
     p.setAttribute("contenteditable", "true");
@@ -2413,6 +2422,7 @@
     if (e.button !== 0) return;
     const p = e.target.closest && e.target.closest('[data-act="prose"]');
     if (!p) return;
+    if (S.before) return;
     if (p.getAttribute("contenteditable") === "true") return;
     const row = p.closest(".row");
     // On a coarse pointer the press is ambiguous until it ends: a tap
