@@ -5,6 +5,10 @@ import Slide from '@decks/templates/Slide.astro';
 // menu, editing in place, sub-items one level deep, and somebody else
 // in the second row.
 //
+// presence=none: the avatar and no row treatment. The bar in the gutter
+// sits directly under the avatar and reads as a second mark for the same
+// thing, so on this slide the face carries presence on its own.
+//
 // The handle is hover-only and stays that way. The deck is a web page,
 // so hovering a row in front of the panel reveals it exactly as it
 // would in the product. An earlier version pinned it visible to work
@@ -24,9 +28,9 @@ import Slide from '@decks/templates/Slide.astro';
 //   open the row menu for Move up and Move down
 ---
 
-<Slide subtitle="Where we landed">
+<Slide subtitle="Final Component">
 	<iframe
-		src="/decks/2026-checklist-component/prototypes/c4-accessibility-bench?embed=1&scale=2&reorder=both&enter=menu&focus=object&presence=bar&fit=center"
+		src="/decks/2026-checklist-component/prototypes/c4-accessibility-bench?embed=1&scale=2&reorder=both&enter=menu&focus=object&presence=none&fit=center"
 		title="The component, live"
 		class="live-embed m-0! block h-[800px] w-[1640px] max-h-none! max-w-none! border-0"
 	></iframe>

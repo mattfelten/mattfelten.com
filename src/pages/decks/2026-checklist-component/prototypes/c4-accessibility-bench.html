@@ -2758,6 +2758,15 @@
       render();
     }
     if (q.get("embed") === "1") document.body.classList.add("is-embed");
+    // presence=none keeps the avatar and drops the row treatment. Every
+    // treatment is gated on a data-presence value, so a value that
+    // matches none of them leaves the floater and nothing else. The
+    // segmented control has no button for it, which is why this is here
+    // rather than in the allowed table above.
+    if (q.get("presence") === "none") {
+      S.presence = "none";
+      document.body.dataset.presence = "none";
+    }
     if (q.get("fit") === "center") document.body.dataset.fit = "center";
     const sc = parseFloat(q.get("scale"));
     if (sc > 0 && sc <= 4) document.documentElement.style.setProperty("--embed-scale", String(sc));
