@@ -27,22 +27,33 @@ import Slide from '@decks/templates/Slide.astro';
 // would read as the site's primary navigation and put us back where we
 // started.
 //
-// What to say over it. The address under the specimen is the part that
-// is not in every design system's docs: pick a state and the specimen
-// and the address change together. Named values only, unknown values
-// ignored rather than guessed at, so an agent can open a state and look
-// at it instead of reading a paragraph describing one.
+// What to say over it, and this now has to be SAID rather than pointed
+// at. Every state up there is a named value with an address of its own,
+// unknown values are ignored rather than guessed at, and an agent can
+// open a state and look at it instead of reading a paragraph describing
+// one. That is the part that is not in every design system's docs.
+//
+// The address used to be printed under the specimen, which made the
+// point visible without a word. It came off because it made the footer
+// look like nothing a real docs site ships, so the demonstration is now
+// a click: pick a state, then hit Open and let the address appear in the
+// browser. Do not skip that click. It is the whole argument and there is
+// nothing on screen making it for you any more.
 //
 // Say the caveat before the engineer does. The vocabulary grew on the
 // prototypes and documents the states the component has; it is not
 // generated from the component. The claim is that the property should
 // carry into the docs, not that these are generated docs today.
 //
+// Source is disabled on purpose. If anyone asks: there is no source
+// viewer behind it, and a dead control is more honest than one wired to
+// nothing.
+//
 // Drive it, roughly in this order:
-//   pick two or three states and let the address change under them
+//   pick two or three states and let the specimen change under them
+//   hit Open on one, so the address is seen rather than described
 //   hover a row, open the row menu, take Move up
-//   scroll to Props or States if anybody asks what else is in it, and to
-//     Open questions if they ask what is not finished
+//   scroll to Props or States if anybody asks what else is in it
 ---
 
 <Slide subtitle="Docs">

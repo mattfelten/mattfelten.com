@@ -20,10 +20,14 @@
      with a screenshot dropped into it.
 
      The example canvas is the argument. Every state is a named
-     value, the URL that produced it is printed underneath, and
-     picking a state rewrites both. Docs an agent can use are docs
-     where the state is addressable, and the page shows that by
-     doing it rather than by claiming it.
+     value and every one has an address, which Open goes to. Docs an
+     agent can use are docs where the state is addressable, and the
+     page shows that by doing it rather than by claiming it.
+
+     The address used to be printed under the specimen in monospace
+     with the frame parameters dimmed. It made the point visible and
+     it also made the footer look like nothing a real docs site
+     ships, so it is two buttons now. The property is unchanged.
      ============================================================ */
 
   :root {
@@ -312,11 +316,9 @@
      grows. Going to 31rem would put the menu exactly on the edge. */
   body.is-compact .canvas iframe { height: 32rem; }
 
-  /* The address is what the slide is about, so it stops being a caption
-     and takes a readable size. Paid for by the two prose blocks compact
-     mode already dropped. */
-  body.is-compact .urlbar { padding: 0.625rem 0.875rem; }
-  body.is-compact .urlbar .url { font-size: 0.9375rem; }
+  /* Nothing to enlarge here any more. The bar used to print the address
+     at a readable size for the slide; two buttons need no help. */
+  body.is-compact .urlbar { padding: 0.5rem 0.75rem; }
 
   /* ---------- the example canvas ---------- */
 
@@ -382,38 +384,25 @@
     background: transparent;
   }
 
-  /* The URL bar under the specimen. This is the whole point of the
-     page, so it is a first-class part of the example rather than a
-     caption: monospace, boxed, and always showing the exact string
-     that produced what is above it. */
+  /* The action bar under the specimen.
+     It used to print the whole address, monospace and boxed, with the
+     frame parameters dimmed. That made the addressability visible, but
+     it also made the footer of the example look like nothing any real
+     docs site ships. Two buttons is what a component preview actually
+     has. The address did not go anywhere: every state still has one and
+     Open still goes to it. */
   .urlbar {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    justify-content: flex-end;
+    gap: 0.5rem;
     border-top: 1px solid var(--bench-line);
     background: var(--bench-sunk);
     padding: 0.5rem 0.75rem;
   }
 
-  /* `anywhere` rather than `break-all`, so the explicit break
-     opportunity before the plumbing wins and the address only splits
-     mid-token when it genuinely has nowhere else to go. break-all had no
-     such preference and split "scale" down the middle. */
-  .urlbar .url {
-    flex: 1 1 auto;
-    min-width: 0;
-    font-size: 0.75rem;
-    line-height: 1.5;
-    color: var(--bench-ink);
-    overflow-wrap: anywhere;
-  }
-
-  /* Frame plumbing is dimmed. embed, scale and fit size the thing
-     inside a slide and say nothing about the component, and marking
-     that difference is cheaper than explaining it. */
-  .urlbar .plumbing { color: var(--bench-ink-3); }
-
-  .urlbar .open {
+  .urlbar .btn {
+    font: inherit;
     flex: none;
     font-size: 0.75rem;
     color: var(--bench-ink-2);
@@ -423,9 +412,19 @@
     padding: 0.1875rem 0.5rem;
     background: var(--bench-raise);
     white-space: nowrap;
+    cursor: pointer;
   }
-  .urlbar .open:hover { color: var(--bench-ink); background: var(--bench-panel); }
-  .urlbar .open:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 2px; }
+  .urlbar .btn:hover:not(:disabled) { color: var(--bench-ink); background: var(--bench-panel); }
+  .urlbar .btn:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 2px; }
+
+  /* Source is deliberately dead. There is no source viewer behind it and
+     the page does not pretend otherwise: it is disabled rather than
+     wired to nothing, which is the honest version of a control that a
+     real docs site would have and this one does not yet. */
+  .urlbar .btn:disabled {
+    cursor: default;
+    opacity: 0.45;
+  }
 
   /* ---------- tables ---------- */
 
@@ -716,16 +715,15 @@
       <div class="canvas">
         <iframe id="specimen" title="Checklist specimen"></iframe>
         <div class="urlbar">
-          <span class="url mono" id="urlreadout"></span>
-          <a class="open" id="openlink" href="#" target="_blank" rel="noopener">Open</a>
+          <button class="btn" type="button" disabled>Source</button>
+          <a class="btn" id="openlink" href="#" target="_blank" rel="noopener">Open</a>
         </div>
       </div>
 
       <p class="note">
-        Every state above is a named value in the address. Values the component does not
-        recognise are ignored rather than guessed at, so a wrong one renders the default
-        instead of something invented. The dimmed parameters are frame plumbing: they size
-        the specimen inside a page and say nothing about the component.
+        Every state above is a named value in the address, and Open goes to exactly the one
+        on screen. Values the component does not recognise are ignored rather than guessed
+        at, so a wrong one renders the default instead of something invented.
       </p>
     </section>
 
@@ -1192,11 +1190,13 @@
 
   var BASE = './prototypes/';
 
-  /* One source for the buttons, the iframe and the printed address.
-     Anything that can disagree eventually will, and the whole claim on
-     this page is that the address and the thing above it are the same
-     fact. `semantic` is what describes the component; `frame` is
-     plumbing that sizes it inside a page and is printed dimmed. */
+  /* One source for the buttons, the iframe and the Open link. Anything
+     that can disagree eventually will, and the whole claim on this page
+     is that the address and the thing above it are the same fact.
+     `semantic` is what describes the component; `frame` only sizes it
+     inside a page and says nothing about the component. The split is
+     still worth keeping now that neither half is printed, because it is
+     what stops the frame parameters leaking into the state vocabulary. */
   var STATES = [
     { id: 'default',    label: 'Default',       file: 'c4-accessibility-bench',
       semantic: 'reorder=both&enter=menu&focus=object&presence=none' },
@@ -1237,7 +1237,6 @@
 
   var wrap = document.querySelector('.states');
   var iframe = document.getElementById('specimen');
-  var readout = document.getElementById('urlreadout');
   var openlink = document.getElementById('openlink');
 
   function urlFor(s) {
@@ -1247,30 +1246,11 @@
   function show(s) {
     var url = urlFor(s);
     iframe.src = url;
+
+    /* The address is no longer printed under the specimen, but it is
+       still what a state IS: Open goes to exactly this, and the state
+       buttons are the same named values that compose it. */
     openlink.href = url;
-
-    /* Printed with the plumbing dimmed. The reader should be able to
-       tell at a glance which half of this address describes the
-       component and which half only sizes it. */
-    readout.innerHTML = '';
-
-    var path = document.createElement('span');
-    path.textContent = 'prototypes/' + s.file + '?';
-    readout.appendChild(path);
-
-    var sem = document.createElement('span');
-    sem.textContent = s.semantic;
-    readout.appendChild(sem);
-
-    /* The one place the address is allowed to wrap. Semantic on the
-       first line, plumbing on the second, rather than a break landing in
-       the middle of a parameter name. */
-    readout.appendChild(document.createElement('wbr'));
-
-    var plumb = document.createElement('span');
-    plumb.className = 'plumbing';
-    plumb.textContent = '&' + frame;
-    readout.appendChild(plumb);
 
     var buttons = wrap.querySelectorAll('.state');
     for (var i = 0; i < buttons.length; i++) {

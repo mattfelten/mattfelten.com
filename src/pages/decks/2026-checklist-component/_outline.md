@@ -158,7 +158,7 @@ too, carried by "Contribution Docs" and "Design & Code Review" in the Organizati
 
 This is the Service and Go-to-market layers, one slide before either has a name.
 
-## Slide 17 — Four Layers `[ANVIL]`
+## Slide 17 — What is a design system? `[ANVIL]`
 
 The model, placed last because it explains the segment they just watched rather than setting it
 up. Artifacts, Platform, Service, Go-to-market.

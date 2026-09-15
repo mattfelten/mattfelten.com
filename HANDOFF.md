@@ -118,9 +118,17 @@ just jumps to the top.
 All three masthead items sit on one flex row on purpose. Stacked they would cost about
 30px of a slide that has 77 to spare, and a fourth one would wrap.
 
-**The Example is the argument.** Seven named states across the top, one live specimen,
-and the address that produced it printed underneath with the frame plumbing dimmed.
-Picking a state rewrites both. The States table links into it by the same names.
+**The Example is the argument.** Seven named states across the top, one live specimen, and
+an Open button that goes to exactly the state on screen. The States table links in by name.
+
+**The printed address came off** (Matt, 2026-09-14). It used to sit under the specimen in
+monospace with the frame parameters dimmed, which made the addressability visible and also
+made the footer look like nothing a real docs site ships. It is a disabled **Source**
+button and an **Open** button now. **Nothing about the property changed** and the claim is
+unchanged: every state is a named value, every one has an address, Open goes to it. It is
+now demonstrated by clicking rather than by printing, so **say it and click Open** instead
+of pointing at a string. Source is deliberately dead: disabled rather than wired to
+nothing, which is the honest version of a control a real docs site would have.
 
 **The section list was checked against Anvil's own**, which is the taxonomy a head of
 design will be matching against: `2024-anvil-case-study/18-Documentation.astro` lists
@@ -225,7 +233,7 @@ minutes and the intro at 3.
 14 Accessibility  (system)      39 — Accessibility —
 15 Documentation                40 Accessibility  (component)
 16 Adoption                     41 — The Component —
-17 Four Layers      (the model) 42 Component Structure   (diagram)
+17 What is a design system?    42 Component Structure   (diagram)
 18 What I'd Do Differently      43 Component API         (table)
 19 — Checklist Cmpt —  (TOC)    44 Object Types          (code)
 20 Original Feature     [live]  45 Implementation        (code)
@@ -258,7 +266,7 @@ and the cultural one was the work. **Read that file before changing this segment
 
 - **11 Key Decisions** is the spine, walked out loud as an agenda. Slides 12 to 16 are
   the evidence for selected lines; not every line needs a slide.
-- **17 Four Layers** closes by explaining the segment retroactively, and pays off the
+- **17 What is a design system?** closes by explaining the segment retroactively, and pays off the
   "nothing in the system is permanent" line rather than introducing a new idea.
 - **18 What I'd Do Differently** carries two regrets, not three. Both are Matt's own
   words from an interview, and both corrected a draft: "build migration tooling earlier"
