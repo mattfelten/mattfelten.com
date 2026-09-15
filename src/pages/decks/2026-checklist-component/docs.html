@@ -856,7 +856,7 @@
             <td class="name">composerLabel</td>
             <td class="type">string?</td>
             <td class="def">"Add an item"</td>
-            <td class="what">Placeholder on the add row. Runbooks says "Add a step".</td>
+            <td class="what">Placeholder on the add row. A consumer whose items are called something else renames it here.</td>
           </tr>
           <tr>
             <td class="name">onReorder, onEdit,<br>onCreate, onDelete</td>
@@ -1108,8 +1108,9 @@
     <section id="usage">
       <h2>Usage</h2>
       <p>
-        Two consumers, four lines of configuration apart. Runbooks is the shorter call, and it
-        never has to know that reordering, presence and the author tag exist.
+        Two consumers, one component. Every capability is off by default, so Runbooks opts
+        into none of them and passes nothing but its items. It never has to know that
+        reordering, nesting, presence and the author tag exist.
       </p>
 
       <div class="two">
@@ -1127,11 +1128,7 @@
         </div>
         <div>
           <div class="label">Runbooks</div>
-          <pre><code><span class="p">&lt;</span><span class="t">Checklist</span>
-  <span class="k">items</span><span class="p">={</span>steps<span class="p">}</span>
-  <span class="k">nesting</span>
-  <span class="k">onEdit</span><span class="p">={</span>save<span class="p">}</span>
-<span class="p">/&gt;</span></code></pre>
+          <pre><code><span class="p">&lt;</span><span class="t">Checklist</span> <span class="k">items</span><span class="p">={</span>steps<span class="p">} /&gt;</span></code></pre>
         </div>
       </div>
     </section>
@@ -1159,7 +1156,7 @@
         </div>
         <div>
           <div class="dt">Name the thing being added</div>
-          <div class="dd">composerLabel is a prop for this reason. "Add an item" by default, "Add a step" in Runbooks.</div>
+          <div class="dd">composerLabel is a prop for this reason. Name the thing being added: "Add an item", "Add a step", "Add a check".</div>
         </div>
         <div>
           <div class="dt">Do not put state in the text</div>

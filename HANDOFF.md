@@ -25,18 +25,18 @@ actually stands rather than trusting a number written here.
 
 ## What this is
 
-**The whole 45-minute portfolio review, as one deck. 51 slides, 15 running live.**
+**The whole 45-minute portfolio review, as one deck. 50 slides, 15 running live.**
 
 | Segment | Slides | Target | Built from |
 |---|---|---|---|
 | About Me | 1 to 6 | about 3 min | `2026-portfolio-review` |
 | Anvil Design System | 7 to 18 | about 13 min | `2026-anvil-15m` + `2024-anvil-case-study` |
-| Checklist Component | 19 to 48 | about 17 min | this deck's own work |
-| Closing | 49 to 51 | about 2 min | `2026-portfolio-review` |
+| Checklist Component | 19 to 47 | about 17 min | this deck's own work |
+| Closing | 48 to 50 | about 2 min | `2026-portfolio-review` |
 
 About 35 minutes of talking against roughly 10 of questions.
 
-**Slide files are numbered by deck position.** The gaps in `_slides/` (2, 3, 7, 19, 49)
+**Slide files are numbered by deck position.** The gaps in `_slides/` (2, 3, 7, 19, 48)
 are the TOC interstitials, which `index.astro` renders inline. So slide 40 in the outline
 is `40-AccessibilityAudit.astro`, with nothing to work out.
 
@@ -82,7 +82,7 @@ argument that Runbooks is a second consumer.
 | Worktree | `~/Projects/personal/mattfelten.com/.claude/worktrees/checklist-component-deck` |
 | Branch | `worktree-checklist-component-deck` (pushed) |
 | Deck | `src/pages/decks/2026-checklist-component/` |
-| Slides | `_slides/`, 48 files numbered by deck position, 51 slides |
+| Slides | `_slides/`, 46 files numbered by deck position, 50 slides |
 | Narrative | `_outline.md` — **edit this before slides** |
 | Benches | `prototypes/*.html`, 7 of them, plus `index.html` and `rejections.html` |
 | Reasoning record | `~/Projects/personal/ai-brain/work/mission/2026-09-07-checklist-component/` |
@@ -96,7 +96,7 @@ Deck at `/decks/2026-checklist-component/`. Explorations index at
 
 ## Next, in order
 
-### The docs page is built, and slide 47 is no longer a placeholder
+### The docs page is built, and slide 46 is no longer a placeholder
 
 `docs.html` in the deck folder, served at `/decks/2026-checklist-component/docs`.
 Matt's call, 2026-09-14: build a real one. The component is not in Anvil and the
@@ -113,7 +113,7 @@ something longer that looks more like a design system.
 **The Figma library and Storybook links are deliberately empty.** Both are `href="#"` in
 the masthead. Neither exists, and the page does not say so. `#` rather than an empty
 href, because an empty one navigates to the current URL and reloads: that page runs
-inside slide 47, so a stray click during the talk would wipe the selected state. `#`
+inside slide 46, so a stray click during the talk would wipe the selected state. `#`
 just jumps to the top.
 
 All three masthead items sit on one flex row on purpose. Stacked they would cost about
@@ -134,7 +134,7 @@ costs more credibility than an absent one. Do not add them to complete the set.
 
 **Open questions was cut** (Matt, 2026-09-14). It is the one section that is not a docs
 convention: component docs tell you how to use the thing, they do not carry the author's
-unresolved list. Nothing is lost, because slide 48 carries the same four threads.
+unresolved list. Nothing is lost, because slide 47 carries the same four threads.
 
 **Watch for duplication when adding a section.** Two crept in this round and both were
 caught by reading the rendered page rather than the diff: the Keyboard intro restated
@@ -203,36 +203,40 @@ minutes and the intro at 3.
 
 ---
 
-## The deck as it stands: 51 slides, 15 running live, no placeholders
+## The deck as it stands: 50 slides, 15 running live, no placeholders
 
 ```
- 1 Title                        27 — Reordering —
- 2 Contents            (TOC)    28 Reordering             [live]
- 3 — About Me —        (TOC)    29 Rows shift out of the way [R]
- 4 Hey, I'm Matt                30 Row follows cursor     [R]
- 5 Work History                 31 — Nested Items —
- 6 Design Principles            32 Nested Items           [live]
- 7 — Anvil —           (TOC)    33 Unlimited Nesting  [R][live]
- 8 What is ServiceTitan?        34 Parent ticks its children [R]
- 9 Overview       (the numbers) 35 — Multiplayer —
-10 Prior Art          (the audit) 36 Multiplayer          [live]
-11 Key Decisions   (the spine)  37 Lock the row      [R]   [live]
-12 Code Architecture            38 Highlight the row [R]   [live]
-13 Figma Libraries              39 — Accessibility —
-14 Accessibility  (system)      40 Accessibility  (component)
-15 Documentation                41 Accessible Implementation
-16 Adoption                     42 — The Component —
-17 Four Layers      (the model) 43 Component Structure   (diagram)
-18 What I'd Do Differently      44 Component API         (table)
-19 — Checklist Cmpt —  (TOC)    45 Object Types          (code)
-20 Original Feature     [live]  46 Implementation        (code)
-21 From Feature to Component    47 Docs                  [live]
-22 Final Component      [live]  48 Next Steps
-23 — Editing —                  49 — Closing —          (TOC)
-24 Editing              [live]  50 Why me?
-25 Editor as an Object [R][live] 51 Thank you
-26 Field with Edges    [R][live]
+ 1 Title                        26 Field with Edges    [R][live]
+ 2 Contents            (TOC)    27 — Reordering —
+ 3 — About Me —        (TOC)    28 Reordering             [live]
+ 4 Hey, I'm Matt                29 Rows shift out of the way [R]
+ 5 Work History                 30 Row follows cursor     [R]
+ 6 Design Principles            31 — Nested Items —
+ 7 — Anvil —           (TOC)    32 Nested Items           [live]
+ 8 What is ServiceTitan?        33 Unlimited Nesting  [R][live]
+ 9 Overview       (the numbers) 34 Parent ticks its children [R]
+10 Prior Art          (the audit) 35 — Multiplayer —
+11 Key Decisions   (the spine)  36 Multiplayer            [live]
+12 Code Architecture            37 Lock the row      [R]   [live]
+13 Figma Libraries              38 Highlight the row [R]   [live]
+14 Accessibility  (system)      39 — Accessibility —
+15 Documentation                40 Accessibility  (component)
+16 Adoption                     41 — The Component —
+17 Four Layers      (the model) 42 Component Structure   (diagram)
+18 What I'd Do Differently      43 Component API         (table)
+19 — Checklist Cmpt —  (TOC)    44 Object Types          (code)
+20 Original Feature     [live]  45 Implementation        (code)
+21 From Feature to Component    46 Docs                  [live]
+22 Final Component      [live]  47 Next Steps
+23 — Editing —                  48 — Closing —          (TOC)
+24 Editing              [live]  49 Why me?
+25 Editor as an Object [R][live] 50 Thank you
 ```
+
+**Accessible Implementation was cut** (Matt, 2026-09-14). It was the four things a
+consumer owes: object names, a section heading, permissions, naming the people. The
+Accessibility audit on 40 carries the component's own case, and the docs page has a
+"What the consumer owes" block covering the same four, so nothing is lost.
 
 **Testimonials was cut** (Matt, 2026-09-14). The quote collage that used to sit between
 Why me and Thank you is gone, and `47-Testimonials.astro` with it. Why me now lands
@@ -302,6 +306,24 @@ classes that have each bitten more than once. In short:
 - The Astro dev server can serve **stale CSS** after many edits, and it showed two phantom
   bugs this session. If something looks wrong that should be fixed, hard-reload or restart
   the server before believing it.
+
+**Nesting had no path but a drag, and the audit did not notice.** The C4 round's whole
+finding is that a keyboard path is necessary and never sufficient, and it fixed
+*reordering* by putting Move up / Move down in the row menu. It never ran the same test
+against *nesting*: C1 had arrow keys for it, this bench had nothing, so nesting scored the
+worst row of the round's own table. Fixed by applying the settled rule rather than
+inventing one: **Make sub-item / Move out in the row menu**, plus C1's left/right arrows
+ported onto the lifted row. One `nestState(id)` answers both so they cannot drift, and the
+asymmetry is deliberate: the menu disables what it cannot do, the keyboard says why,
+because you cannot un-offer a key.
+
+**And the audit was overstating one setting.** `paths()` computes
+`hasKeys = R === "keyboard" || R === "both"` and prints "Tab to the row, space to lift,
+arrows to move" underneath, but the row's tab stop was gated on `S.reorder === "keyboard"`
+alone. In `both`, which is the setting slides 22 and 40 present, **you could not tab to
+the row at all**, so the panel claimed a path the bench did not provide. The space handler
+already accepted `both`; only that one gate disagreed. Worth remembering as a class: **a
+panel computed from settings is only as honest as the settings it reads.**
 
 **A bench can silently lack a capability the design settled on.** C4 only ever started a
 drag from `.handle`, so the Final Component slide, the one that claims to show everything

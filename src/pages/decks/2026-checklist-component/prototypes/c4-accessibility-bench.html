@@ -1279,6 +1279,8 @@
   <button data-act="done" role="menuitem">Mark done</button>
   <button data-act="up" role="menuitem">Move up</button>
   <button data-act="down" role="menuitem">Move down</button>
+  <button data-act="nest" role="menuitem">Make sub-item</button>
+  <button data-act="unnest" role="menuitem">Move out</button>
   <div class="sep"></div>
   <button data-act="edit" role="menuitem">Edit text</button>
   <button data-act="del" role="menuitem" class="neg">Delete</button>
@@ -1362,7 +1364,16 @@
       // already carries. The row itself only becomes a stop in the
       // keyboard-lift comparison, which is the one setting where the
       // row is the thing being operated on.
-      const rowTab = S.reorder === "keyboard" ? ' tabindex="0"' : "";
+      // The row is a tab stop wherever the keyboard lift exists, which
+      // is both settings that claim it and not just the one named after
+      // it. This read `=== "keyboard"` and the audit has always scored
+      // `both` as having the keyboard path, printing "Tab to the row,
+      // space to lift, arrows to move" underneath. In `both` you could
+      // not tab to the row, so the panel stated a path the bench did not
+      // provide, on the exact setting the deck presents. The space
+      // handler already accepted `both`; only this gate disagreed.
+      const rowTab = (S.reorder === "keyboard" || S.reorder === "both")
+        ? ' tabindex="0"' : "";
       return '<div class="row' + (held ? " is-held" : "") + (parent ? " has-kids" : "") +
         '" data-id="' + it.id + '" data-tier="' + tier +
         '" data-done="' + it.done + '"' + rowTab + ' role="group" aria-label="' +
@@ -1831,6 +1842,92 @@
     reflow();
   }
 
+  // Whether a row can change level, and why not when it cannot.
+  //
+  // One function answers both so the menu and the keyboard cannot drift
+  // apart. The menu reads the booleans and disables; the keyboard reads
+  // the reasons and says them out loud. That asymmetry is deliberate and
+  // it is the settled rule applied twice: the one-level ceiling is
+  // enforced by not offering, and you cannot un-offer a key.
+  function nestState(id) {
+    const it = byId(id);
+    const s = { canNest: false, canUnnest: false, nestWhy: "", unnestWhy: "" };
+    if (!it) return s;
+
+    if (!S.nesting) {
+      s.nestWhy = s.unnestWhy = "This list does not use sub-items.";
+      return s;
+    }
+
+    if (it.parent !== null) {
+      s.canUnnest = true;
+      s.nestWhy = "Already a sub-item. Only one level is allowed.";
+      return s;
+    }
+
+    s.unnestWhy = "Already at the top level.";
+
+    // A row carrying children cannot become a child itself. That is the
+    // one-level ceiling, and it is the same refusal the drop indicator
+    // makes by only offering the gaps a row can land in.
+    if (hasKids(id)) {
+      s.nestWhy = "This row has sub-items, so it cannot become one.";
+      return s;
+    }
+
+    const t = tops();
+    const at = t.findIndex(x => x.id === id);
+    if (at <= 0) { s.nestWhy = "Nothing above it to sit under."; return s; }
+
+    s.canNest = true;
+    return s;
+  }
+
+  // Change a row's level. The nesting counterpart of moveBy, and the
+  // same shape: refuse with a reason, or move, announce, log, repaint.
+  //
+  // This is C4 catching up with its own finding. The round settled that
+  // a keyboard path was necessary and never sufficient, and fixed
+  // reordering by putting Move up and Move down in the row menu. Nesting
+  // never got the same treatment: C1 had it on the arrow keys and this
+  // bench had nothing at all, so the only way to nest was a drag. Drag
+  // only scores no on keyboard, no on touch and no on a screen reader,
+  // which is the worst row of this round's own table.
+  function nestBy(id, dir, how) {
+    const it = byId(id);
+    if (!it) return;
+    const st = nestState(id);
+
+    if (dir === 1) {
+      if (!st.canNest) {
+        announce(st.nestWhy);
+        log('<span class="op">blocked</span> <span class="dim">' + esc(st.nestWhy) + "</span>");
+        return;
+      }
+      const t = tops();
+      const at = t.findIndex(x => x.id === id);
+      const above = t[at - 1];
+      moveTo(id, kidsOf(above.id).length, 1, above.id);
+      announce("Now a sub-item of " + short(above.text));
+      log('<span class="op">nest</span> <span class="hot">' + how + "</span> " +
+        '<span class="dim">' + esc(short(it.text)) + " under " + esc(short(above.text)) + "</span>");
+    } else {
+      if (!st.canUnnest) {
+        announce(st.unnestWhy);
+        log('<span class="op">blocked</span> <span class="dim">' + esc(st.unnestWhy) + "</span>");
+        return;
+      }
+      const p = byId(it.parent);
+      const pIndex = tops().findIndex(x => x.id === p.id);
+      moveTo(id, pIndex + 1, 0, null);
+      announce("Moved out to the top level, below " + short(p.text));
+      log('<span class="op">unnest</span> <span class="hot">' + how + "</span> " +
+        '<span class="dim">' + esc(short(it.text)) + " out of " + esc(short(p.text)) + "</span>");
+    }
+
+    reflow();
+  }
+
   // Move the nodes. Do not rebuild the list.
   //
   // Rebuilding destroys the element that had focus, and a reorder that
@@ -2259,6 +2356,12 @@
     show(doneBtn, S.before);
     show(item("up"), !S.before);
     show(item("down"), !S.before);
+    // Hidden rather than disabled when the list declines sub-items. A
+    // permanently greyed pair would advertise a capability this list
+    // does not have, which is the opposite of nesting being something a
+    // consumer opts into.
+    show(item("nest"), !S.before && S.nesting);
+    show(item("unnest"), !S.before && S.nesting);
     show(item("edit"), !S.before);
     show(sep, !S.before);
     show(item("del"), true);
@@ -2271,6 +2374,10 @@
     if (item("up")) item("up").disabled = at === 0;
     if (item("down")) item("down").disabled = at === sibs.length - 1;
 
+    // Same rule one level out: offer only what this row can actually do.
+    const nest = nestState(id);
+    if (item("nest")) item("nest").disabled = !nest.canNest;
+    if (item("unnest")) item("unnest").disabled = !nest.canUnnest;
   }
 
   function focusFirstMenuItem() {
@@ -2287,6 +2394,11 @@
     if (act === "up" || act === "down") {
       closeMenu(false);
       moveBy(id, act === "up" ? -1 : 1, "menu");
+      return;
+    }
+    if (act === "nest" || act === "unnest") {
+      closeMenu(false);
+      nestBy(id, act === "nest" ? 1 : -1, "menu");
       return;
     }
     if (act === "edit") {
@@ -2669,6 +2781,15 @@
     if (e.key === "ArrowUp" || e.key === "ArrowDown") {
       e.preventDefault();
       moveBy(id, e.key === "ArrowUp" ? -1 : 1, "keyboard");
+    }
+
+    // Both axes, or neither. A lifted row that answers up and down but
+    // ignores left and right is incoherent on its own terms, whatever
+    // the accessibility argument says. Ported from the nesting bench,
+    // which had this working the whole time.
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+      e.preventDefault();
+      nestBy(id, e.key === "ArrowRight" ? 1 : -1, "keyboard");
     }
   });
 

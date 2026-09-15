@@ -1,7 +1,7 @@
 // The whole 45 minutes, in four segments.
 //
 // File numbers are deck positions, and the gaps are the TOC
-// interstitials: 2, 3, 7, 19 and 49 have no file because TocSlide is
+// interstitials: 2, 3, 7, 19 and 48 have no file because TocSlide is
 // rendered inline in index.astro. So a missing number here means an
 // interstitial, never a missing slide, and slide 40 in the outline is
 // 40-AccessibilityAudit.astro with nothing to work out.
@@ -53,15 +53,14 @@ export { default as RuledOutLock } from './37-RuledOutLock.astro';
 export { default as RuledOutHighlight } from './38-RuledOutHighlight.astro';
 export { default as AccessibilitySection } from './39-AccessibilitySection.astro';
 export { default as AccessibilityAudit } from './40-AccessibilityAudit.astro';
-export { default as AccessibleImplementation } from './41-AccessibleImplementation.astro';
-export { default as ComponentSection } from './42-ComponentSection.astro';
-export { default as ComponentStructure } from './43-ComponentStructure.astro';
-export { default as ComponentAPI } from './44-ComponentAPI.astro';
-export { default as ObjectTypes } from './45-ObjectTypes.astro';
-export { default as Implementation } from './46-Implementation.astro';
-export { default as Docs } from './47-Docs.astro';
-export { default as NextSteps } from './48-NextSteps.astro';
+export { default as ComponentSection } from './41-ComponentSection.astro';
+export { default as ComponentStructure } from './42-ComponentStructure.astro';
+export { default as ComponentAPI } from './43-ComponentAPI.astro';
+export { default as ObjectTypes } from './44-ObjectTypes.astro';
+export { default as Implementation } from './45-Implementation.astro';
+export { default as Docs } from './46-Docs.astro';
+export { default as NextSteps } from './47-NextSteps.astro';
 
 // Closing
-export { default as WhyMe } from './50-WhyMe.astro';
-export { default as ThankYou } from './51-ThankYou.astro';
+export { default as WhyMe } from './49-WhyMe.astro';
+export { default as ThankYou } from './50-ThankYou.astro';

@@ -1,7 +1,7 @@
 # Design System Portfolio — Slide Deck Outline
 
 The whole 45 minutes, in four segments: about me, the Anvil design system at breadth, the
-Checklist component at depth, and a close. 51 slides, 15 of them running live.
+Checklist component at depth, and a close. 50 slides, 15 of them running live.
 
 **Timing, and the two segments are paced very differently on purpose.**
 
@@ -9,8 +9,8 @@ Checklist component at depth, and a close. 51 slides, 15 of them running live.
 |---|---|---|
 | About Me | 1 to 6 | about 3 min |
 | Anvil Design System | 7 to 18 | about 13 min |
-| Checklist Component | 19 to 48 | about 17 min |
-| Closing | 49 to 51 | about 2 min |
+| Checklist Component | 19 to 47 | about 17 min |
+| Closing | 48 to 50 | about 2 min |
 
 That is roughly 35 minutes of talking against about 10 of questions. Anvil is diagram slides
 talked over for a minute each. Checklist is short slides with live prototypes driven for twenty
@@ -351,35 +351,26 @@ pointer gestures, touch, screen reader, focus visible, reduced motion.
 Read the headings if the room is quiet. The point is that somebody scanning them can see nothing
 was skipped, rather than reading decisions and working out which areas they cover.
 
-## Slide 41 — Accessible Implementation
 
-Four things a person does while implementing. Use object names. Include a section heading.
-Handle permissions. Name the people.
-
-The line worth saying: the component can be accessible and the page can still fail, and these are
-the seams where that happens.
-
----
-
-## Slide 42 — The Component
+## Slide 41 — The Component
 
 Section title.
 
-## Slide 43 — Component Structure
+## Slide 42 — Component Structure
 
 The diagram. Three nested levels, one colour each: the Checklist, a ChecklistRow, and the parts a
 row is assembled from, with the composer in its own colour because it is not a row. A sub-row is
 drawn as a real child with exactly the same parts, which is the one-level ceiling and the
 nesting-as-capability argument in one picture.
 
-## Slide 44 — Component API
+## Slide 43 — Component API
 
 The props, which are the decisions restated as a surface. Point at `nesting`: false withdraws the
 gesture, the affordance, and flattens the data.
 
 The ones that are not props are the ones a consumer should not be able to get wrong.
 
-## Slide 45 — Object Types
+## Slide 44 — Object Types
 
 What you hand it. A row is five fields and a boolean, which is worth seeing after fifteen minutes
 of argument about them. `parentId` is the entire nesting model: one nullable field is what one
@@ -389,14 +380,17 @@ level costs in the data.
 you. Presence hangs off the item, so a row can be rendered without its parent looking up who is
 in it.
 
-## Slide 46 — Implementation
+## Slide 45 — Implementation
 
-Loops and Runbooks side by side. They differ by four lines of configuration. Runbooks is the
-shorter call, and it never has to know that reordering, presence and the author tag exist.
+Loops and Runbooks side by side. Runbooks passes nothing but its items.
+
+Every capability is off by default, so the second consumer opts into none of them and the
+call collapses to one line. That is the argument at its sharpest: a consumer that declines a
+capability should not have to know the capability exists, and here it demonstrably does not.
 
 Say that out loud rather than putting it on the slide.
 
-## Slide 47 — Docs
+## Slide 46 — Docs
 
 The component's documentation page, running rather than pictured, opened at the Example section.
 The sticky sidebar carries the name and the section list, so the frame is free for the part that
@@ -415,7 +409,7 @@ property should carry into the docs, not that these are generated docs.
 Scroll it if anybody asks. Props, Data and States are the surface, Accessibility is the audit, and
 Open questions is the four unresolved threads, which sets up the closing slide.
 
-## Slide 48 — Next Steps
+## Slide 47 — Next Steps
 
 Four open threads, named rather than stated. Autosave failures, the only correctness problem
 left. More nesting levels, a ceiling I chose rather than one anybody asked for. The multiplayer
@@ -428,17 +422,17 @@ invite the panel to push.
 
 ---
 
-## Slide 49 — Closing
+## Slide 48 — Closing
 
 TOC interstitial.
 
-## Slide 50 — Why me?
+## Slide 49 — Why me?
 
 Three things, and the third is the one this deck just spent thirty minutes proving rather than
 claiming. Complexity and the unknown, software as a team sport, and sweating the details that
 make or break it. Do not restate the deck here. The evidence already landed.
 
-## Slide 51 — Thank you
+## Slide 50 — Thank you
 
 Leave them the explorations index: every question, every variation, and the chosen one marked in
 words.
@@ -454,7 +448,7 @@ the prototype scores all eight ways of arranging them, and not one keeps all thr
 because the scorecard panel is not legible at presentation scale. Measured: it renders about
 1195 pixels tall against a usable slide budget of roughly 780. The same is true of the contrast
 table at about 2090. Both are working instruments, not slide graphics. The argument survives in
-Matt's mouth on slides 28 and 41, and both panels are still reachable from the explorations
+Matt's mouth on slides 28 and 40, and both panels are still reachable from the explorations
 index.
 
 **The long opening.** Role, where this lives, and the four asks each had their own slide. They

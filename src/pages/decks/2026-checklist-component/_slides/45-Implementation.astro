@@ -3,10 +3,14 @@ import Slide from '@decks/templates/Slide.astro';
 import { CLASS, tokenise } from './_code.ts';
 
 // The same component, twice, which is the whole argument on one slide:
-// Loops and Runbooks differ by four lines of configuration, not by being
-// two components. Worth saying out loud that the Runbooks call is the
-// shorter one, because a consumer that declines a capability should not
-// have to know it exists.
+// Loops and Runbooks are one component configured two ways, not two
+// components.
+//
+// Runbooks passes nothing but its items. Every capability is off by
+// default, so the second consumer opts into none of them and the call
+// collapses to a single line. That is the sharpest form of the argument
+// available: a consumer that declines a capability should not have to
+// know the capability exists, and here it demonstrably does not.
 //
 // Coloured with the deck's own palette rather than an editor theme. The
 // props take the same violet the structure diagram gives the parts of a
@@ -23,11 +27,7 @@ const loops = `<Checklist
   onEdit={save}
 />`;
 
-const runbooks = `<Checklist
-  items={steps}
-  nesting
-  onEdit={save}
-/>`;
+const runbooks = `<Checklist items={steps} />`;
 
 // No commentary under the Runbooks call. The shorter call is the
 // argument, and saying it in prose underneath only takes the line away
