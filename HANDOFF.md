@@ -103,8 +103,16 @@ Matt's call, 2026-09-14: build a real one. The component is not in Anvil and the
 Mission Control design system has very little documentation, so this is the chance to
 make a good one even though no other component has one.
 
-It is the bench token set, a sticky contents list, and eleven sections: Example, When to
-use, Anatomy, Props, Data, States, Keyboard, Accessibility, Usage, Content, Rules.
+It is the bench token set, a sticky contents list, and twelve sections: Example, When to
+use, Anatomy, Props, Data, States, Keyboard, Accessibility, Install, Usage, Content,
+Rules.
+
+**Two things in there are plausible fiction, and both are Matt's call.** The **Figma
+library** link in the masthead has `href="#"` on purpose: there is no library yet, and
+the page does not say so. `#` rather than an empty href so a stray click during the talk
+jumps to the top instead of reloading the page and wiping the selected state. And the
+package name **`@mission-control/design-system`** is invented, following Anvil's
+`@servicetitan/anvil` shape. **Swap it if the real one exists.**
 **The Example is the argument.** Seven named states across the top, one live specimen,
 and the address that produced it printed underneath with the frame plumbing dimmed.
 Picking a state rewrites both. The States table links into it by the same names.

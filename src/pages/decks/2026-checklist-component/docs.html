@@ -202,11 +202,20 @@
      the page already states properly further down, and as chips they
      read as a spec sheet nobody asked for. Status is the one thing that
      is only true right now, which is what a pill at the top is for. */
+  /* Status and the design resources share one row. On their own lines
+     they would cost about 30px, and the slide has 66 to spare. */
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.125rem;
+  }
+
   .status {
     display: inline-flex;
     align-items: center;
     gap: 0.4375rem;
-    margin-top: 1.125rem;
     font-size: 0.75rem;
     font-weight: 500;
     padding: 0.25rem 0.6875rem 0.25rem 0.5625rem;
@@ -215,6 +224,20 @@
     color: var(--bench-ink-2);
     background: var(--bench-raise);
   }
+
+  .reslink {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3125rem;
+    font-size: 0.8125rem;
+    color: var(--bench-ink-2);
+    text-decoration: none;
+    border-bottom: 1px solid var(--bench-line-2);
+    padding-bottom: 0.0625rem;
+  }
+  .reslink:hover { color: var(--bench-ink); border-bottom-color: var(--bench-ink-3); }
+  .reslink:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 3px; }
+  .reslink .arrow { font-size: 0.6875rem; color: var(--bench-ink-3); }
 
   .status::before {
     content: "";
@@ -677,7 +700,10 @@
         A list of items you can tick, reorder, edit in place, and nest one level deep.
         Built for Collaboration Loops, and adopted by Runbooks.
       </p>
-      <span class="status">In review</span>
+      <div class="meta">
+        <span class="status">In review</span>
+        <a class="reslink" href="#">Figma library <span class="arrow">&#8599;</span></a>
+      </div>
     </div>
 
     <section id="example">
@@ -1058,6 +1084,26 @@
       </div>
     </section>
 
+    <section id="install">
+      <h2>Install</h2>
+      <p>
+        One package for the whole system. The component is a named export, and the types come
+        from the same place so a consumer never has to hand-write the shape of an item.
+      </p>
+
+      <pre><code><span class="p">$</span> npm install @mission-control/design-system</code></pre>
+
+      <h3>Import</h3>
+      <pre><code><span class="k">import</span> <span class="p">{</span> <span class="t">Checklist</span> <span class="p">}</span> <span class="k">from</span> <span class="s">'@mission-control/design-system'</span>
+<span class="k">import type</span> <span class="p">{</span> <span class="t">ChecklistItem</span><span class="p">,</span> <span class="t">PresenceUser</span> <span class="p">}</span> <span class="k">from</span> <span class="s">'@mission-control/design-system'</span></code></pre>
+
+      <p class="note">
+        React 18 or later. The component brings its own styles and reads the system's tokens
+        from the theme already on the page, so there is no second stylesheet to import and
+        nothing to configure before the first render.
+      </p>
+    </section>
+
     <section id="usage">
       <h2>Usage</h2>
       <p>
@@ -1165,6 +1211,7 @@
       <a href="#states">States</a>
       <a href="#keyboard">Keyboard</a>
       <a href="#accessibility">Accessibility</a>
+      <a href="#install">Install</a>
       <a href="#usage">Usage</a>
       <a href="#content">Content</a>
       <a href="#rules">Rules</a>
