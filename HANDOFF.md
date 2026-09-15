@@ -4,7 +4,9 @@
 > "Checklist", but this is now the whole 45 minutes: about me, Anvil, Checklist, close.**
 > Matt's call, 2026-09-14: grow the Checklist deck rather than start a new folder. He was
 > shown that the name would lie and chose it anyway, so do not "fix" it. `meta.title` is
-> "Portfolio Review" and that is what the browser tab and the title slide say. The `title`
+> "Design System Portfolio", and DeckShell appends the byline, so the tab reads "Design
+> System Portfolio → Matt Felten" and the title slide reads "Matt Felten / Design System
+> Portfolio". Do not put the name in `meta.title` as well or it prints twice. The `title`
 > prop on `<Deck>` is only the per-slide header fallback, and the 29 Checklist slides rely
 > on it, which is why it stays.
 

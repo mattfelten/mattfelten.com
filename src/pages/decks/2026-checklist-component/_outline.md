@@ -1,4 +1,4 @@
-# Portfolio Review — Slide Deck Outline
+# Design System Portfolio — Slide Deck Outline
 
 The whole 45 minutes, in four segments: about me, the Anvil design system at breadth, the
 Checklist component at depth, and a close. 48 slides, 15 of them running live.
@@ -38,7 +38,7 @@ recorded at the bottom so it is not lost.
 
 ## Slide 1 — Title
 
-Matt Felten. Portfolio review.
+Matt Felten. Design System Portfolio.
 
 ## Slide 2 — Contents
 

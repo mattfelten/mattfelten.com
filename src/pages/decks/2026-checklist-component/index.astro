@@ -48,7 +48,7 @@ import {
 } from './_slides';
 
 const meta = {
-	title: 'Portfolio Review',
+	title: 'Design System Portfolio',
 	description:
 		'A design system at breadth and one component at depth. Anvil is the system argument: how it was distributed, adopted without a mandate, and made accessible. Checklist is the same care applied to the simplest thing in the product, where 33 decisions and 35 rejected directions came out of prototypes a mockup could never have produced.',
 };
@@ -59,9 +59,14 @@ const meta = {
 // fallback, so retitling would have meant touching 29 reviewed slides to
 // fix a string nobody in the room sees.
 //
-// `meta.title` is the browser tab and says Portfolio Review. The `title`
-// on <Deck> is the per-slide header fallback and stays "Checklist". They
-// are separate props on purpose.
+// `meta.title` is the deck's name: "Design System Portfolio". DeckShell
+// appends the byline itself, so the tab reads "Design System Portfolio →
+// Matt Felten" and the title slide reads "Matt Felten / Design System
+// Portfolio". Putting the name in `meta.title` too would print it twice.
+//
+// The `title` on <Deck> is a different thing: the per-slide header
+// fallback, which stays "Checklist" because the 29 Checklist slides rely
+// on it. Two separate props on purpose.
 //
 // Shape and the timing it is built against, 45 minutes with questions:
 //
@@ -79,7 +84,7 @@ const meta = {
 // Anvil comes first because Checklist is the zoom-in counterpart. The
 // system argument has to be on the table before the component depth
 // means anything, and accessibility lands twice on purpose: once at
-// system level on slide 10, once inside one component on slide 36.
+// system level on slide 13, once inside one component on slide 36.
 //
 // The Checklist segment keeps its own internal section slides rather
 // than TOC interstitials. That is a settled decision from its own review
