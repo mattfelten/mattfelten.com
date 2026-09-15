@@ -1,43 +1,46 @@
 ---
 import Slide from '@decks/templates/Slide.astro';
 
-// The model Matt arrived at, placed last because it retro-explains the
-// segment rather than setting it up. Everything the panel just watched
+// The model Matt arrived at, placed last because it explains the segment
+// they just watched rather than setting it up. Everything the panel saw
 // lands in one of these: Code Architecture and Figma Libraries were
 // Platform, Accessibility and Documentation were Artifacts, Adoption was
 // Service and Go-to-market at once.
 //
-// Drawn as four stacked bands rather than four columns, because they are
-// layers and a stack says so without a caption. Governance is a band
-// down the side crossing all four, because that is literally the claim:
-// it is not a fifth layer, it is a question asked at every layer.
+// The point said out loud: most people build the first layer and stop.
 //
-// The four are peers, so they share one treatment. Governance is a
-// different kind of thing, so it takes the accent. That is the whole
-// colour logic; resist giving each layer its own hue, which reads as
-// four unrelated categories.
+// Two versions of this slide were wrong before this one, both for the
+// same reason. The first drew four filled, bordered, rounded boxes with
+// a dashed Governance band down the side. The second kept the boxes and
+// only shrank them. But this deck has no cards anywhere else: the
+// accessibility audit, Next Steps, Key Decisions and Adoption are all
+// type on black, so four grey rectangles read as imported from another
+// deck however carefully they are spaced. Hairline rules between bands
+// say "layers" at least as clearly and cost nothing.
 //
-// Hand-drawn in CSS rather than an image, same reasoning as
-// 43-ComponentStructure: the labels have to be readable across a room
-// and an exported diagram would not scale with the deck.
+// Sizes match Next Steps, which is the closest sibling in the deck: four
+// items, each a label over a description. Nothing here earns bigger type
+// than the slide that closes the Checklist segment.
 //
-// Two things to say over it, neither of which needs its own slide:
+// Governance came out (Matt, 2026-09-14). It had been a band crossing
+// all four, on the argument that it is who may change what at which
+// layer. Correct, and it still did not earn its place: it is a fifth
+// idea competing with the four the slide is named for.
 //
-//   Every part of every layer has to be removable. A new design tool, a
-//   better framework, React to Svelte. We deleted the entire
-//   html-sketchapp to Abstract to Sketch pipeline when Figma won, and I
-//   would build it again, because manual sync does not scale. The reason
-//   that cost a pipeline instead of the system is slide 11: code was the
-//   source of truth, so the design tool was replaceable by construction.
+// One thing still told over this slide, and it no longer needs the word
+// governance to land: SYSTEMS WITHIN SYSTEMS. Teams shipped their own
+// libraries for what was not systemized yet and changed those freely,
+// core was reviewed, and those libraries were the source material for
+// what got promoted up when it earned it. That is layering one level
+// out, which is why it belongs here.
 //
-//   Systems within systems. Teams shipped their own libraries for what
-//   was not systemized yet and could change those freely. Core was
-//   reviewed. Those libraries were the source material for what got
-//   promoted up when it earned it. That IS the governance band: who may
-//   change what, at which layer.
-//
-// And the point of the whole slide, said plainly: most people build the
-// first layer and stop.
+// The other thing to say: EVERY PART OF EVERY LAYER HAS TO BE REMOVABLE.
+// A new design tool, a better framework, React to Svelte. We deleted the
+// whole html-sketchapp to Abstract to Sketch pipeline when Figma won,
+// and would build it again, because manual sync does not scale. The
+// reason that cost a pipeline instead of the system is slide 11: code
+// was the source of truth, so the design tool was replaceable by
+// construction.
 
 const layers = [
 	{
@@ -59,61 +62,56 @@ const layers = [
 ];
 ---
 
-<Slide title="Anvil Design System" subtitle="Four Layers" align="top">
-	<div class="grid grid-cols-[minmax(0,1fr)_auto] gap-[28px]">
-		<div class="flex flex-col gap-[24px]">
-			{
-				layers.map((l) => (
-					<div class="layer">
-						<span class="text-strong text-5xl font-medium">
-							{l.name}
-						</span>
-						<span class="text-subdued text-3xl">{l.items}</span>
-					</div>
-				))
-			}
-		</div>
-
-		<div class="governance">
-			<span class="gov-label">Governance</span>
-		</div>
+<Slide title="Anvil Design System" subtitle="Four Layers">
+	<div class="layers">
+		{
+			layers.map((l, i) => (
+				<div class="layer">
+					<span class="num">{String(i + 1).padStart(2, '0')}</span>
+					<span class="text-strong text-3xl font-medium">{l.name}</span>
+					<span class="text-subdued text-2xl">{l.items}</span>
+				</div>
+			))
+		}
 	</div>
 </Slide>
 
 <style>
+	/* Three columns shared by every band, so the names and the items line
+	   up down the slide rather than each band setting its own widths. */
+	.layers {
+		display: grid;
+		grid-template-columns: auto 260px minmax(0, 1fr);
+		align-items: baseline;
+	}
+
 	.layer {
-		display: flex;
-		flex-direction: column;
-		gap: 12px;
-		border-radius: 20px;
-		border: 1px solid rgb(156 163 175 / 0.28);
-		background: rgb(156 163 175 / 0.07);
-		padding: 30px 40px;
+		display: grid;
+		grid-column: 1 / -1;
+		grid-template-columns: subgrid;
+		align-items: baseline;
+		column-gap: 40px;
+		padding: 28px 0;
+		border-top: 1px solid rgb(156 163 175 / 0.2);
 	}
 
-	/* One band down the side of all four, not a fifth box beside them.
-	   The claim is that governance is a question asked at every layer,
-	   so the shape has to cross them rather than sit next to them. */
-	.governance {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 148px;
-		border-radius: 20px;
-		border: 2px dashed rgb(var(--hue) / 0.55);
-		background: rgb(var(--hue) / 0.1);
-		--hue: 61 223 194;
+	/* No rule above the first band. A leading rule reads as the underside
+	   of something that is not there. */
+	.layer:first-child {
+		border-top: 0;
+		padding-top: 0;
 	}
 
-	/* Rotated so the band reads as a band. Upright text in a 120px column
-	   would wrap to three lines and stop looking like one continuous
-	   thing crossing the stack. */
-	.gov-label {
-		writing-mode: vertical-rl;
-		transform: rotate(180deg);
-		font-size: 36px;
+	.layer:last-child {
+		padding-bottom: 0;
+	}
+
+	/* The count does the work the title claims. Quiet enough to be a
+	   rhythm down the left edge rather than a column of data. */
+	.num {
+		font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+		font-size: 18px;
 		font-weight: 500;
-		letter-spacing: 0.02em;
-		color: rgb(var(--hue) / 1);
+		color: rgb(156 163 175 / 0.45);
 	}
 </style>

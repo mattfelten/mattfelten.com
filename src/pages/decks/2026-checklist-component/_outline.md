@@ -161,8 +161,7 @@ This is the Service and Go-to-market layers, one slide before either has a name.
 ## Slide 17 — Four Layers `[ANVIL]`
 
 The model, placed last because it explains the segment they just watched rather than setting it
-up. Artifacts, Platform, Service, Go-to-market, with governance as a band crossing all four:
-who may change what, at which layer.
+up. Artifacts, Platform, Service, Go-to-market.
 
 Map it back out loud. Code Architecture and Figma Libraries were Platform. Accessibility and
 Documentation were Artifacts. Adoption was Service and Go-to-market at once. **The point: most
@@ -178,7 +177,11 @@ replaceable by construction.
 
 **Systems within systems.** Teams shipped their own libraries for what was not systemized yet and
 could change those freely. Core was reviewed. Those libraries were the source material for what
-got promoted up when it earned it. That is the governance band.
+got promoted up when it earned it. That is layering one level out, which is why it belongs here.
+
+Governance is deliberately not on this slide (Matt, 2026-09-14). It was a band crossing all four,
+and the reasoning held, but it was a fifth idea competing with the four the slide is named for.
+It is still the honest answer if anyone asks who decides what changes.
 
 ## Slide 18 — What I'd Do Differently `[ANVIL]`
 
