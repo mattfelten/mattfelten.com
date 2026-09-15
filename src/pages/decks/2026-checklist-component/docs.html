@@ -96,16 +96,31 @@
 
   /* ---------- shell ---------- */
 
+  /* Content first, nav second, and the content column takes whatever is
+     left rather than a fixed width.
+
+     Both halves of that are doing the same job. The page has to fill its
+     frame edge to edge: centring a fixed-width shell leaves a gutter
+     down each side, and a gutter reads as "this is the whole site and it
+     has one component in it". Filling the frame reads as the inner page
+     of a larger site whose component list is cropped off the left edge,
+     which is what this is.
+
+     The nav on the right is the other half. On the left it looks like
+     the site's primary navigation; on the right it reads as an on-page
+     contents list, which is all it is. */
   .shell {
     display: grid;
-    grid-template-columns: 14rem minmax(0, 51rem);
-    gap: 3rem;
-    justify-content: center;
-    padding: 0 2rem 7rem;
+    grid-template-columns: minmax(0, 1fr) 14rem;
+    gap: 3.5rem;
+    padding: 0 3rem 7rem;
   }
 
   /* ---------- sidebar ---------- */
 
+  /* No product name and no component name up here. Those were what made
+     the page read as a whole site rather than as one page inside one.
+     What is left is an on-page contents list, which is what it is. */
   .side {
     position: sticky;
     top: 0;
@@ -114,19 +129,18 @@
     padding: 3.25rem 0 1.75rem;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 0.75rem;
     overflow-y: auto;
   }
 
-  .brand { display: flex; flex-direction: column; gap: 0.1875rem; }
-  .brand .sys {
+  .side-label {
     font-size: 0.6875rem;
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--bench-ink-3);
+    padding-left: 0.75rem;
   }
-  .brand .name { font-size: 1.0625rem; font-weight: 600; letter-spacing: -0.012em; }
 
   .nav { display: flex; flex-direction: column; gap: 0.0625rem; }
   .nav a {
@@ -151,20 +165,6 @@
     background: var(--bench-sunk);
     border-left-color: var(--bench-ink);
   }
-
-  .side-foot {
-    margin-top: auto;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--bench-line);
-    display: flex;
-    flex-direction: column;
-    gap: 0.4375rem;
-    font-size: 0.75rem;
-    color: var(--bench-ink-3);
-  }
-  .side-foot a { color: var(--bench-ink-2); text-decoration: none; }
-  .side-foot a:hover { color: var(--bench-ink); text-decoration: underline; }
-  .side-foot a:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 2px; }
 
   /* ---------- main ---------- */
 
@@ -195,20 +195,31 @@
     max-width: 42rem;
   }
 
-  .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
-
-  .chip {
+  /* One pill, not four. Consumers, Nesting and Server state were facts
+     the page already states properly further down, and as chips they
+     read as a spec sheet nobody asked for. Status is the one thing that
+     is only true right now, which is what a pill at the top is for. */
+  .status {
     display: inline-flex;
-    align-items: baseline;
-    gap: 0.375rem;
+    align-items: center;
+    gap: 0.4375rem;
+    margin-top: 1.125rem;
     font-size: 0.75rem;
-    padding: 0.25rem 0.625rem;
+    font-weight: 500;
+    padding: 0.25rem 0.6875rem 0.25rem 0.5625rem;
     border-radius: 999px;
     border: 1px solid var(--bench-line-2);
-    color: var(--bench-ink-3);
+    color: var(--bench-ink-2);
     background: var(--bench-raise);
   }
-  .chip b { font-weight: 600; color: var(--bench-ink); }
+
+  .status::before {
+    content: "";
+    width: 0.4375rem;
+    height: 0.4375rem;
+    border-radius: 999px;
+    background: var(--bench-open);
+  }
 
   section { padding-top: 2.75rem; scroll-margin-top: 1.25rem; }
 
@@ -248,13 +259,17 @@
      specimen and the address all stay, and so does the menu reserve
      under the specimen, because the slide is driven live. */
   body.is-compact #example > p,
-  body.is-compact #example > .note { display: none; }
+  body.is-compact #example > .note,
+  body.is-compact .hero .lede { display: none; }
 
-  /* Flush to the top of the frame. Any scroll margin here leaves the
-     bottom edge of the masthead chips showing above the heading, which
-     reads as a page that failed to scroll rather than one opened at a
-     section. The breathing room comes from the padding inside. */
   body.is-compact #example { padding-top: 0.75rem; scroll-margin-top: 0; }
+
+  /* The slide shows the page from its masthead down, so the frame's own
+     top edge is doing the job the page's top padding would. Every pixel
+     bought back here goes into `scale`, and at this size the type is the
+     whole argument about whether it reads as a real page. */
+  body.is-compact main,
+  body.is-compact .side { padding-top: 1.25rem; }
 
   /* Slide mode buys back two rem of canvas. 32rem is 512px of frame,
      and the worst case in there is the nested specimen: 364 tall, last
@@ -346,13 +361,17 @@
     padding: 0.5rem 0.75rem;
   }
 
+  /* `anywhere` rather than `break-all`, so the explicit break
+     opportunity before the plumbing wins and the address only splits
+     mid-token when it genuinely has nowhere else to go. break-all had no
+     such preference and split "scale" down the middle. */
   .urlbar .url {
     flex: 1 1 auto;
     min-width: 0;
     font-size: 0.75rem;
     line-height: 1.5;
     color: var(--bench-ink);
-    word-break: break-all;
+    overflow-wrap: anywhere;
   }
 
   /* Frame plumbing is dimmed. embed, scale and fit size the thing
@@ -629,45 +648,16 @@
 
 <div class="shell">
 
-  <aside class="side">
-    <div class="brand">
-      <span class="sys">Mission Control</span>
-      <span class="name">Checklist</span>
-    </div>
-
-    <nav class="nav" aria-label="On this page">
-      <a href="#example">Example</a>
-      <a href="#anatomy">Anatomy</a>
-      <a href="#props">Props</a>
-      <a href="#data">Data</a>
-      <a href="#states">States</a>
-      <a href="#accessibility">Accessibility</a>
-      <a href="#usage">Usage</a>
-      <a href="#rules">Rules</a>
-      <a href="#open">Open questions</a>
-    </nav>
-
-    <div class="side-foot">
-      <a href="./prototypes/">What we explored</a>
-      <a href="./prototypes/rejections">Rejected directions</a>
-    </div>
-  </aside>
-
   <main>
 
     <div class="hero">
-      <span class="eyebrow">Design System</span>
+      <span class="eyebrow">Component</span>
       <h1>Checklist</h1>
       <p class="lede">
         A list of items you can tick, reorder, edit in place, and nest one level deep.
         Built for Collaboration Loops, and adopted by Runbooks.
       </p>
-      <div class="chips">
-        <span class="chip">Status <b>In review</b></span>
-        <span class="chip">Consumers <b>2</b></span>
-        <span class="chip">Nesting <b>One level</b></span>
-        <span class="chip">Server state <b>None</b></span>
-      </div>
+      <span class="status">In review</span>
     </div>
 
     <section id="example">
@@ -1058,6 +1048,21 @@
     </section>
 
   </main>
+
+  <aside class="side">
+    <span class="side-label">On this page</span>
+    <nav class="nav" aria-label="On this page">
+      <a href="#example">Example</a>
+      <a href="#anatomy">Anatomy</a>
+      <a href="#props">Props</a>
+      <a href="#data">Data</a>
+      <a href="#states">States</a>
+      <a href="#accessibility">Accessibility</a>
+      <a href="#usage">Usage</a>
+      <a href="#rules">Rules</a>
+      <a href="#open">Open questions</a>
+    </nav>
+  </aside>
 </div>
 
 <script>
@@ -1136,6 +1141,11 @@
     sem.textContent = s.semantic;
     readout.appendChild(sem);
 
+    /* The one place the address is allowed to wrap. Semantic on the
+       first line, plumbing on the second, rather than a break landing in
+       the middle of a parameter name. */
+    readout.appendChild(document.createElement('wbr'));
+
     var plumb = document.createElement('span');
     plumb.className = 'plumbing';
     plumb.textContent = '&' + frame;
@@ -1182,33 +1192,88 @@
   }
   show(start);
 
-  /* Sidebar follows the reader. IntersectionObserver rather than a
-     scroll handler so it costs nothing while nobody is scrolling. */
+  /* Sidebar follows the reader.
+
+     The first version asked "which sections intersect a band across the
+     top of the viewport" and took the first one in document order. That
+     is wrong in the exact case you notice: click Accessibility, it
+     scrolls so Accessibility starts at the top, and the section above it
+     ends at the same y. States is therefore still intersecting by its
+     last pixel, and being earlier in the document it won. The page was
+     on Accessibility and the nav said States.
+
+     What the nav actually means is "which section have I most recently
+     scrolled past the top of", so ask that instead: walk the sections in
+     order and keep the last one whose top is above a line near the top
+     of the viewport. No intersection, no document-order tiebreak, and it
+     cannot disagree with what is under the heading. */
   var links = {};
   var navLinks = document.querySelectorAll('.nav a');
   for (var j = 0; j < navLinks.length; j++) {
     links[navLinks[j].getAttribute('href').slice(1)] = navLinks[j];
   }
 
-  var visible = {};
+  var sections = document.querySelectorAll('main section');
 
-  var obs = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      visible[e.target.id] = e.isIntersecting;
-    });
+  function updateCurrent() {
+    if (!sections.length) return;
 
-    var current = null;
-    var sections = document.querySelectorAll('main section');
+    /* A quarter of the way down. High enough that a section counts as
+       current as soon as its heading is comfortably on screen, low
+       enough that the last section still wins at the bottom of the
+       page. */
+    var line = document.documentElement.clientHeight * 0.25;
+    var current = sections[0].id;
+
     for (var k = 0; k < sections.length; k++) {
-      if (visible[sections[k].id]) { current = sections[k].id; break; }
+      if (sections[k].getBoundingClientRect().top <= line) current = sections[k].id;
     }
 
     for (var id in links) {
       links[id].setAttribute('aria-current', String(id === current));
     }
-  }, { rootMargin: '0px 0px -70% 0px' });
+  }
 
-  document.querySelectorAll('main section').forEach(function (el) { obs.observe(el); });
+  /* Two triggers, because neither is reliable on its own here.
+
+     IntersectionObserver is the one that is known to fire: the bug this
+     replaces was visible, which means the observer was running. It also
+     fires on layout changes, not only on scrolling.
+
+     Scroll events are the belt to that pair of braces, and they are NOT
+     delivered at all in a backgrounded tab. That is the same class of
+     trap as requestAnimationFrame in the reorder benches: the handler
+     runs whenever somebody is watching and not when nobody is, so a fix
+     tested only that way looks fine and is not.
+
+     What changed is the answer, not the plumbing. The observer no longer
+     decides anything; it just says "something moved" and the rect walk
+     above works out where we are.
+
+     Nine rects is cheap enough to do straight through, and doing it
+     straight through keeps it out of requestAnimationFrame. */
+  if (window.IntersectionObserver) {
+    var obs = new IntersectionObserver(updateCurrent, {
+      threshold: [0, 0.25, 0.5, 0.75, 1],
+    });
+    for (var m = 0; m < sections.length; m++) obs.observe(sections[m]);
+  }
+
+  window.addEventListener('scroll', updateCurrent, { passive: true });
+  window.addEventListener('resize', updateCurrent, { passive: true });
+
+  /* Clicking a contents link is the one case that must never depend on
+     an event arriving. Let the anchor jump happen, then recompute on the
+     next tick from where the page actually ended up. Without this the
+     clicked item is only right if a scroll event gets delivered, which
+     is exactly the thing that does not happen in a background tab. */
+  for (var n = 0; n < navLinks.length; n++) {
+    navLinks[n].addEventListener('click', function () {
+      setTimeout(updateCurrent, 0);
+    });
+  }
+
+  updateCurrent();
 
   /* Anchor scrolling has to wait for the slide to exist.
 
@@ -1236,6 +1301,7 @@
       if (landed || document.documentElement.clientWidth === 0) return;
       landed = true;
       anchor.scrollIntoView();
+      updateCurrent();
       if (ro) ro.disconnect();
     };
 

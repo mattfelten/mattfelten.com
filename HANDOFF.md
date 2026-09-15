@@ -103,11 +103,29 @@ Matt's call, 2026-09-14: build a real one. The component is not in Anvil and the
 Mission Control design system has very little documentation, so this is the chance to
 make a good one even though no other component has one.
 
-It is the bench token set, a sticky sidebar, and nine sections: Example, Anatomy,
+It is the bench token set, a sticky contents list, and nine sections: Example, Anatomy,
 Props, Data, States, Accessibility, Usage, Rules, Open questions. **The Example is the
 argument.** Seven named states across the top, one live specimen, and the address that
 produced it printed underneath with the frame plumbing dimmed. Picking a state
 rewrites both. The States table links into it by the same names.
+
+**It is built to read as one page inside a larger system, not as a whole site**, and
+three things do that job together. Do not undo them one at a time.
+
+1. **The shell fills its frame.** No centring, no max width. A centred fixed-width
+   shell leaves a gutter down each side, and that gutter reads as "this is the whole
+   site and it has one component in it".
+2. **The contents list is on the right.** On the left it reads as the site's primary
+   navigation. On the right it reads as an on-page contents list, which is all it is.
+3. **No product name and no component name above it.** "Mission Control / Checklist" in
+   the sidebar was the single thing making it look like a site of its own. What is left
+   is "On this page", and the component list a real docs site would carry is implied to
+   be cropped off the left edge.
+
+One status pill, not four chips. Consumers, nesting and server state are all stated
+properly further down the page, and as chips they read as a spec sheet nobody asked
+for. The eyebrow says **Component**, not "Design System": the page is a component, it
+is not the system.
 
 **No sibling artifacts.** No `docs.md`, no `spec.json`. Matt scoped it to an iframe in
 the deck and nothing else consumes it, so the machine-readable claim is made by the
@@ -118,11 +136,20 @@ Its own params, and the reasoning is in the file:
 | Param | Effect |
 |---|---|
 | `scale` | Multiplies the **root font size**. Every size on the page is rem. Deliberately not `zoom`: see the bug class below. The bench inside gets the same number through its own `scale`, which is zoom, but inside its own document. |
-| `compact` | `1` is slide mode. Drops the two prose blocks and trims the canvas to 32rem. |
+| `compact` | `1` is slide mode. Drops the lede, the two prose blocks and most of the top padding, and trims the canvas to 32rem. Everything it drops is something Matt says out loud. |
 | `state` | Opens on a named state. Unknown values fall back to the default. |
 
-Slide 43 embeds it at `?compact=1&scale=1.1&state=default#example`, 1640 x 800.
-**Those numbers are measured, not chosen.** See the sizing note below.
+**Slide 43 is a bleed, and it is the first iframe in the deck to be one.** The same move
+`5-MCWhatIsMissionCloud` and `6-MCBeta` make with an image: absolutely positioned,
+`left-1/2 -translate-x-1/2`, `bottom: -60px`, square bottom and `rounded-t-2xl` because
+the bottom is not an edge, it is a cut. `BleedImage` cannot do it: its `bleed` prop only
+sets an edge to offset 0, and going past one needs a negative offset written inline.
+
+`?compact=1&scale=1.05&state=default`, **1400 x 930**, and **those numbers are measured**.
+No `#example` anchor any more: at 1400 wide the whole page from the masthead down to the
+address bar measures 899 at scale 1.05, so the frame shows it all and the anchor is not
+needed. 1400 is also what makes the shell fill with no gutters. Scale is capped at about
+1.05 by the height; above that the address bar falls out of the frame.
 
 ### The rest of the presentation is assembled
 
@@ -213,7 +240,18 @@ classes that have each bitten more than once. In short:
   bugs this session. If something looks wrong that should be fixed, hard-reload or restart
   the server before believing it.
 
-**Four more from building the docs page, all found by driving it:**
+**Five more from building the docs page, all found by driving it:**
+
+- **"Which section is current" is not "which sections are visible".** The contents list
+  asked which sections intersected a band across the top and took the first in document
+  order. Click Accessibility, it scrolls so Accessibility starts at the top, the section
+  above ends at the same y, so the outgoing section is still intersecting by its last
+  pixel and wins on document order. The page said Accessibility and the nav said States.
+  The right question is **which section have I most recently scrolled past the top of**:
+  walk them in order and keep the last one whose top is above a line near the top of the
+  viewport. Also: **update on the click itself**, because otherwise the clicked item is
+  only right if a scroll event gets delivered, and see the next point for why that is not
+  a safe assumption.
 
 - **A hidden Reveal slide cannot resolve an anchor.** Its iframe is zero width at load, so
   the browser resolves `#example` against a viewport with no height and scrolls nowhere: the
@@ -233,6 +271,13 @@ classes that have each bitten more than once. In short:
 - **Sizing a page into a slide binds on height, not width.** The docs page fits the 1640
   frame at scale 1.45 and the 800 height at 1.1, so height decides. Work it the other way and
   you get a page that looks right and clips the one row the slide exists to show.
+
+**Scroll events are not delivered in the automation tab either.** Proven rather than
+assumed this session: a probe listener attached from the console fired **zero** times
+while `window.scrollY` went from 0 to 2600. That is the same trap as `requestAnimationFrame`
+in the benches, one layer out, and it means **a scroll-driven behaviour cannot be verified
+here at all**. Where something must be right, drive it with a click and assert the result,
+or give it a second trigger that does fire.
 
 **Not written down elsewhere:** the automation browser tab runs backgrounded. Real key and
 mouse events are often not delivered and `requestAnimationFrame` never fires. Synthetic

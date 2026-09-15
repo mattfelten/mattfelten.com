@@ -1,50 +1,55 @@
 ---
 import Slide from '@decks/templates/Slide.astro';
 
-// The component's documentation, live rather than a screenshot, and
-// anchored at the Example section rather than at the top of the page.
+// The component's documentation, running rather than pictured, rising
+// off the bottom edge of the slide.
 //
-// Why the Example and not the masthead: the sidebar is sticky, so it
-// carries "Mission Control / Checklist" and the whole section list no
-// matter where the page is scrolled to. The identity is already on
-// screen, which frees the body of the frame for the one thing on this
-// page that is not in every design system's docs.
+// The bleed is the same move `5-MCWhatIsMissionCloud` and `6-MCBeta`
+// make with an image, and it is doing the same job here: a page that
+// runs off the bottom reads as a page, where one boxed inside the slide
+// reads as a screenshot of a page. Rounded top corners and square
+// bottom, because the bottom is not an edge, it is a cut.
 //
-// That thing is the address bar under the specimen. Every state is a
-// named value, unknown values are ignored rather than guessed at, and
-// picking a state rewrites the specimen and the address together. Say
-// out loud what it buys: an agent can open a state and look at it, not
-// only read a paragraph describing one. Docs that are machine-readable
-// by construction rather than by a second export nobody maintains.
+// `BleedImage` cannot do this. Its `bleed` prop only sets an edge to
+// offset 0; extending past one needs a negative offset written inline,
+// which is why this is positioned by hand. Same reason the two image
+// slides above are raw `<img>` rather than the template.
 //
-// The honest caveat, and it is worth saying before the engineer on the
-// panel says it: this vocabulary grew on the prototypes, and it
-// documents states the component has rather than being generated from
-// the component. The claim is that the property should carry into the
-// docs, not that these are generated docs today.
+// The page fills the frame with no gutters, which is deliberate and is
+// what the width is chosen for. A centred fixed-width shell leaves a
+// margin down each side, and that margin reads as "this is the whole
+// site, and it has one component in it". Filling the frame reads as the
+// inner page of a larger system whose component list is cropped off the
+// left edge, which is the truthful impression: this is one page of a
+// design system, not a design system.
 //
-// Sizing is measured, not guessed. The Example section runs 840px at
-// scale 1, against a slide budget of 800, so `compact=1` drops the two
-// prose blocks that get said out loud anyway. Compact measures 709 at
-// scale 1 and 779 at scale 1.1, which is the largest step that still
-// clears 800. Above that the page also outgrows the 1640 frame width.
+// The contents nav sits on the right for the same reason. On the left it
+// would read as the site's primary navigation and put us back where we
+// started.
 //
-// The canvas inside the page keeps its full menu reserve at this scale.
-// That is deliberate: this embed gets driven live, and centring the
-// specimen instead of reserving room below it is what made the row
-// menu clip on the last row.
+// What to say over it. The address under the specimen is the part that
+// is not in every design system's docs: pick a state and the specimen
+// and the address change together. Named values only, unknown values
+// ignored rather than guessed at, so an agent can open a state and look
+// at it instead of reading a paragraph describing one.
+//
+// Say the caveat before the engineer does. The vocabulary grew on the
+// prototypes and documents the states the component has; it is not
+// generated from the component. The claim is that the property should
+// carry into the docs, not that these are generated docs today.
 //
 // Drive it, roughly in this order:
 //   pick two or three states and let the address change under them
 //   hover a row, open the row menu, take Move up
-//   scroll the page to Props or States if anybody asks what else is in
-//     it, and to Open questions if they ask what is not finished
+//   scroll to Props or States if anybody asks what else is in it, and to
+//     Open questions if they ask what is not finished
 ---
 
 <Slide subtitle="Docs">
 	<iframe
-		src="/decks/2026-checklist-component/docs?compact=1&scale=1.1&state=default#example"
+		src="/decks/2026-checklist-component/docs?compact=1&scale=1.05&state=default"
 		title="The Checklist component documentation, live"
-		class="live-embed m-0! block h-[800px] w-[1640px] max-h-none! max-w-none! border-0"
+		class="live-embed absolute left-1/2 m-0! block h-[930px] w-[1400px] max-h-none! max-w-none! -translate-x-1/2 rounded-t-2xl! border-0"
+		style="bottom: -60px;"
 	></iframe>
 </Slide>
