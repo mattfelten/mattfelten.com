@@ -1,13 +1,50 @@
 ---
 import Slide from '@decks/templates/Slide.astro';
 
-import Placeholder from './_Placeholder.astro';
+// The component's documentation, live rather than a screenshot, and
+// anchored at the Example section rather than at the top of the page.
+//
+// Why the Example and not the masthead: the sidebar is sticky, so it
+// carries "Mission Control / Checklist" and the whole section list no
+// matter where the page is scrolled to. The identity is already on
+// screen, which frees the body of the frame for the one thing on this
+// page that is not in every design system's docs.
+//
+// That thing is the address bar under the specimen. Every state is a
+// named value, unknown values are ignored rather than guessed at, and
+// picking a state rewrites the specimen and the address together. Say
+// out loud what it buys: an agent can open a state and look at it, not
+// only read a paragraph describing one. Docs that are machine-readable
+// by construction rather than by a second export nobody maintains.
+//
+// The honest caveat, and it is worth saying before the engineer on the
+// panel says it: this vocabulary grew on the prototypes, and it
+// documents states the component has rather than being generated from
+// the component. The claim is that the property should carry into the
+// docs, not that these are generated docs today.
+//
+// Sizing is measured, not guessed. The Example section runs 840px at
+// scale 1, against a slide budget of 800, so `compact=1` drops the two
+// prose blocks that get said out loud anyway. Compact measures 709 at
+// scale 1 and 779 at scale 1.1, which is the largest step that still
+// clears 800. Above that the page also outgrows the 1640 frame width.
+//
+// The canvas inside the page keeps its full menu reserve at this scale.
+// That is deliberate: this embed gets driven live, and centring the
+// specimen instead of reserving room below it is what made the row
+// menu clip on the last row.
+//
+// Drive it, roughly in this order:
+//   pick two or three states and let the address change under them
+//   hover a row, open the row menu, take Move up
+//   scroll the page to Props or States if anybody asks what else is in
+//     it, and to Open questions if they ask what is not finished
 ---
 
 <Slide subtitle="Docs">
-	<Placeholder
-		need="The component docs, for people and for agents"
-		why="Purpose, anatomy, states, interactions, accessibility notes. And the machine-readable half, which half exists already: every switch has a name, unknown values are ignored rather than guessed, and every decision has a URL that opens the component in exactly that state."
-		height={440}
-	/>
+	<iframe
+		src="/decks/2026-checklist-component/docs?compact=1&scale=1.1&state=default#example"
+		title="The Checklist component documentation, live"
+		class="live-embed m-0! block h-[800px] w-[1640px] max-h-none! max-w-none! border-0"
+	></iframe>
 </Slide>

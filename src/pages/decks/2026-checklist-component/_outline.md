@@ -218,13 +218,24 @@ shorter call, and it never has to know that reordering, presence and the author 
 
 Say that out loud rather than putting it on the slide.
 
-## Slide 29 — Docs `[PLACEHOLDER]`
+## Slide 29 — Docs
 
-**Open.** Either build a real docs page or reframe the slide around the bench param vocabulary,
-which is already machine-readable by construction. Recommendation is to show what exists. The
-differentiating idea is agent-readable component docs: named values only, unknown values ignored
-rather than guessed, and every decision addressable by a URL that opens the component in exactly
-that state.
+The component's documentation page, running rather than pictured, opened at the Example section.
+The sticky sidebar carries the name and the section list, so the frame is free for the part that
+is not in every design system's docs.
+
+That part is the address under the specimen. Pick a state and the specimen and the address change
+together. Say what it buys out loud: named values only, unknown values ignored rather than guessed
+at, and every state addressable, so an agent can open a state and look at it instead of reading a
+paragraph describing one. Machine-readable by construction rather than by a second export nobody
+maintains.
+
+Say the caveat before the engineer does. The vocabulary grew on the prototypes and documents the
+states the component has; it is not generated from the component today. The claim is that the
+property should carry into the docs, not that these are generated docs.
+
+Scroll it if anybody asks. Props, Data and States are the surface, Accessibility is the audit, and
+Open questions is the four unresolved threads, which sets up the closing slide.
 
 ## Slide 30 — Next Steps
 

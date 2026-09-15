@@ -1,0 +1,1259 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Checklist - Mission Control Design System</title>
+<meta name="robots" content="noindex, nofollow">
+
+<style>
+  /* ============================================================
+     Checklist component documentation.
+
+     Built to be read at a desk AND to be embedded in a slide, so
+     every size is in rem and `?scale=` moves the root font size.
+     Deliberately NOT CSS zoom: this project has lost days to zoom
+     creating two pixel spaces, and a docs page carrying a live
+     bench in an iframe is exactly where that would bite again.
+
+     Palette is the bench token set, unchanged, so the page and the
+     specimen inside it read as one artifact rather than as a page
+     with a screenshot dropped into it.
+
+     The example canvas is the argument. Every state is a named
+     value, the URL that produced it is printed underneath, and
+     picking a state rewrites both. Docs an agent can use are docs
+     where the state is addressable, and the page shows that by
+     doing it rather than by claiming it.
+     ============================================================ */
+
+  :root {
+    --bench-bg: #EDEEF1;
+    --bench-panel: #F6F7F9;
+    --bench-ink: #242830;
+    --bench-ink-2: #5C6371;
+    --bench-ink-3: #878E9C;
+    --bench-line: #D8DBE2;
+    --bench-line-2: #C4C9D3;
+    --bench-raise: #FFFFFF;
+    --bench-sunk: #E4E6EB;
+    --bench-focus: #1E40AF;
+    --bench-warn: #B4453A;
+    --bench-open: #8A6D1F;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bench-bg: #15171C;
+      --bench-panel: #1C1F26;
+      --bench-ink: #DDE0E6;
+      --bench-ink-2: #99A0AD;
+      --bench-ink-3: #6E7481;
+      --bench-line: #282C35;
+      --bench-line-2: #363B46;
+      --bench-raise: #23262E;
+      --bench-sunk: #121419;
+      --bench-focus: #7C97E8;
+      --bench-warn: #E08276;
+      --bench-open: #D9B44A;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bench-bg: #15171C;
+    --bench-panel: #1C1F26;
+    --bench-ink: #DDE0E6;
+    --bench-ink-2: #99A0AD;
+    --bench-ink-3: #6E7481;
+    --bench-line: #282C35;
+    --bench-line-2: #363B46;
+    --bench-raise: #23262E;
+    --bench-sunk: #121419;
+    --bench-focus: #7C97E8;
+    --bench-warn: #E08276;
+    --bench-open: #D9B44A;
+  }
+
+  * { box-sizing: border-box; }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    font-size: 16px;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bench-bg);
+    color: var(--bench-ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  code, pre, .mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+
+  /* ---------- shell ---------- */
+
+  .shell {
+    display: grid;
+    grid-template-columns: 14rem minmax(0, 51rem);
+    gap: 3rem;
+    justify-content: center;
+    padding: 0 2rem 7rem;
+  }
+
+  /* ---------- sidebar ---------- */
+
+  .side {
+    position: sticky;
+    top: 0;
+    align-self: start;
+    height: 100vh;
+    padding: 3.25rem 0 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    overflow-y: auto;
+  }
+
+  .brand { display: flex; flex-direction: column; gap: 0.1875rem; }
+  .brand .sys {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--bench-ink-3);
+  }
+  .brand .name { font-size: 1.0625rem; font-weight: 600; letter-spacing: -0.012em; }
+
+  .nav { display: flex; flex-direction: column; gap: 0.0625rem; }
+  .nav a {
+    display: block;
+    padding: 0.3125rem 0.625rem;
+    border-radius: 0.375rem;
+    font-size: 0.8125rem;
+    color: var(--bench-ink-2);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    transition: background .12s ease, color .12s ease;
+  }
+  .nav a:hover { background: var(--bench-sunk); color: var(--bench-ink); }
+  .nav a:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 1px; }
+
+  /* Current section is named by weight and a rule as well as by
+     colour. Same rule the explorations page follows: colour is the
+     second signal, never the only one. */
+  .nav a[aria-current="true"] {
+    color: var(--bench-ink);
+    font-weight: 600;
+    background: var(--bench-sunk);
+    border-left-color: var(--bench-ink);
+  }
+
+  .side-foot {
+    margin-top: auto;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--bench-line);
+    display: flex;
+    flex-direction: column;
+    gap: 0.4375rem;
+    font-size: 0.75rem;
+    color: var(--bench-ink-3);
+  }
+  .side-foot a { color: var(--bench-ink-2); text-decoration: none; }
+  .side-foot a:hover { color: var(--bench-ink); text-decoration: underline; }
+  .side-foot a:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 2px; }
+
+  /* ---------- main ---------- */
+
+  main { padding: 3.25rem 0 0; min-width: 0; }
+
+  .hero { margin-bottom: 0.5rem; }
+
+  .eyebrow {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--bench-ink-3);
+  }
+
+  h1 {
+    font-size: 2.125rem;
+    font-weight: 600;
+    letter-spacing: -0.028em;
+    margin: 0.375rem 0 0.625rem;
+  }
+
+  .lede {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--bench-ink-2);
+    margin: 0;
+    max-width: 42rem;
+  }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.25rem; }
+
+  .chip {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.375rem;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.625rem;
+    border-radius: 999px;
+    border: 1px solid var(--bench-line-2);
+    color: var(--bench-ink-3);
+    background: var(--bench-raise);
+  }
+  .chip b { font-weight: 600; color: var(--bench-ink); }
+
+  section { padding-top: 2.75rem; scroll-margin-top: 1.25rem; }
+
+  h2 {
+    font-size: 1.1875rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    margin: 0 0 0.75rem;
+    padding-bottom: 0.625rem;
+    border-bottom: 1px solid var(--bench-line-2);
+  }
+
+  h3 {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    margin: 1.75rem 0 0.5rem;
+    letter-spacing: -0.005em;
+  }
+
+  p { margin: 0.75rem 0; color: var(--bench-ink-2); max-width: 42rem; }
+  strong { color: var(--bench-ink); font-weight: 600; }
+
+  .note {
+    font-size: 0.8125rem;
+    color: var(--bench-ink-3);
+    margin: 0.75rem 0 0;
+    max-width: 42rem;
+  }
+
+  /* compact=1 is slide mode, and it is the same move embed=1 makes on
+     every bench: drop the prose that a presenter says out loud, keep
+     the instrument. Without it the Example section is 840px against a
+     slide budget of 800, so the whole page has to shrink to fit and
+     the address bar, which is the point of the slide, ends up smaller
+     than anything else in the deck.
+     Only the two prose blocks go. The heading, the states, the
+     specimen and the address all stay, and so does the menu reserve
+     under the specimen, because the slide is driven live. */
+  body.is-compact #example > p,
+  body.is-compact #example > .note { display: none; }
+
+  /* Flush to the top of the frame. Any scroll margin here leaves the
+     bottom edge of the masthead chips showing above the heading, which
+     reads as a page that failed to scroll rather than one opened at a
+     section. The breathing room comes from the padding inside. */
+  body.is-compact #example { padding-top: 0.75rem; scroll-margin-top: 0; }
+
+  /* Slide mode buys back two rem of canvas. 32rem is 512px of frame,
+     and the worst case in there is the nested specimen: 364 tall, last
+     row ending at 343, menu 153 below it, so 496. Sixteen pixels of
+     clearance, which is enough because nothing under the specimen
+     grows. Going to 31rem would put the menu exactly on the edge. */
+  body.is-compact .canvas iframe { height: 32rem; }
+
+  /* The address is what the slide is about, so it stops being a caption
+     and takes a readable size. Paid for by the two prose blocks compact
+     mode already dropped. */
+  body.is-compact .urlbar { padding: 0.625rem 0.875rem; }
+  body.is-compact .urlbar .url { font-size: 0.9375rem; }
+
+  /* ---------- the example canvas ---------- */
+
+  .states {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin: 1rem 0 0.75rem;
+  }
+
+  .state {
+    font: inherit;
+    font-size: 0.8125rem;
+    cursor: pointer;
+    color: var(--bench-ink-2);
+    background: var(--bench-raise);
+    border: 1px solid var(--bench-line);
+    border-radius: 0.4375rem;
+    padding: 0.3125rem 0.6875rem;
+    transition: background .12s ease, color .12s ease, border-color .12s ease;
+  }
+  .state:hover { background: var(--bench-sunk); color: var(--bench-ink); border-color: var(--bench-line-2); }
+  .state:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 2px; }
+
+  /* Selected says so in weight and fill, not in hue alone. */
+  .state[aria-pressed="true"] {
+    background: var(--bench-ink);
+    border-color: var(--bench-ink);
+    color: var(--bench-bg);
+    font-weight: 550;
+  }
+
+  .canvas {
+    border: 1px solid var(--bench-line-2);
+    border-radius: 0.75rem;
+    background: var(--bench-bg);
+    overflow: hidden;
+  }
+
+  /* The bench paints #000 in dark embed mode so it disappears into a
+     slide. Match it here rather than fighting it, or the canvas reads
+     as a black box dropped into a grey page. */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .canvas { background: #000; }
+  }
+  :root[data-theme="dark"] .canvas { background: #000; }
+
+  /* Tall on purpose, and the specimen sits at the top rather than
+     centred. The row menu opens downward from the row and does not
+     flip, so centring a 296px specimen in a 432px frame put Delete
+     below the fold: it clipped on the last row, which is the one
+     somebody demonstrating Move up would reach for first.
+
+     The empty space under the specimen is not slack, it is the room
+     every downward gesture needs. Measured rather than guessed:
+     tallest specimen 364 at 28px top padding, menu 153 tall opening at
+     the last row's bottom edge, so the worst case ends at 521. */
+  .canvas iframe {
+    display: block;
+    width: 100%;
+    height: 34rem;
+    border: 0;
+    background: transparent;
+  }
+
+  /* The URL bar under the specimen. This is the whole point of the
+     page, so it is a first-class part of the example rather than a
+     caption: monospace, boxed, and always showing the exact string
+     that produced what is above it. */
+  .urlbar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-top: 1px solid var(--bench-line);
+    background: var(--bench-sunk);
+    padding: 0.5rem 0.75rem;
+  }
+
+  .urlbar .url {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--bench-ink);
+    word-break: break-all;
+  }
+
+  /* Frame plumbing is dimmed. embed, scale and fit size the thing
+     inside a slide and say nothing about the component, and marking
+     that difference is cheaper than explaining it. */
+  .urlbar .plumbing { color: var(--bench-ink-3); }
+
+  .urlbar .open {
+    flex: none;
+    font-size: 0.75rem;
+    color: var(--bench-ink-2);
+    text-decoration: none;
+    border: 1px solid var(--bench-line-2);
+    border-radius: 0.375rem;
+    padding: 0.1875rem 0.5rem;
+    background: var(--bench-raise);
+    white-space: nowrap;
+  }
+  .urlbar .open:hover { color: var(--bench-ink); background: var(--bench-panel); }
+  .urlbar .open:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 2px; }
+
+  /* ---------- tables ---------- */
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    margin-top: 0.75rem;
+  }
+
+  th {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--bench-ink-3);
+    padding: 0 0 0.5rem;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--bench-line-2);
+  }
+
+  td {
+    padding: 0.6875rem 0;
+    vertical-align: baseline;
+    border-top: 1px solid var(--bench-line);
+    color: var(--bench-ink-2);
+    font-size: 0.8125rem;
+  }
+
+  th + th, td + td { padding-left: 1.25rem; }
+
+  td.name {
+    color: var(--bench-ink);
+    font-weight: 500;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    white-space: nowrap;
+  }
+
+  td.type {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color: var(--bench-focus);
+    white-space: nowrap;
+  }
+
+  td.def {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color: var(--bench-ink-3);
+    white-space: nowrap;
+  }
+
+  td.what { width: 100%; }
+
+  /* The states table needs three real columns. Under auto layout the
+     `what` cell's width: 100% collapses every other column to
+     min-content, and a stated width on When loses to it, so "Pointer
+     over the row." wrapped onto four lines. Fixed layout is the only
+     thing that actually holds the widths. */
+  .states-table { table-layout: fixed; }
+  .states-table th:first-child, .states-table td:first-child { width: 10.5rem; }
+  .states-table th.when, .states-table td.when { width: 13rem; }
+
+  /* The state name is a link where the state has an address of its
+     own. Underlined rather than coloured, so the ones that are not
+     links are told apart by more than hue. */
+  td.name a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--bench-ink-3);
+    text-underline-offset: 0.1875rem;
+  }
+  td.name a:hover { text-decoration-color: var(--bench-ink); }
+  td.name a:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 2px; }
+
+  td a { color: var(--bench-ink-2); }
+  td a:hover { color: var(--bench-ink); }
+
+  .vals { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+  .val {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.75rem;
+    border: 1px solid var(--bench-line-2);
+    border-radius: 0.25rem;
+    padding: 0.0625rem 0.3125rem;
+    color: var(--bench-ink-2);
+    background: var(--bench-raise);
+    white-space: nowrap;
+  }
+  .val.is-default { color: var(--bench-ink); border-color: var(--bench-ink-3); font-weight: 600; }
+
+  /* ---------- code ---------- */
+
+  pre {
+    margin: 0.75rem 0 0;
+    border-radius: 0.625rem;
+    border: 1px solid var(--bench-line);
+    background: var(--bench-panel);
+    padding: 0.875rem 1.125rem;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    overflow-x: auto;
+    color: var(--bench-ink);
+  }
+
+  .k { color: #8B5CF6; }
+  .t { color: var(--bench-focus); }
+  .s { color: #0E7490; }
+  .c { color: var(--bench-ink-3); font-style: italic; }
+  .p { color: var(--bench-ink-3); }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .k { color: #B39BF7; }
+    :root:not([data-theme="light"]) .s { color: #5FC7D9; }
+  }
+  :root[data-theme="dark"] .k { color: #B39BF7; }
+  :root[data-theme="dark"] .s { color: #5FC7D9; }
+
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; align-items: start; }
+  .two .label { font-size: 0.8125rem; font-weight: 600; color: var(--bench-ink); }
+
+  /* ---------- anatomy diagram ---------- */
+
+  .diagram { margin-top: 1rem; }
+
+  .box {
+    position: relative;
+    border-radius: 0.625rem;
+    border: 1px dashed rgb(var(--hue) / 0.55);
+    background: rgb(var(--hue) / 0.07);
+    padding: 1.5rem 0.875rem 0.875rem;
+  }
+
+  .box .tag {
+    position: absolute;
+    top: 0.4375rem;
+    left: 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: rgb(var(--hue) / 1);
+  }
+
+  .box.list {
+    --hue: 120 128 144;
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .box.row {
+    --hue: 20 150 130;
+    padding: 1.375rem 0.75rem 0.75rem;
+  }
+
+  /* A sub-row is a real child with exactly the parts every other row
+     has. That is the one-level ceiling and the nesting-as-capability
+     argument in one picture. */
+  .box.row.nested { margin-left: 2.25rem; }
+
+  .box.composer {
+    --hue: 180 110 10;
+    padding: 1.375rem 0.75rem 0.8125rem;
+  }
+
+  .box .note-r {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.75rem;
+    font-size: 0.6875rem;
+    color: var(--bench-ink-3);
+  }
+
+  /* The placeholder is a prop, not a part. Drawing it as a chip made
+     the composer look like it had one of a row's parts, which is the
+     opposite of what the caption underneath says. */
+  .box .prop {
+    display: block;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.75rem;
+    color: rgb(var(--hue) / 0.9);
+  }
+
+  .parts { display: flex; gap: 0.5rem; }
+
+  .part {
+    --hue: 110 90 220;
+    flex: none;
+    border-radius: 0.375rem;
+    border: 1px dashed rgb(var(--hue) / 0.6);
+    background: rgb(var(--hue) / 0.12);
+    color: rgb(var(--hue) / 1);
+    padding: 0.3125rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  /* The text is the only part that takes whatever room is left,
+     which is true of the component too. */
+  .part.grow { flex: 1 1 auto; }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .box.list { --hue: 156 163 175; }
+    :root:not([data-theme="light"]) .box.row { --hue: 61 223 194; }
+    :root:not([data-theme="light"]) .box.composer { --hue: 245 158 11; }
+    :root:not([data-theme="light"]) .part { --hue: 139 124 246; }
+  }
+  :root[data-theme="dark"] .box.list { --hue: 156 163 175; }
+  :root[data-theme="dark"] .box.row { --hue: 61 223 194; }
+  :root[data-theme="dark"] .box.composer { --hue: 245 158 11; }
+  :root[data-theme="dark"] .part { --hue: 139 124 246; }
+
+  /* ---------- definition grids ---------- */
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.125rem 1.75rem; margin-top: 1rem; }
+  .grid2 .dt { font-size: 0.8125rem; font-weight: 600; color: var(--bench-ink); margin-bottom: 0.1875rem; }
+  .grid2 .dd { font-size: 0.8125rem; color: var(--bench-ink-2); }
+
+  /* ---------- rules ---------- */
+
+  .rules { display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem; margin-top: 1rem; }
+
+  .rules h3 { margin-top: 0; }
+
+  .rules ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.625rem; }
+  .rules li { font-size: 0.8125rem; color: var(--bench-ink-2); padding-left: 1.125rem; position: relative; }
+
+  /* Do and Do not are printed in words in the heading above, so the
+     marks are only a second read. */
+  .rules .do li::before {
+    content: "+";
+    position: absolute;
+    left: 0;
+    color: var(--bench-focus);
+    font-weight: 700;
+  }
+  .rules .dont li::before {
+    content: "-";
+    position: absolute;
+    left: 0.125rem;
+    color: var(--bench-warn);
+    font-weight: 700;
+  }
+  .rules li b { color: var(--bench-ink); font-weight: 600; }
+
+  /* ---------- open questions ---------- */
+
+  .open-list { display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem; }
+
+  .open-item {
+    border-left: 2px solid var(--bench-open);
+    padding-left: 0.875rem;
+  }
+  .open-item .dt { font-size: 0.8125rem; font-weight: 600; color: var(--bench-ink); margin-bottom: 0.1875rem; }
+  .open-item .dd { font-size: 0.8125rem; color: var(--bench-ink-2); max-width: 42rem; }
+</style>
+
+<div class="shell">
+
+  <aside class="side">
+    <div class="brand">
+      <span class="sys">Mission Control</span>
+      <span class="name">Checklist</span>
+    </div>
+
+    <nav class="nav" aria-label="On this page">
+      <a href="#example">Example</a>
+      <a href="#anatomy">Anatomy</a>
+      <a href="#props">Props</a>
+      <a href="#data">Data</a>
+      <a href="#states">States</a>
+      <a href="#accessibility">Accessibility</a>
+      <a href="#usage">Usage</a>
+      <a href="#rules">Rules</a>
+      <a href="#open">Open questions</a>
+    </nav>
+
+    <div class="side-foot">
+      <a href="./prototypes/">What we explored</a>
+      <a href="./prototypes/rejections">Rejected directions</a>
+    </div>
+  </aside>
+
+  <main>
+
+    <div class="hero">
+      <span class="eyebrow">Design System</span>
+      <h1>Checklist</h1>
+      <p class="lede">
+        A list of items you can tick, reorder, edit in place, and nest one level deep.
+        Built for Collaboration Loops, and adopted by Runbooks.
+      </p>
+      <div class="chips">
+        <span class="chip">Status <b>In review</b></span>
+        <span class="chip">Consumers <b>2</b></span>
+        <span class="chip">Nesting <b>One level</b></span>
+        <span class="chip">Server state <b>None</b></span>
+      </div>
+    </div>
+
+    <section id="example">
+      <h2>Example</h2>
+      <p>
+        Running, not a screenshot. Pick a state and the specimen and the address change together.
+      </p>
+
+      <div class="states" role="group" aria-label="Component state"></div>
+
+      <div class="canvas">
+        <iframe id="specimen" title="Checklist specimen"></iframe>
+        <div class="urlbar">
+          <span class="url mono" id="urlreadout"></span>
+          <a class="open" id="openlink" href="#" target="_blank" rel="noopener">Open</a>
+        </div>
+      </div>
+
+      <p class="note">
+        Every state above is a named value in the address. Values the component does not
+        recognise are ignored rather than guessed at, so a wrong one renders the default
+        instead of something invented. The dimmed parameters are frame plumbing: they size
+        the specimen inside a page and say nothing about the component.
+      </p>
+    </section>
+
+    <section id="anatomy">
+      <h2>Anatomy</h2>
+      <p>
+        Three levels. The list owns order and nothing else. A row is the arbiter between
+        its parts, and a sub-item is a real row with exactly the same parts, which is why
+        nesting is a capability rather than a second component.
+      </p>
+
+      <div class="diagram">
+        <div class="box list">
+          <span class="tag">Checklist</span>
+
+          <div class="box row">
+            <span class="tag">ChecklistRow</span>
+            <div class="parts">
+              <span class="part">DragHandle</span>
+              <span class="part">Checkbox</span>
+              <span class="part grow">EditableText</span>
+              <span class="part">CreatorBadge</span>
+              <span class="part">RowActions</span>
+            </div>
+          </div>
+
+          <div class="box row nested">
+            <span class="tag">ChecklistRow</span>
+            <span class="note-r">nested, one level</span>
+            <div class="parts">
+              <span class="part">DragHandle</span>
+              <span class="part">Checkbox</span>
+              <span class="part grow">EditableText</span>
+              <span class="part">CreatorBadge</span>
+              <span class="part">RowActions</span>
+            </div>
+          </div>
+
+          <div class="box composer">
+            <span class="tag">ChecklistComposer</span>
+            <span class="prop">label="Add an item"</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="note">
+        The composer has its own colour because it is not a row. It sits in the list and has
+        none of a row's parts: no checkbox, no handle, nothing to drag.
+      </p>
+    </section>
+
+    <section id="props">
+      <h2>Props</h2>
+      <p>
+        Every capability is off by default, and turning one on brings its whole surface with
+        it. <strong>The things that are not props are the things a consumer should not be
+        able to get wrong.</strong>
+      </p>
+
+      <table>
+        <thead>
+          <tr><th>Prop</th><th>Type</th><th>Default</th><th>What it does</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="name">items</td>
+            <td class="type">ChecklistItem[]</td>
+            <td class="def">required</td>
+            <td class="what">Order comes from the array. The component never sorts. Each item carries its own presence.</td>
+          </tr>
+          <tr>
+            <td class="name">reorderable</td>
+            <td class="type">boolean</td>
+            <td class="def">false</td>
+            <td class="what">The handle and the Move up / Move down menu items, together. Never one without the other.</td>
+          </tr>
+          <tr>
+            <td class="name">nesting</td>
+            <td class="type">boolean</td>
+            <td class="def">false</td>
+            <td class="what">One level, or none. False withdraws the gesture and the affordance, and flattens the data.</td>
+          </tr>
+          <tr>
+            <td class="name">editable</td>
+            <td class="type">boolean</td>
+            <td class="def">false</td>
+            <td class="what">Inline edit and autosave. Who may edit is the consumer's call, not this flag.</td>
+          </tr>
+          <tr>
+            <td class="name">showCreator</td>
+            <td class="type">boolean</td>
+            <td class="def">false</td>
+            <td class="what">The author tag. Runbooks does not want one.</td>
+          </tr>
+          <tr>
+            <td class="name">composerLabel</td>
+            <td class="type">string?</td>
+            <td class="def">"Add an item"</td>
+            <td class="what">Placeholder on the add row. Runbooks says "Add a step".</td>
+          </tr>
+          <tr>
+            <td class="name">onReorder, onEdit,<br>onCreate, onDelete</td>
+            <td class="type">callbacks</td>
+            <td class="def">-</td>
+            <td class="what">Intent out, new items in. The component holds no server state.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="note">
+        There is no prop for target size, for how a completed row fades, for whether a parent
+        cascades to its children, or for locking a row while somebody is in it. Each of those
+        was decided once, and exposing it would let a consumer decide it again and worse.
+      </p>
+    </section>
+
+    <section id="data">
+      <h2>Data</h2>
+      <p>
+        A row is five fields and a boolean. <strong>parentId is the entire nesting
+        model:</strong> one nullable field is what one level costs in the data, which is why
+        turning nesting off can flatten rather than migrate.
+      </p>
+
+      <pre><code><span class="k">type</span> <span class="t">ChecklistItem</span> <span class="p">= {</span>
+  id<span class="p">:</span> <span class="t">string</span>
+  text<span class="p">:</span> <span class="t">string</span>                <span class="c">// markdown</span>
+  checked<span class="p">:</span> <span class="t">boolean</span>            <span class="c">// the box, not your meaning</span>
+  author<span class="p">:</span> <span class="t">string</span>              <span class="c">// the creator badge</span>
+  parentId<span class="p">:</span> <span class="t">string</span> <span class="p">|</span> <span class="k">null</span>     <span class="c">// the whole nesting model</span>
+  presence<span class="p">?:</span> <span class="t">PresenceUser</span><span class="p">[]</span>   <span class="c">// who is in THIS row</span>
+<span class="p">}</span>
+
+<span class="k">type</span> <span class="t">PresenceUser</span> <span class="p">= {</span>
+  id<span class="p">:</span> <span class="t">string</span>
+  name<span class="p">:</span> <span class="t">string</span>          <span class="c">// announced, not just drawn</span>
+<span class="p">}</span></code></pre>
+
+      <h3>Callbacks</h3>
+      <pre><code><span class="k">const</span> move <span class="p">= (</span>id<span class="p">, {</span> after<span class="p">,</span> before <span class="p">}) =&gt;</span> api<span class="p">.</span>reorder<span class="p">(...)</span>   <span class="c">// neighbours, never an index</span>
+<span class="k">const</span> save <span class="p">= (</span>id<span class="p">,</span> text<span class="p">) =&gt;</span> api<span class="p">.</span>updateItem<span class="p">(</span>id<span class="p">,</span> text<span class="p">)</span>            <span class="c">// fires on autosave, not on blur</span></code></pre>
+
+      <p class="note">
+        Reorder takes neighbour ids rather than an index, so the server resolves the position
+        inside the transaction and two people reordering at once cannot write the same slot.
+        <strong>checked, not done:</strong> the component knows the box is ticked, not what
+        that means to you.
+      </p>
+    </section>
+
+    <section id="states">
+      <h2>States</h2>
+      <p>
+        What a row can be, and what it looks like when it is. Where a state has an address of
+        its own the name links to it, and the example above changes to match. The four that do
+        not are things the specimen does under your cursor rather than states you can open.
+      </p>
+
+      <table class="states-table">
+        <thead>
+          <tr><th>State</th><th class="when">When</th><th>Treatment</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="name"><a href="#example" data-state="default">default</a></td>
+            <td class="when">Resting.</td>
+            <td class="what">No handle, no menu. Both arrive on hover so a resting list is a list.</td>
+          </tr>
+          <tr>
+            <td class="name">hover</td>
+            <td class="when">Pointer over the row.</td>
+            <td class="what">Row tint. The handle and the kebab appear in the gutters, which are reserved whether or not anything is in them.</td>
+          </tr>
+          <tr>
+            <td class="name">checked</td>
+            <td class="when">Box ticked.</td>
+            <td class="what">Text fades to 60%, which measures 4.58:1. The author's name is not faded at all.</td>
+          </tr>
+          <tr>
+            <td class="name"><a href="#example" data-state="editing">editing</a></td>
+            <td class="when">Text clicked, or Edit from the menu.</td>
+            <td class="what">No border, no padding, no growth. The field has no edges, so nothing below it moves.</td>
+          </tr>
+          <tr>
+            <td class="name">focused</td>
+            <td class="when">Keyboard focus anywhere in the row.</td>
+            <td class="what">Hover tint plus a ring on the row's own edge, keyed off focus-within. Painted, never laid out.</td>
+          </tr>
+          <tr>
+            <td class="name"><a href="#example" data-state="occupied">occupied</a></td>
+            <td class="when">Somebody else is in the row.</td>
+            <td class="what">An avatar in the left gutter, and nothing else. No dim, no bar. Announced by name, not only drawn.</td>
+          </tr>
+          <tr>
+            <td class="name"><a href="#example" data-state="reordering">dragging</a></td>
+            <td class="when">Row lifted.</td>
+            <td class="what">A collapsed proxy follows the cursor and an insertion line shows where it lands. Only the gaps it can land in are offered.</td>
+          </tr>
+          <tr>
+            <td class="name"><a href="#example" data-state="nested">nested</a></td>
+            <td class="when">parentId is set.</td>
+            <td class="what">Indented one step. Identical parts. A sub-item cannot itself be a parent.</td>
+          </tr>
+          <tr>
+            <td class="name"><a href="#example" data-state="coarse">coarse pointer</a></td>
+            <td class="when">pointer: coarse.</td>
+            <td class="what">The edit affordance becomes permanent instead of hover-only, and the menu opens on long press.</td>
+          </tr>
+          <tr>
+            <td class="name"><a href="#example" data-state="forced">forced colors</a></td>
+            <td class="when">forced-colors: active.</td>
+            <td class="what">Background and box-shadow are dropped by the mode, so every painted state is repaired with outline.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="accessibility">
+      <h2>Accessibility</h2>
+      <p>
+        Audited against eight areas. The headline is a correction rather than a confirmation:
+        <strong>a keyboard path was necessary and was never sufficient.</strong> SC 2.5.7 asks
+        for a single pointer alternative to any drag, and a keyboard is not one.
+      </p>
+
+      <div class="grid2">
+        <div>
+          <div class="dt">Colour contrast</div>
+          <div class="dd">Completed items dim to 60%, which measures 4.58:1. They shipped at 50%, which is 3.35:1 and fails.</div>
+        </div>
+        <div>
+          <div class="dt">Target size</div>
+          <div class="dd">Checkbox, handle and kebab are 24 by 24, the 2.5.8 minimum, grown with a negative margin so the glyph does not move.</div>
+        </div>
+        <div>
+          <div class="dt">Keyboard</div>
+          <div class="dd">Every row action has a keyboard path. Move up and Move down live in the row menu, so reordering never needs a drag.</div>
+        </div>
+        <div>
+          <div class="dt">Pointer gestures</div>
+          <div class="dd">The menu is the single pointer alternative, and it covers touch and screen readers for free.</div>
+        </div>
+        <div>
+          <div class="dt">Touch</div>
+          <div class="dd">Tapping the text already edited it and nothing said so. The affordance becomes permanent under pointer: coarse.</div>
+        </div>
+        <div>
+          <div class="dt">Screen reader</div>
+          <div class="dd">A nested list, not a tree. One level does not earn the arrow-key contract a tree takes over.</div>
+        </div>
+        <div>
+          <div class="dt">Focus visible</div>
+          <div class="dd">The field has no edges, so focus cannot be the field appearing. Painted with background and shadow, which sit outside layout.</div>
+        </div>
+        <div>
+          <div class="dt">Reduced motion</div>
+          <div class="dd">The drop animation and the presence entrance both respect it. Nothing conveys state by movement alone.</div>
+        </div>
+      </div>
+
+      <h3>What the consumer owes</h3>
+      <div class="grid2">
+        <div>
+          <div class="dt">Use object names</div>
+          <div class="dd">Pass a label. The component renders a group of checkboxes and does not know what they are a list of.</div>
+        </div>
+        <div>
+          <div class="dt">Include a section heading</div>
+          <div class="dd">The component owns one region, not the page. Give it a heading somebody can navigate to.</div>
+        </div>
+        <div>
+          <div class="dt">Handle permissions</div>
+          <div class="dd">Set editable per row from your own rules. The component asks the question and never answers it.</div>
+        </div>
+        <div>
+          <div class="dt">Name the people</div>
+          <div class="dd">Presence is announced, not just drawn. Without a name it is an anonymous face a screen reader cannot report.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="usage">
+      <h2>Usage</h2>
+      <p>
+        Two consumers, four lines of configuration apart. Runbooks is the shorter call, and it
+        never has to know that reordering, presence and the author tag exist.
+      </p>
+
+      <div class="two">
+        <div>
+          <div class="label">Collaboration Loops</div>
+          <pre><code><span class="p">&lt;</span><span class="t">Checklist</span>
+  <span class="k">items</span><span class="p">={</span>items<span class="p">}</span>
+  <span class="k">reorderable</span>
+  <span class="k">nesting</span>
+  <span class="k">editable</span>
+  <span class="k">showCreator</span>
+  <span class="k">onReorder</span><span class="p">={</span>move<span class="p">}</span>
+  <span class="k">onEdit</span><span class="p">={</span>save<span class="p">}</span>
+<span class="p">/&gt;</span></code></pre>
+        </div>
+        <div>
+          <div class="label">Runbooks</div>
+          <pre><code><span class="p">&lt;</span><span class="t">Checklist</span>
+  <span class="k">items</span><span class="p">={</span>steps<span class="p">}</span>
+  <span class="k">nesting</span>
+  <span class="k">onEdit</span><span class="p">={</span>save<span class="p">}</span>
+<span class="p">/&gt;</span></code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="rules">
+      <h2>Rules</h2>
+
+      <div class="rules">
+        <div>
+          <h3>Do</h3>
+          <ul class="do">
+            <li><b>Pass a label and a heading.</b> The component owns one region, not the page, and it does not know what its items are a list of.</li>
+            <li><b>Decide who may edit, per row.</b> The editable prop turns the capability on. Your rules decide who gets it.</li>
+            <li><b>Give every presence user a name.</b> An avatar without one is a face a screen reader cannot report.</li>
+            <li><b>Resolve order on the server</b> from the neighbour ids onReorder hands you, inside the transaction.</li>
+            <li><b>Handle a failed save yourself.</b> There is no Save button, so there is no place for a failed write to land. See Open questions.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Do not</h3>
+          <ul class="dont">
+            <li><b>Do not sort items.</b> Order comes from the array, and the component never touches it.</li>
+            <li><b>Do not cascade a tick to children.</b> Multiplayer decides this: cascading silently writes to rows other people wrote.</li>
+            <li><b>Do not lock a row</b> while somebody is in it. Merging at save removed the reason for one, and a lock trains a habit that has to be untrained.</li>
+            <li><b>Do not read checked as done.</b> A checked runbook step is complete. A checked discussion item might be agreed, covered, or dropped.</li>
+            <li><b>Do not nest past one level.</b> A sub-item cannot be a parent, and the ceiling is enforced by not offering, never by refusing.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="open">
+      <h2>Open questions</h2>
+      <p>
+        Documented rather than hidden. The first is a defect. The other three are limits I
+        chose, and I would rather be argued out of them here than find out later.
+      </p>
+
+      <div class="open-list">
+        <div class="open-item">
+          <div class="dt">Autosave failures</div>
+          <div class="dd">No Save button means no place for a failed write to land, which makes it silent data loss. The only correctness problem still open, and the first thing to build.</div>
+        </div>
+        <div class="open-item">
+          <div class="dt">More nesting levels</div>
+          <div class="dd">One level is a ceiling I chose, not one anybody asked for. Runbooks is the consumer most likely to want depth.</div>
+        </div>
+        <div class="open-item">
+          <div class="dt">The multiplayer lock</div>
+          <div class="dd">Merging removes the reason for one. If people keep talking over each other in the same row, the answer is probably presence that is louder, not a lock.</div>
+        </div>
+        <div class="open-item">
+          <div class="dt">Character-level merging</div>
+          <div class="dd">Merging happens at save, not per keystroke, so two people typing for a minute diverge for a minute and then meet. A CRDT is the destination, and it is backend work: the text is one string today, and the activity stream, emails and search all expect it to stay one.</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var BASE = './prototypes/';
+
+  /* One source for the buttons, the iframe and the printed address.
+     Anything that can disagree eventually will, and the whole claim on
+     this page is that the address and the thing above it are the same
+     fact. `semantic` is what describes the component; `frame` is
+     plumbing that sizes it inside a page and is printed dimmed. */
+  var STATES = [
+    { id: 'default',    label: 'Default',       file: 'c4-accessibility-bench',
+      semantic: 'reorder=both&enter=menu&focus=object&presence=none' },
+    { id: 'reordering', label: 'Reordering',    file: 'reorder-bench',
+      semantic: 'grab=both&drop=line&proxy=full' },
+    { id: 'editing',    label: 'Editing',       file: 'edit-mechanics-bench',
+      semantic: 'chrome=none&enter=text&autoedit=1' },
+    { id: 'nested',     label: 'Nested',        file: 'c1-nesting-bench',
+      semantic: 'nesting=on&nest=independent&nosr=1' },
+    { id: 'occupied',   label: 'Occupied',      file: 'edit-presence-bench',
+      semantic: 'solo=1&mark=float' },
+    { id: 'coarse',     label: 'Coarse pointer', file: 'c4-accessibility-bench',
+      semantic: 'reorder=both&enter=menu&focus=object&presence=none&coarse=1' },
+    { id: 'forced',     label: 'Forced colors', file: 'c4-accessibility-bench',
+      semantic: 'reorder=both&enter=menu&focus=object&presence=none&forced=1&fix=1' }
+  ];
+
+  var params = new URLSearchParams(location.search);
+
+  /* Scale moves the root font size rather than applying zoom. Every
+     size on this page is in rem, so the whole layout follows, and the
+     page never grows a second pixel space for the bench inside it to
+     fall into. The bench gets the same number through its own scale
+     param, which IS zoom, but inside its own document where it is the
+     only one. */
+  var scale = parseFloat(params.get('scale'));
+  if (!isFinite(scale) || scale <= 0) scale = 1;
+  if (scale !== 1) {
+    document.documentElement.style.fontSize = (16 * scale) + 'px';
+  }
+
+  if (params.get('compact') === '1') document.body.classList.add('is-compact');
+
+  /* No fit=center. Top alignment is the bench default and it is what
+     leaves room under the specimen for the row menu and the drag proxy,
+     both of which are drawn downward and neither of which flips. */
+  var frame = 'embed=1&scale=' + scale;
+
+  var wrap = document.querySelector('.states');
+  var iframe = document.getElementById('specimen');
+  var readout = document.getElementById('urlreadout');
+  var openlink = document.getElementById('openlink');
+
+  function urlFor(s) {
+    return BASE + s.file + '?' + s.semantic + '&' + frame;
+  }
+
+  function show(s) {
+    var url = urlFor(s);
+    iframe.src = url;
+    openlink.href = url;
+
+    /* Printed with the plumbing dimmed. The reader should be able to
+       tell at a glance which half of this address describes the
+       component and which half only sizes it. */
+    readout.innerHTML = '';
+
+    var path = document.createElement('span');
+    path.textContent = 'prototypes/' + s.file + '?';
+    readout.appendChild(path);
+
+    var sem = document.createElement('span');
+    sem.textContent = s.semantic;
+    readout.appendChild(sem);
+
+    var plumb = document.createElement('span');
+    plumb.className = 'plumbing';
+    plumb.textContent = '&' + frame;
+    readout.appendChild(plumb);
+
+    var buttons = wrap.querySelectorAll('.state');
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].setAttribute('aria-pressed', String(buttons[i].dataset.id === s.id));
+    }
+  }
+
+  STATES.forEach(function (s) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'state';
+    b.dataset.id = s.id;
+    b.textContent = s.label;
+    b.setAttribute('aria-pressed', 'false');
+    b.addEventListener('click', function () { show(s); });
+    wrap.appendChild(b);
+  });
+
+  /* The States table names states by the same words the buttons use,
+     so clicking one should change the example rather than reload the
+     page onto it. The href is a real anchor, so this degrades to a
+     jump if the handler never runs. */
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest ? e.target.closest('a[data-state]') : null;
+    if (!a) return;
+    var want = a.dataset.state;
+    for (var n = 0; n < STATES.length; n++) {
+      if (STATES[n].id === want) { show(STATES[n]); break; }
+    }
+  });
+
+  /* A state can be deep linked, so a slide can open the page already
+     showing the one it is about. Unknown values fall back to the
+     default rather than rendering nothing, which is the same contract
+     the benches hold. */
+  var wanted = params.get('state');
+  var start = STATES[0];
+  for (var i = 0; i < STATES.length; i++) {
+    if (STATES[i].id === wanted) start = STATES[i];
+  }
+  show(start);
+
+  /* Sidebar follows the reader. IntersectionObserver rather than a
+     scroll handler so it costs nothing while nobody is scrolling. */
+  var links = {};
+  var navLinks = document.querySelectorAll('.nav a');
+  for (var j = 0; j < navLinks.length; j++) {
+    links[navLinks[j].getAttribute('href').slice(1)] = navLinks[j];
+  }
+
+  var visible = {};
+
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      visible[e.target.id] = e.isIntersecting;
+    });
+
+    var current = null;
+    var sections = document.querySelectorAll('main section');
+    for (var k = 0; k < sections.length; k++) {
+      if (visible[sections[k].id]) { current = sections[k].id; break; }
+    }
+
+    for (var id in links) {
+      links[id].setAttribute('aria-current', String(id === current));
+    }
+  }, { rootMargin: '0px 0px -70% 0px' });
+
+  document.querySelectorAll('main section').forEach(function (el) { obs.observe(el); });
+
+  /* Anchor scrolling has to wait for the slide to exist.
+
+     Reveal builds every slide up front and hides the ones it is not on,
+     which collapses their iframes to zero width. This page loads inside
+     one of those, so the browser resolves #example against a viewport
+     with no height and scrolls nowhere. The slide then appears already
+     at the top of the page, with the address bar, which is the whole
+     point of the slide, below the fold.
+
+     Size is the only usable signal, exactly as it is for the animated
+     benches: every iframe in the deck shares the tab's visibility, so
+     document.hidden cannot tell the slide you are on from the twenty
+     you are not.
+
+     Once only. Coming back to a slide mid-demo and having the page jump
+     out from under the state you just selected is worse than landing
+     where you left it. */
+  var anchor = location.hash ? document.querySelector(location.hash) : null;
+
+  if (anchor) {
+    var landed = false;
+
+    var land = function () {
+      if (landed || document.documentElement.clientWidth === 0) return;
+      landed = true;
+      anchor.scrollIntoView();
+      if (ro) ro.disconnect();
+    };
+
+    var ro = window.ResizeObserver ? new ResizeObserver(land) : null;
+    if (ro) ro.observe(document.documentElement);
+    land();
+  }
+
+  /* Keydown never crosses out of an iframe, so a presenter with focus
+     inside this page has no keyboard route back to the deck. Same
+     repair every bench carries. */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && window.parent !== window) {
+      if (document.activeElement && document.activeElement.blur) {
+        document.activeElement.blur();
+      }
+      window.parent.focus();
+    }
+  });
+})();
+</script>

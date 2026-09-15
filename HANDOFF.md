@@ -60,17 +60,35 @@ Deck at `/decks/2026-checklist-component/`. Explorations index at
 
 ## Next, in order
 
-### 1. The docs page (slide 29 is the last placeholder)
+### The docs page is built, and slide 29 is no longer a placeholder
 
-Matt's interest is specifically **agent-readable component docs**, which is the most
-differentiating idea in the deck. The recommendation on the table has been to show
-what already exists rather than build a docs page from scratch: the bench param
-vocabulary is machine-readable by construction. Named values only, unknown values
-ignored rather than guessed, and every decision addressable by a URL that opens the
-component in exactly that state. Matt has not chosen between that and a real docs
-page. Ask before building.
+`docs.html` in the deck folder, served at `/decks/2026-checklist-component/docs`.
+Matt's call, 2026-09-14: build a real one. The component is not in Anvil and the
+Mission Control design system has very little documentation, so this is the chance to
+make a good one even though no other component has one.
 
-### 2. The rest of the presentation
+It is the bench token set, a sticky sidebar, and ten sections: Example, Anatomy,
+Props, Data, States, Accessibility, Usage, Rules, Open questions. **The Example is the
+argument.** Seven named states across the top, one live specimen, and the address that
+produced it printed underneath with the frame plumbing dimmed. Picking a state
+rewrites both. The States table links into it by the same names.
+
+**No sibling artifacts.** No `docs.md`, no `spec.json`. Matt scoped it to an iframe in
+the deck and nothing else consumes it, so the machine-readable claim is made by the
+page rather than by files nobody fetches.
+
+Its own params, and the reasoning is in the file:
+
+| Param | Effect |
+|---|---|
+| `scale` | Multiplies the **root font size**. Every size on the page is rem. Deliberately not `zoom`: see the bug class below. The bench inside gets the same number through its own `scale`, which is zoom, but inside its own document. |
+| `compact` | `1` is slide mode. Drops the two prose blocks and trims the canvas to 32rem. |
+| `state` | Opens on a named state. Unknown values fall back to the default. |
+
+Slide 29 embeds it at `?compact=1&scale=1.1&state=default#example`, 1640 x 800.
+**Those numbers are measured, not chosen.** See the sizing note below.
+
+### The rest of the presentation
 
 Personal intro, the Anvil case study, and outro slides, so the 45 minutes exists as
 one deck rather than a middle segment. That is a different frame from this work:
@@ -79,7 +97,7 @@ assembly and pacing across four segments, not pixels inside one component.
 
 ---
 
-## The deck as it stands: 31 slides, 14 live benches, 1 placeholder
+## The deck as it stands: 31 slides, 15 running live, no placeholders
 
 ```
  1 Title                        17 — Multiplayer —
@@ -94,7 +112,7 @@ assembly and pacing across four segments, not pixels inside one component.
 10 Reordering             [live] 26 Component API         (table)
 11 Rows shift out of the way [R] 27 Object Types          (code)
 12 Row follows cursor     [R]    28 Implementation        (code)
-13 — Nested Items —              29 Docs           [PLACEHOLDER]
+13 — Nested Items —              29 Docs                  [live]
 14 Nested Items           [live] 30 Next Steps
 15 Unlimited Nesting  [R][live]  31 Thank you
 16 Parent ticks its children [R]
@@ -138,6 +156,27 @@ classes that have each bitten more than once. In short:
   bugs this session. If something looks wrong that should be fixed, hard-reload or restart
   the server before believing it.
 
+**Four more from building the docs page, all found by driving it:**
+
+- **A hidden Reveal slide cannot resolve an anchor.** Its iframe is zero width at load, so
+  the browser resolves `#example` against a viewport with no height and scrolls nowhere: the
+  slide then opens at the top of the page with the part that matters below the fold. Same
+  rule as the animated benches, and for the same reason. **Size is the only usable signal**,
+  never `document.hidden`. Wait for `clientWidth > 0`, then scroll, and **once only**, or
+  returning to a slide mid-demo yanks the page out from under the state just selected.
+- **`fit=center` steals the room a downward gesture needs.** The row menu opens from the row
+  and does not flip. Centring a 296px specimen in a 432px frame put Delete below the frame
+  edge, on the last row, which is the one a presenter reaches for first. Top alignment is the
+  bench default and it is the default for a reason. Measured: menu 153 tall, tallest specimen
+  364, so the worst case ends at 521.
+- **`width: 100%` on one table cell collapses every other column to min-content**, and a
+  stated width on a sibling loses to it silently. "Pointer over the row." wrapped onto four
+  lines and a 12rem rule on that column changed nothing. `table-layout: fixed` is the only
+  thing that actually holds column widths.
+- **Sizing a page into a slide binds on height, not width.** The docs page fits the 1640
+  frame at scale 1.45 and the 800 height at 1.1, so height decides. Work it the other way and
+  you get a page that looks right and clips the one row the slide exists to show.
+
 **Not written down elsewhere:** the automation browser tab runs backgrounded. Real key and
 mouse events are often not delivered and `requestAnimationFrame` never fires. Synthetic
 pointer events *do* drive drag code and are fine for that; they do **not** move focus, so
@@ -147,12 +186,11 @@ pointer events *do* drive drag code and are fine for that; they do **not** move 
 
 ## Open, and Matt's to decide
 
-1. **The docs slide.** Show the param vocabulary, or build real docs. See above.
-2. **`edit-mechanics` gates Delete on `item.who === ME`**, so rows owned by other people
+1. **`edit-mechanics` gates Delete on `item.who === ME`**, so rows owned by other people
    show no Delete on slides 6 to 8. Every other bench offers it unconditionally. It is a
    deliberate permission model in the round that was about permission, left alone rather
    than flattened.
-3. **C1's screen-reader panel still argues "nested list plus a labelled twisty wins"**,
+2. **C1's screen-reader panel still argues "nested list plus a labelled twisty wins"**,
    and the twisty no longer exists. That is an argument rather than a mechanism, so it was
    flagged rather than rewritten. It shows on the explorations index, not on a slide.
 
