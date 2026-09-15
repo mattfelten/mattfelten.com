@@ -9,7 +9,12 @@ import Slide from '@decks/templates/Slide.astro';
 // would be padding on the one slide in the segment where padding is most
 // obvious.
 //
-// The first item is a correction to the version of this that was drafted
+// Titles name the thread and the body carries the argument, the same
+// shape as Next Steps on slide 47. They were full sentences stating
+// their own conclusions, which left the body with nothing to do but
+// repeat the heading in longer words.
+//
+// MIGRATION IS NOT GUARANTEED is a correction to the version drafted
 // first. "I would have built migration tooling earlier" is the wrong
 // diagnosis: migration was never a technical problem. Teams could do it.
 // They would not spend roadmap on "consistency" when there was no
@@ -17,12 +22,12 @@ import Slide from '@decks/templates/Slide.astro';
 // priority problem, so naming tooling as the fix would have been the
 // kind of answer that sounds humble and is actually shallow.
 //
-// The second is the honest limit of the hybrid role Matt hired for and
-// still believes in. Design Technologists were right. They were also
-// spending stretches of time on framework upgrades and bug fixes, which
-// is specialist platform work being done expensively by generalists. In
-// the language of slide 17: the Platform layer needed its own staffing
-// and never got it.
+// PLAN FOR MAINTENANCE is the honest limit of the hybrid role Matt hired
+// for and still believes in. Design Technologists were right. They were
+// also spending stretches of time on framework upgrades and bug fixes,
+// which is specialist platform work being done expensively by
+// generalists. In the language of slide 17: the Platform layer needed
+// its own staffing and never got it.
 //
 // Deliberately not here, and both were considered:
 //   Mobile parity from day one. Matt does not believe it.
@@ -31,11 +36,11 @@ import Slide from '@decks/templates/Slide.astro';
 
 const items = [
 	{
-		title: 'Adoption stalls on priority, not difficulty',
+		title: 'Migration is not Guaranteed',
 		body: 'Migration was never a technical problem. Teams would not spend roadmap on consistency when there was no mandate and nothing else in it for them. Better tooling would not have fixed that. When the grid became layout, the cost landed on teams who got nothing out of paying it.',
 	},
 	{
-		title: 'The platform layer needed its own engineers',
+		title: 'Plan for Maintenance',
 		body: 'Design Technologists were the right hire and still are. But stretches of the work were framework upgrades and bug fixes, which is specialist platform work done expensively by generalists. I would have pushed for dedicated engineering support years earlier.',
 	},
 ];

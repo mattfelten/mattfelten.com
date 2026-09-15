@@ -187,15 +187,20 @@ It is still the honest answer if anyone asks who decides what changes.
 
 Two, and both are real.
 
-**Adoption stalls on priority, not difficulty.** Migration was never a technical problem. Teams
-would not spend roadmap on consistency when there was no mandate and nothing else in it for them.
-Better tooling would not have fixed that. The grid becoming layout is the example: the cost
-landed on teams who got nothing out of paying it.
+**Migration is not Guaranteed.** Migration was never a technical problem. Teams would not spend
+roadmap on consistency when there was no mandate and nothing else in it for them. Better tooling
+would not have fixed that. The grid becoming layout is the example: the cost landed on teams who
+got nothing out of paying it.
 
-**The platform layer needed its own engineers.** Design Technologists were the right hire and
-still are. But stretches of the work were framework upgrades and bug fixes, specialist platform
-work done expensively by generalists. I would have pushed for dedicated engineering support years
-earlier.
+Say the diagnosis out loud, because the title only names the symptom: **adoption stalls on
+priority, not difficulty.**
+
+**Plan for Maintenance.** Design Technologists were the right hire and still are. But stretches of
+the work were framework upgrades and bug fixes, specialist platform work done expensively by
+generalists. I would have pushed for dedicated engineering support years earlier.
+
+In the language of the slide before it: the Platform layer needed its own staffing and never got
+it.
 
 ---
 
