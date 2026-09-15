@@ -1,0 +1,56 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+// Named threads rather than sentences, so the slide reads as a list of
+// things that are open rather than as four opinions.
+//
+// Target size came off. 24 is the 2.5.8 minimum and it clears AA on a
+// fine pointer, and the touch case was answered in its own round, so
+// raising it here would invite a challenge that has already been
+// handled and take a slot from something genuinely unresolved.
+//
+// Read-only rows takes the slot, and it is the better fourth: it is
+// carried as open in the record, and it belongs to the second consumer.
+// Runbooks spends most of its life being read, not authored.
+//
+// The other candidate, if this ever needs a fifth: item variants. A tick
+// versus an approval gate, and whether that is the system's problem or
+// the consumer's. It is the unbuilt boundary round.
+//
+// Order is deliberate. The correctness problem first, because it is the
+// one that would keep me up. Then the two questions I would want the
+// room to answer. Then the one I would most like to be told I am wrong
+// about.
+
+const items = [
+	{
+		title: 'Autosave Failures',
+		body: 'No Save button means no place for a failed write to land, which makes it silent data loss. The only correctness problem still open, and the first thing I would build.',
+	},
+	{
+		title: 'More Nesting Levels',
+		body: 'One level is a ceiling I chose, not one anybody asked for. Runbooks is the consumer most likely to want depth, and I would rather ask than find out.',
+	},
+	{
+		title: 'Multiplayer Lock',
+		body: 'Merging removes the reason for one. If people keep talking over each other in the same row, the answer is probably presence that is louder, not a lock.',
+	},
+	{
+		title: 'Read-only Rows',
+		body: 'On touch this answered itself: no pencil means no editing. With a mouse a read-only row looks exactly like an editable one until you try, and that is still unsolved.',
+	},
+];
+---
+
+<Slide subtitle="Next Steps">
+	<div class="grid grid-cols-2 gap-x-16 gap-y-10">
+		{
+			items.map((i) => (
+				<div class="flex flex-col gap-3">
+					<span class="text-strong text-3xl font-medium">{i.title}</span>
+					<span class="text-subdued text-2xl">{i.body}</span>
+				</div>
+			))
+		}
+	</div>
+</Slide>
