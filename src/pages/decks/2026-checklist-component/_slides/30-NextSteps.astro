@@ -9,13 +9,26 @@ import Slide from '@decks/templates/Slide.astro';
 // raising it here would invite a challenge that has already been
 // handled and take a slot from something genuinely unresolved.
 //
-// Read-only rows takes the slot, and it is the better fourth: it is
-// carried as open in the record, and it belongs to the second consumer.
-// Runbooks spends most of its life being read, not authored.
+// Character-level merging takes the slot (Matt, 2026-09-14). It follows
+// straight on from the Multiplayer section the room has just watched, it
+// is the only thread with a named external dependency, and saying what
+// something costs and who you would need is a better last note than
+// another thing that is merely unfinished.
 //
-// The other candidate, if this ever needs a fifth: item variants. A tick
-// versus an approval gate, and whether that is the system's problem or
-// the consumer's. It is the unbuilt boundary round.
+// Say "a CRDT" out loud rather than only reading the line: the engineer
+// on the panel will recognise it, and the two designers get the meaning
+// from the title.
+//
+// Candidates that lost the slot, kept so they are not re-argued:
+//   Read-only rows on a fine pointer. Carried as open in the record, but
+//     smaller, and the touch half already answered itself.
+//   Item variants, a tick versus an approval gate. The unbuilt boundary
+//     round, and the best choice if this should end on a systems
+//     question rather than an engineering one.
+//   The one-level ceiling. The symptom is fixed; whether a parent should
+//     be able to carry its subtree into another parent is still open.
+//   Target size. Cut: 24 clears AA on a fine pointer and touch was
+//     answered in its own round.
 //
 // Order is deliberate. The correctness problem first, because it is the
 // one that would keep me up. Then the two questions I would want the
@@ -36,8 +49,8 @@ const items = [
 		body: 'Merging removes the reason for one. If people keep talking over each other in the same row, the answer is probably presence that is louder, not a lock.',
 	},
 	{
-		title: 'Read-only Rows',
-		body: 'On touch this answered itself: no pencil means no editing. With a mouse a read-only row looks exactly like an editable one until you try, and that is still unsolved.',
+		title: 'Character-level Merging',
+		body: 'Merging happens at save, not per keystroke, so two people typing for a minute diverge for a minute and then meet. A CRDT is the destination, and it is backend work: the text is one string today, and the activity stream, emails and search all expect it to stay one.',
 	},
 ];
 ---
