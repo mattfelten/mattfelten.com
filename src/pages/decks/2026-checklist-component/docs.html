@@ -143,10 +143,13 @@
   }
 
   .nav { display: flex; flex-direction: column; gap: 0.0625rem; }
+
+  /* Square, not rounded. The active state is a 2px rule down the left
+     edge, and a corner radius rounds the ends of that rule into a
+     stripe with tapered tips. A rule should meet its own corners. */
   .nav a {
     display: block;
     padding: 0.3125rem 0.625rem;
-    border-radius: 0.375rem;
     font-size: 0.8125rem;
     color: var(--bench-ink-2);
     text-decoration: none;
@@ -221,15 +224,17 @@
     background: var(--bench-open);
   }
 
-  section { padding-top: 2.75rem; scroll-margin-top: 1.25rem; }
+  /* Space separates the sections, not rules. A line under every heading
+     turns a page into a form, and with nine of them the page reads as a
+     stack of boxes rather than as one document. The extra padding is
+     doing the divider's job. */
+  section { padding-top: 4.75rem; scroll-margin-top: 1.25rem; }
 
   h2 {
     font-size: 1.1875rem;
     font-weight: 600;
     letter-spacing: -0.015em;
-    margin: 0 0 0.75rem;
-    padding-bottom: 0.625rem;
-    border-bottom: 1px solid var(--bench-line-2);
+    margin: 0 0 0.875rem;
   }
 
   h3 {
@@ -474,6 +479,26 @@
   td a { color: var(--bench-ink-2); }
   td a:hover { color: var(--bench-ink); }
 
+  /* Key caps. Raised rather than outlined, so a row of them reads as
+     keys and not as a row of code tokens sitting next to the mono in
+     the Props table. */
+  kbd {
+    display: inline-block;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.6875rem;
+    line-height: 1.4;
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    border: 1px solid var(--bench-line-2);
+    border-bottom-width: 2px;
+    background: var(--bench-raise);
+    color: var(--bench-ink);
+    white-space: nowrap;
+  }
+
+  .keys { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem; }
+  .keys .sep { color: var(--bench-ink-3); font-size: 0.75rem; }
+
   .vals { display: flex; flex-wrap: wrap; gap: 0.25rem; }
   .val {
     font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -677,6 +702,36 @@
         instead of something invented. The dimmed parameters are frame plumbing: they size
         the specimen inside a page and say nothing about the component.
       </p>
+    </section>
+
+    <section id="when">
+      <h2>When to use</h2>
+      <p>
+        A flat agenda and a nested runbook are this component configured two ways, which is the
+        argument that it is one component and not two. What it is not good at is anything that
+        wants columns or depth.
+      </p>
+
+      <div class="rules">
+        <div>
+          <h3>Use it for</h3>
+          <ul class="do">
+            <li><b>A list people tick off</b> where the order carries meaning and somebody may want to change it.</li>
+            <li><b>Items that are sentences.</b> The text is markdown and a row is free to run to several lines.</li>
+            <li><b>Lists more than one person is in</b> at the same time. Presence and merge-on-save are built in, not bolted on.</li>
+            <li><b>One level of grouping, or none.</b> Turning nesting off withdraws the gesture, the affordance and the indent together.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Reach for something else when</h3>
+          <ul class="dont">
+            <li><b>Nothing is checkable and the order is arbitrary.</b> That is a list, and a list is lighter than this.</li>
+            <li><b>Rows carry fields that want columns.</b> Dates, owners, statuses side by side. That is a table.</li>
+            <li><b>You need more than one level.</b> The ceiling is one, and it is enforced by only offering the gaps a row can land in.</li>
+            <li><b>You want the component to decide who may edit.</b> It asks that question per row and never answers it.</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <section id="anatomy">
@@ -893,6 +948,52 @@
       </table>
     </section>
 
+    <section id="keyboard">
+      <h2>Keyboard</h2>
+      <p>
+        Reordering by keyboard is a lift, then arrows, then a drop, and the new position is
+        announced after every move rather than only when the row lands. The row menu carries
+        Move up and Move down as well, and these keys sit on top of that rather than instead
+        of it. <strong>Accessibility below is where that distinction gets its reason.</strong>
+      </p>
+
+      <table class="states-table">
+        <thead>
+          <tr><th class="when">Key</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="when"><span class="keys"><kbd>Tab</kbd></span></td>
+            <td class="what">Move through the rows and the controls inside them.</td>
+          </tr>
+          <tr>
+            <td class="when"><span class="keys"><kbd>Space</kbd></span></td>
+            <td class="what">On the checkbox, tick or untick. On a focused row, pick it up and put it down again.</td>
+          </tr>
+          <tr>
+            <td class="when"><span class="keys"><kbd>&#8593;</kbd><span class="sep">/</span><kbd>&#8595;</kbd></span></td>
+            <td class="what">Move a picked-up row.</td>
+          </tr>
+          <tr>
+            <td class="when"><span class="keys"><kbd>Enter</kbd></span></td>
+            <td class="what">On the text, start editing. On the composer, add the item and stay in the composer.</td>
+          </tr>
+          <tr>
+            <td class="when"><span class="keys"><kbd>Esc</kbd></span></td>
+            <td class="what">Leave the field and return focus to its row, or close the row menu.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="note">
+        Focus survives a reorder. The list repaints in place and moves nodes rather than
+        rebuilding, because a rebuild drops focus and the second arrow key then goes nowhere.
+        Restoring it afterwards is not a fix: the repair that looked right ran inside
+        requestAnimationFrame, which does not run in a background tab, so it worked whenever
+        somebody was watching and failed whenever nobody was.
+      </p>
+    </section>
+
     <section id="accessibility">
       <h2>Accessibility</h2>
       <p>
@@ -988,6 +1089,42 @@
       </div>
     </section>
 
+    <section id="content">
+      <h2>Content</h2>
+      <p>
+        The text is the document, not a field in a form. That is why the editor has no edges,
+        and it is the same reason the writing should read as something a person said rather
+        than as a record in a system.
+      </p>
+
+      <div class="grid2">
+        <div>
+          <div class="dt">Write items as sentences</div>
+          <div class="dd">Rows wrap, so a full thought is fine. Sentence case, and a full stop if it is a sentence.</div>
+        </div>
+        <div>
+          <div class="dt">Keep the markdown light</div>
+          <div class="dd">Emphasis and links. Not headings, not tables. A row that needs a heading is not a row.</div>
+        </div>
+        <div>
+          <div class="dt">Let the heading say what a tick means</div>
+          <div class="dd">The component knows the box is ticked and not what that means. No row can settle it for the others, so the list's own heading has to.</div>
+        </div>
+        <div>
+          <div class="dt">Name the thing being added</div>
+          <div class="dd">composerLabel is a prop for this reason. "Add an item" by default, "Add a step" in Runbooks.</div>
+        </div>
+        <div>
+          <div class="dt">Do not put state in the text</div>
+          <div class="dd">No "DONE" prefixes and no "(blocked)" suffixes. The box carries completion and the row carries the rest.</div>
+        </div>
+        <div>
+          <div class="dt">Do not sign the text</div>
+          <div class="dd">The component renders the author. Adding a name to the sentence prints it twice.</div>
+        </div>
+      </div>
+    </section>
+
     <section id="rules">
       <h2>Rules</h2>
 
@@ -1021,12 +1158,15 @@
     <span class="side-label">On this page</span>
     <nav class="nav" aria-label="On this page">
       <a href="#example">Example</a>
+      <a href="#when">When to use</a>
       <a href="#anatomy">Anatomy</a>
       <a href="#props">Props</a>
       <a href="#data">Data</a>
       <a href="#states">States</a>
+      <a href="#keyboard">Keyboard</a>
       <a href="#accessibility">Accessibility</a>
       <a href="#usage">Usage</a>
+      <a href="#content">Content</a>
       <a href="#rules">Rules</a>
     </nav>
   </aside>

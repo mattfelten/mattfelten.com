@@ -103,11 +103,29 @@ Matt's call, 2026-09-14: build a real one. The component is not in Anvil and the
 Mission Control design system has very little documentation, so this is the chance to
 make a good one even though no other component has one.
 
-It is the bench token set, a sticky contents list, and eight sections: Example, Anatomy,
-Props, Data, States, Accessibility, Usage, Rules. **The Example is the
-argument.** Seven named states across the top, one live specimen, and the address that
-produced it printed underneath with the frame plumbing dimmed. Picking a state
-rewrites both. The States table links into it by the same names.
+It is the bench token set, a sticky contents list, and eleven sections: Example, When to
+use, Anatomy, Props, Data, States, Keyboard, Accessibility, Usage, Content, Rules.
+**The Example is the argument.** Seven named states across the top, one live specimen,
+and the address that produced it printed underneath with the frame plumbing dimmed.
+Picking a state rewrites both. The States table links into it by the same names.
+
+**The section list was checked against Anvil's own**, which is the taxonomy a head of
+design will be matching against: `2024-anvil-case-study/18-Documentation.astro` lists
+eleven. When to use, Content and Keyboard were the three real gaps, and all three had
+settled answers already in `design-direction`, so none of it was invented.
+
+**Deliberately still missing: Localisation, Related Components, Component Pairings.**
+The system has too few neighbours for those to be anything but thin, and a thin section
+costs more credibility than an absent one. Do not add them to complete the set.
+
+**Open questions was cut** (Matt, 2026-09-14). It is the one section that is not a docs
+convention: component docs tell you how to use the thing, they do not carry the author's
+unresolved list. Nothing is lost, because slide 44 carries the same four threads.
+
+**Watch for duplication when adding a section.** Two crept in this round and both were
+caught by reading the rendered page rather than the diff: the Keyboard intro restated
+two cells of the Accessibility audit, and Content restated the Rules line about
+`checked` word for word.
 
 **It is built to read as one page inside a larger system, not as a whole site**, and
 three things do that job together. Do not undo them one at a time.
