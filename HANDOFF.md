@@ -103,8 +103,8 @@ Matt's call, 2026-09-14: build a real one. The component is not in Anvil and the
 Mission Control design system has very little documentation, so this is the chance to
 make a good one even though no other component has one.
 
-It is the bench token set, a sticky contents list, and nine sections: Example, Anatomy,
-Props, Data, States, Accessibility, Usage, Rules, Open questions. **The Example is the
+It is the bench token set, a sticky contents list, and eight sections: Example, Anatomy,
+Props, Data, States, Accessibility, Usage, Rules. **The Example is the
 argument.** Seven named states across the top, one live specimen, and the address that
 produced it printed underneath with the frame plumbing dimmed. Picking a state
 rewrites both. The States table links into it by the same names.
@@ -136,7 +136,7 @@ Its own params, and the reasoning is in the file:
 | Param | Effect |
 |---|---|
 | `scale` | Multiplies the **root font size**. Every size on the page is rem. Deliberately not `zoom`: see the bug class below. The bench inside gets the same number through its own `scale`, which is zoom, but inside its own document. |
-| `compact` | `1` is slide mode. Drops the lede, the two prose blocks and most of the top padding, and trims the canvas to 32rem. Everything it drops is something Matt says out loud. |
+| `compact` | `1` is slide mode. Drops the two section prose blocks and most of the top padding, trims the canvas to 32rem, and lets the lede run wider so it sits on one line. The lede stays: Matt asked for it back. |
 | `state` | Opens on a named state. Unknown values fall back to the default. |
 
 **Slide 43 is a bleed, and it is the first iframe in the deck to be one.** The same move
@@ -145,11 +145,16 @@ Its own params, and the reasoning is in the file:
 the bottom is not an edge, it is a cut. `BleedImage` cannot do it: its `bleed` prop only
 sets an edge to offset 0, and going past one needs a negative offset written inline.
 
-`?compact=1&scale=1.05&state=default`, **1400 x 930**, and **those numbers are measured**.
+`?compact=1&scale=1&state=default`, **1400 x 930**, and **those numbers are measured**.
 No `#example` anchor any more: at 1400 wide the whole page from the masthead down to the
-address bar measures 899 at scale 1.05, so the frame shows it all and the anchor is not
-needed. 1400 is also what makes the shell fill with no gutters. Scale is capped at about
-1.05 by the height; above that the address bar falls out of the frame.
+address bar measures 864 at scale 1, so the frame shows all of it and the anchor is not
+needed. 1400 is also what makes the shell fill with no gutters.
+
+**Height is what caps the scale, and it is tighter than it looks.** With the lede back
+the stack is 864 at scale 1 (66px spare) and 926 at 1.05 (4px spare). Scale 1 is not
+timidity: 4px of slack on a 930px frame is one font-rendering difference away from the
+address bar, which is the point of the slide, dropping out of the frame. The 5% of type
+size is invisible; the failure is not.
 
 ### The rest of the presentation is assembled
 

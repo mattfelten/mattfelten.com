@@ -259,8 +259,14 @@
      specimen and the address all stay, and so does the menu reserve
      under the specimen, because the slide is driven live. */
   body.is-compact #example > p,
-  body.is-compact #example > .note,
-  body.is-compact .hero .lede { display: none; }
+  body.is-compact #example > .note { display: none; }
+
+  /* The lede stays. It is the one line that says what the component is,
+     and Matt wants it on the slide. It is allowed to run wider here than
+     the 42rem prose measure: at slide width that turns it from two lines
+     into one, which is worth about 30px of height, and one line under a
+     title is a masthead rather than a paragraph. */
+  body.is-compact .hero .lede { max-width: none; }
 
   body.is-compact #example { padding-top: 0.75rem; scroll-margin-top: 0; }
 
@@ -633,17 +639,6 @@
     font-weight: 700;
   }
   .rules li b { color: var(--bench-ink); font-weight: 600; }
-
-  /* ---------- open questions ---------- */
-
-  .open-list { display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem; }
-
-  .open-item {
-    border-left: 2px solid var(--bench-open);
-    padding-left: 0.875rem;
-  }
-  .open-item .dt { font-size: 0.8125rem; font-weight: 600; color: var(--bench-ink); margin-bottom: 0.1875rem; }
-  .open-item .dd { font-size: 0.8125rem; color: var(--bench-ink-2); max-width: 42rem; }
 </style>
 
 <div class="shell">
@@ -1004,7 +999,7 @@
             <li><b>Decide who may edit, per row.</b> The editable prop turns the capability on. Your rules decide who gets it.</li>
             <li><b>Give every presence user a name.</b> An avatar without one is a face a screen reader cannot report.</li>
             <li><b>Resolve order on the server</b> from the neighbour ids onReorder hands you, inside the transaction.</li>
-            <li><b>Handle a failed save yourself.</b> There is no Save button, so there is no place for a failed write to land. See Open questions.</li>
+            <li><b>Handle a failed save yourself.</b> There is no Save button, so there is no place for a failed write to land, and a silent failure is silent data loss.</li>
           </ul>
         </div>
         <div>
@@ -1016,33 +1011,6 @@
             <li><b>Do not read checked as done.</b> A checked runbook step is complete. A checked discussion item might be agreed, covered, or dropped.</li>
             <li><b>Do not nest past one level.</b> A sub-item cannot be a parent, and the ceiling is enforced by not offering, never by refusing.</li>
           </ul>
-        </div>
-      </div>
-    </section>
-
-    <section id="open">
-      <h2>Open questions</h2>
-      <p>
-        Documented rather than hidden. The first is a defect. The other three are limits I
-        chose, and I would rather be argued out of them here than find out later.
-      </p>
-
-      <div class="open-list">
-        <div class="open-item">
-          <div class="dt">Autosave failures</div>
-          <div class="dd">No Save button means no place for a failed write to land, which makes it silent data loss. The only correctness problem still open, and the first thing to build.</div>
-        </div>
-        <div class="open-item">
-          <div class="dt">More nesting levels</div>
-          <div class="dd">One level is a ceiling I chose, not one anybody asked for. Runbooks is the consumer most likely to want depth.</div>
-        </div>
-        <div class="open-item">
-          <div class="dt">The multiplayer lock</div>
-          <div class="dd">Merging removes the reason for one. If people keep talking over each other in the same row, the answer is probably presence that is louder, not a lock.</div>
-        </div>
-        <div class="open-item">
-          <div class="dt">Character-level merging</div>
-          <div class="dd">Merging happens at save, not per keystroke, so two people typing for a minute diverge for a minute and then meet. A CRDT is the destination, and it is backend work: the text is one string today, and the activity stream, emails and search all expect it to stay one.</div>
         </div>
       </div>
     </section>
@@ -1060,7 +1028,6 @@
       <a href="#accessibility">Accessibility</a>
       <a href="#usage">Usage</a>
       <a href="#rules">Rules</a>
-      <a href="#open">Open questions</a>
     </nav>
   </aside>
 </div>
