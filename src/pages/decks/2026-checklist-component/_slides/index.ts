@@ -60,5 +60,4 @@ export { default as NextSteps } from './44-NextSteps.astro';
 
 // Closing
 export { default as WhyMe } from './46-WhyMe.astro';
-export { default as Testimonials } from './47-Testimonials.astro';
-export { default as ThankYou } from './48-ThankYou.astro';
+export { default as ThankYou } from './47-ThankYou.astro';

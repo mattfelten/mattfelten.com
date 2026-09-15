@@ -1,7 +1,7 @@
 # Design System Portfolio — Slide Deck Outline
 
 The whole 45 minutes, in four segments: about me, the Anvil design system at breadth, the
-Checklist component at depth, and a close. 48 slides, 15 of them running live.
+Checklist component at depth, and a close. 47 slides, 15 of them running live.
 
 **Timing, and the two segments are paced very differently on purpose.**
 
@@ -10,7 +10,7 @@ Checklist component at depth, and a close. 48 slides, 15 of them running live.
 | About Me | 1 to 6 | about 3 min |
 | Anvil Design System | 7 to 14 | about 11 min |
 | Checklist Component | 15 to 44 | about 17 min |
-| Closing | 45 to 48 | about 2 min |
+| Closing | 45 to 47 | about 2 min |
 
 That is roughly 33 minutes of talking against about 10 of questions. Anvil is diagram slides
 talked over for a minute each. Checklist is short slides with live prototypes driven for twenty
@@ -357,11 +357,7 @@ Three things, and the third is the one this deck just spent thirty minutes provi
 claiming. Complexity and the unknown, software as a team sport, and sweating the details that
 make or break it. Do not restate the deck here. The evidence already landed.
 
-## Slide 47 — Testimonials
-
-Five quotes, no header. Let them read. Say nothing for a few seconds.
-
-## Slide 48 — Thank you
+## Slide 47 — Thank you
 
 Leave them the explorations index: every question, every variation, and the chosen one marked in
 words.

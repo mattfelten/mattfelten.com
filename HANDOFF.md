@@ -25,14 +25,14 @@ actually stands rather than trusting a number written here.
 
 ## What this is
 
-**The whole 45-minute portfolio review, as one deck. 48 slides, 15 running live.**
+**The whole 45-minute portfolio review, as one deck. 47 slides, 15 running live.**
 
 | Segment | Slides | Target | Built from |
 |---|---|---|---|
 | About Me | 1 to 6 | about 3 min | `2026-portfolio-review` |
 | Anvil Design System | 7 to 14 | about 11 min | `2026-anvil-15m` |
 | Checklist Component | 15 to 44 | about 17 min | this deck's own work |
-| Closing | 45 to 48 | about 2 min | `2026-portfolio-review` |
+| Closing | 45 to 47 | about 2 min | `2026-portfolio-review` |
 
 About 33 minutes of talking against roughly 10 of questions.
 
@@ -82,7 +82,7 @@ argument that Runbooks is a second consumer.
 | Worktree | `~/Projects/personal/mattfelten.com/.claude/worktrees/checklist-component-deck` |
 | Branch | `worktree-checklist-component-deck` (pushed) |
 | Deck | `src/pages/decks/2026-checklist-component/` |
-| Slides | `_slides/`, 45 files numbered by deck position, 48 slides |
+| Slides | `_slides/`, 44 files numbered by deck position, 47 slides |
 | Narrative | `_outline.md` — **edit this before slides** |
 | Benches | `prototypes/*.html`, 7 of them, plus `index.html` and `rejections.html` |
 | Reasoning record | `~/Projects/personal/ai-brain/work/mission/2026-09-07-checklist-component/` |
@@ -110,10 +110,15 @@ Rules.
 **The package is `@m/ui`** (Matt, 2026-09-14). Not invented, so do not "correct" it to
 something longer that looks more like a design system.
 
-**The Figma library link is deliberately empty.** `href="#"` in the masthead: there is no
-library yet, and the page does not say so. `#` rather than an empty href, because an
-empty one navigates to the current URL and reloads. That page is running inside slide 43,
-so a stray click during the talk would wipe the selected state; `#` just jumps to the top.
+**The Figma library and Storybook links are deliberately empty.** Both are `href="#"` in
+the masthead. Neither exists, and the page does not say so. `#` rather than an empty
+href, because an empty one navigates to the current URL and reloads: that page runs
+inside slide 43, so a stray click during the talk would wipe the selected state. `#`
+just jumps to the top.
+
+All three masthead items sit on one flex row on purpose. Stacked they would cost about
+30px of a slide that has 77 to spare, and a fourth one would wrap.
+
 **The Example is the argument.** Seven named states across the top, one live specimen,
 and the address that produced it printed underneath with the frame plumbing dimmed.
 Picking a state rewrites both. The States table links into it by the same names.
@@ -198,7 +203,7 @@ minutes and the intro at 3.
 
 ---
 
-## The deck as it stands: 48 slides, 15 running live, no placeholders
+## The deck as it stands: 47 slides, 15 running live, no placeholders
 
 ```
  1 Title                        24 Reordering             [live]
@@ -224,9 +229,12 @@ minutes and the intro at 3.
 21 Editor as an Object [R][live] 44 Next Steps
 22 Field with Edges    [R][live] 45 — Closing —          (TOC)
 23 — Reordering —               46 Why me?
-                                47 Testimonials
-                                48 Thank you
+                                47 Thank you
 ```
+
+**Testimonials was cut** (Matt, 2026-09-14). The quote collage that used to sit between
+Why me and Thank you is gone, and `47-Testimonials.astro` with it. Why me now lands
+straight into the close.
 
 Slide 14 is a cue card with nothing on it but the prompt. It is the "what went wrong"
 beat from the recorded talk, told live, and here it doubles as the handoff into
