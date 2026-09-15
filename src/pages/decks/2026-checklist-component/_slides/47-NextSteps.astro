@@ -30,10 +30,15 @@ import Slide from '@decks/templates/Slide.astro';
 //   Target size. Cut: 24 clears AA on a fine pointer and touch was
 //     answered in its own round.
 //
-// Order is deliberate. The correctness problem first, because it is the
-// one that would keep me up. Then the two questions I would want the
-// room to answer. Then the one I would most like to be told I am wrong
-// about.
+// Order is deliberate, and it is reading order rather than priority
+// order: two columns flowing row-major, so the array runs top left, top
+// right, bottom left, bottom right.
+//
+// The correctness problem first, because it is the one that would keep
+// me up. Then the two multiplayer threads together, merging before the
+// lock, because the lock question only exists once merging is on the
+// table. Then the ceiling last, which is the one I would most like to be
+// told I am wrong about, and the best note to hand back to the room.
 
 const items = [
 	{
@@ -41,16 +46,16 @@ const items = [
 		body: 'No Save button means no place for a failed write to land, which makes it silent data loss. The only correctness problem still open, and the first thing I would build.',
 	},
 	{
-		title: 'More Nesting Levels',
-		body: 'One level is a ceiling I chose, not one anybody asked for. Runbooks is the consumer most likely to want depth, and I would rather ask than find out.',
+		title: 'Character-level Merging',
+		body: 'Merging happens at save, not per keystroke, so two people typing for a minute diverge for a minute and then meet. A CRDT is the destination, and it is backend work: the text is one string today, and the activity stream, emails and search all expect it to stay one.',
 	},
 	{
 		title: 'Multiplayer Lock',
 		body: 'Merging removes the reason for one. If people keep talking over each other in the same row, the answer is probably presence that is louder, not a lock.',
 	},
 	{
-		title: 'Character-level Merging',
-		body: 'Merging happens at save, not per keystroke, so two people typing for a minute diverge for a minute and then meet. A CRDT is the destination, and it is backend work: the text is one string today, and the activity stream, emails and search all expect it to stay one.',
+		title: 'More Nesting Levels',
+		body: 'One level is a ceiling I chose, not one anybody asked for. Runbooks is the consumer most likely to want depth, and I would rather ask than find out.',
 	},
 ];
 ---

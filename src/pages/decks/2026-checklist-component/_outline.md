@@ -411,11 +411,18 @@ Open questions is the four unresolved threads, which sets up the closing slide.
 
 ## Slide 47 — Next Steps
 
-Four open threads, named rather than stated. Autosave failures, the only correctness problem
-left. More nesting levels, a ceiling I chose rather than one anybody asked for. The multiplayer
-lock, and whether merging removed the reason for one. And character-level merging: it merges at
-save, not per keystroke, a CRDT is the destination, and it is backend work because the text is
-one string that the activity stream, emails and search all expect to stay one.
+Four open threads, named rather than stated, in reading order across two columns.
+
+**Autosave failures**, the only correctness problem left. **Character-level merging**: it merges
+at save, not per keystroke, a CRDT is the destination, and it is backend work because the text is
+one string that the activity stream, emails and search all expect to stay one. **The multiplayer
+lock**, and whether merging removed the reason for one. **More nesting levels**, a ceiling I chose
+rather than one anybody asked for.
+
+The correctness problem first because it is the one that would keep me up, then the two
+multiplayer threads together with merging before the lock, since the lock question only exists
+once merging is on the table. The ceiling last: it is the one I would most like to be told I am
+wrong about, which is the right note to hand back to the room.
 
 Ending on open questions rather than a scoreboard, because a scoreboard invites nodding and these
 invite the panel to push.
