@@ -303,6 +303,15 @@ classes that have each bitten more than once. In short:
   bugs this session. If something looks wrong that should be fixed, hard-reload or restart
   the server before believing it.
 
+**A bench can silently lack a capability the design settled on.** C4 only ever started a
+drag from `.handle`, so the Final Component slide, the one that claims to show everything
+at once, could not be grabbed by the row. Meanwhile the Reordering slide ships
+`grab=both` and demonstrates exactly that. Nothing was broken, which is why nobody caught
+it: the bench was built for the accessibility round and simply never grew the capability
+a different round had settled. Fixed by porting `canStartFrom` from `reorder-bench`
+rather than re-deriving it. **When a bench is promoted to "the settled configuration",
+check it against the other benches' settled params, not just against its own.**
+
 **Five more from building the docs page, all found by driving it:**
 
 - **"Which section is current" is not "which sections are visible".** The contents list

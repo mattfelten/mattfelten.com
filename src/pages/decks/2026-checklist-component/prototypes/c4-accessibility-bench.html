@@ -1948,13 +1948,40 @@
   const INTO_BAND = 0.34;   // middle third of a row is "drop inside"
   let drag = null;
 
+  // Where a pointer drag may start.
+  //
+  // This bench only ever allowed the handle, which made the Final
+  // Component slide quietly wrong: the reorder round settled on
+  // grab=both, the slide that demonstrates it ships grab=both, and the
+  // slide that claims to show everything at once could not be grabbed
+  // by the row. Ported from reorder-bench's canStartFrom rather than
+  // re-derived, per the rule about copying the implementation and not
+  // the idea of it.
+  //
+  // reorder-bench excludes [data-interactive]; this bench marks the
+  // same things with data-act (grab, check, prose, pencil, menu), so
+  // that is the equivalent test. Excluding them is what keeps the
+  // checkbox checking, the text editing and the kebab opening.
+  //
+  // The creator badge carries no data-act and is deliberately grabbable.
+  // It is a label, not a control, so it counts as blank space.
+  //
+  // Nothing here needs a threshold of its own: the drag still does not
+  // activate until the pointer has moved THRESHOLD px, so a plain click
+  // on blank space is still a plain click.
+  function canStartFrom(target) {
+    if (!target || !target.closest) return false;
+    if (target.closest(".handle")) return true;
+    if (target.closest("[data-act]")) return false;
+    return true;
+  }
+
   listEl.addEventListener("pointerdown", (e) => {
     if (e.button !== 0) return;
     if (S.reorder === "menu") return;
-    const h = e.target.closest && e.target.closest(".handle");
-    if (!h) return;
-    const row = h.closest(".row");
+    const row = e.target.closest && e.target.closest(".row");
     if (!row) return;
+    if (!canStartFrom(e.target)) return;
 
     // A live selection means the press is about text, not about moving.
     const sel = window.getSelection();
