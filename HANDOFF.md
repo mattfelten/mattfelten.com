@@ -107,12 +107,13 @@ It is the bench token set, a sticky contents list, and twelve sections: Example,
 use, Anatomy, Props, Data, States, Keyboard, Accessibility, Install, Usage, Content,
 Rules.
 
-**Two things in there are plausible fiction, and both are Matt's call.** The **Figma
-library** link in the masthead has `href="#"` on purpose: there is no library yet, and
-the page does not say so. `#` rather than an empty href so a stray click during the talk
-jumps to the top instead of reloading the page and wiping the selected state. And the
-package name **`@mission-control/design-system`** is invented, following Anvil's
-`@servicetitan/anvil` shape. **Swap it if the real one exists.**
+**The package is `@m/ui`** (Matt, 2026-09-14). Not invented, so do not "correct" it to
+something longer that looks more like a design system.
+
+**The Figma library link is deliberately empty.** `href="#"` in the masthead: there is no
+library yet, and the page does not say so. `#` rather than an empty href, because an
+empty one navigates to the current URL and reloads. That page is running inside slide 43,
+so a stray click during the talk would wipe the selected state; `#` just jumps to the top.
 **The Example is the argument.** Seven named states across the top, one live specimen,
 and the address that produced it printed underneath with the frame plumbing dimmed.
 Picking a state rewrites both. The States table links into it by the same names.

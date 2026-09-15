@@ -198,12 +198,8 @@
     max-width: 42rem;
   }
 
-  /* One pill, not four. Consumers, Nesting and Server state were facts
-     the page already states properly further down, and as chips they
-     read as a spec sheet nobody asked for. Status is the one thing that
-     is only true right now, which is what a pill at the top is for. */
   /* Status and the design resources share one row. On their own lines
-     they would cost about 30px, and the slide has 66 to spare. */
+     they would cost about 30px of a slide that had 66 to spare. */
   .meta {
     display: flex;
     flex-wrap: wrap;
@@ -212,6 +208,10 @@
     margin-top: 1.125rem;
   }
 
+  /* One pill, not four. Consumers, Nesting and Server state were facts
+     the page already states properly further down, and as chips they
+     read as a spec sheet nobody asked for. Status is the one thing that
+     is only true right now, which is what a pill at the top is for. */
   .status {
     display: inline-flex;
     align-items: center;
@@ -223,6 +223,14 @@
     border: 1px solid var(--bench-line-2);
     color: var(--bench-ink-2);
     background: var(--bench-raise);
+  }
+
+  .status::before {
+    content: "";
+    width: 0.4375rem;
+    height: 0.4375rem;
+    border-radius: 999px;
+    background: var(--bench-open);
   }
 
   .reslink {
@@ -238,14 +246,6 @@
   .reslink:hover { color: var(--bench-ink); border-bottom-color: var(--bench-ink-3); }
   .reslink:focus-visible { outline: 2px solid var(--bench-focus); outline-offset: 3px; }
   .reslink .arrow { font-size: 0.6875rem; color: var(--bench-ink-3); }
-
-  .status::before {
-    content: "";
-    width: 0.4375rem;
-    height: 0.4375rem;
-    border-radius: 999px;
-    background: var(--bench-open);
-  }
 
   /* Space separates the sections, not rules. A line under every heading
      turns a page into a form, and with nine of them the page reads as a
@@ -1091,11 +1091,11 @@
         from the same place so a consumer never has to hand-write the shape of an item.
       </p>
 
-      <pre><code><span class="p">$</span> npm install @mission-control/design-system</code></pre>
+      <pre><code><span class="p">$</span> npm install @m/ui</code></pre>
 
       <h3>Import</h3>
-      <pre><code><span class="k">import</span> <span class="p">{</span> <span class="t">Checklist</span> <span class="p">}</span> <span class="k">from</span> <span class="s">'@mission-control/design-system'</span>
-<span class="k">import type</span> <span class="p">{</span> <span class="t">ChecklistItem</span><span class="p">,</span> <span class="t">PresenceUser</span> <span class="p">}</span> <span class="k">from</span> <span class="s">'@mission-control/design-system'</span></code></pre>
+      <pre><code><span class="k">import</span> <span class="p">{</span> <span class="t">Checklist</span> <span class="p">}</span> <span class="k">from</span> <span class="s">'@m/ui'</span>
+<span class="k">import type</span> <span class="p">{</span> <span class="t">ChecklistItem</span><span class="p">,</span> <span class="t">PresenceUser</span> <span class="p">}</span> <span class="k">from</span> <span class="s">'@m/ui'</span></code></pre>
 
       <p class="note">
         React 18 or later. The component brings its own styles and reads the system's tokens
