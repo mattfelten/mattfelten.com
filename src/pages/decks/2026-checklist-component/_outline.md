@@ -1,7 +1,7 @@
 # Design System Portfolio — Slide Deck Outline
 
-The whole 45 minutes, in four segments: about me, the Anvil design system at breadth, the
-Checklist component at depth, and a close. 38 slides, 8 of them running live.
+The whole 45 minutes, in three segments: about me, the Anvil design system at breadth, and the
+Checklist component at depth. 36 slides, 8 of them running live.
 
 **Timing, and the two segments are paced very differently on purpose.**
 
@@ -10,7 +10,14 @@ Checklist component at depth, and a close. 38 slides, 8 of them running live.
 | About Me | 1 to 6 | about 3 min |
 | Anvil Design System | 7 to 18 | about 13 min |
 | Checklist Component | 19 to 35 | about 10 min |
-| Closing | 36 to 38 | about 2 min |
+| Thank you | 36 | — |
+
+**There is no Closing section** (Matt, 2026-09-15). It used to be an agenda line, a TOC
+interstitial and a Why me slide. Announcing a closing section buys nothing: the room can see
+the deck ending. And Why me asked the panel to take a claim on trust one slide after Next Steps
+had just shown the work. The reflection beat still lands twice, in What I'd Do Differently and
+in Next Steps, both inside the work rather than after it. The deck ends on Next Steps and then
+thanks the room.
 
 That is roughly 28 minutes of talking, which leaves a lot of room for questions. Anvil is diagram slides
 talked over for a minute each. Checklist is short slides with live prototypes driven for twenty
@@ -373,17 +380,7 @@ invite the panel to push.
 
 ---
 
-## Slide 36 — Closing
-
-TOC interstitial.
-
-## Slide 37 — Why me?
-
-Three things, and the third is the one this deck just spent thirty minutes proving rather than
-claiming. Complexity and the unknown, software as a team sport, and sweating the details that
-make or break it. Do not restate the deck here. The evidence already landed.
-
-## Slide 38 — Thank you
+## Slide 36 — Thank you
 
 Leave them the explorations index: every question, every variation, and the chosen one marked in
 words.

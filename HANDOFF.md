@@ -1,7 +1,7 @@
 # Portfolio review deck — continue here
 
-> **`2026-checklist-component` is now the whole 45 minutes: about me, Anvil, Checklist
-> Component, close.** Matt's call, 2026-09-14: grow the Checklist deck rather than start a
+> **`2026-checklist-component` is now the whole 45 minutes: about me, Anvil, and the
+> Checklist Component.** Matt's call, 2026-09-14: grow the Checklist deck rather than start a
 > new folder. He was shown that the folder name would then lie and chose it anyway, so do
 > not "fix" it. Only the folder says "checklist"; nothing on screen does.
 >
@@ -25,18 +25,18 @@ actually stands rather than trusting a number written here.
 
 ## What this is
 
-**The whole 45-minute portfolio review, as one deck. 38 slides, 8 running live.**
+**The whole 45-minute portfolio review, as one deck. 36 slides, 8 running live.**
 
 | Segment | Slides | Target | Built from |
 |---|---|---|---|
 | About Me | 1 to 6 | about 3 min | `2026-portfolio-review` |
 | Anvil Design System | 7 to 18 | about 13 min | `2026-anvil-15m` + `2024-anvil-case-study` |
 | Checklist Component | 19 to 35 | about 10 min | this deck's own work |
-| Closing | 36 to 38 | about 2 min | `2026-portfolio-review` |
+| Thank you | 36 | — | `2026-portfolio-review` |
 
 About 28 minutes of talking, which leaves a lot of room for questions.
 
-**Slide files are numbered by deck position.** The gaps in `_slides/` (2, 3, 7, 19, 36)
+**Slide files are numbered by deck position.** The gaps in `_slides/` (2, 3, 7, 19)
 are the TOC interstitials, which `index.astro` renders inline. So slide 29 in the outline
 is `29-AccessibilityAudit.astro`, with nothing to work out.
 
@@ -82,7 +82,7 @@ argument that Runbooks is a second consumer.
 | Worktree | `~/Projects/personal/mattfelten.com/.claude/worktrees/checklist-component-deck` |
 | Branch | `worktree-checklist-component-deck` (pushed) |
 | Deck | `src/pages/decks/2026-checklist-component/` |
-| Slides | `_slides/`, 34 files numbered by deck position, 38 slides |
+| Slides | `_slides/`, 33 files numbered by deck position, 36 slides |
 | Narrative | `_outline.md` — **edit this before slides** |
 | Benches | `prototypes/*.html`, 7 of them, plus `index.html` and `rejections.html` |
 | Reasoning record | `~/Projects/personal/ai-brain/work/mission/2026-09-07-checklist-component/` |
@@ -214,7 +214,7 @@ minutes and the intro at 3.
 
 ---
 
-## The deck as it stands: 38 slides, 8 running live, no placeholders
+## The deck as it stands: 36 slides, 8 running live, no placeholders
 
 ```
  1 Title                        20 Original Feature     [live]
@@ -233,10 +233,20 @@ minutes and the intro at 3.
 14 Accessibility  (system)      33 Implementation        (code)
 15 Documentation                34 Docs                  [live]
 16 Adoption                     35 Next Steps
-17 What is a design system?     36 — Closing —          (TOC)
-18 What I'd Do Differently      37 Why me?
-19 — Checklist Cmpt —  (TOC)    38 Thank you
+17 What is a design system?     36 Thank you
+18 What I'd Do Differently
+19 — Checklist Cmpt —  (TOC)
 ```
+
+**There is no Closing section** (Matt, 2026-09-15). It was an agenda line, a TOC
+interstitial and a Why me slide, and all three came out. Announcing a closing section
+buys nothing, because the room can see the deck ending. Why me was the bigger problem:
+it asked the panel to take a claim on trust one slide after Next Steps had just shown
+the work. The reflection beat still lands twice, in What I'd Do Differently and in Next
+Steps, both inside the work rather than appended to it.
+
+Thank you now follows Next Steps directly and is deliberately not in `toc`. Do not add
+it back as a section to make the agenda symmetrical.
 
 **The Checklist segment was cut roughly in half** (Matt, 2026-09-15), from 29 slides to 16.
 It used to give each of four features a section slide and a live slide, then spend eight
@@ -256,8 +266,8 @@ Accessibility audit on 29 carries the component's own case, and the docs page ha
 "What the consumer owes" block covering the same four, so nothing is lost.
 
 **Testimonials was cut** (Matt, 2026-09-14). The quote collage that used to sit between
-Why me and Thank you is gone, and `47-Testimonials.astro` with it. Why me now lands
-straight into the close.
+Why me and Thank you is gone, and its file with it. Why me followed it out a day later,
+so nothing remains of that block.
 
 ### The Anvil segment was reshaped, and it has an argument now
 

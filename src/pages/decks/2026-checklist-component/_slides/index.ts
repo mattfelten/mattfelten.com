@@ -1,7 +1,8 @@
-// The whole 45 minutes, in four segments.
+// The whole 45 minutes: three agenda sections, then a Thank you that is
+// not one of them.
 //
 // File numbers are deck positions, and the gaps are the TOC
-// interstitials: 2, 3, 7, 19 and 36 have no file because TocSlide is
+// interstitials: 2, 3, 7 and 19 have no file because TocSlide is
 // rendered inline in index.astro. So a missing number here means an
 // interstitial, never a missing slide, and slide 29 in the outline is
 // 29-AccessibilityAudit.astro with nothing to work out.
@@ -49,6 +50,6 @@ export { default as Implementation } from './33-Implementation.astro';
 export { default as Docs } from './34-Docs.astro';
 export { default as NextSteps } from './35-NextSteps.astro';
 
-// Closing
-export { default as WhyMe } from './37-WhyMe.astro';
-export { default as ThankYou } from './38-ThankYou.astro';
+// Close. Not an agenda section: the deck ends on Next Steps and then
+// thanks the room.
+export { default as ThankYou } from './36-ThankYou.astro';

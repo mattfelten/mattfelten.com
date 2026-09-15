@@ -33,7 +33,6 @@ import {
 	WhereWeLanded,
 	WhoIAm,
 	WhyAComponent,
-	WhyMe,
 	WorkHistory,
 } from './_slides';
 
@@ -71,7 +70,17 @@ const meta = {
 //   About Me                4 slides    about 3 min
 //   Anvil Design System    11 slides    about 13 min
 //   Checklist              16 slides    about 10 min
-//   Closing                 2 slides    about 2 min
+//   Thank you               1 slide
+//
+// There is no Closing section (Matt, 2026-09-15). It used to be an
+// agenda line, a TOC interstitial and a Why me slide. Announcing a
+// closing section buys nothing: the room can see the deck ending, and
+// Why me asked them to take a claim on trust one slide after Next Steps
+// had just shown the work. The reflection beat still lands twice, in
+// What I'd Do Differently and in Next Steps, both inside the work.
+//
+// Thank you therefore follows Next Steps directly, with no interstitial
+// in between. It is deliberately not in `toc`.
 //
 // The Checklist segment was cut roughly in half (Matt, 2026-09-15). It
 // used to spend eight slides on eight rejected directions, one each, on
@@ -109,7 +118,7 @@ const meta = {
 //
 // Narrative lives in _outline.md. Edit that first.
 
-const toc = ['About Me', 'Anvil Design System', 'Checklist Component', 'Closing'];
+const toc = ['About Me', 'Anvil Design System', 'Checklist Component'];
 ---
 
 <DeckShell {...meta}>
@@ -158,8 +167,6 @@ const toc = ['About Me', 'Anvil Design System', 'Checklist Component', 'Closing'
 		<Docs />
 		<NextSteps />
 
-		<TocSlide items={toc} active="Closing" />
-		<WhyMe />
 		<ThankYou />
 	</Deck>
 </DeckShell>
