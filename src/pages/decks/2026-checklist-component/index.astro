@@ -1,14 +1,22 @@
 ---
-import { Deck, DeckShell } from '@decks';
+import { Deck, DeckShell, TocSlide } from '@decks';
 
 import {
 	AccessibilityAudit,
 	AccessibilitySection,
 	AccessibleImplementation,
+	AnvilAccessibility,
+	AnvilAdoption,
+	AnvilCodeArchitecture,
+	AnvilFigmaLibraries,
+	AnvilGridAndLayout,
+	AnvilOverview,
+	AnvilReleaseAnnouncements,
 	Before,
 	ComponentAPI,
 	ComponentSection,
 	ComponentStructure,
+	DesignPrinciples,
 	Docs,
 	EditingFinal,
 	EditingSection,
@@ -29,35 +37,81 @@ import {
 	RuledOutHighlight,
 	RuledOutLock,
 	RuledOutShift,
+	Testimonials,
 	ThankYou,
 	Title,
 	WhereWeLanded,
+	WhoIAm,
 	WhyAComponent,
+	WhyMe,
+	WorkHistory,
 } from './_slides';
 
 const meta = {
-	title: 'Checklist',
+	title: 'Portfolio Review',
 	description:
-		'A checkable, orderable, editable row in Collaboration Loops, taken from two tickets to an approved design system component. The argument is depth: this is the simplest thing in the product, and getting it right took 33 decisions and 35 rejected directions that a mockup could never have produced.',
+		'A design system at breadth and one component at depth. Anvil is the system argument: how it was distributed, adopted without a mandate, and made accessible. Checklist is the same care applied to the simplest thing in the product, where 33 decisions and 35 rejected directions came out of prototypes a mockup could never have produced.',
 };
 
+// The whole 45 minutes. Grew out of the Checklist deck rather than into a
+// new folder, which is Matt's call: the folder name and the deck-level
+// title still say "Checklist" and the Checklist segment relies on that
+// fallback, so retitling would have meant touching 29 reviewed slides to
+// fix a string nobody in the room sees.
+//
+// `meta.title` is the browser tab and says Portfolio Review. The `title`
+// on <Deck> is the per-slide header fallback and stays "Checklist". They
+// are separate props on purpose.
+//
+// Shape and the timing it is built against, 45 minutes with questions:
+//
+//   About Me                4 slides    about 3 min
+//   Anvil Design System     7 slides    about 11 min
+//   Checklist              29 slides    about 17 min
+//   Closing                 3 slides    about 2 min
+//
+// That is 33 minutes of talking against roughly 10 of questions, which
+// leaves headroom rather than eating it. The two segments are paced very
+// differently on purpose: Anvil is diagram slides that get talked over
+// for a minute each, Checklist is short slides with live prototypes that
+// get driven for twenty to thirty seconds.
+//
+// Anvil comes first because Checklist is the zoom-in counterpart. The
+// system argument has to be on the table before the component depth
+// means anything, and accessibility lands twice on purpose: once at
+// system level on slide 10, once inside one component on slide 36.
+//
+// The Checklist segment keeps its own internal section slides rather
+// than TOC interstitials. That is a settled decision from its own review
+// and it reads as a deck within a deck, which is what it is. The TOC
+// interstitials here are top level only.
+//
 // Narrative lives in _outline.md. Edit that first.
-//
-// Shape: before, why it is a component, where we landed, then one
-// section per feature. Each section opens with a title slide, shows the
-// settled answer, then the directions that were ruled out. Then
-// accessibility, the system, the docs, and where it landed.
-//
-// Feature sections are Editing, Reordering, Nested items, Multiplayer.
-//
-// Two slides are placeholders, and both are a conversation before they
-// are work: the primitives diagram and the docs slide.
-//   grep -rn Placeholder _slides/
+
+const toc = ['About Me', 'Anvil Design System', 'Checklist', 'Closing'];
 ---
 
 <DeckShell {...meta}>
 	<Deck title="Checklist">
 		<Title />
+
+		<TocSlide items={toc} />
+
+		<TocSlide items={toc} active="About Me" />
+		<WhoIAm />
+		<WorkHistory />
+		<DesignPrinciples />
+
+		<TocSlide items={toc} active="Anvil Design System" />
+		<AnvilOverview />
+		<AnvilCodeArchitecture />
+		<AnvilFigmaLibraries />
+		<AnvilAdoption />
+		<AnvilReleaseAnnouncements />
+		<AnvilAccessibility />
+		<AnvilGridAndLayout />
+
+		<TocSlide items={toc} active="Checklist" />
 		<Before />
 		<WhyAComponent />
 		<WhereWeLanded />
@@ -94,6 +148,10 @@ const meta = {
 
 		<Docs />
 		<NextSteps />
+
+		<TocSlide items={toc} active="Closing" />
+		<WhyMe />
+		<Testimonials />
 		<ThankYou />
 	</Deck>
 </DeckShell>

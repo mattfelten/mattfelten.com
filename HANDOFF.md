@@ -1,4 +1,13 @@
-# Checklist deck — continue here
+# Portfolio review deck — continue here
+
+> **The folder is still `2026-checklist-component` and the deck-level title is still
+> "Checklist", but this is now the whole 45 minutes: about me, Anvil, Checklist, close.**
+> Matt's call, 2026-09-14: grow the Checklist deck rather than start a new folder. He was
+> shown that the name would lie and chose it anyway, so do not "fix" it. `meta.title` is
+> "Portfolio Review" and that is what the browser tab and the title slide say. The `title`
+> prop on `<Deck>` is only the per-slide header fallback, and the 29 Checklist slides rely
+> on it, which is why it stays.
+
 
 Scaffolding for finishing this deck. **Delete it when the deck ships** — the durable
 record is `ai-brain/work/mission/2026-09-07-checklist-component/`, and anything here
@@ -11,16 +20,37 @@ actually stands rather than trusting a number written here.
 
 ## What this is
 
-A portfolio deep dive on the Checklist component, for an interview.
+**The whole 45-minute portfolio review, as one deck. 48 slides, 15 running live.**
+
+| Segment | Slides | Target | Built from |
+|---|---|---|---|
+| About Me | 1 to 6 | about 3 min | `2026-portfolio-review` |
+| Anvil Design System | 7 to 14 | about 11 min | `2026-anvil-15m` |
+| Checklist | 15 to 44 | about 17 min | this deck's own work |
+| Closing | 45 to 48 | about 2 min | `2026-portfolio-review` |
+
+About 33 minutes of talking against roughly 10 of questions.
+
+**Slide files are numbered by deck position.** The gaps in `_slides/` (2, 3, 7, 15, 45)
+are the TOC interstitials, which `index.astro` renders inline. So slide 36 in the outline
+is `36-AccessibilityAudit.astro`, with nothing to work out.
+
+**Slides were copied, not imported**, and so were their images. `2026-anvil-15m` is a
+delivered recorded talk and `2026-portfolio-review` is a separate deck; tuning the live
+Anvil segment must not edit either of them. The one exception is the bench iframes, which
+still point at `/decks/2026-checklist-component/prototypes/...` because that is where they
+live.
+
+**The Anvil slides carry an explicit `title="Anvil Design System"`.** Everything else
+either passes its own title or hides the header, so the deck-level fallback only serves the
+Checklist segment.
+
+### The Checklist segment, which is still the heart of it
 
 **The role:** a designer who works in code, on the design team, whose main
 responsibility is the company's design system. Day to day he still partners with an
 engineer. He is **not** trying to present as a full engineer, so do not shape the
 deck as though the job is to prove that. Company deliberately not named here.
-
-It is the third segment of a longer portfolio review: personal intro, Anvil design
-system overview, **this**, outro. About 18 minutes inside a 45-minute slot with
-questions.
 
 **Audience:** hiring manager (head of design), senior frontend engineer, senior
 product designer.
@@ -29,9 +59,10 @@ product designer.
 found and explored things nobody would find by looking, and that he cares about
 pixels. Not systems judgment, not spec rigour. Craft.
 
-**It follows an Anvil deck** that already covers design systems at breadth including
+**It follows the Anvil segment**, which covers design systems at breadth including
 system-level accessibility, so this is the zoom-in counterpart. Nothing here
 re-explains design systems, and the accessibility beat must read as component depth.
+Accessibility lands twice on purpose: system level on slide 13, one component on slide 36.
 
 **The real story:** two tickets under epic RND-4044, reorder (RND-4840) and editing
 (RND-4765 P0), specced by Matt from prototypes and handed to DJ Bowers to build.
@@ -46,7 +77,7 @@ argument that Runbooks is a second consumer.
 | Worktree | `~/Projects/personal/mattfelten.com/.claude/worktrees/checklist-component-deck` |
 | Branch | `worktree-checklist-component-deck` (pushed) |
 | Deck | `src/pages/decks/2026-checklist-component/` |
-| Slides | `_slides/`, 31 of them, numbered |
+| Slides | `_slides/`, 45 files numbered by deck position, 48 slides |
 | Narrative | `_outline.md` — **edit this before slides** |
 | Benches | `prototypes/*.html`, 7 of them, plus `index.html` and `rejections.html` |
 | Reasoning record | `~/Projects/personal/ai-brain/work/mission/2026-09-07-checklist-component/` |
@@ -60,14 +91,14 @@ Deck at `/decks/2026-checklist-component/`. Explorations index at
 
 ## Next, in order
 
-### The docs page is built, and slide 29 is no longer a placeholder
+### The docs page is built, and slide 43 is no longer a placeholder
 
 `docs.html` in the deck folder, served at `/decks/2026-checklist-component/docs`.
 Matt's call, 2026-09-14: build a real one. The component is not in Anvil and the
 Mission Control design system has very little documentation, so this is the chance to
 make a good one even though no other component has one.
 
-It is the bench token set, a sticky sidebar, and ten sections: Example, Anatomy,
+It is the bench token set, a sticky sidebar, and nine sections: Example, Anatomy,
 Props, Data, States, Accessibility, Usage, Rules, Open questions. **The Example is the
 argument.** Seven named states across the top, one live specimen, and the address that
 produced it printed underneath with the frame plumbing dimmed. Picking a state
@@ -85,43 +116,64 @@ Its own params, and the reasoning is in the file:
 | `compact` | `1` is slide mode. Drops the two prose blocks and trims the canvas to 32rem. |
 | `state` | Opens on a named state. Unknown values fall back to the default. |
 
-Slide 29 embeds it at `?compact=1&scale=1.1&state=default#example`, 1640 x 800.
+Slide 43 embeds it at `?compact=1&scale=1.1&state=default#example`, 1640 x 800.
 **Those numbers are measured, not chosen.** See the sizing note below.
 
-### The rest of the presentation
+### The rest of the presentation is assembled
 
-Personal intro, the Anvil case study, and outro slides, so the 45 minutes exists as
-one deck rather than a middle segment. That is a different frame from this work:
-assembly and pacing across four segments, not pixels inside one component.
-`2026-portfolio-review` and `2024-anvil-case-study` are the decks to read first.
+Intro, Anvil and close are in. `2026-anvil-15m` was the source for Anvil, on Matt's
+answer that **the panel has not seen that recorded talk**. It was built as answers to
+five questions a panel asked, which is why it is the right breadth to set up the
+Checklist zoom-in. `2024-anvil-case-study` was not used: it is ServiceTitan-era, it
+would need cutting from 27 slides to about 12, and it overlaps the Checklist segment
+on accessibility and documentation.
+
+**What is genuinely left is rehearsal, not building.** Walk it end to end with a
+timer. The two segment estimates that have never been spoken aloud are Anvil at 11
+minutes and the intro at 3.
 
 ---
 
-## The deck as it stands: 31 slides, 15 running live, no placeholders
+## The deck as it stands: 48 slides, 15 running live, no placeholders
 
 ```
- 1 Title                        17 — Multiplayer —
- 2 Original Feature       [live] 18 Multiplayer            [live]
- 3 From Feature to Component     19 Lock the row      [R]   [live]
- 4 Final Component        [live] 20 Highlight the row [R]   [live]
- 5 — Editing —                   21 — Accessibility —
- 6 Editing                [live] 22 Accessibility
- 7 Editor as an Object [R][live] 23 Accessible Implementation
- 8 Field with Edges    [R][live] 24 — The Component —
- 9 — Reordering —                25 Component Structure   (diagram)
-10 Reordering             [live] 26 Component API         (table)
-11 Rows shift out of the way [R] 27 Object Types          (code)
-12 Row follows cursor     [R]    28 Implementation        (code)
-13 — Nested Items —              29 Docs                  [live]
-14 Nested Items           [live] 30 Next Steps
-15 Unlimited Nesting  [R][live]  31 Thank you
-16 Parent ticks its children [R]
+ 1 Title                        24 Reordering             [live]
+ 2 Contents            (TOC)    25 Rows shift out of the way [R]
+ 3 — About Me —        (TOC)    26 Row follows cursor     [R]
+ 4 Hey, I'm Matt                27 — Nested Items —
+ 5 Work History                 28 Nested Items           [live]
+ 6 Design Principles            29 Unlimited Nesting  [R][live]
+ 7 — Anvil —           (TOC)    30 Parent ticks its children [R]
+ 8 Overview                     31 — Multiplayer —
+ 9 Code Architecture            32 Multiplayer            [live]
+10 Figma Libraries              33 Lock the row      [R]   [live]
+11 Adoption                     34 Highlight the row [R]   [live]
+12 Release Announcements        35 — Accessibility —
+13 Accessibility  (system)      36 Accessibility  (component)
+14 Grid to Layout Story [TELL]  37 Accessible Implementation
+15 — Checklist —       (TOC)    38 — The Component —
+16 Original Feature     [live]  39 Component Structure   (diagram)
+17 From Feature to Component    40 Component API         (table)
+18 Final Component      [live]  41 Object Types          (code)
+19 — Editing —                  42 Implementation        (code)
+20 Editing              [live]  43 Docs                  [live]
+21 Editor as an Object [R][live] 44 Next Steps
+22 Field with Edges    [R][live] 45 — Closing —          (TOC)
+23 — Reordering —               46 Why me?
+                                47 Testimonials
+                                48 Thank you
 ```
 
-Every embed is **800px tall with `fit=center`**, which is the ceiling: the slide is
-1080 with 80px padding and the body centres on 600, so 800 lands 200..1000, 28px
-clear of the header. **Slides 7 and 8 stay top-aligned** because they exist to show
-the list being pushed down, and centring halves that movement.
+Slide 14 is a cue card with nothing on it but the prompt. It is the "what went wrong"
+beat from the recorded talk, told live, and here it doubles as the handoff into
+Checklist: the system got something wrong, which is the argument for going all the way
+down into one component.
+
+Every **bench** embed is 800px tall with `fit=center`, which is the ceiling: the slide
+is 1080 with 80px padding and the body centres on 600, so 800 lands 200..1000, 28px
+clear of the header. **Slides 21 and 22 stay top-aligned** because they exist to show
+the list being pushed down, and centring halves that movement. **Slide 43 is the one
+embed with no `fit=center` at all**, for the reason in the bug list below.
 
 ---
 

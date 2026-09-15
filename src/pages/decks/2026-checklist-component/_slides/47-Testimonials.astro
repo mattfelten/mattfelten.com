@@ -1,0 +1,85 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+// Free-form testimonial card collage. Card x/y/width values come straight
+// from the Figma frame (node 159:13483, Frame 4466). Heights auto-size to
+// content. No header — the TOC interstitial communicates the section.
+
+interface Testimonial {
+	quote: string; // may contain <strong> for emphasized portions
+	role: string;
+	relationship: string;
+	left: number;
+	top: number;
+	width: number;
+}
+
+const testimonials: Testimonial[] = [
+	{
+		quote: '<strong>Matt always puts business and user goals into perspective.</strong> It’s an art and I have so much to learn from him.',
+		role: 'Product Designer',
+		relationship: 'Team Member',
+		left: 270,
+		top: 142,
+		width: 394,
+	},
+	{
+		quote: 'Matt has a unique ability to motivate me to hone my skills and continue to grow in my role. His feedback and patience are incredible. <strong>He makes me want to be better.</strong>',
+		role: 'Product Designer',
+		relationship: 'Team Member',
+		left: 704,
+		top: 161,
+		width: 786,
+	},
+	{
+		quote: 'Matt has an amazing ability to listen to ideas and make the person feel heard while at the same time expanding on the idea and getting to the most optimal solution. <strong>Also he’s not too bad at design either ;)</strong>',
+		role: 'Product Manager',
+		relationship: 'Peer',
+		left: 78,
+		top: 373,
+		width: 855,
+	},
+	{
+		quote: '<strong>Matt is one of the best managers I have ever had.</strong> Thanks for being a sounding board as we work through ways we can improve our codebase, and thanks for always being available to help unblock the team.',
+		role: 'Software Engineer',
+		relationship: 'Team Member',
+		left: 973,
+		top: 354,
+		width: 709,
+	},
+	{
+		quote: '<strong>Matt is a mentor figure to me.</strong> I really appreciate that he’s regularly checked in on me since transitioning to a management role. He’s always available to listen, bounce ideas off of, and provide recommendations and insight into how to continue building trust with my team.',
+		role: 'Engineering Manager',
+		relationship: 'Peer',
+		left: 447.5,
+		top: 586,
+		width: 865,
+	},
+];
+---
+
+<Slide hideHeader align="top">
+	<div class="relative h-115 w-220">
+		{
+			testimonials.map(t => (
+				<div
+					class="border-weak/18 absolute flex flex-col items-start gap-1 rounded-2xl border bg-[#111827]/60 px-3 py-1.5"
+					style={`left: ${t.left}px; top: ${t.top}px; width: ${t.width}px;`}
+				>
+					<p
+						class="text-subdued [&>strong]:text-strong m-0 text-xl leading-7 [&>strong]:font-normal"
+						set:html={t.quote}
+					/>
+					<div class="flex items-center gap-2">
+						<span class="text-subdued font-regular text-lg">
+							{t.role}
+						</span>
+						<span class="text-subdued rounded-md bg-black px-0.5 py-[1px] text-sm font-medium">
+							{t.relationship}
+						</span>
+					</div>
+				</div>
+			))
+		}
+	</div>
+</Slide>
