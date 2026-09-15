@@ -148,15 +148,11 @@ pointer events *do* drive drag code and are fine for that; they do **not** move 
 ## Open, and Matt's to decide
 
 1. **The docs slide.** Show the param vocabulary, or build real docs. See above.
-2. **Presence is avatar-only now** (Matt, 2026-09-14): "I don't want the bar anywhere."
-   That supersedes the C4 settlement of a gutter bar at 8.72:1. Said while reviewing a
-   slide, so it is certain about the slides and probably about the component. Worth
-   confirming before it is treated as final.
-3. **`edit-mechanics` gates Delete on `item.who === ME`**, so rows owned by other people
+2. **`edit-mechanics` gates Delete on `item.who === ME`**, so rows owned by other people
    show no Delete on slides 6 to 8. Every other bench offers it unconditionally. It is a
    deliberate permission model in the round that was about permission, left alone rather
    than flattened.
-4. **C1's screen-reader panel still argues "nested list plus a labelled twisty wins"**,
+3. **C1's screen-reader panel still argues "nested list plus a labelled twisty wins"**,
    and the twisty no longer exists. That is an argument rather than a mechanism, so it was
    flagged rather than rewritten. It shows on the explorations index, not on a slide.
 
@@ -171,3 +167,9 @@ pointer events *do* drive drag code and are fine for that; they do **not** move 
   touch case was answered in its own round.
 - **`checked`, not `done`.** The component knows the box is ticked, not what it means.
 - **Presence lives on `ChecklistItem`**, not as a list-level array to be joined.
+- **Presence is the avatar alone. No gutter bar** (Matt, 2026-09-14, confirmed as a
+  component decision). This supersedes the C4 settlement of a bar at 8.72:1: the two share
+  the left gutter and read as two marks for one fact. Benches take `presence=none`.
+  Loose end it creates: the avatar tracks focus, and the row treatment was what tracked
+  words moving, so there is no longer a visual difference between somebody parked in a row
+  and somebody typing in it.
