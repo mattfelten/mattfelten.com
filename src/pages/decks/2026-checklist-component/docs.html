@@ -562,8 +562,6 @@
   :root[data-theme="dark"] .k { color: #B39BF7; }
   :root[data-theme="dark"] .s { color: #5FC7D9; }
 
-  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; align-items: start; }
-  .two .label { font-size: 0.8125rem; font-weight: 600; color: var(--bench-ink); }
 
   /* ---------- anatomy diagram ---------- */
 
@@ -1105,34 +1103,6 @@
       </p>
     </section>
 
-    <section id="usage">
-      <h2>Usage</h2>
-      <p>
-        Two consumers, one component. Every capability is off by default, so Runbooks opts
-        into none of them and passes nothing but its items. It never has to know that
-        reordering, nesting, presence and the author tag exist.
-      </p>
-
-      <div class="two">
-        <div>
-          <div class="label">Collaboration Loops</div>
-          <pre><code><span class="p">&lt;</span><span class="t">Checklist</span>
-  <span class="k">items</span><span class="p">={</span>items<span class="p">}</span>
-  <span class="k">reorderable</span>
-  <span class="k">nesting</span>
-  <span class="k">editable</span>
-  <span class="k">showCreator</span>
-  <span class="k">onReorder</span><span class="p">={</span>move<span class="p">}</span>
-  <span class="k">onEdit</span><span class="p">={</span>save<span class="p">}</span>
-<span class="p">/&gt;</span></code></pre>
-        </div>
-        <div>
-          <div class="label">Runbooks</div>
-          <pre><code><span class="p">&lt;</span><span class="t">Checklist</span> <span class="k">items</span><span class="p">={</span>steps<span class="p">} /&gt;</span></code></pre>
-        </div>
-      </div>
-    </section>
-
     <section id="content">
       <h2>Content</h2>
       <p>
@@ -1210,7 +1180,6 @@
       <a href="#keyboard">Keyboard</a>
       <a href="#accessibility">Accessibility</a>
       <a href="#install">Install</a>
-      <a href="#usage">Usage</a>
       <a href="#content">Content</a>
       <a href="#rules">Rules</a>
     </nav>

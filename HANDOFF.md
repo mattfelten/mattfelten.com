@@ -103,9 +103,8 @@ Matt's call, 2026-09-14: build a real one. The component is not in Anvil and the
 Mission Control design system has very little documentation, so this is the chance to
 make a good one even though no other component has one.
 
-It is the bench token set, a sticky contents list, and twelve sections: Example, When to
-use, Anatomy, Props, Data, States, Keyboard, Accessibility, Install, Usage, Content,
-Rules.
+It is the bench token set, a sticky contents list, and eleven sections: Example, When to
+use, Anatomy, Props, Data, States, Keyboard, Accessibility, Install, Content, Rules.
 
 **The package is `@m/ui`** (Matt, 2026-09-14). Not invented, so do not "correct" it to
 something longer that looks more like a design system.
@@ -135,6 +134,10 @@ costs more credibility than an absent one. Do not add them to complete the set.
 **Open questions was cut** (Matt, 2026-09-14). It is the one section that is not a docs
 convention: component docs tell you how to use the thing, they do not carry the author's
 unresolved list. Nothing is lost, because slide 47 carries the same four threads.
+
+**Usage was cut too** (Matt, 2026-09-14). It was the Loops and Runbooks call sites side by
+side, which is slide 45's whole job. Install still shows the import, so the page never
+loses how you get the component, only the duplicate of a slide the room has just seen.
 
 **Watch for duplication when adding a section.** Two crept in this round and both were
 caught by reading the rendered page rather than the diff: the Keyboard intro restated
