@@ -6,11 +6,19 @@ import Slide from '@decks/templates/Slide.astro';
 // Cancel. Note what it does to the rows underneath. The editor does
 // not outline the text, it pushes the rest of the list down to make
 // room for itself, and that is the argument.
+//
+// fmt=none is load-bearing, do not drop it. The bench defaults to
+// fmt=bar, which is correct everywhere else because the floating
+// selection bar is the settled formatting answer. Here it is wrong
+// twice over: this editor already carries its own B / I / U toolbar
+// along the bottom, so selecting text put two formatting UIs on one
+// field, and the floating one rendered over the second line of the
+// text it was formatting.
 ---
 
 <Slide subtitle="Editing → Editor as an Object" badge="Rejected">
 	<iframe
-		src="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?embed=1&scale=2&chrome=object&autoedit=1"
+		src="/decks/2026-checklist-component/prototypes/edit-mechanics-bench?embed=1&scale=2&chrome=object&fmt=none&autoedit=1"
 		title="R1, the editor as an object"
 		class="live-embed m-0! block h-[800px] w-[1640px] max-h-none! max-w-none! border-0"
 	></iframe>
