@@ -25,20 +25,20 @@ actually stands rather than trusting a number written here.
 
 ## What this is
 
-**The whole 45-minute portfolio review, as one deck. 47 slides, 15 running live.**
+**The whole 45-minute portfolio review, as one deck. 51 slides, 15 running live.**
 
 | Segment | Slides | Target | Built from |
 |---|---|---|---|
 | About Me | 1 to 6 | about 3 min | `2026-portfolio-review` |
-| Anvil Design System | 7 to 14 | about 11 min | `2026-anvil-15m` |
-| Checklist Component | 15 to 44 | about 17 min | this deck's own work |
-| Closing | 45 to 47 | about 2 min | `2026-portfolio-review` |
+| Anvil Design System | 7 to 18 | about 13 min | `2026-anvil-15m` + `2024-anvil-case-study` |
+| Checklist Component | 19 to 48 | about 17 min | this deck's own work |
+| Closing | 49 to 51 | about 2 min | `2026-portfolio-review` |
 
-About 33 minutes of talking against roughly 10 of questions.
+About 35 minutes of talking against roughly 10 of questions.
 
-**Slide files are numbered by deck position.** The gaps in `_slides/` (2, 3, 7, 15, 45)
-are the TOC interstitials, which `index.astro` renders inline. So slide 36 in the outline
-is `36-AccessibilityAudit.astro`, with nothing to work out.
+**Slide files are numbered by deck position.** The gaps in `_slides/` (2, 3, 7, 19, 49)
+are the TOC interstitials, which `index.astro` renders inline. So slide 40 in the outline
+is `40-AccessibilityAudit.astro`, with nothing to work out.
 
 **Slides were copied, not imported**, and so were their images. `2026-anvil-15m` is a
 delivered recorded talk and `2026-portfolio-review` is a separate deck; tuning the live
@@ -67,7 +67,7 @@ pixels. Not systems judgment, not spec rigour. Craft.
 **It follows the Anvil segment**, which covers design systems at breadth including
 system-level accessibility, so this is the zoom-in counterpart. Nothing here
 re-explains design systems, and the accessibility beat must read as component depth.
-Accessibility lands twice on purpose: system level on slide 13, one component on slide 36.
+Accessibility lands twice on purpose: system level on slide 14, one component on slide 40.
 
 **The real story:** two tickets under epic RND-4044, reorder (RND-4840) and editing
 (RND-4765 P0), specced by Matt from prototypes and handed to DJ Bowers to build.
@@ -82,7 +82,7 @@ argument that Runbooks is a second consumer.
 | Worktree | `~/Projects/personal/mattfelten.com/.claude/worktrees/checklist-component-deck` |
 | Branch | `worktree-checklist-component-deck` (pushed) |
 | Deck | `src/pages/decks/2026-checklist-component/` |
-| Slides | `_slides/`, 44 files numbered by deck position, 47 slides |
+| Slides | `_slides/`, 48 files numbered by deck position, 51 slides |
 | Narrative | `_outline.md` — **edit this before slides** |
 | Benches | `prototypes/*.html`, 7 of them, plus `index.html` and `rejections.html` |
 | Reasoning record | `~/Projects/personal/ai-brain/work/mission/2026-09-07-checklist-component/` |
@@ -96,7 +96,7 @@ Deck at `/decks/2026-checklist-component/`. Explorations index at
 
 ## Next, in order
 
-### The docs page is built, and slide 43 is no longer a placeholder
+### The docs page is built, and slide 47 is no longer a placeholder
 
 `docs.html` in the deck folder, served at `/decks/2026-checklist-component/docs`.
 Matt's call, 2026-09-14: build a real one. The component is not in Anvil and the
@@ -113,7 +113,7 @@ something longer that looks more like a design system.
 **The Figma library and Storybook links are deliberately empty.** Both are `href="#"` in
 the masthead. Neither exists, and the page does not say so. `#` rather than an empty
 href, because an empty one navigates to the current URL and reloads: that page runs
-inside slide 43, so a stray click during the talk would wipe the selected state. `#`
+inside slide 47, so a stray click during the talk would wipe the selected state. `#`
 just jumps to the top.
 
 All three masthead items sit on one flex row on purpose. Stacked they would cost about
@@ -134,7 +134,7 @@ costs more credibility than an absent one. Do not add them to complete the set.
 
 **Open questions was cut** (Matt, 2026-09-14). It is the one section that is not a docs
 convention: component docs tell you how to use the thing, they do not carry the author's
-unresolved list. Nothing is lost, because slide 44 carries the same four threads.
+unresolved list. Nothing is lost, because slide 48 carries the same four threads.
 
 **Watch for duplication when adding a section.** Two crept in this round and both were
 caught by reading the rendered page rather than the diff: the Keyboard intro restated
@@ -203,43 +203,66 @@ minutes and the intro at 3.
 
 ---
 
-## The deck as it stands: 47 slides, 15 running live, no placeholders
+## The deck as it stands: 51 slides, 15 running live, no placeholders
 
 ```
- 1 Title                        24 Reordering             [live]
- 2 Contents            (TOC)    25 Rows shift out of the way [R]
- 3 — About Me —        (TOC)    26 Row follows cursor     [R]
- 4 Hey, I'm Matt                27 — Nested Items —
- 5 Work History                 28 Nested Items           [live]
- 6 Design Principles            29 Unlimited Nesting  [R][live]
- 7 — Anvil —           (TOC)    30 Parent ticks its children [R]
- 8 Overview                     31 — Multiplayer —
- 9 Code Architecture            32 Multiplayer            [live]
-10 Figma Libraries              33 Lock the row      [R]   [live]
-11 Adoption                     34 Highlight the row [R]   [live]
-12 Release Announcements        35 — Accessibility —
-13 Accessibility  (system)      36 Accessibility  (component)
-14 Grid to Layout Story [TELL]  37 Accessible Implementation
-15 — Checklist Cmpt —  (TOC)    38 — The Component —
-16 Original Feature     [live]  39 Component Structure   (diagram)
-17 From Feature to Component    40 Component API         (table)
-18 Final Component      [live]  41 Object Types          (code)
-19 — Editing —                  42 Implementation        (code)
-20 Editing              [live]  43 Docs                  [live]
-21 Editor as an Object [R][live] 44 Next Steps
-22 Field with Edges    [R][live] 45 — Closing —          (TOC)
-23 — Reordering —               46 Why me?
-                                47 Thank you
+ 1 Title                        27 — Reordering —
+ 2 Contents            (TOC)    28 Reordering             [live]
+ 3 — About Me —        (TOC)    29 Rows shift out of the way [R]
+ 4 Hey, I'm Matt                30 Row follows cursor     [R]
+ 5 Work History                 31 — Nested Items —
+ 6 Design Principles            32 Nested Items           [live]
+ 7 — Anvil —           (TOC)    33 Unlimited Nesting  [R][live]
+ 8 What is ServiceTitan?        34 Parent ticks its children [R]
+ 9 Overview       (the numbers) 35 — Multiplayer —
+10 Prior Art          (the audit) 36 Multiplayer          [live]
+11 Key Decisions   (the spine)  37 Lock the row      [R]   [live]
+12 Code Architecture            38 Highlight the row [R]   [live]
+13 Figma Libraries              39 — Accessibility —
+14 Accessibility  (system)      40 Accessibility  (component)
+15 Documentation                41 Accessible Implementation
+16 Adoption                     42 — The Component —
+17 Four Layers      (the model) 43 Component Structure   (diagram)
+18 What I'd Do Differently      44 Component API         (table)
+19 — Checklist Cmpt —  (TOC)    45 Object Types          (code)
+20 Original Feature     [live]  46 Implementation        (code)
+21 From Feature to Component    47 Docs                  [live]
+22 Final Component      [live]  48 Next Steps
+23 — Editing —                  49 — Closing —          (TOC)
+24 Editing              [live]  50 Why me?
+25 Editor as an Object [R][live] 51 Thank you
+26 Field with Edges    [R][live]
 ```
 
 **Testimonials was cut** (Matt, 2026-09-14). The quote collage that used to sit between
 Why me and Thank you is gone, and `47-Testimonials.astro` with it. Why me now lands
 straight into the close.
 
-Slide 14 is a cue card with nothing on it but the prompt. It is the "what went wrong"
-beat from the recorded talk, told live, and here it doubles as the handoff into
-Checklist: the system got something wrong, which is the argument for going all the way
-down into one component.
+### The Anvil segment was reshaped, and it has an argument now
+
+It used to be seven slides lifted from `2026-anvil-15m`, which was built as answers to
+five questions a **different** panel asked. That is why Adoption read as an answer to a
+question nobody here asked, why Release Announcements had no stated purpose, and why the
+Grid to Layout cue card landed cold.
+
+The argument came from the website case study at `src/content/work/anvil/index.mdx`,
+which is the only place any of this was written down: the technical problem was solvable
+and the cultural one was the work. **Read that file before changing this segment.**
+
+- **11 Key Decisions** is the spine, walked out loud as an agenda. Slides 12 to 16 are
+  the evidence for selected lines; not every line needs a slide.
+- **17 Four Layers** closes by explaining the segment retroactively, and pays off the
+  "nothing in the system is permanent" line rather than introducing a new idea.
+- **18 What I'd Do Differently** carries two regrets, not three. Both are Matt's own
+  words from an interview, and both corrected a draft: "build migration tooling earlier"
+  was the wrong diagnosis, because migration was a business-priority problem and not a
+  technical one.
+
+**Cut and why:** Grid to Layout (survives as the example on 18), Release Announcements
+(no purpose of its own; it was already a line in Adoption's Organization column, so the
+point moved there). **Not brought over from the 2024 deck:** Kickoff, Personas, Problem
+Statement, Design Process, Discovery, Hypothesis, Design Details, Prototyping, Component
+Proposal, Figma Components, Build, Contribution, System Principles, Results.
 
 Every **bench** embed is 800px tall with `fit=center`, which is the ceiling: the slide
 is 1080 with 80px padding and the body centres on 600, so 800 lands 200..1000, 28px

@@ -1,0 +1,27 @@
+---
+import ImageSlide from '@decks/templates/ImageSlide.astro';
+
+import img from '../images/4 Prior Art.png?url';
+
+// Copied from 8-PriorArt in 2024-anvil-case-study. How it started, and
+// placed after the numbers so the segment reads as "here is what it
+// became, and here is the mess it came out of".
+//
+// The line that makes this slide worth its twenty seconds is from the
+// case study rather than from either deck: this audit is what got the
+// project funded. It mapped every unique pattern across the products and
+// made the inconsistency impossible to ignore.
+//
+// Kickoff is not in this deck, so its findings get said here instead of
+// shown: thirteen interviews across design, engineering, product,
+// marketing, sales and QA, and three problems in the answers. Very
+// little consistency across applications. No alignment on scope or
+// solution. No process for making or distributing a change.
+---
+
+<ImageSlide
+	title="Anvil Design System"
+	subtitle="Prior Art"
+	src={img}
+	alt="Audit of existing styles, components, and color palettes across ServiceTitan products"
+/>

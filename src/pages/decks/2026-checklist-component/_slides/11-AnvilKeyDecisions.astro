@@ -1,0 +1,83 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+// The spine of the Anvil segment, stated rather than implied. Neither
+// source deck had this slide, and without it the five that follow read
+// as a tour of artifacts instead of as evidence for a position.
+//
+// It is built to be WALKED, and it took three passes to get there.
+// One column of eight at 48px was the first attempt and it was a wall:
+// eight lines of heavy type under eight bright accent ticks, which is a
+// lot of shouting for a list nobody is meant to read ahead on. Shrinking
+// it fixed the weight and broke the composition, leaving a small block
+// floating in the top left of a 1920 slide.
+//
+// Two columns of four at 36px is the answer. Light enough to be a list
+// rather than a headline, wide enough to look composed, and short enough
+// that it does not need the whole slide.
+//
+// `grid-flow-col` with `grid-rows-4` is load-bearing. Default row-major
+// flow would read 1,2 across then 3,4 across, which scrambles both the
+// walk order and the grouping. Filling column-major keeps the reading
+// order top-to-bottom-then-over, and puts the four architecture
+// decisions in the left column and the four about keeping it alive in
+// the right. Nothing labels those groups; the split just rewards anyone
+// who notices.
+//
+// The order is not arbitrary. The left column gets paid off by slides 12
+// to 15. The right column is how it stayed alive, and only Adoption gets
+// its own slide; the rest are said here and here only.
+//
+// "Nothing in the system is permanent" is the one to linger on, because
+// it is the one that pays off twice: it is why multiple frontend
+// libraries were allowed to coexist, and it is why the Sketch to Figma
+// pivot cost a pipeline instead of the system. Slide 17 comes back to it.
+//
+// The checkmark next to a list of decisions, in the deck whose next
+// segment is a Checklist component, is a coincidence. It is not worth
+// pointing out and it is not why the marks are there.
+//
+// Sizes are arbitrary pixel values on purpose. This deck overrides
+// Tailwind's spacing scale (--spacing-1..12 is 8/16/24/32/48/64/...),
+// so `size-9` is 120px here and `gap-6` is 64px, not the 36 and 24 you
+// would get from stock Tailwind. The first draft used those and
+// overflowed the slide by a long way. Anything that has to fit exactly
+// gets a bracketed value.
+
+const decisions = [
+	'Code is the source of truth',
+	'Multiple frontend libraries can coexist',
+	'Nothing in the system is permanent',
+	'Design assets stay in sync with code',
+	'Documentation is a first-class citizen',
+	'Adoption is earned, not mandated',
+	'Accessibility is baked in, not bolted on',
+	'Teams contribute, and own what is not yet systemized',
+];
+---
+
+<Slide title="Anvil Design System" subtitle="Key Decisions">
+	<div
+		class="grid grid-flow-col grid-rows-4 justify-start gap-x-[96px] gap-y-[40px]"
+	>
+		{
+			decisions.map((d) => (
+				<div class="flex items-center gap-[22px]">
+					<svg
+						class="text-accent block h-[30px] w-[30px] flex-none"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="2.5"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						aria-hidden="true"
+					>
+						<path d="M20 6 9 17l-5-5" />
+					</svg>
+					<span class="text-strong text-4xl">{d}</span>
+				</div>
+			))
+		}
+	</div>
+</Slide>

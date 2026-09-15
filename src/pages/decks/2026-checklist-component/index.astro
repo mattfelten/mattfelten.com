@@ -8,10 +8,14 @@ import {
 	AnvilAccessibility,
 	AnvilAdoption,
 	AnvilCodeArchitecture,
+	AnvilDocumentation,
 	AnvilFigmaLibraries,
-	AnvilGridAndLayout,
+	AnvilFourLayers,
+	AnvilKeyDecisions,
 	AnvilOverview,
-	AnvilReleaseAnnouncements,
+	AnvilPriorArt,
+	AnvilWhatIdDoDifferently,
+	AnvilWhatIsServiceTitan,
 	Before,
 	ComponentAPI,
 	ComponentSection,
@@ -78,20 +82,26 @@ const meta = {
 // Shape and the timing it is built against, 45 minutes with questions:
 //
 //   About Me                4 slides    about 3 min
-//   Anvil Design System     7 slides    about 11 min
+//   Anvil Design System    11 slides    about 13 min
 //   Checklist              29 slides    about 17 min
 //   Closing                 2 slides    about 2 min
 //
-// That is 33 minutes of talking against roughly 10 of questions, which
-// leaves headroom rather than eating it. The two segments are paced very
-// differently on purpose: Anvil is diagram slides that get talked over
-// for a minute each, Checklist is short slides with live prototypes that
-// get driven for twenty to thirty seconds.
+// The two segments are paced very differently on purpose: Anvil is
+// diagram slides that get talked over for a minute each, Checklist is
+// short slides with live prototypes that get driven for twenty to thirty
+// seconds. Do not try to even them out.
+//
+// The Anvil segment has an argument and is ordered around it. Slide 11
+// states the decisions; 12 to 16 are the evidence for selected ones, in
+// the order how it is built, how it stays in sync, what is guaranteed
+// inside it, how you learn it, how people came to it. 17 and 18 are the
+// reflection, and 17 pays off slide 11 rather than introducing anything
+// new.
 //
 // Anvil comes first because Checklist is the zoom-in counterpart. The
 // system argument has to be on the table before the component depth
 // means anything, and accessibility lands twice on purpose: once at
-// system level on slide 13, once inside one component on slide 36.
+// system level on slide 14, once inside one component on slide 40.
 //
 // The Checklist segment keeps its own internal section slides rather
 // than TOC interstitials. That is a settled decision from its own review
@@ -115,13 +125,17 @@ const toc = ['About Me', 'Anvil Design System', 'Checklist Component', 'Closing'
 		<DesignPrinciples />
 
 		<TocSlide items={toc} active="Anvil Design System" />
+		<AnvilWhatIsServiceTitan />
 		<AnvilOverview />
+		<AnvilPriorArt />
+		<AnvilKeyDecisions />
 		<AnvilCodeArchitecture />
 		<AnvilFigmaLibraries />
-		<AnvilAdoption />
-		<AnvilReleaseAnnouncements />
 		<AnvilAccessibility />
-		<AnvilGridAndLayout />
+		<AnvilDocumentation />
+		<AnvilAdoption />
+		<AnvilFourLayers />
+		<AnvilWhatIdDoDifferently />
 
 		<TocSlide items={toc} active="Checklist Component" />
 		<Before />
