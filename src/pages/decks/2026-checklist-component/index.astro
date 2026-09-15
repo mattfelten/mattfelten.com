@@ -54,19 +54,27 @@ const meta = {
 };
 
 // The whole 45 minutes. Grew out of the Checklist deck rather than into a
-// new folder, which is Matt's call: the folder name and the deck-level
-// title still say "Checklist" and the Checklist segment relies on that
-// fallback, so retitling would have meant touching 29 reviewed slides to
-// fix a string nobody in the room sees.
+// new folder, which is Matt's call. Only the folder name still says
+// "checklist-component"; nothing on screen does.
 //
-// `meta.title` is the deck's name: "Design System Portfolio". DeckShell
-// appends the byline itself, so the tab reads "Design System Portfolio →
-// Matt Felten" and the title slide reads "Matt Felten / Design System
-// Portfolio". Putting the name in `meta.title` too would print it twice.
+// Three different strings, and they are easy to confuse:
 //
-// The `title` on <Deck> is a different thing: the per-slide header
-// fallback, which stays "Checklist" because the 29 Checklist slides rely
-// on it. Two separate props on purpose.
+//   meta.title          "Design System Portfolio"
+//     The deck's name. DeckShell appends the byline itself, so the tab
+//     reads "Design System Portfolio → Matt Felten" and the title slide
+//     reads "Matt Felten / Design System Portfolio". Putting the name in
+//     meta.title as well would print it twice.
+//
+//   <Deck title=>       "Checklist Component"
+//     The per-slide header fallback, so it is really the SEGMENT name.
+//     It reaches only the Checklist content slides: everything else in
+//     this deck passes its own title or hides the header, which is the
+//     Act I and Act III kit working as decks/CLAUDE.md describes it.
+//     Renaming the segment is therefore this one string, not 23 files.
+//
+//   toc[]               "Checklist Component"
+//     The interstitial. Keep it identical to <Deck title=> or the
+//     section is called two things ten seconds apart.
 //
 // Shape and the timing it is built against, 45 minutes with questions:
 //
@@ -93,11 +101,11 @@ const meta = {
 //
 // Narrative lives in _outline.md. Edit that first.
 
-const toc = ['About Me', 'Anvil Design System', 'Checklist', 'Closing'];
+const toc = ['About Me', 'Anvil Design System', 'Checklist Component', 'Closing'];
 ---
 
 <DeckShell {...meta}>
-	<Deck title="Checklist">
+	<Deck title="Checklist Component">
 		<Title />
 
 		<TocSlide items={toc} />
@@ -116,7 +124,7 @@ const toc = ['About Me', 'Anvil Design System', 'Checklist', 'Closing'];
 		<AnvilAccessibility />
 		<AnvilGridAndLayout />
 
-		<TocSlide items={toc} active="Checklist" />
+		<TocSlide items={toc} active="Checklist Component" />
 		<Before />
 		<WhyAComponent />
 		<WhereWeLanded />

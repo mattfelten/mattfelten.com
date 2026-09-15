@@ -9,7 +9,7 @@ Checklist component at depth, and a close. 48 slides, 15 of them running live.
 |---|---|---|
 | About Me | 1 to 6 | about 3 min |
 | Anvil Design System | 7 to 14 | about 11 min |
-| Checklist | 15 to 44 | about 17 min |
+| Checklist Component | 15 to 44 | about 17 min |
 | Closing | 45 to 48 | about 2 min |
 
 That is roughly 33 minutes of talking against about 10 of questions. Anvil is diagram slides
@@ -115,7 +115,7 @@ for going all the way down into one component.
 
 ---
 
-## Slide 15 — Checklist
+## Slide 15 — Checklist Component
 
 TOC interstitial.
 

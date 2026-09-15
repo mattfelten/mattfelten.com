@@ -7,11 +7,10 @@
 // 36-AccessibilityAudit.astro with nothing to work out.
 //
 // The Anvil slides carry an explicit title. Every other slide in this
-// deck either passes its own or hides the header, and the deck-level
-// fallback is still "Checklist", which is what the 29 Checklist slides
-// rely on. Adding the title to the Anvil ones was cheaper and less
-// disruptive than retitling a segment that has already been reviewed
-// slide by slide.
+// deck either passes its own or hides the header, so the deck-level
+// fallback reaches only the Checklist content slides, which makes it the
+// SEGMENT name rather than the deck name. Renaming that segment is one
+// string in index.astro, not an edit to every file in here.
 
 // About Me
 export { default as Title } from './1-Title.astro';

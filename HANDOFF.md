@@ -1,14 +1,17 @@
 # Portfolio review deck — continue here
 
-> **The folder is still `2026-checklist-component` and the deck-level title is still
-> "Checklist", but this is now the whole 45 minutes: about me, Anvil, Checklist, close.**
-> Matt's call, 2026-09-14: grow the Checklist deck rather than start a new folder. He was
-> shown that the name would lie and chose it anyway, so do not "fix" it. `meta.title` is
-> "Design System Portfolio", and DeckShell appends the byline, so the tab reads "Design
-> System Portfolio → Matt Felten" and the title slide reads "Matt Felten / Design System
-> Portfolio". Do not put the name in `meta.title` as well or it prints twice. The `title`
-> prop on `<Deck>` is only the per-slide header fallback, and the 29 Checklist slides rely
-> on it, which is why it stays.
+> **`2026-checklist-component` is now the whole 45 minutes: about me, Anvil, Checklist
+> Component, close.** Matt's call, 2026-09-14: grow the Checklist deck rather than start a
+> new folder. He was shown that the folder name would then lie and chose it anyway, so do
+> not "fix" it. Only the folder says "checklist"; nothing on screen does.
+>
+> **Three strings, easy to confuse, all set deliberately:**
+>
+> | | | |
+> |---|---|---|
+> | `meta.title` | "Design System Portfolio" | The deck. DeckShell appends the byline, so the tab reads "Design System Portfolio → Matt Felten". **Do not add the name here too** or it prints twice. |
+> | `<Deck title=>` | "Checklist Component" | The per-slide header fallback, which reaches **only** the Checklist content slides, so it is really the segment name. Renaming the segment is this one string. |
+> | `toc[]` | "Checklist Component" | The interstitial. Keep identical to `<Deck title=>`. |
 
 
 Scaffolding for finishing this deck. **Delete it when the deck ships** — the durable
@@ -28,7 +31,7 @@ actually stands rather than trusting a number written here.
 |---|---|---|---|
 | About Me | 1 to 6 | about 3 min | `2026-portfolio-review` |
 | Anvil Design System | 7 to 14 | about 11 min | `2026-anvil-15m` |
-| Checklist | 15 to 44 | about 17 min | this deck's own work |
+| Checklist Component | 15 to 44 | about 17 min | this deck's own work |
 | Closing | 45 to 48 | about 2 min | `2026-portfolio-review` |
 
 About 33 minutes of talking against roughly 10 of questions.
@@ -153,7 +156,7 @@ minutes and the intro at 3.
 12 Release Announcements        35 — Accessibility —
 13 Accessibility  (system)      36 Accessibility  (component)
 14 Grid to Layout Story [TELL]  37 Accessible Implementation
-15 — Checklist —       (TOC)    38 — The Component —
+15 — Checklist Cmpt —  (TOC)    38 — The Component —
 16 Original Feature     [live]  39 Component Structure   (diagram)
 17 From Feature to Component    40 Component API         (table)
 18 Final Component      [live]  41 Object Types          (code)
