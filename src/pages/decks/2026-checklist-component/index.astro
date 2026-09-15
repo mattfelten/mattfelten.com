@@ -21,23 +21,11 @@ import {
 	ComponentStructure,
 	DesignPrinciples,
 	Docs,
-	EditingFinal,
-	EditingSection,
+	Explorations,
 	Implementation,
 	MultiplayerFinal,
-	MultiplayerSection,
-	NestedFinal,
-	NestedSection,
 	NextSteps,
-	ObjectTypes,
-	ReorderingFinal,
-	ReorderingSection,
-	RuledOutCascade,
-	RuledOutDeepNesting,
 	RuledOutEditorOpens,
-	RuledOutFullProxy,
-	RuledOutHairline,
-	RuledOutHighlight,
 	RuledOutLock,
 	RuledOutShift,
 	ThankYou,
@@ -82,8 +70,20 @@ const meta = {
 //
 //   About Me                4 slides    about 3 min
 //   Anvil Design System    11 slides    about 13 min
-//   Checklist              29 slides    about 17 min
+//   Checklist              16 slides    about 10 min
 //   Closing                 2 slides    about 2 min
+//
+// The Checklist segment was cut roughly in half (Matt, 2026-09-15). It
+// used to spend eight slides on eight rejected directions, one each, on
+// the argument that summarising them as a number throws the evidence
+// away. That was right about the evidence and wrong about the medium.
+// Three rejections keep slides because three arguments are worth
+// hearing in full; the rest are on the explorations index, which is
+// embedded whole on slide 27 and says "thirty-two questions, every
+// variation" in one move.
+//
+// Gone with them: the Editing, Reordering and Nested Items sections and
+// their live slides. Final Component already demonstrates all three.
 //
 // The two segments are paced very differently on purpose: Anvil is
 // diagram slides that get talked over for a minute each, Checklist is
@@ -140,26 +140,12 @@ const toc = ['About Me', 'Anvil Design System', 'Checklist Component', 'Closing'
 		<Before />
 		<WhyAComponent />
 		<WhereWeLanded />
-
-		<EditingSection />
-		<EditingFinal />
-		<RuledOutEditorOpens />
-		<RuledOutHairline />
-
-		<ReorderingSection />
-		<ReorderingFinal />
-		<RuledOutShift />
-		<RuledOutFullProxy />
-
-		<NestedSection />
-		<NestedFinal />
-		<RuledOutDeepNesting />
-		<RuledOutCascade />
-
-		<MultiplayerSection />
 		<MultiplayerFinal />
+
+		<RuledOutShift />
 		<RuledOutLock />
-		<RuledOutHighlight />
+		<RuledOutEditorOpens />
+		<Explorations />
 
 		<AccessibilitySection />
 		<AccessibilityAudit />
@@ -167,7 +153,6 @@ const toc = ['About Me', 'Anvil Design System', 'Checklist Component', 'Closing'
 		<ComponentSection />
 		<ComponentStructure />
 		<ComponentAPI />
-		<ObjectTypes />
 		<Implementation />
 
 		<Docs />

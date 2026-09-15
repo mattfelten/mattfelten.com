@@ -1,0 +1,45 @@
+---
+import Slide from '@decks/templates/Slide.astro';
+
+// The explorations index, live, rising off the bottom edge. Same bleed
+// as the Docs slide and for the same reason: a page that runs off the
+// bottom reads as a page, where one boxed inside the slide reads as a
+// screenshot of one.
+//
+// This slide replaces five rejection slides. The deck used to spend
+// eight slides on eight dead ends, one each, on the argument that a
+// number summarising them throws the evidence away. That argument was
+// right about the evidence and wrong about the medium: this page IS the
+// evidence, all of it, and showing it whole says "thirty-two questions
+// and every variation we built" in one move instead of eight.
+//
+// Three rejections still get slides, because three arguments are worth
+// hearing in full rather than pointed at. The rest live here.
+//
+// What to say over it. It is organised by DECISION rather than by which
+// bench a switch happens to live in, every option that got built is
+// listed under the question it answers, and the chosen one is marked in
+// words rather than by colour. Scroll it. Open one if they ask.
+//
+// The two questions with no decision marked are honest rather than
+// unfinished: the C2 framing question is answered in prose by the round
+// underneath it, and the fine-pointer half of read-only is genuinely
+// still open.
+//
+// No dates anywhere on that page, deliberately. When the work happened
+// is Matt's to say out loud.
+//
+// No params (Matt, 2026-09-15). The page runs at its own size with its
+// own top padding, which is what it was built to look like. It had been
+// zoomed to 1.4 and flushed to the top edge to fill the frame; filling
+// the frame is not worth making the page look like something else.
+---
+
+<Slide subtitle="What We Explored">
+	<iframe
+		src="/decks/2026-checklist-component/prototypes/"
+		title="Every question the component had to answer, and every option built for it"
+		class="live-embed absolute left-1/2 m-0! block h-[930px] w-[1400px] max-h-none! max-w-none! -translate-x-1/2 rounded-t-2xl! border-0"
+		style="bottom: -60px;"
+	></iframe>
+</Slide>

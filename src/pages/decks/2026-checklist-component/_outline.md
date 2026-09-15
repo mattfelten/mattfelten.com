@@ -1,7 +1,7 @@
 # Design System Portfolio — Slide Deck Outline
 
 The whole 45 minutes, in four segments: about me, the Anvil design system at breadth, the
-Checklist component at depth, and a close. 50 slides, 15 of them running live.
+Checklist component at depth, and a close. 38 slides, 8 of them running live.
 
 **Timing, and the two segments are paced very differently on purpose.**
 
@@ -9,10 +9,10 @@ Checklist component at depth, and a close. 50 slides, 15 of them running live.
 |---|---|---|
 | About Me | 1 to 6 | about 3 min |
 | Anvil Design System | 7 to 18 | about 13 min |
-| Checklist Component | 19 to 47 | about 17 min |
-| Closing | 48 to 50 | about 2 min |
+| Checklist Component | 19 to 35 | about 10 min |
+| Closing | 36 to 38 | about 2 min |
 
-That is roughly 35 minutes of talking against about 10 of questions. Anvil is diagram slides
+That is roughly 28 minutes of talking, which leaves a lot of room for questions. Anvil is diagram slides
 talked over for a minute each. Checklist is short slides with live prototypes driven for twenty
 to thirty seconds. Do not try to even them out.
 
@@ -23,7 +23,7 @@ than trimming in advance on an estimate.
 the table before the component depth means anything. Checklist is the zoom-in counterpart:
 nothing in it re-explains design systems, and its accessibility beat has to read as component
 depth rather than as the system-level policy Anvil already covered. Accessibility deliberately
-lands twice, once at system level on slide 14 and once inside one component on slide 40.
+lands twice, once at system level on slide 14 and once inside one component on slide 29.
 
 What they should conclude from the Checklist segment specifically: depth of craft on one small
 thing. That I found and explored things nobody would find by looking, and that I care about
@@ -135,7 +135,7 @@ audiences without a slide saying so.
 
 What the system guaranteed so that teams did not have to. This is the policy view: baked in,
 colour contrast, the rest. Say that a system can be accessible and a page can still fail, because
-slide 40 is where that gets paid off inside one component.
+slide 29 is where that gets paid off inside one component.
 
 ## Slide 15 — Documentation `[ANVIL]`
 
@@ -214,7 +214,7 @@ The list as it ships right now. You can tick an item and you can add one. That i
 cannot reorder them, you cannot edit the text after you have written it, and if two people are
 in the list at once neither of them knows.
 
-Do not point out the completed item. It is failing contrast and that pays off on slide 40, and
+Do not point out the completed item. It is failing contrast and that pays off on slide 29, and
 the point only lands if nobody was told to look.
 
 ## Slide 21 — From Feature to Component
@@ -231,92 +231,7 @@ parent, drag it, watch its children come with it, then open the row menu on a ch
 Worth saying here: everything you are about to see is a prototype I built, not a mockup I drew.
 That is why every decision after this has a number attached to it instead of an opinion.
 
----
-
-## Slide 23 — Editing
-
-Section title.
-
-## Slide 24 — Editing `[DRIVE]`
-
-The field has no edges. Not a light border, not a subtle one. None, at rest, on hover, and
-while you are typing. The pointer turning into a caret is the entire affordance.
-
-The reason is that the text is the document. If editing it looks like filling in a form, you
-have told people they are operating a control instead of writing.
-
-The top row is already open on arrival, because a closed field just shows an ordinary list.
-
-## Slide 25 — Editor as an Object `[REJECTED]` `[DRIVE]`
-
-The first version opened an editor as an object. Bordered field, toolbar, Save and Cancel. It
-works, and it announces that you have entered a mode. Editing a list item is not a mode, it is
-typing. Watch what it does to the rows underneath.
-
-## Slide 26 — Field with Edges `[REJECTED]` `[DRIVE]`
-
-A one pixel outline, built the naive way, so the border and the padding are real and take up
-space. Click out and back in: 9 pixels right, 7 pixels down, and a 14 pixel shove to everything
-below. The chosen version measures zero and zero, because it paints with a background and a
-shadow, which sit outside layout.
-
----
-
-## Slide 27 — Reordering
-
-Section title.
-
-## Slide 28 — Reordering `[DRIVE]`
-
-A handle in the gutter, the blank space of the row, and an insertion line to show where it
-lands. The row collapses to a single line that follows the cursor.
-
-The half that matters is Move up and Move down in the row menu. Slide 36 is where that gets its
-reason. Here it is just shown.
-
-## Slide 29 — Rows shift out of the way `[REJECTED]` `[DRIVE]`
-
-The nice version, where the list opens a gap as you drag. It only works when every row is the
-same height. These are markdown, so they are not. A tall item displacing short ones makes the
-list jump, and the gap you were aiming at slides out from under the cursor.
-
-## Slide 30 — Row follows cursor `[REJECTED]` `[DRIVE]`
-
-Drag the tallest row. A full height block under the pointer covers the list you are trying to
-aim at. The thing in your hand only has to say which row it is.
-
----
-
-## Slide 31 — Nested Items
-
-Section title.
-
-## Slide 32 — Nested Items `[DRIVE]`
-
-Sub-items go one level deep and no further. The more useful half: a list can decline them. Turn
-nesting off and the same component withdraws one gesture and one affordance. A flat agenda and a
-nested runbook are one thing configured differently, which is the sharpest argument I have that
-this is a component and not two.
-
-## Slide 33 — Unlimited Nesting `[REJECTED]` `[DRIVE]`
-
-Five levels. Every step costs another 32 pixels of the text column, so by the fourth the row is
-mostly margin.
-
-## Slide 34 — Parent ticks its children `[REJECTED]` `[DRIVE]`
-
-Tick the first row and watch both children go with it. This one looks tidy and it is the one I
-feel strongest about. In a shared list, cascading means one tick silently rewrites an item
-somebody else wrote and is watching. A rule that looks neat for one person is a destructive
-write to somebody else's row.
-
----
-
-## Slide 35 — Multiplayer
-
-Section title.
-
-## Slide 36 — Multiplayer `[DRIVE]`
+## Slide 23 — Multiplayer `[DRIVE]`
 
 A small avatar hanging off the corner of the row. Deliberately not next to the author tag on the
 right, because the row already has one face on it and a second one beside it reads as
@@ -324,7 +239,22 @@ co-authorship rather than as presence.
 
 Say nothing for the first few seconds. Let them watch a row they did not touch start changing.
 
-## Slide 37 — Lock the row `[REJECTED]` `[DRIVE]`
+This is the one feature Final Component cannot show on its own, which is why it is the only one
+that kept a slide.
+
+---
+
+**Three rejections, then the whole shelf.** The deck used to spend eight slides on eight dead
+ends, one each. These three are the arguments worth hearing in full; the other five are on the
+index on slide 27, which says how much was explored far better than five more slides would.
+
+## Slide 24 — Rows shift out of the way `[REJECTED]` `[DRIVE]`
+
+The nice version, where the list opens a gap as you drag. It only works when every row is the
+same height. These are markdown, so they are not. A tall item displacing short ones makes the
+list jump, and the gap you were aiming at slides out from under the cursor.
+
+## Slide 25 — Lock the row `[REJECTED]` `[DRIVE]`
 
 The obvious answer to two people editing: let the first one hold it. Drive it, try to type in
 the row somebody else is in.
@@ -335,23 +265,34 @@ editing lands. And the dim that announces the lock measures 2.67 to 1 against th
 No opacity value saves it, because the treatment weakens the text and the text has to stay
 readable. The affordance fails on its own terms even if the rule were right.
 
-## Slide 38 — Highlight the row `[REJECTED]` `[DRIVE]`
+## Slide 26 — Editor as an Object `[REJECTED]` `[DRIVE]`
 
-The better rejection of the two, because it is not rejected on a number. It keeps the text at
-full strength, so it passes.
+The first version opened an editor as an object. Bordered field, toolbar, Save and Cancel. It
+works, and it announces that you have entered a mode. Editing a list item is not a mode, it is
+typing. Watch what it does to the rows underneath.
 
-It loses because the row already changes its background on hover. On a pointer the two states
-are nearly the same picture, and a signal that says somebody is here cannot also be the signal
-that says your mouse is here. That is a collision you only find by building it into a row that
-already has states.
+## Slide 27 — What We Explored `[DRIVE]`
+
+The explorations index, live, rising off the bottom edge. This is the evidence, all of it, and
+it is the slide to slow down on.
+
+Organised by **decision** rather than by which bench a switch lives in. Every option that got
+built is listed under the question it answers, and the chosen one is marked in words rather than
+by colour. Thirty-two questions, thirty of them with a decision marked.
+
+Scroll it. Open one if they ask. The two questions with nothing marked are honest rather than
+unfinished: the framing question about the hover-only handle is answered in prose by the round
+underneath it, and the fine-pointer half of read-only is genuinely still open.
+
+No dates anywhere on that page, deliberately. When the work happened is mine to say out loud.
 
 ---
 
-## Slide 39 — Accessibility
+## Slide 28 — Accessibility
 
 Section title.
 
-## Slide 40 — Accessibility
+## Slide 29 — Accessibility
 
 Eight areas, not eight decisions. Heading over answer: colour contrast, target size, keyboard,
 pointer gestures, touch, screen reader, focus visible, reduced motion.
@@ -360,35 +301,25 @@ Read the headings if the room is quiet. The point is that somebody scanning them
 was skipped, rather than reading decisions and working out which areas they cover.
 
 
-## Slide 41 — The Component
+## Slide 30 — The Component
 
 Section title.
 
-## Slide 42 — Component Structure
+## Slide 31 — Component Structure
 
 The diagram. Three nested levels, one colour each: the Checklist, a ChecklistRow, and the parts a
 row is assembled from, with the composer in its own colour because it is not a row. A sub-row is
 drawn as a real child with exactly the same parts, which is the one-level ceiling and the
 nesting-as-capability argument in one picture.
 
-## Slide 43 — Component API
+## Slide 32 — Component API
 
 The props, which are the decisions restated as a surface. Point at `nesting`: false withdraws the
 gesture, the affordance, and flattens the data.
 
 The ones that are not props are the ones a consumer should not be able to get wrong.
 
-## Slide 44 — Object Types
-
-What you hand it. A row is five fields and a boolean, which is worth seeing after fifteen minutes
-of argument about them. `parentId` is the entire nesting model: one nullable field is what one
-level costs in the data.
-
-`checked`, not `done`, because the component knows the box is ticked and not what that means to
-you. Presence hangs off the item, so a row can be rendered without its parent looking up who is
-in it.
-
-## Slide 45 — Implementation
+## Slide 33 — Implementation
 
 Loops and Runbooks side by side. Runbooks passes nothing but its items.
 
@@ -398,26 +329,31 @@ capability should not have to know the capability exists, and here it demonstrab
 
 Say that out loud rather than putting it on the slide.
 
-## Slide 46 — Docs
+## Slide 34 — Docs
 
-The component's documentation page, running rather than pictured, opened at the Example section.
-The sticky sidebar carries the name and the section list, so the frame is free for the part that
-is not in every design system's docs.
+The component's documentation page, running rather than pictured. The whole page from the masthead
+down to the specimen fits the frame, so there is nothing to scroll to before it makes its point.
+The contents list on the right is only "On this page": no product name and no component name above
+it, because this is one page inside a system rather than a site of its own.
 
-That part is the address under the specimen. Pick a state and the specimen and the address change
-together. Say what it buys out loud: named values only, unknown values ignored rather than guessed
-at, and every state addressable, so an agent can open a state and look at it instead of reading a
-paragraph describing one. Machine-readable by construction rather than by a second export nobody
-maintains.
+The part that is not in every design system's docs is the specimen. Seven named states across the
+top, one live one underneath, and an Open button that goes to exactly the state on screen. Pick a
+state, then click Open. Say what it buys while you are doing it: named values only, unknown values
+ignored rather than guessed at, and every state addressable, so an agent can open a state and look
+at it instead of reading a paragraph describing one. Machine-readable by construction rather than
+by a second export nobody maintains.
+
+Source beside it is deliberately dead. A real docs site would carry it, and disabled is the honest
+version of a control that does not go anywhere yet.
 
 Say the caveat before the engineer does. The vocabulary grew on the prototypes and documents the
 states the component has; it is not generated from the component today. The claim is that the
 property should carry into the docs, not that these are generated docs.
 
 Scroll it if anybody asks. Props, Data and States are the surface, Accessibility is the audit, and
-Open questions is the four unresolved threads, which sets up the closing slide.
+the States table links back into the Example by name.
 
-## Slide 47 — Next Steps
+## Slide 35 — Next Steps
 
 Four open threads, named rather than stated, in reading order across two columns.
 
@@ -437,17 +373,17 @@ invite the panel to push.
 
 ---
 
-## Slide 48 — Closing
+## Slide 36 — Closing
 
 TOC interstitial.
 
-## Slide 49 — Why me?
+## Slide 37 — Why me?
 
 Three things, and the third is the one this deck just spent thirty minutes proving rather than
 claiming. Complexity and the unknown, software as a team sport, and sweating the details that
 make or break it. Do not restate the deck here. The evidence already landed.
 
-## Slide 50 — Thank you
+## Slide 38 — Thank you
 
 Leave them the explorations index: every question, every variation, and the chosen one marked in
 words.
@@ -463,7 +399,7 @@ the prototype scores all eight ways of arranging them, and not one keeps all thr
 because the scorecard panel is not legible at presentation scale. Measured: it renders about
 1195 pixels tall against a usable slide budget of roughly 780. The same is true of the contrast
 table at about 2090. Both are working instruments, not slide graphics. The argument survives in
-Matt's mouth on slides 28 and 40, and both panels are still reachable from the explorations
+Matt's mouth on slides 24 and 29, and both panels are still reachable from the explorations
 index.
 
 **The long opening.** Role, where this lives, and the four asks each had their own slide. They

@@ -25,20 +25,20 @@ actually stands rather than trusting a number written here.
 
 ## What this is
 
-**The whole 45-minute portfolio review, as one deck. 50 slides, 15 running live.**
+**The whole 45-minute portfolio review, as one deck. 38 slides, 8 running live.**
 
 | Segment | Slides | Target | Built from |
 |---|---|---|---|
 | About Me | 1 to 6 | about 3 min | `2026-portfolio-review` |
 | Anvil Design System | 7 to 18 | about 13 min | `2026-anvil-15m` + `2024-anvil-case-study` |
-| Checklist Component | 19 to 47 | about 17 min | this deck's own work |
-| Closing | 48 to 50 | about 2 min | `2026-portfolio-review` |
+| Checklist Component | 19 to 35 | about 10 min | this deck's own work |
+| Closing | 36 to 38 | about 2 min | `2026-portfolio-review` |
 
-About 35 minutes of talking against roughly 10 of questions.
+About 28 minutes of talking, which leaves a lot of room for questions.
 
-**Slide files are numbered by deck position.** The gaps in `_slides/` (2, 3, 7, 19, 48)
-are the TOC interstitials, which `index.astro` renders inline. So slide 40 in the outline
-is `40-AccessibilityAudit.astro`, with nothing to work out.
+**Slide files are numbered by deck position.** The gaps in `_slides/` (2, 3, 7, 19, 36)
+are the TOC interstitials, which `index.astro` renders inline. So slide 29 in the outline
+is `29-AccessibilityAudit.astro`, with nothing to work out.
 
 **Slides were copied, not imported**, and so were their images. `2026-anvil-15m` is a
 delivered recorded talk and `2026-portfolio-review` is a separate deck; tuning the live
@@ -67,7 +67,7 @@ pixels. Not systems judgment, not spec rigour. Craft.
 **It follows the Anvil segment**, which covers design systems at breadth including
 system-level accessibility, so this is the zoom-in counterpart. Nothing here
 re-explains design systems, and the accessibility beat must read as component depth.
-Accessibility lands twice on purpose: system level on slide 14, one component on slide 40.
+Accessibility lands twice on purpose: system level on slide 14, one component on slide 29.
 
 **The real story:** two tickets under epic RND-4044, reorder (RND-4840) and editing
 (RND-4765 P0), specced by Matt from prototypes and handed to DJ Bowers to build.
@@ -82,7 +82,7 @@ argument that Runbooks is a second consumer.
 | Worktree | `~/Projects/personal/mattfelten.com/.claude/worktrees/checklist-component-deck` |
 | Branch | `worktree-checklist-component-deck` (pushed) |
 | Deck | `src/pages/decks/2026-checklist-component/` |
-| Slides | `_slides/`, 46 files numbered by deck position, 50 slides |
+| Slides | `_slides/`, 34 files numbered by deck position, 38 slides |
 | Narrative | `_outline.md` — **edit this before slides** |
 | Benches | `prototypes/*.html`, 7 of them, plus `index.html` and `rejections.html` |
 | Reasoning record | `~/Projects/personal/ai-brain/work/mission/2026-09-07-checklist-component/` |
@@ -96,7 +96,7 @@ Deck at `/decks/2026-checklist-component/`. Explorations index at
 
 ## Next, in order
 
-### The docs page is built, and slide 46 is no longer a placeholder
+### The docs page is built, and slide 34 is no longer a placeholder
 
 `docs.html` in the deck folder, served at `/decks/2026-checklist-component/docs`.
 Matt's call, 2026-09-14: build a real one. The component is not in Anvil and the
@@ -112,7 +112,7 @@ something longer that looks more like a design system.
 **The Figma library and Storybook links are deliberately empty.** Both are `href="#"` in
 the masthead. Neither exists, and the page does not say so. `#` rather than an empty
 href, because an empty one navigates to the current URL and reloads: that page runs
-inside slide 46, so a stray click during the talk would wipe the selected state. `#`
+inside slide 34, so a stray click during the talk would wipe the selected state. `#`
 just jumps to the top.
 
 All three masthead items sit on one flex row on purpose. Stacked they would cost about
@@ -141,10 +141,10 @@ costs more credibility than an absent one. Do not add them to complete the set.
 
 **Open questions was cut** (Matt, 2026-09-14). It is the one section that is not a docs
 convention: component docs tell you how to use the thing, they do not carry the author's
-unresolved list. Nothing is lost, because slide 47 carries the same four threads.
+unresolved list. Nothing is lost, because slide 35 carries the same four threads.
 
 **Usage was cut too** (Matt, 2026-09-14). It was the Loops and Runbooks call sites side by
-side, which is slide 45's whole job. Install still shows the import, so the page never
+side, which is slide 33's whole job. Install still shows the import, so the page never
 loses how you get the component, only the duplicate of a slide the room has just seen.
 
 **Watch for duplication when adding a section.** Two crept in this round and both were
@@ -182,7 +182,7 @@ Its own params, and the reasoning is in the file:
 | `compact` | `1` is slide mode. Drops the two section prose blocks and most of the top padding, trims the canvas to 32rem, and lets the lede run wider so it sits on one line. The lede stays: Matt asked for it back. |
 | `state` | Opens on a named state. Unknown values fall back to the default. |
 
-**Slide 43 is a bleed, and it is the first iframe in the deck to be one.** The same move
+**The Docs slide is a bleed, and What We Explored now makes the same move.** The same move
 `5-MCWhatIsMissionCloud` and `6-MCBeta` make with an image: absolutely positioned,
 `left-1/2 -translate-x-1/2`, `bottom: -60px`, square bottom and `rounded-t-2xl` because
 the bottom is not an edge, it is a cut. `BleedImage` cannot do it: its `bleed` prop only
@@ -214,39 +214,45 @@ minutes and the intro at 3.
 
 ---
 
-## The deck as it stands: 50 slides, 15 running live, no placeholders
+## The deck as it stands: 38 slides, 8 running live, no placeholders
 
 ```
- 1 Title                        26 Field with Edges    [R][live]
- 2 Contents            (TOC)    27 — Reordering —
- 3 — About Me —        (TOC)    28 Reordering             [live]
- 4 Hey, I'm Matt                29 Rows shift out of the way [R]
- 5 Work History                 30 Row follows cursor     [R]
- 6 Design Principles            31 — Nested Items —
- 7 — Anvil —           (TOC)    32 Nested Items           [live]
- 8 What is ServiceTitan?        33 Unlimited Nesting  [R][live]
- 9 Overview       (the numbers) 34 Parent ticks its children [R]
-10 Prior Art          (the audit) 35 — Multiplayer —
-11 Key Decisions   (the spine)  36 Multiplayer            [live]
-12 Code Architecture            37 Lock the row      [R]   [live]
-13 Figma Libraries              38 Highlight the row [R]   [live]
-14 Accessibility  (system)      39 — Accessibility —
-15 Documentation                40 Accessibility  (component)
-16 Adoption                     41 — The Component —
-17 What is a design system?    42 Component Structure   (diagram)
-18 What I'd Do Differently      43 Component API         (table)
-19 — Checklist Cmpt —  (TOC)    44 Object Types          (code)
-20 Original Feature     [live]  45 Implementation        (code)
-21 From Feature to Component    46 Docs                  [live]
-22 Final Component      [live]  47 Next Steps
-23 — Editing —                  48 — Closing —          (TOC)
-24 Editing              [live]  49 Why me?
-25 Editor as an Object [R][live] 50 Thank you
+ 1 Title                        20 Original Feature     [live]
+ 2 Contents            (TOC)    21 From Feature to Component
+ 3 — About Me —        (TOC)    22 Final Component      [live]
+ 4 Hey, I'm Matt                23 Multiplayer          [live]
+ 5 Work History                 24 Rows shift out of the way [R][live]
+ 6 Design Principles            25 Lock the row      [R][live]
+ 7 — Anvil —           (TOC)    26 Editor as an Object [R][live]
+ 8 What is ServiceTitan?        27 What We Explored     [live]
+ 9 Overview       (the numbers) 28 — Accessibility —
+10 Prior Art        (the audit) 29 Accessibility  (component)
+11 Key Decisions   (the spine)  30 — The Component —
+12 Code Architecture            31 Component Structure   (diagram)
+13 Figma Libraries              32 Component API         (table)
+14 Accessibility  (system)      33 Implementation        (code)
+15 Documentation                34 Docs                  [live]
+16 Adoption                     35 Next Steps
+17 What is a design system?     36 — Closing —          (TOC)
+18 What I'd Do Differently      37 Why me?
+19 — Checklist Cmpt —  (TOC)    38 Thank you
 ```
+
+**The Checklist segment was cut roughly in half** (Matt, 2026-09-15), from 29 slides to 16.
+It used to give each of four features a section slide and a live slide, then spend eight
+slides on eight rejected directions, one each. The argument for that was that summarising
+rejections as a number throws the evidence away. Right about the evidence, wrong about the
+medium: **slide 27 is that evidence, all of it**, and showing the explorations index whole
+says "thirty-two questions and every variation we built" in one move.
+
+Three rejections keep slides because three arguments are worth hearing in full. Gone with
+the rest: the Editing, Reordering and Nested Items sections and their live slides, because
+**Final Component already demonstrates all three**, and Object Types, which was a data shape
+the room can be told rather than shown.
 
 **Accessible Implementation was cut** (Matt, 2026-09-14). It was the four things a
 consumer owes: object names, a section heading, permissions, naming the people. The
-Accessibility audit on 40 carries the component's own case, and the docs page has a
+Accessibility audit on 29 carries the component's own case, and the docs page has a
 "What the consumer owes" block covering the same four, so nothing is lost.
 
 **Testimonials was cut** (Matt, 2026-09-14). The quote collage that used to sit between
@@ -281,9 +287,12 @@ Proposal, Figma Components, Build, Contribution, System Principles, Results.
 
 Every **bench** embed is 800px tall with `fit=center`, which is the ceiling: the slide
 is 1080 with 80px padding and the body centres on 600, so 800 lands 200..1000, 28px
-clear of the header. **Slides 21 and 22 stay top-aligned** because they exist to show
-the list being pushed down, and centring halves that movement. **Slide 43 is the one
-embed with no `fit=center` at all**, for the reason in the bug list below.
+clear of the header. **Editor as an Object is the one bench embed with no `fit=center` at
+all**, for the reason in the bug list below: its row menu opens downward and does not flip,
+so centring pushes Delete past the frame edge.
+
+Slides are named here rather than numbered from this point on, deliberately. The numbers in
+this file went stale across two renumberings and pointed at the wrong slide both times.
 
 ---
 
@@ -331,7 +340,7 @@ because you cannot un-offer a key.
 **And the audit was overstating one setting.** `paths()` computes
 `hasKeys = R === "keyboard" || R === "both"` and prints "Tab to the row, space to lift,
 arrows to move" underneath, but the row's tab stop was gated on `S.reorder === "keyboard"`
-alone. In `both`, which is the setting slides 22 and 40 present, **you could not tab to
+alone. In `both`, which is the setting Final Component and the Accessibility audit present, **you could not tab to
 the row at all**, so the panel claimed a path the bench did not provide. The space handler
 already accepted `both`; only that one gate disagreed. Worth remembering as a class: **a
 panel computed from settings is only as honest as the settings it reads.**

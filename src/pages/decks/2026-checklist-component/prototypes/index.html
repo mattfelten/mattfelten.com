@@ -671,6 +671,26 @@
     });
   });
 
+  // Slide mode. This page is embedded whole on one slide so Matt can
+  // talk through the process against the real thing, and at 1:1 its
+  // 14px body is unreadable across a room.
+  //
+  // `zoom` rather than the docs page's root font-size trick, because
+  // every size in here is in px and converting the lot would be a
+  // rewrite. Zoom is safe on this page specifically: it carries no
+  // drag, no overlay and no positioning computed from rects, so there
+  // is no second pixel space for anything to fall into. Do NOT copy
+  // this to a bench.
+  //
+  // `flush` drops the top padding, which is dead space on a slide.
+  (function () {
+    const q = new URLSearchParams(location.search);
+    const page = document.querySelector(".page");
+    const s = parseFloat(q.get("scale"));
+    if (page && isFinite(s) && s > 0) page.style.zoom = s;
+    if (page && q.get("flush") === "1") page.style.paddingTop = "24px";
+  })();
+
   // Escape hands the deck back. Keydown never crosses out of an iframe,
   // so without this a presenter with focus in here has no keyboard route
   // back to the slides.
