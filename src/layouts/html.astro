@@ -4,7 +4,7 @@ import favicons from './favicon.html?raw';
 import '@assets/fonts/nudica.css';
 import '@assets/global.css';
 
-const { title: pageTitle } = Astro.props;
+const { title: pageTitle, noindex } = Astro.props;
 
 const titleParts: string[] = [];
 if (pageTitle) titleParts.push(pageTitle);
@@ -43,6 +43,7 @@ const title = titleParts.join(' → ');
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		{noindex && <meta name="robots" content="noindex, nofollow" />}
 		<title>{title}</title>
 		<Fragment set:html={favicons} />
 	</head>

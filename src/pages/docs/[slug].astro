@@ -1,0 +1,29 @@
+---
+import { getCollection, render } from 'astro:content';
+
+import Prose from '@layouts/prose.astro';
+
+export async function getStaticPaths() {
+	const entries = await getCollection('docs');
+	return entries.map(entry => ({
+		params: { slug: entry.id },
+		props: { entry },
+	}));
+}
+
+const { entry } = Astro.props;
+const { title, description } = entry.data;
+const { Content } = await render(entry);
+---
+
+<Prose title={title} noindex>
+	<div class="mb-6 flex flex-col gap-1">
+		<h1 class="mb-0!">{title}</h1>
+		{description && <p class="text-subdued m-0! text-xl">{description}</p>}
+	</div>
+	<Content />
+	<hr class="border-hairline my-10" />
+	<p class="text-subdued text-sm">
+		<a href="/docs" class="hover">← All docs</a>
+	</p>
+</Prose>
